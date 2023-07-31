@@ -34,6 +34,19 @@ services:
     container_name: ThreadShield-db
     networks:
       - threadshield-network
+  migration:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["mix", "ecto.migrate"]
+    env_file:
+      - .env
+    container_name: ThreadShield-migration
+    networks:
+      - threadshield-network
 
 volumes:
   db-data:
