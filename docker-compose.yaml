@@ -7,6 +7,9 @@ services:
       - "4000:4000"
     env_file:
       - .env
+    # important for live reloading:
+    volumes:
+      - .:/app
     depends_on:
       db:
         condition: service_healthy

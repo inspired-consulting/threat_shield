@@ -58,6 +58,9 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+# Enable live reloading of code
+config :phoenix, :live_reload, pattern: "**/*.ex"
+
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 

@@ -12,11 +12,13 @@ RUN apk add --no-cache inotify-tools build-base npm
 RUN mix local.hex --force && mix local.rebar --force
 
 # Copy the application source code into the container
-COPY . /app
+COPY . /app/
 
 # Install dependencies and compile the application
 RUN mix deps.get && mix deps.compile && mix compile
 
-# Start Phoenix live-reload (adjust based on your Phoenix version)
-# For Phoenix 1.5 and later:
+# Expose port 4000 from the container to the host:
+EXPOSE 4000
+
+# run the phoenix server with inotify-tools:
 CMD ["mix", "phx.server"]
