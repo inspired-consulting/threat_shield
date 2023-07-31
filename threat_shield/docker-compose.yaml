@@ -1,0 +1,40 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    container_name: ThreadShield-server
+    networks:
+      - threadshield-network
+  db:
+    image: postgres
+    restart: always
+    user: ${POSTGRES_USER}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    ports:
+      - "55432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    container_name: ThreadShield-db
+    networks:
+      - threadshield-network
+
+volumes:
+  db-data:
+
+networks:
+  threadshield-network:
+    driver: bridge
