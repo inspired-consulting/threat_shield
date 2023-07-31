@@ -24,7 +24,7 @@ To run the Threat Shield application, you will need the following installed on y
 
 ### Installation
 
-Clone this repo and change into the `threat_shield` directory:
+Clone this repo and switch to `threat_shield`:
 
 ```bash
 git clone git@github.com:inspired-consulting/ThreatShields.git
