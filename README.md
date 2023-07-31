@@ -36,7 +36,7 @@ cd threat_shield
 
 The Threat Shield application requires the environment variables that are defined in the .env file provided to you. Copy the file into the root of this application.
 
-### Usage
+## Usage
 
 Build and start the Docker image:
 
