@@ -32,3 +32,13 @@ threat_shield-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# IDE related
+.DS_Store
+
+# ENV related
+.env
+
+# Ignore Elixir LS generated files
+.elixir_ls/
+
+
