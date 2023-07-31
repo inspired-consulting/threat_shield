@@ -41,3 +41,4 @@ jobs:
           pull: true
           push: true
           tags: ghcr.io/${{ github.repository }}-app:${{ github.sha }}
+
