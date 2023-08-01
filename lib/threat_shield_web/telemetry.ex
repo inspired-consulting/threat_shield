@@ -1,4 +1,4 @@
-defmodule TreatShieldWeb.Telemetry do
+defmodule ThreatShieldWeb.Telemetry do
   use Supervisor
   import Telemetry.Metrics
 
@@ -52,23 +52,23 @@ defmodule TreatShieldWeb.Telemetry do
       ),
 
       # Database Metrics
-      summary("treat_shield.repo.query.total_time",
+      summary("threat_shield.repo.query.total_time",
         unit: {:native, :millisecond},
         description: "The sum of the other measurements"
       ),
-      summary("treat_shield.repo.query.decode_time",
+      summary("threat_shield.repo.query.decode_time",
         unit: {:native, :millisecond},
         description: "The time spent decoding the data received from the database"
       ),
-      summary("treat_shield.repo.query.query_time",
+      summary("threat_shield.repo.query.query_time",
         unit: {:native, :millisecond},
         description: "The time spent executing the query"
       ),
-      summary("treat_shield.repo.query.queue_time",
+      summary("threat_shield.repo.query.queue_time",
         unit: {:native, :millisecond},
         description: "The time spent waiting for a database connection"
       ),
-      summary("treat_shield.repo.query.idle_time",
+      summary("threat_shield.repo.query.idle_time",
         unit: {:native, :millisecond},
         description:
           "The time the connection spent waiting before being checked out for the query"
@@ -86,7 +86,7 @@ defmodule TreatShieldWeb.Telemetry do
     [
       # A module, function and arguments to be invoked periodically.
       # This function must call :telemetry.execute/3 and a metric must be added above.
-      # {TreatShieldWeb, :count_users, []}
+      # {ThreatShieldWeb, :count_users, []}
     ]
   end
 end

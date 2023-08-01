@@ -1,4 +1,4 @@
-defmodule TreatShieldWeb.ConnCase do
+defmodule ThreatShieldWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -11,7 +11,7 @@ defmodule TreatShieldWeb.ConnCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use TreatShieldWeb.ConnCase, async: true`, although
+  by setting `use ThreatShieldWeb.ConnCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -20,19 +20,19 @@ defmodule TreatShieldWeb.ConnCase do
   using do
     quote do
       # The default endpoint for testing
-      @endpoint TreatShieldWeb.Endpoint
+      @endpoint ThreatShieldWeb.Endpoint
 
-      use TreatShieldWeb, :verified_routes
+      use ThreatShieldWeb, :verified_routes
 
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
-      import TreatShieldWeb.ConnCase
+      import ThreatShieldWeb.ConnCase
     end
   end
 
   setup tags do
-    TreatShield.DataCase.setup_sandbox(tags)
+    ThreatShield.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

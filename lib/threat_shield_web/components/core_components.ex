@@ -1,4 +1,4 @@
-defmodule TreatShieldWeb.CoreComponents do
+defmodule ThreatShieldWeb.CoreComponents do
   @moduledoc """
   Provides core UI components.
 
@@ -17,7 +17,7 @@ defmodule TreatShieldWeb.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import TreatShieldWeb.Gettext
+  import ThreatShieldWeb.Gettext
 
   @doc """
   Renders a modal.
@@ -650,9 +650,9 @@ defmodule TreatShieldWeb.CoreComponents do
     # with our gettext backend as first argument. Translations are
     # available in the errors.po file (as we use the "errors" domain).
     if count = opts[:count] do
-      Gettext.dngettext(TreatShieldWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(ThreatShieldWeb.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(TreatShieldWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(ThreatShieldWeb.Gettext, "errors", msg, opts)
     end
   end
 

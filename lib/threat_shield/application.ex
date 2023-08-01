@@ -1,4 +1,4 @@
-defmodule TreatShield.Application do
+defmodule ThreatShield.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -9,22 +9,22 @@ defmodule TreatShield.Application do
   def start(_type, _args) do
     children = [
       # Start the Telemetry supervisor
-      TreatShieldWeb.Telemetry,
+      ThreatShieldWeb.Telemetry,
       # Start the Ecto repository
-      TreatShield.Repo,
+      ThreatShield.Repo,
       # Start the PubSub system
-      {Phoenix.PubSub, name: TreatShield.PubSub},
+      {Phoenix.PubSub, name: ThreatShield.PubSub},
       # Start Finch
-      {Finch, name: TreatShield.Finch},
+      {Finch, name: ThreatShield.Finch},
       # Start the Endpoint (http/https)
-      TreatShieldWeb.Endpoint
-      # Start a worker by calling: TreatShield.Worker.start_link(arg)
-      # {TreatShield.Worker, arg}
+      ThreatShieldWeb.Endpoint
+      # Start a worker by calling: ThreatShield.Worker.start_link(arg)
+      # {ThreatShield.Worker, arg}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: TreatShield.Supervisor]
+    opts = [strategy: :one_for_one, name: ThreatShield.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
@@ -32,7 +32,7 @@ defmodule TreatShield.Application do
   # whenever the application is updated.
   @impl true
   def config_change(changed, _new, removed) do
-    TreatShieldWeb.Endpoint.config_change(changed, removed)
+    ThreatShieldWeb.Endpoint.config_change(changed, removed)
     :ok
   end
 end

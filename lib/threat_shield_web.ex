@@ -1,12 +1,12 @@
-defmodule TreatShieldWeb do
+defmodule ThreatShieldWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, components, channels, and so on.
 
   This can be used in your application as:
 
-      use TreatShieldWeb, :controller
-      use TreatShieldWeb, :html
+      use ThreatShieldWeb, :controller
+      use ThreatShieldWeb, :html
 
   The definitions below will be executed for every controller,
   component, etc, so keep them short and clean, focused
@@ -40,10 +40,10 @@ defmodule TreatShieldWeb do
     quote do
       use Phoenix.Controller,
         formats: [:html, :json],
-        layouts: [html: TreatShieldWeb.Layouts]
+        layouts: [html: ThreatShieldWeb.Layouts]
 
       import Plug.Conn
-      import TreatShieldWeb.Gettext
+      import ThreatShieldWeb.Gettext
 
       unquote(verified_routes())
     end
@@ -52,7 +52,7 @@ defmodule TreatShieldWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {TreatShieldWeb.Layouts, :app}
+        layout: {ThreatShieldWeb.Layouts, :app}
 
       unquote(html_helpers())
     end
@@ -84,8 +84,8 @@ defmodule TreatShieldWeb do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
-      import TreatShieldWeb.CoreComponents
-      import TreatShieldWeb.Gettext
+      import ThreatShieldWeb.CoreComponents
+      import ThreatShieldWeb.Gettext
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
@@ -98,9 +98,9 @@ defmodule TreatShieldWeb do
   def verified_routes do
     quote do
       use Phoenix.VerifiedRoutes,
-        endpoint: TreatShieldWeb.Endpoint,
-        router: TreatShieldWeb.Router,
-        statics: TreatShieldWeb.static_paths()
+        endpoint: ThreatShieldWeb.Endpoint,
+        router: ThreatShieldWeb.Router,
+        statics: ThreatShieldWeb.static_paths()
     end
   end
 

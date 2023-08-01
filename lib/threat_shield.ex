@@ -1,6 +1,6 @@
-defmodule TreatShield do
+defmodule ThreatShield do
   @moduledoc """
-  TreatShield keeps the contexts that define your domain
+  ThreatShield keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless

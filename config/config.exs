@@ -19,17 +19,17 @@ if File.exists?(dotenv_path) do
   end)
 end
 
-config :treat_shield,
-  ecto_repos: [TreatShield.Repo]
+config :threat_shield,
+  ecto_repos: [ThreatShield.Repo]
 
 # Configures the endpoint
-config :treat_shield, TreatShieldWeb.Endpoint,
+config :threat_shield, ThreatShieldWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [
-    formats: [html: TreatShieldWeb.ErrorHTML, json: TreatShieldWeb.ErrorJSON],
+    formats: [html: ThreatShieldWeb.ErrorHTML, json: ThreatShieldWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: TreatShield.PubSub,
+  pubsub_server: ThreatShield.PubSub,
   live_view: [signing_salt: "TOOUQx8Y"]
 
 # Configures the mailer
@@ -39,7 +39,7 @@ config :treat_shield, TreatShieldWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :treat_shield, TreatShield.Mailer, adapter: Swoosh.Adapters.Local
+config :threat_shield, ThreatShield.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,

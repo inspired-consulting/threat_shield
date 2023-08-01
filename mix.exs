@@ -1,9 +1,9 @@
-defmodule TreatShield.MixProject do
+defmodule ThreatShield.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :treat_shield,
+      app: :threat_shield,
       version: "0.1.0",
       elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -18,7 +18,7 @@ defmodule TreatShield.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {TreatShield.Application, []},
+      mod: {ThreatShield.Application, []},
       extra_applications: [:dotenv, :logger, :runtime_tools]
     ]
   end
