@@ -41,12 +41,6 @@ The Threat Shield application requires the environment variables that are define
 Build and start the Docker image:
 
 ```bash
-docker compose --build
-```
-
-or, if you have already built the Docker image, run the following command:
-
-```bash
 docker compose up
 ```
 

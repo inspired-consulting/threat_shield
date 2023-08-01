@@ -19,17 +19,18 @@ if File.exists?(dotenv_path) do
   end)
 end
 
-config :threat_shield,
-  adapter: Ecto.Adapters.Postgres,
-  database: System.get_env("POSTGRES_DB"),
-  ecto_repos: [ThreatShield.Repo]
+config :treat_shield,
+  ecto_repos: [TreatShield.Repo]
 
 # Configures the endpoint
-config :threat_shield, ThreatShieldWeb.Endpoint,
+config :treat_shield, TreatShieldWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: ThreatShieldWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: ThreatShield.PubSub,
-  live_view: [signing_salt: "/PYPjCgJ"]
+  render_errors: [
+    formats: [html: TreatShieldWeb.ErrorHTML, json: TreatShieldWeb.ErrorJSON],
+    layout: false
+  ],
+  pubsub_server: TreatShield.PubSub,
+  live_view: [signing_salt: "TOOUQx8Y"]
 
 # Configures the mailer
 #
@@ -38,14 +39,11 @@ config :threat_shield, ThreatShieldWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :threat_shield, ThreatShield.Mailer, adapter: Swoosh.Adapters.Local
-
-# Swoosh API client is needed for adapters other than SMTP.
-config :swoosh, :api_client, false
+config :treat_shield, TreatShield.Mailer, adapter: Swoosh.Adapters.Local
 
 # Configure esbuild (the version is required)
 config :esbuild,
-  version: "0.14.29",
+  version: "0.17.11",
   default: [
     args:
       ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
@@ -53,17 +51,26 @@ config :esbuild,
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]
 
+# Configure tailwind (the version is required)
+config :tailwind,
+  version: "3.3.2",
+  default: [
+    args: ~w(
+      --config=tailwind.config.js
+      --input=css/app.css
+      --output=../priv/static/assets/app.css
+    ),
+    cd: Path.expand("../assets", __DIR__)
+  ]
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
-
-# Enable live reloading of code
-config :phoenix, :live_reload, pattern: "**/*.ex"
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env()}.exs"
+import_config "#{config_env()}.exs"
