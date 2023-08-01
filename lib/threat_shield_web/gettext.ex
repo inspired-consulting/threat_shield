@@ -1,11 +1,11 @@
-defmodule TreatShieldWeb.Gettext do
+defmodule ThreatShieldWeb.Gettext do
   @moduledoc """
   A module providing Internationalization with a gettext-based API.
 
   By using [Gettext](https://hexdocs.pm/gettext),
   your module gains a set of macros for translations, for example:
 
-      import TreatShieldWeb.Gettext
+      import ThreatShieldWeb.Gettext
 
       # Simple translation
       gettext("Here is the string to translate")
@@ -20,5 +20,5 @@ defmodule TreatShieldWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :treat_shield
+  use Gettext, otp_app: :threat_shield
 end

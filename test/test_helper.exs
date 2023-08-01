@@ -1,2 +1,2 @@
 ExUnit.start()
-Ecto.Adapters.SQL.Sandbox.mode(TreatShield.Repo, :manual)
+Ecto.Adapters.SQL.Sandbox.mode(ThreatShield.Repo, :manual)
