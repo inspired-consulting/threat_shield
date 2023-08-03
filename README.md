@@ -41,7 +41,7 @@ The Threat Shield application requires the environment variables that are define
 Build and start the Docker image:
 
 ```bash
-docker compose up
+docker compose up --build
 ```
 
 Navigate to [localhost:4000](http://localhost:4000) in your browser, you're set to go.
