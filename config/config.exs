@@ -13,6 +13,7 @@ dotenv_path = Path.expand("../.env", __DIR__)
 if File.exists?(dotenv_path) do
   File.read!(dotenv_path)
   |> String.split("\n")
+  |> Enum.filter(&String.contains?(&1, "="))
   |> Enum.each(fn line ->
     [key, value] = String.trim(line) |> String.split("=", parts: 2)
     System.put_env(key, value)
