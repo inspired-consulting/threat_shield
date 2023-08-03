@@ -14,11 +14,16 @@ RUN mix local.hex --force && mix local.rebar --force
 # Copy the application source code into the container
 COPY . /app/
 
-# Install dependencies and compile the application
-RUN mix deps.get && mix deps.compile && mix compile
+# Copy the entrypoint script into the container and make it executable
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # Expose port 4000 from the container to the host:
 EXPOSE 4000
 
-# run the phoenix server with inotify-tools:
-CMD ["mix", "phx.server"]
+# Fetch dependencies and compile the application
+RUN mix deps.get && mix deps.compile
+
+# Set the default command to run when starting the container
+CMD ["/app/entrypoint.sh"]
+
