@@ -39,4 +39,6 @@ jobs:
           platforms: ${{ matrix.platform }}
           pull: true
           push: true
-          tags: ghcr.io/${{ github.repository }}-app:${{ github.sha }}
+          tags: |
+            ghcr.io/${{ github.repository }}-app:${{ github.sha }}
+            ghcr.io/${{ github.repository }}-app:latest
