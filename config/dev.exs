@@ -2,14 +2,13 @@ import Config
 
 # Configure your database
 config :threat_shield, ThreatShield.Repo,
-username: System.get_env("POSTGRES_USER"),
-  password: System.get_env("POSTGRES_PASSWORD"),
-  hostname: System.get_env("POSTGRES_HOST"),
-  database: System.get_env("POSTGRES_DB"),
+  username: System.get_env("POSTGRES_USER", "threat_shield"),
+  password: System.get_env("POSTGRES_PASSWORD", "secret"),
+  hostname: System.get_env("POSTGRES_HOST", "localhost"),
+  database: System.get_env("POSTGRES_DB", "threat_shield"),
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
-
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
