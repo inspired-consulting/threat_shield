@@ -46,7 +46,7 @@ docker compose up --build
 
 Navigate to [localhost:4000](http://localhost:4000) in your browser, you're set to go.
 
-### Local development setup without docker
+## Local development setup with CLI tools
 
 ### Prerequisites
 
@@ -64,10 +64,10 @@ You also need to setup a PostgreSQL database. For local development, you can use
 docker run -e POSTGRES_USER=threat_shield -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=threat_shield -p 5432:5432 --name threat-shield-db -d postgres:14
 ```
 
-For local testing a seperate DB is necessary. You can create this besides the dev database in the same docker instance:
+For local testing a separate DB is necessary. You can create this besides the dev database in the same docker instance:
 
 ```bash
-docker exec -it threat-shield-db psql -h localhost -U glt -c "CREATE DATABASE threat_shield_test;"
+docker exec -it threat-shield-db psql -h localhost -U threat_shield -c "CREATE DATABASE threat_shield_test;"
 ```
 
 ### Configuration
