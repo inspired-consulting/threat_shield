@@ -2,7 +2,7 @@
 
 ## Safeguarding Your Digital Realm
 
-ThreatShield is a ChatGPT-powered web application built with Elixir and Phoenix Framework designed to perform threat analysis and threat modeling.
+ThreatShield is an AI-powered web application built with Elixir and Phoenix Framework designed to perform threat analysis and threat modeling.
 
 In short, ThreatShield is your Intelligent Threat Analysis Companion.
 
@@ -13,6 +13,10 @@ In short, ThreatShield is your Intelligent Threat Analysis Companion.
   - [Installation](#installation)
   - [Configuration](#configuration)
 - [Usage](#usage)
+  - [Running the application](#running-the-application)
+  - [Stopping the application](#stopping-the-application)
+  - [Access the app container](#access-the-app-container)
+  - [Access the database container](#access-the-database-container)
 
 ## Getting Started
 
@@ -38,10 +42,36 @@ The Threat Shield application requires the environment variables that are define
 
 ## Usage
 
-Build and start the Docker image:
+### Running the application
+
+Build and start the Docker image via docker compose:
 
 ```bash
 docker compose up --build
 ```
 
 Navigate to [localhost:4000](http://localhost:4000) in your browser, you're set to go.
+
+### Stopping the application
+
+Run the following command in your terminal to stop the Docker container via docker compose:
+
+```bash
+docker compose down
+```
+
+### Access the app container
+
+Run the following command in your terminal to access the app container:
+
+```bash
+docker exec -it ThreatShield-server /bin/sh
+```
+
+### Access the database container
+
+Run the following command in your terminal to access the database container:
+
+```bash
+docker exec -it ThreatShield-db /bin/sh
+```
