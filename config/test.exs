@@ -9,9 +9,9 @@ config :bcrypt_elixir, :log_rounds, 1
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :threat_shield, ThreatShield.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
+  username: System.get_env("POSTGRES_USER", "threat_shield"),
+  password: System.get_env("POSTGRES_PASSWORD", "secret"),
+  hostname: System.get_env("POSTGRES_HOST", "localhost"),
   database: "threat_shield_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
