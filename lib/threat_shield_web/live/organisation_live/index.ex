@@ -28,9 +28,10 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
   end
 
   defp apply_action(socket, :new, _params) do
+    %{current_user: current_user} = socket.assigns
     socket
     |> assign(:page_title, "New Organisation")
-    |> assign(:organisation, %Organisation{})
+    |> assign(:organisation, %Organisation{users: [current_user]})
   end
 
   defp apply_action(socket, :index, _params) do

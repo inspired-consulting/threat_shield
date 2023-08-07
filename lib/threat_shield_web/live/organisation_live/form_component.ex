@@ -68,7 +68,9 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   end
 
   defp save_organisation(socket, :new, organisation_params) do
-    case Organsations.create_organisation(organisation_params) do
+    %{current_user: current_user} = socket.assigns
+
+    case Organsations.create_organisation(organisation_params, current_user) do
       {:ok, organisation} ->
         notify_parent({:saved, organisation})
 

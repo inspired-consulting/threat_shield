@@ -70,8 +70,8 @@ defmodule ThreatShieldWeb.Router do
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
       live "/organisations", OrganisationLive.Index, :index
-      live "/organisations/:id", OrganisationLive.Show, :show
       live "/organisations/new", OrganisationLive.Index, :new
+      live "/organisations/:id", OrganisationLive.Show, :show
       live "/organisations/:id/edit", OrganisationLive.Index, :edit
     end
   end

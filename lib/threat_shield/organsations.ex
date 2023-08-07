@@ -63,9 +63,10 @@ defmodule ThreatShield.Organsations do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_organisation(attrs \\ %{}) do
+  def create_organisation(attrs \\ %{}, %User{} = current_user) do
     %Organisation{}
     |> Organisation.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:users, [current_user])
     |> Repo.insert()
   end
 
