@@ -17,8 +17,15 @@ defmodule ThreatShield.Organsations do
       [%Organisation{}, ...]
 
   """
-  def list_organisations do
-    Repo.all(Organisation)
+  def list_organisations(user) do
+    query =
+      from m in "memberships",
+        join: o in "organisations",
+        on: o.id == m.organisation_id,
+        where: m.user_id == ^user.id,
+        select: %Organisation{id: o.id, name: o.name}
+
+    Repo.all(query)
   end
 
   @doc """

@@ -6,7 +6,12 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :organisations, Organsations.list_organisations())}
+    {:ok,
+     stream(
+       socket,
+       :organisations,
+       Organsations.list_organisations(socket.assigns.current_user) |> IO.inspect()
+     )}
   end
 
   @impl true
@@ -33,7 +38,10 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.OrganisationLive.FormComponent, {:saved, organisation}}, socket) do
+  def handle_info(
+        {ThreatShieldWeb.OrganisationLive.FormComponent, {:saved, organisation}},
+        socket
+      ) do
     {:noreply, stream_insert(socket, :organisations, organisation)}
   end
 
