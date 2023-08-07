@@ -5,6 +5,8 @@ defmodule ThreatShield.Organsations.Organisation do
   schema "organisations" do
     field :name, :string
 
+    many_to_many :users, ThreatShield.Accounts.User, join_through: "memberships"
+
     timestamps()
   end
 

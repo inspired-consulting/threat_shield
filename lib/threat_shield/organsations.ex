@@ -7,6 +7,7 @@ defmodule ThreatShield.Organsations do
   alias ThreatShield.Repo
 
   alias ThreatShield.Organsations.Organisation
+  alias ThreatShield.Accounts.User
 
   @doc """
   Returns the list of organisations.
@@ -18,14 +19,11 @@ defmodule ThreatShield.Organsations do
 
   """
   def list_organisations(user) do
-    query =
-      from m in "memberships",
-        join: o in "organisations",
-        on: o.id == m.organisation_id,
-        where: m.user_id == ^user.id,
-        select: %Organisation{id: o.id, name: o.name}
+    full_user =
+      Repo.get(User, user.id)
+      |> Repo.preload(:organisations)
 
-    Repo.all(query)
+    full_user.organisations
   end
 
   @doc """
