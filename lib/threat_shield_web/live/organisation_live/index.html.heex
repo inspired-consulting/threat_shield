@@ -1,0 +1,41 @@
+<.header>
+  Listing Organisations
+  <:actions>
+    <.link patch={~p"/organisations/new"}>
+      <.button>New Organisation</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="organisations"
+  rows={@streams.organisations}
+  row_click={fn {_id, organisation} -> JS.navigate(~p"/organisations/#{organisation}") end}
+>
+  <:col :let={{_id, organisation}} label="Name"><%= organisation.name %></:col>
+  <:action :let={{_id, organisation}}>
+    <div class="sr-only">
+      <.link navigate={~p"/organisations/#{organisation}"}>Show</.link>
+    </div>
+    <.link patch={~p"/organisations/#{organisation}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, organisation}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: organisation.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="organisation-modal" show on_cancel={JS.patch(~p"/organisations")}>
+  <.live_component
+    module={ThreatShieldWeb.OrganisationLive.FormComponent}
+    id={@organisation.id || :new}
+    title={@page_title}
+    action={@live_action}
+    organisation={@organisation}
+    patch={~p"/organisations"}
+  />
+</.modal>

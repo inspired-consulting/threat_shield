@@ -68,6 +68,11 @@ defmodule ThreatShieldWeb.Router do
       on_mount: [{ThreatShieldWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      live "/organisations", OrganisationLive.Index, :index
+      live "/organisations/:id", OrganisationLive.Show, :show
+      live "/organisations/new", OrganisationLive.Index, :new
+      live "/organisations/:id/edit", OrganisationLive.Index, :edit
     end
   end
 
