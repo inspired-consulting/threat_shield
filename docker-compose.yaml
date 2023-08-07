@@ -41,8 +41,7 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      db:
-        condition: service_healthy
+      - web
     command: ["mix", "ecto.migrate"]
     env_file:
       - .env

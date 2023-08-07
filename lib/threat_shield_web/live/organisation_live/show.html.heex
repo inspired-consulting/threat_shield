@@ -1,0 +1,26 @@
+<.header>
+  Organisation <%= @organisation.id %>
+  <:subtitle>This is a organisation record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/organisations/#{@organisation}/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit organisation</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @organisation.name %></:item>
+</.list>
+
+<.back navigate={~p"/organisations"}>Back to organisations</.back>
+
+<.modal :if={@live_action == :edit} id="organisation-modal" show on_cancel={JS.patch(~p"/organisations/#{@organisation}")}>
+  <.live_component
+    module={ThreatShieldWeb.OrganisationLive.FormComponent}
+    id={@organisation.id}
+    title={@page_title}
+    action={@live_action}
+    organisation={@organisation}
+    patch={~p"/organisations/#{@organisation}"}
+  />
+</.modal>

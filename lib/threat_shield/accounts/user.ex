@@ -8,6 +8,9 @@ defmodule ThreatShield.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
 
+    many_to_many :organisations, ThreatShield.Organsations.Organisation,
+      join_through: "memberships"
+
     timestamps()
   end
 
