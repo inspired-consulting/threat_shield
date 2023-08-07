@@ -82,10 +82,19 @@ defmodule ThreatShield.Organsations do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_organisation(%Organisation{} = organisation, attrs) do
-    organisation
-    |> Organisation.changeset(attrs)
-    |> Repo.update()
+  def update_organisation(%Organisation{} = organisation, %User{} = user, attrs) do
+    changeset =
+      organisation
+      |> Organisation.changeset(attrs)
+
+    query =
+      from m in Membership,
+        where: m.organisation_id == ^organisation.id and m.user_id == ^user.id
+
+    Repo.transaction(fn ->
+      Repo.one!(query)
+      Repo.update!(changeset)
+    end)
   end
 
   @doc """

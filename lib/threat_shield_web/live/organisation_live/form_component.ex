@@ -53,7 +53,13 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   end
 
   defp save_organisation(socket, :edit, organisation_params) do
-    case Organsations.update_organisation(socket.assigns.organisation, organisation_params) do
+    %{current_user: current_user} = socket.assigns
+
+    case Organsations.update_organisation(
+           socket.assigns.organisation,
+           current_user,
+           organisation_params
+         ) do
       {:ok, organisation} ->
         notify_parent({:saved, organisation})
 
