@@ -7,6 +7,7 @@ defmodule ThreatShield.Organsations do
   alias ThreatShield.Repo
 
   alias ThreatShield.Organsations.Organisation
+  alias ThreatShield.Organsations.Membership
   alias ThreatShield.Accounts.User
 
   @doc """
@@ -24,6 +25,14 @@ defmodule ThreatShield.Organsations do
       |> Repo.preload(:organisations)
 
     full_user.organisations
+  end
+
+  def get_organisation_for_user!(id, user) do
+    membership =
+      Repo.get_by!(Membership, user_id: user.id, organisation_id: id)
+      |> Repo.preload(:organisation)
+
+    membership.organisation
   end
 
   @doc """

@@ -20,9 +20,11 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
+    user = socket.assigns.current_user
+
     socket
     |> assign(:page_title, "Edit Organisation")
-    |> assign(:organisation, Organsations.get_organisation!(id))
+    |> assign(:organisation, Organsations.get_organisation_for_user!(id, user))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -47,7 +49,8 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    organisation = Organsations.get_organisation!(id)
+    user = socket.assigns.user
+    organisation = Organsations.get_organisation_for_user!(id, user)
     {:ok, _} = Organsations.delete_organisation(organisation)
 
     {:noreply, stream_delete(socket, :organisations, organisation)}
