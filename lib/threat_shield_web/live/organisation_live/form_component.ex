@@ -24,11 +24,13 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:industry]} type="text" label="Industry" />
         <.input field={@form[:legal_form]} type="text" label="Legal Form" />
-        <select name="location" id="location">
-          <%= for {option_label, option_value} <- @locations_options do %>
-            <option value={option_value}><%= option_label %></option>
-          <% end %>
-        </select>
+
+        <.input
+          field={@form[:location]}
+          type="select"
+          label="Choose your location"
+          options={@locations_options}
+        />
 
         <.input field={@form[:type_of_business]} type="text" label="Type of Business" />
         <.input field={@form[:size]} type="text" label="Size" />
