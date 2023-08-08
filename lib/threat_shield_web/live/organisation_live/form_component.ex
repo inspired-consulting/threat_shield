@@ -2,8 +2,7 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   use ThreatShieldWeb, :live_component
   import Phoenix.LiveView
 
-  alias ThreatShield.Organsations
-  alias ThreatShield.Const.Locations
+  alias ThreatShield.Organisations
 
   @impl true
   def render(assigns) do
@@ -45,7 +44,7 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
 
   @impl true
   def update(%{organisation: organisation} = assigns, socket) do
-    changeset = Organsations.change_organisation(organisation)
+    changeset = Organisations.change_organisation(organisation)
 
     {:ok,
      socket
@@ -57,7 +56,7 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   def handle_event("validate", %{"organisation" => organisation_params}, socket) do
     changeset =
       socket.assigns.organisation
-      |> Organsations.change_organisation(organisation_params)
+      |> Organisations.change_organisation(organisation_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign_form(socket, changeset)}
@@ -70,7 +69,7 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   defp save_organisation(socket, :edit, organisation_params) do
     %{current_user: current_user} = socket.assigns
 
-    case Organsations.update_organisation(
+    case Organisations.update_organisation(
            socket.assigns.organisation,
            current_user,
            organisation_params
@@ -91,7 +90,7 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   defp save_organisation(socket, :new, organisation_params) do
     %{current_user: current_user} = socket.assigns
 
-    case Organsations.create_organisation(organisation_params, current_user) do
+    case Organisations.create_organisation(organisation_params, current_user) do
       {:ok, organisation} ->
         notify_parent({:saved, organisation})
 

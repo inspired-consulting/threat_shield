@@ -1,4 +1,4 @@
-defmodule ThreatShield.Organsations.Organisation do
+defmodule ThreatShield.Organisations.Organisation do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -12,6 +12,7 @@ defmodule ThreatShield.Organsations.Organisation do
     field :financial_information, :string
 
     many_to_many :users, ThreatShield.Accounts.User, join_through: "memberships"
+    has_many :systems, ThreatShield.Systems.System
 
     timestamps()
   end

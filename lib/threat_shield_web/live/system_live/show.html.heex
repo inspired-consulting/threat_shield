@@ -1,0 +1,38 @@
+<.header>
+  System <%= @system.id %>
+  <:subtitle>This is a system record from your database.</:subtitle>
+  <:actions>
+    <.link
+      patch={~p"/organisations/#{@organisation.id}/systems/#{@system}/show/edit"}
+      phx-click={JS.push_focus()}
+    >
+      <.button>Edit system</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name"><%= @system.name %></:item>
+  <:item title="Description"><%= @system.description %></:item>
+  <:item title="Attributes"><%= @system.attributes %></:item>
+</.list>
+
+<.back navigate={~p"/organisations/#{@organisation.id}/systems"}>Back to systems</.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="system-modal"
+  show
+  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/systems/#{@system}")}
+>
+  <.live_component
+    module={ThreatShieldWeb.SystemLive.FormComponent}
+    id={@system.id}
+    title={@page_title}
+    action={@live_action}
+    system={@system}
+    organisation={@organisation}
+    current_user={@current_user}
+    patch={~p"/organisations/#{@organisation.id}/systems/#{@system}"}
+  />
+</.modal>

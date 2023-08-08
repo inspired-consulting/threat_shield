@@ -1,13 +1,13 @@
-defmodule ThreatShield.Organsations do
+defmodule ThreatShield.Organisations do
   @moduledoc """
-  The Organsations context.
+  The Organisations context.
   """
 
   import Ecto.Query, warn: false
   alias ThreatShield.Repo
 
-  alias ThreatShield.Organsations.Organisation
-  alias ThreatShield.Organsations.Membership
+  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Organisations.Membership
   alias ThreatShield.Accounts.User
 
   @doc """
@@ -87,12 +87,8 @@ defmodule ThreatShield.Organsations do
       organisation
       |> Organisation.changeset(attrs)
 
-    query =
-      from m in Membership,
-        where: m.organisation_id == ^organisation.id and m.user_id == ^user.id
-
     Repo.transaction(fn ->
-      Repo.one!(query)
+      Repo.one!(is_member_query(user, organisation))
       Repo.update!(changeset)
     end)
   end
@@ -124,5 +120,10 @@ defmodule ThreatShield.Organsations do
   """
   def change_organisation(%Organisation{} = organisation, attrs \\ %{}) do
     Organisation.changeset(organisation, attrs)
+  end
+
+  def is_member_query(user, organisation) do
+    from m in Membership,
+      where: m.organisation_id == ^organisation.id and m.user_id == ^user.id
   end
 end

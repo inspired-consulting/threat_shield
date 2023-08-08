@@ -1,7 +1,7 @@
 defmodule ThreatShieldWeb.OrganisationLive.Show do
   use ThreatShieldWeb, :live_view
 
-  alias ThreatShield.Organsations
+  alias ThreatShield.Organisations
 
   @impl true
   def mount(_params, _session, socket) do
@@ -9,11 +9,11 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   end
 
   @impl true
-  def handle_params(%{"id" => id}, _, socket) do
+  def handle_params(%{"org_id" => id}, _, socket) do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:organisation, Organsations.get_organisation!(id))}
+     |> assign(:organisation, Organisations.get_organisation!(id))}
   end
 
   defp page_title(:show), do: "Show Organisation"

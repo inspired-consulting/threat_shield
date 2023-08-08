@@ -2,7 +2,7 @@ defmodule ThreatShieldWeb.OrganisationLiveTest do
   use ThreatShieldWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import ThreatShield.OrgansationsFixtures
+  import ThreatShield.OrganisationsFixtures
 
   @create_attrs %{name: "some name"}
   @update_attrs %{name: "some updated name"}
@@ -49,7 +49,9 @@ defmodule ThreatShieldWeb.OrganisationLiveTest do
     test "updates organisation in listing", %{conn: conn, organisation: organisation} do
       {:ok, index_live, _html} = live(conn, ~p"/organisations")
 
-      assert index_live |> element("#organisations-#{organisation.id} a", "Edit") |> render_click() =~
+      assert index_live
+             |> element("#organisations-#{organisation.id} a", "Edit")
+             |> render_click() =~
                "Edit Organisation"
 
       assert_patch(index_live, ~p"/organisations/#{organisation}/edit")
@@ -72,7 +74,10 @@ defmodule ThreatShieldWeb.OrganisationLiveTest do
     test "deletes organisation in listing", %{conn: conn, organisation: organisation} do
       {:ok, index_live, _html} = live(conn, ~p"/organisations")
 
-      assert index_live |> element("#organisations-#{organisation.id} a", "Delete") |> render_click()
+      assert index_live
+             |> element("#organisations-#{organisation.id} a", "Delete")
+             |> render_click()
+
       refute has_element?(index_live, "#organisations-#{organisation.id}")
     end
   end
