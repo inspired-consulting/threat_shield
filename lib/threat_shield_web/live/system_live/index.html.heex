@@ -1,0 +1,43 @@
+<.header>
+  Listing Systems
+  <:actions>
+    <.link patch={~p"/systems/new"}>
+      <.button>New System</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="systems"
+  rows={@streams.systems}
+  row_click={fn {_id, system} -> JS.navigate(~p"/systems/#{system}") end}
+>
+  <:col :let={{_id, system}} label="Name"><%= system.name %></:col>
+  <:col :let={{_id, system}} label="Description"><%= system.description %></:col>
+  <:col :let={{_id, system}} label="Attributes"><%= system.attributes %></:col>
+  <:action :let={{_id, system}}>
+    <div class="sr-only">
+      <.link navigate={~p"/systems/#{system}"}>Show</.link>
+    </div>
+    <.link patch={~p"/systems/#{system}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, system}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: system.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="system-modal" show on_cancel={JS.patch(~p"/systems")}>
+  <.live_component
+    module={ThreatShieldWeb.SystemLive.FormComponent}
+    id={@system.id || :new}
+    title={@page_title}
+    action={@live_action}
+    system={@system}
+    patch={~p"/systems"}
+  />
+</.modal>

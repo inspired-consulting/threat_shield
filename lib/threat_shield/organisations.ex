@@ -1,13 +1,13 @@
-defmodule ThreatShield.Organsations do
+defmodule ThreatShield.Organisations do
   @moduledoc """
-  The Organsations context.
+  The Organisations context.
   """
 
   import Ecto.Query, warn: false
   alias ThreatShield.Repo
 
-  alias ThreatShield.Organsations.Organisation
-  alias ThreatShield.Organsations.Membership
+  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Organisations.Membership
   alias ThreatShield.Accounts.User
 
   @doc """

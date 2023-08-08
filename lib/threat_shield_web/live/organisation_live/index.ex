@@ -1,8 +1,8 @@
 defmodule ThreatShieldWeb.OrganisationLive.Index do
   use ThreatShieldWeb, :live_view
 
-  alias ThreatShield.Organsations
-  alias ThreatShield.Organsations.Organisation
+  alias ThreatShield.Organisations
+  alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Const.Locations
 
   @impl true
@@ -22,7 +22,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
     stream(
       socket,
       :organisations,
-      Organsations.list_organisations(socket.assigns.current_user)
+      Organisations.list_organisations(socket.assigns.current_user)
     )
   end
 
@@ -31,12 +31,12 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
+  defp apply_action(socket, :edit, %{"org_id" => id}) do
     user = socket.assigns.current_user
 
     socket
     |> assign(:page_title, "Edit Organisation")
-    |> assign(:organisation, Organsations.get_organisation_for_user!(id, user))
+    |> assign(:organisation, Organisations.get_organisation_for_user!(id, user))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -62,10 +62,10 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
+  def handle_event("delete", %{"org_id" => id}, socket) do
     user = socket.assigns.user
-    organisation = Organsations.get_organisation_for_user!(id, user)
-    {:ok, _} = Organsations.delete_organisation(organisation)
+    organisation = Organisations.get_organisation_for_user!(id, user)
+    {:ok, _} = Organisations.delete_organisation(organisation)
 
     {:noreply, stream_delete(socket, :organisations, organisation)}
   end

@@ -1,4 +1,4 @@
-defmodule ThreatShield.Organsations.Organisation do
+defmodule ThreatShield.Organisations.Organisation do
   use Ecto.Schema
   import Ecto.Changeset
 

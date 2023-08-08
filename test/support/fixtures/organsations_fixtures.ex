@@ -1,7 +1,7 @@
-defmodule ThreatShield.OrgansationsFixtures do
+defmodule ThreatShield.OrganisationsFixtures do
   @moduledoc """
   This module defines test helpers for creating
-  entities via the `ThreatShield.Organsations` context.
+  entities via the `ThreatShield.Organisations` context.
   """
 
   @doc """
@@ -13,7 +13,7 @@ defmodule ThreatShield.OrgansationsFixtures do
       |> Enum.into(%{
         name: "some name"
       })
-      |> ThreatShield.Organsations.create_organisation()
+      |> ThreatShield.Organisations.create_organisation()
 
     organisation
   end
