@@ -22,7 +22,6 @@ defmodule ThreatShield.Systems do
   def list_systems_for_user_and_org(user, org_id) do
     Repo.get_by(Membership, user_id: user.id, organisation_id: org_id)
     |> Repo.preload(organisation: [:systems])
-    |> IO.inspect()
   end
 
   @doc """
