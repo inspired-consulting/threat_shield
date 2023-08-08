@@ -25,7 +25,7 @@
   </:action>
   <:action :let={{id, system}}>
     <.link
-      phx-click={JS.push("delete", value: %{id: system.id}) |> hide("##{id}")}
+      phx-click={JS.push("delete", value: %{sys_id: system.id}) |> hide("##{id}")}
       data-confirm="Are you sure?"
     >
       Delete
@@ -46,6 +46,7 @@
     action={@live_action}
     system={@system}
     organisation={@organisation}
+    current_user={@current_user}
     patch={~p"/organisations/#{@organisation.id}/systems"}
   />
 </.modal>

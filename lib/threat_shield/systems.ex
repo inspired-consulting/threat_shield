@@ -7,7 +7,7 @@ defmodule ThreatShield.Systems do
   alias ThreatShield.Repo
 
   alias ThreatShield.Systems.System
-  alias ThreatShield.Accounts.User
+  alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Membership
 
   @doc """
@@ -52,10 +52,16 @@ defmodule ThreatShield.Systems do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_system(attrs \\ %{}) do
-    %System{}
-    |> System.changeset(attrs)
-    |> Repo.insert()
+  def create_system(user, organisation, attrs \\ %{}) do
+    changeset =
+      %System{}
+      |> System.changeset(attrs)
+      |> Ecto.Changeset.put_assoc(:organisation, organisation)
+
+    Repo.transaction(fn ->
+      Repo.one!(Organisations.is_member_query(user, organisation))
+      Repo.insert!(changeset)
+    end)
   end
 
   @doc """
@@ -70,10 +76,15 @@ defmodule ThreatShield.Systems do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_system(%System{} = system, attrs) do
-    system
-    |> System.changeset(attrs)
-    |> Repo.update()
+  def update_system(user, organisation, %System{} = system, attrs) do
+    changeset =
+      system
+      |> System.changeset(attrs)
+
+    Repo.transaction(fn ->
+      Repo.one!(Organisations.is_member_query(user, organisation))
+      Repo.update!(changeset)
+    end)
   end
 
   @doc """
@@ -88,8 +99,11 @@ defmodule ThreatShield.Systems do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_system(%System{} = system) do
-    Repo.delete(system)
+  def delete_system(user, organisation, %System{} = system) do
+    Repo.transaction(fn ->
+      Repo.one!(Organisations.is_member_query(user, organisation))
+      Repo.delete(system)
+    end)
   end
 
   @doc """

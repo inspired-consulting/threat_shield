@@ -55,7 +55,10 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
   end
 
   defp save_system(socket, :edit, system_params) do
-    case Systems.update_system(socket.assigns.system, system_params) do
+    user = socket.assigns.current_user
+    organisation = socket.assigns.organisation
+
+    case Systems.update_system(user, organisation, socket.assigns.system, system_params) do
       {:ok, system} ->
         notify_parent({:saved, system})
 
@@ -70,7 +73,10 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
   end
 
   defp save_system(socket, :new, system_params) do
-    case Systems.create_system(system_params) do
+    user = socket.assigns.current_user
+    organisation = socket.assigns.organisation
+
+    case Systems.create_system(user, organisation, system_params) do
       {:ok, system} ->
         notify_parent({:saved, system})
 

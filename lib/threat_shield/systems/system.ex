@@ -15,6 +15,6 @@ defmodule ThreatShield.Systems.System do
   def changeset(system, attrs) do
     system
     |> cast(attrs, [:name, :description, :attributes])
-    |> validate_required([:name, :description, :attributes])
+    |> validate_required([:name, :description])
   end
 end

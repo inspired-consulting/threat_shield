@@ -4,7 +4,16 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   alias ThreatShield.Systems
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(%{"org_id" => org_id}, _session, socket) do
+    user = socket.assigns.current_user
+
+    membership = Systems.list_systems_for_user_and_org(user, org_id)
+    organisation = membership.organisation
+
+    socket =
+      socket
+      |> assign(:organisation, organisation)
+
     {:ok, socket}
   end
 

@@ -3,7 +3,6 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   import Phoenix.LiveView
 
   alias ThreatShield.Organisations
-  alias ThreatShield.Const.Locations
 
   @impl true
   def render(assigns) do

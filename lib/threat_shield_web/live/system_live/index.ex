@@ -50,8 +50,11 @@ defmodule ThreatShieldWeb.SystemLive.Index do
 
   @impl true
   def handle_event("delete", %{"sys_id" => id}, socket) do
+    user = socket.assigns.current_user
+    organisation = socket.assigns.organisation
+
     system = Systems.get_system!(id)
-    {:ok, _} = Systems.delete_system(system)
+    {:ok, _} = Systems.delete_system(user, organisation, system)
 
     {:noreply, stream_delete(socket, :systems, system)}
   end
