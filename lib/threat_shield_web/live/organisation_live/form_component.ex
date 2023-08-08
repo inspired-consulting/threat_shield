@@ -1,7 +1,9 @@
 defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   use ThreatShieldWeb, :live_component
+  import Phoenix.LiveView
 
   alias ThreatShield.Organsations
+  alias ThreatShield.Const.Locations
 
   @impl true
   def render(assigns) do
@@ -22,7 +24,12 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:industry]} type="text" label="Industry" />
         <.input field={@form[:legal_form]} type="text" label="Legal Form" />
-        <.input field={@form[:location]} type="text" label="Location/Region" />
+        <select name="location" id="location">
+          <%= for {option_label, option_value} <- @locations_options do %>
+            <option value={option_value}><%= option_label %></option>
+          <% end %>
+        </select>
+
         <.input field={@form[:type_of_business]} type="text" label="Type of Business" />
         <.input field={@form[:size]} type="text" label="Size" />
         <.input field={@form[:financial_information]} type="text" label="Financial Information" />
