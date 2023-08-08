@@ -1,7 +1,9 @@
 defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   use ThreatShieldWeb, :live_component
+  import Phoenix.LiveView
 
   alias ThreatShield.Organsations
+  alias ThreatShield.Const.Locations
 
   @impl true
   def render(assigns) do
@@ -20,6 +22,19 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Name" />
+        <.input field={@form[:industry]} type="text" label="Industry" />
+        <.input field={@form[:legal_form]} type="text" label="Legal Form" />
+
+        <.input
+          field={@form[:location]}
+          type="select"
+          label="Choose your location"
+          options={@locations_options}
+        />
+
+        <.input field={@form[:type_of_business]} type="text" label="Type of Business" />
+        <.input field={@form[:size]} type="text" label="Size" />
+        <.input field={@form[:financial_information]} type="text" label="Financial Information" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Organisation</.button>
         </:actions>

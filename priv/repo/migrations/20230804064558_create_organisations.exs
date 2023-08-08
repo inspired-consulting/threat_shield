@@ -4,6 +4,12 @@ defmodule ThreatShield.Repo.Migrations.CreateOrganisations do
   def change do
     create table(:organisations) do
       add(:name, :string, null: false)
+      add(:industry, :string)
+      add(:legal_form, :string)
+      add(:location, :string)
+      add(:type_of_business, :string)
+      add(:size, :integer)
+      add(:financial_information, :string)
 
       timestamps()
     end

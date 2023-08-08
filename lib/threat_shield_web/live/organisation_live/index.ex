@@ -3,15 +3,27 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
 
   alias ThreatShield.Organsations
   alias ThreatShield.Organsations.Organisation
+  alias ThreatShield.Const.Locations
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok,
-     stream(
-       socket,
-       :organisations,
-       Organsations.list_organisations(socket.assigns.current_user) |> IO.inspect()
-     )}
+    locations_options = Locations.list_locations()
+
+    socket =
+      socket
+      |> assign(locations_options: locations_options)
+      |> IO.inspect(label: "SOCKET", pretty: true)
+      |> stream_organisations()
+
+    {:ok, socket}
+  end
+
+  defp stream_organisations(socket) do
+    stream(
+      socket,
+      :organisations,
+      Organsations.list_organisations(socket.assigns.current_user)
+    )
   end
 
   @impl true
@@ -29,6 +41,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
 
   defp apply_action(socket, :new, _params) do
     %{current_user: current_user} = socket.assigns
+
     socket
     |> assign(:page_title, "New Organisation")
     |> assign(:organisation, %Organisation{users: [current_user]})
