@@ -7,6 +7,8 @@ defmodule ThreatShield.Systems do
   alias ThreatShield.Repo
 
   alias ThreatShield.Systems.System
+  alias ThreatShield.Accounts.User
+  alias ThreatShield.Organisations.Membership
 
   @doc """
   Returns the list of systems.
@@ -17,8 +19,10 @@ defmodule ThreatShield.Systems do
       [%System{}, ...]
 
   """
-  def list_systems do
-    Repo.all(System)
+  def list_systems_for_user_and_org(user, org_id) do
+    Repo.get_by(Membership, user_id: user.id, organisation_id: org_id)
+    |> Repo.preload(organisation: [:systems])
+    |> IO.inspect()
   end
 
   @doc """

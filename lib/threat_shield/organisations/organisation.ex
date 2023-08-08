@@ -12,6 +12,7 @@ defmodule ThreatShield.Organisations.Organisation do
     field :financial_information, :string
 
     many_to_many :users, ThreatShield.Accounts.User, join_through: "memberships"
+    has_many :systems, ThreatShield.Systems.System
 
     timestamps()
   end
