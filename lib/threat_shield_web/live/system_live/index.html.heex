@@ -21,6 +21,9 @@
     <div class="sr-only">
       <.link navigate={~p"/organisations/#{@organisation.id}/systems/#{system}"}>Show</.link>
     </div>
+    <.link navigate={~p"/organisations/#{@organisation.id}/systems/#{system}/suggestions"}>
+      Threats
+    </.link>
     <.link patch={~p"/organisations/#{@organisation.id}/systems/#{system}/edit"}>Edit</.link>
   </:action>
   <:action :let={{id, system}}>

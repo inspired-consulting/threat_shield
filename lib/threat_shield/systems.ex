@@ -6,9 +6,11 @@ defmodule ThreatShield.Systems do
   import Ecto.Query, warn: false
   alias ThreatShield.Repo
 
+  alias ThreatShield.Accounts.User
   alias ThreatShield.Systems.System
   alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Membership
+  alias ThreatShield.Organisations.Organisation
 
   @doc """
   Returns the list of systems.
@@ -39,6 +41,19 @@ defmodule ThreatShield.Systems do
 
   """
   def get_system!(id), do: Repo.get!(System, id)
+
+  def get_system_for_user_and_org(%User{} = user, org_id, sys_id) do
+    query =
+      from m in Membership,
+        where: m.user_id == ^user.id and m.organisation_id == ^org_id,
+        join: o in assoc(m, :organisation),
+        join: s in assoc(o, :systems),
+        where: s.id == ^sys_id,
+        select: s
+
+    Repo.one!(query)
+    |> Repo.preload(:organisation)
+  end
 
   @doc """
   Creates a system.
