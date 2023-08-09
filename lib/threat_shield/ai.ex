@@ -1,11 +1,20 @@
 defmodule ThreatShield.AI do
-  def suggest_initial_threats() do
-    prompt = "Give me a threat analysis for my vacation in Paris."
+  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Systems.System
 
-    case OpenAI.completions(
-           model: "davinci",
-           prompt: prompt,
-           max_tokens: 50
+  def suggest_initial_threats(%Organisation{} = organisation, %System{} = system) do
+    messages = [
+      %{
+        role: "system",
+        content:
+          "You are a threat modelling assistant. Give results as a JSON list of strings. The results should be potential threats."
+      },
+      %{role: "user", content: "I have a Postgres database. Give a list of five threats."}
+    ]
+
+    case OpenAI.chat_completion(
+           model: "gpt-3.5-turbo",
+           messages: messages
          ) do
       {:ok, response} ->
         {:ok, response}
