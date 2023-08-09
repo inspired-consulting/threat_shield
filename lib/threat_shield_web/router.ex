@@ -21,6 +21,10 @@ defmodule ThreatShieldWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    get "/organisations/:org_id/systems/:sys_id/suggestions",
+        ThreatSuggestionsController,
+        :suggestions
   end
 
   # Other scopes may use custom stacks.
