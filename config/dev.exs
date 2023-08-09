@@ -29,6 +29,19 @@ config :threat_shield, ThreatShieldWeb.Endpoint,
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
   ]
 
+# OPENAI
+config :openai,
+  # find it at https://platform.openai.com/account/api-keys
+  api_key: System.get_env("OPENAI_API_KEY"),
+  # find it at https://platform.openai.com/account/org-settings under "Organization ID"
+  organization_key: System.get_env("OPENAI_ORGANIZATION_KEY"),
+  # optional, passed to [HTTPoison.Request](https://hexdocs.pm/httpoison/HTTPoison.Request.html) options
+  http_options: [recv_timeout: 30_000]
+
+# optional, useful if you want to do local integration tests using Bypass or similar
+# (https://github.com/PSPDFKit-labs/bypass), do not use it for production code,
+# but only in your test config!
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed
