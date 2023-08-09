@@ -7,9 +7,18 @@ defmodule ThreatShield.AI do
       %{
         role: "system",
         content:
-          "You are a threat modelling assistant. Give results as a JSON list of strings. The results should be potential threats."
+          "You are a threat modelling assistant. Your response is valid JSON. The results should be a list of five potential threats. Here is an example:
+
+          {\"threats\": _
+          }
+
+          "
       },
-      %{role: "user", content: "I have a Postgres database. Give a list of five threats."}
+      %{
+        role: "user",
+        content:
+          "I work at a company in the field of #{organisation.industry}. The system can be described as follows: #{system.description}"
+      }
     ]
 
     case OpenAI.chat_completion(
@@ -17,10 +26,18 @@ defmodule ThreatShield.AI do
            messages: messages
          ) do
       {:ok, response} ->
-        {:ok, response}
+        get_content_from_response(response)
 
       {:error, %{"error" => error}} ->
         {:error, error}
     end
+  end
+
+  defp get_content_from_response(response) do
+    [first_choice | _] = response.choices
+    %{"message" => message} = first_choice
+    %{"content" => raw_response_string} = message
+
+    Jason.decode(raw_response_string)
   end
 end

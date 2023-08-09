@@ -13,7 +13,8 @@ defmodule ThreatShieldWeb.ThreatSuggestionsController do
     system = Systems.get_system_for_user_and_org(current_user, org_id, sys_id)
     organisation = system.organisation
 
-    {:ok, threats} = AI.suggest_initial_threats(organisation, system) |> IO.inspect()
+    {:ok, %{"threats" => threats}} =
+      AI.suggest_initial_threats(organisation, system)
 
     conn =
       conn
