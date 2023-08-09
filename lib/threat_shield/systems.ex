@@ -10,7 +10,6 @@ defmodule ThreatShield.Systems do
   alias ThreatShield.Systems.System
   alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Membership
-  alias ThreatShield.Organisations.Organisation
 
   @doc """
   Returns the list of systems.

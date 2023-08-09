@@ -2,10 +2,12 @@ defmodule ThreatShield.Threats.Threat do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias ThreatShield.Systems.System
+
   schema "threats" do
     field :description, :string
     field :is_accepted, :boolean, default: false
-    field :system_id, :id
+    belongs_to :system, System
 
     timestamps()
   end
