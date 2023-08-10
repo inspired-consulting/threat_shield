@@ -2,7 +2,7 @@
   Threat <%= @threat.id %>
   <:subtitle>This is a threat record from your database.</:subtitle>
   <:actions>
-    <.link patch={~p"/threats/#{@threat}/show/edit"} phx-click={JS.push_focus()}>
+    <.link patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/#{@threat}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit threat</.button>
     </.link>
   </:actions>
@@ -13,15 +13,18 @@
   <:item title="Is accepted"><%= @threat.is_accepted %></:item>
 </.list>
 
-<.back navigate={~p"/threats"}>Back to threats</.back>
+<.back navigate={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats"}>Back to threats</.back>
 
-<.modal :if={@live_action == :edit} id="threat-modal" show on_cancel={JS.patch(~p"/threats/#{@threat}")}>
+<.modal :if={@live_action == :edit} id="threat-modal" show on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/#{@threat}")}>
   <.live_component
     module={ThreatShieldWeb.ThreatLive.FormComponent}
     id={@threat.id}
     title={@page_title}
     action={@live_action}
     threat={@threat}
+    current_user={@current_user}
+    organisation={@organisation}
+    system={@system}
     patch={~p"/threats/#{@threat}"}
   />
 </.modal>

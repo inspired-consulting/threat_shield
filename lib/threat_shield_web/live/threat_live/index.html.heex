@@ -42,6 +42,8 @@
   </:action>
 </.table>
 
+<.back navigate={~p"/organisations/#{@organisation.id}/systems"}>Back to systems</.back>
+
 <.modal
   :if={@live_action in [:new, :edit]}
   id="threat-modal"
