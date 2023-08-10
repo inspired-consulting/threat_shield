@@ -56,4 +56,20 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
 
     {:noreply, stream_delete(socket, :threats, threat)}
   end
+
+  @impl true
+  def handle_event("ignore", %{"threat_id" => id}, socket) do
+    user = socket.assigns.current_user
+    {:ok, threat} = Threats.ignore_threat_by_id(user, id)
+
+    {:noreply, stream_insert(socket, :threats, threat)}
+  end
+
+  @impl true
+  def handle_event("add", %{"threat_id" => id}, socket) do
+    user = socket.assigns.current_user
+    {:ok, threat} = Threats.add_threat_by_id(user, id)
+
+    {:noreply, stream_insert(socket, :threats, threat)}
+  end
 end

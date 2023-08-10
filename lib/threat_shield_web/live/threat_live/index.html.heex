@@ -19,26 +19,21 @@
   <:col :let={{_id, threat}} label="Description"><%= threat.description %></:col>
   <:col :let={{_id, threat}} label="Is accepted"><%= threat.is_accepted %></:col>
   <:action :let={{_id, threat}}>
-    <div class="sr-only">
-      <.link navigate={
-        ~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/#{threat}"
-      }>
-        Show
+    <%= if threat.is_accepted do %>
+      <.link
+        phx-click={JS.push("ignore", value: %{threat_id: threat.id})}
+        data-confirm="Are you sure?"
+      >
+        Ignore
       </.link>
-    </div>
-    <.link patch={
-      ~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/#{threat}/edit"
-    }>
-      Edit
-    </.link>
-  </:action>
-  <:action :let={{id, threat}}>
-    <.link
-      phx-click={JS.push("delete", value: %{threat_id: threat.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
-    >
-      Delete
-    </.link>
+    <% else %>
+      <.link
+        phx-click={JS.push("add", value: %{threat_id: threat.id})}
+        data-confirm="Are you sure?"
+      >
+        Add
+      </.link>
+    <% end %>
   </:action>
 </.table>
 

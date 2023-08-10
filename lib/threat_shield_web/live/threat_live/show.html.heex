@@ -3,6 +3,13 @@
   <:subtitle>This is a threat record from your database.</:subtitle>
   <:actions>
     <.link
+      phx-click={JS.push("delete", value: %{threat_id: @threat.id})}
+      data-confirm="Are you sure?"
+      navigate={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats"}
+    >
+      Delete
+    </.link>
+    <.link
       patch={
         ~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/#{@threat}/show/edit"
       }
