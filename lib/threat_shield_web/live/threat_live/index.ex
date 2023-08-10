@@ -3,6 +3,8 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
 
   alias ThreatShield.Threats
   alias ThreatShield.Threats.Threat
+  alias ThreatShield.Systems
+  alias ThreatShield.AI
 
   @impl true
   def mount(%{"org_id" => org_id, "sys_id" => sys_id}, _session, socket) do
@@ -71,5 +73,21 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
     {:ok, threat} = Threats.add_threat_by_id(user, id)
 
     {:noreply, stream_insert(socket, :threats, threat)}
+  end
+
+  @impl true
+  def handle_event("suggest", %{"sys_id" => sys_id}, socket) do
+    user = socket.assigns.current_user
+
+    system = Systems.get_system_for_user(user, sys_id)
+    organisation = system.organisation
+
+    threats =
+      AI.suggest_initial_threats(organisation, system)
+      |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
+
+    new_threats = Threats.bulk_add_for_user_and_system(user, system, threats)
+
+    {:noreply, stream(socket, :threats, new_threats)}
   end
 end

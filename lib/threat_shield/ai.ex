@@ -1,6 +1,7 @@
 defmodule ThreatShield.AI do
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Systems.System
+  alias ThreatShield.Threats.Threat
 
   def suggest_initial_threats(%Organisation{} = organisation, %System{} = system) do
     messages = [
@@ -38,6 +39,11 @@ defmodule ThreatShield.AI do
     %{"message" => message} = first_choice
     %{"content" => raw_response_string} = message
 
-    Jason.decode(raw_response_string)
+    {:ok, data} = Jason.decode(raw_response_string)
+
+    %{"threats" => content} = data
+
+    content
+    |> Enum.map(fn d -> %Threat{description: d} end)
   end
 end

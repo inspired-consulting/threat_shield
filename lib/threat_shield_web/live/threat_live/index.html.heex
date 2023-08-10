@@ -1,6 +1,9 @@
 <.header>
   Listing Threats
   <:actions>
+    <.link phx-click={JS.push("suggest", value: %{sys_id: @system.id})}>
+      <.button>Suggest Threats</.button>
+    </.link>
     <.link patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/new"}>
       <.button>New Threat</.button>
     </.link>

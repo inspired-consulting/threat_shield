@@ -9,6 +9,7 @@ defmodule ThreatShield.Threats do
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Accounts.User
   alias ThreatShield.Systems.System
+  alias ThreatShield.Systems
   alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Organisations.Membership
@@ -89,6 +90,21 @@ defmodule ThreatShield.Threats do
         |> Threat.changeset(%{is_accepted: target_value})
 
       Repo.update!(changeset)
+    end)
+  end
+
+  def bulk_add_for_user_and_system(%User{} = user, %System{} = system, threats) do
+    Repo.transaction(fn ->
+      Systems.get_system!(user, system.id)
+
+      Enum.each(threats, fn threat ->
+        changeset =
+          threat
+          |> Ecto.Changeset.change()
+          |> Ecto.Changeset.put_assoc(:system, system)
+
+        Repo.insert!(changeset)
+      end)
     end)
   end
 
