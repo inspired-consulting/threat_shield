@@ -86,10 +86,15 @@ defmodule ThreatShield.Threats do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_threat(%Threat{} = threat, attrs) do
-    threat
-    |> Threat.changeset(attrs)
-    |> Repo.update()
+  def update_threat(%User{} = user, %Threat{} = threat, attrs) do
+    changeset =
+      threat
+      |> Threat.changeset(attrs)
+
+    Repo.transaction(fn ->
+      Repo.one!(get_single_threat_query(user, threat.id))
+      Repo.update!(changeset)
+    end)
   end
 
   @doc """

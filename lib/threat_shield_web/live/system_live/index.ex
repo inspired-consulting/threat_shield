@@ -26,9 +26,11 @@ defmodule ThreatShieldWeb.SystemLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"sys_id" => id}) do
+    user = socket.assigns.current_user
+
     socket
     |> assign(:page_title, "Edit System")
-    |> assign(:system, Systems.get_system!(id))
+    |> assign(:system, Systems.get_system!(user, id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -53,7 +55,7 @@ defmodule ThreatShieldWeb.SystemLive.Index do
     user = socket.assigns.current_user
     organisation = socket.assigns.organisation
 
-    system = Systems.get_system!(id)
+    system = Systems.get_system!(user, id)
     {:ok, _} = Systems.delete_system(user, organisation, system)
 
     {:noreply, stream_delete(socket, :systems, system)}

@@ -39,7 +39,17 @@ defmodule ThreatShield.Systems do
       ** (Ecto.NoResultsError)
 
   """
-  def get_system!(id), do: Repo.get!(System, id)
+  def get_system!(%User{} = user, sys_id) do
+    query =
+      from m in Membership,
+        where: m.user_id == ^user.id,
+        join: o in assoc(m, :organisation),
+        join: s in assoc(o, :systems),
+        where: s.id == ^sys_id,
+        select: s
+
+    Repo.one!(query)
+  end
 
   def get_system_for_user_and_org(%User{} = user, org_id, sys_id) do
     query =
