@@ -54,7 +54,7 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
   end
 
   defp save_threat(socket, :edit, threat_params) do
-    user = socket.assigns.user
+    user = socket.assigns.current_user
 
     case Threats.update_threat(user, socket.assigns.threat, threat_params) do
       {:ok, threat} ->

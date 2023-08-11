@@ -39,6 +39,7 @@ defmodule ThreatShield.Threats do
   """
   def get_threat!(user, threat_id) do
     Repo.one!(get_single_threat_query(user, threat_id))
+    |> Repo.preload(:organisation)
   end
 
   @doc """
@@ -138,10 +139,12 @@ defmodule ThreatShield.Threats do
 
   """
   def delete_threat_by_id(%User{} = user, threat_id) do
-    Repo.transaction(fn ->
-      threat = Repo.one!(get_single_threat_query(user, threat_id))
-      Repo.delete(threat)
-    end)
+    IO.inspect(user)
+
+    case Repo.delete_all(get_single_threat_query(user, threat_id)) do
+      {1, _} -> {:ok, 1}
+      _ -> {:error, :unauthorized}
+    end
   end
 
   @doc """
@@ -158,11 +161,7 @@ defmodule ThreatShield.Threats do
   end
 
   def get_single_threat_query(user, threat_id) do
-    from m in Membership,
-      where: m.user_id == ^user.id,
-      join: o in assoc(m, :organisation),
-      join: t in assoc(o, :threats),
-      where: t.id == ^threat_id,
-      select: t
+    Threat.get(threat_id)
+    |> Threat.for_user(user.id)
   end
 end

@@ -32,4 +32,12 @@ defmodule ThreatShield.Organisations.Organisation do
     ])
     |> validate_required([:name])
   end
+
+  import Ecto.Query
+
+  def for_user(query, user_id) do
+    query
+    |> join(:left, [organisation: o], assoc(o, :users), as: :user)
+    |> where([user: u], u.id == ^user_id)
+  end
 end
