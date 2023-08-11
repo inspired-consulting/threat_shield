@@ -21,7 +21,7 @@
     <div class="sr-only">
       <.link navigate={~p"/organisations/#{@organisation.id}/systems/#{system}"}>Show</.link>
     </div>
-    <.link navigate={~p"/organisations/#{@organisation.id}/systems/#{system}/suggestions"}>
+    <.link navigate={~p"/organisations/#{@organisation.id}/systems/#{system}/threats"}>
       Threats
     </.link>
     <.link patch={~p"/organisations/#{@organisation.id}/systems/#{system}/edit"}>Edit</.link>
@@ -35,6 +35,8 @@
     </.link>
   </:action>
 </.table>
+
+<.back navigate={~p"/organisations"}>Back to organisations</.back>
 
 <.modal
   :if={@live_action in [:new, :edit]}
