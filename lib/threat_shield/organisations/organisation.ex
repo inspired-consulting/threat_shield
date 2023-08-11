@@ -13,6 +13,7 @@ defmodule ThreatShield.Organisations.Organisation do
 
     many_to_many :users, ThreatShield.Accounts.User, join_through: "memberships"
     has_many :systems, ThreatShield.Systems.System
+    has_many :threats, ThreatShield.Threats.Threat
 
     timestamps()
   end

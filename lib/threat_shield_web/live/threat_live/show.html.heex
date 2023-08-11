@@ -5,14 +5,12 @@
     <.link
       phx-click={JS.push("delete", value: %{threat_id: @threat.id})}
       data-confirm="Are you sure?"
-      navigate={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats"}
+      navigate={~p"/organisations/#{@organisation.id}/threats"}
     >
       Delete
     </.link>
     <.link
-      patch={
-        ~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/#{@threat}/show/edit"
-      }
+      patch={~p"/organisations/#{@organisation.id}/threats/#{@threat}/show/edit"}
       phx-click={JS.push_focus()}
     >
       <.button>Edit threat</.button>
@@ -25,7 +23,7 @@
   <:item title="Is accepted"><%= @threat.is_accepted %></:item>
 </.list>
 
-<.back navigate={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats"}>
+<.back navigate={~p"/organisations/#{@organisation.id}/threats"}>
   Back to threats
 </.back>
 
@@ -33,9 +31,7 @@
   :if={@live_action == :edit}
   id="threat-modal"
   show
-  on_cancel={
-    JS.patch(~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/#{@threat}")
-  }
+  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/threats/#{@threat}")}
 >
   <.live_component
     module={ThreatShieldWeb.ThreatLive.FormComponent}
@@ -46,6 +42,6 @@
     current_user={@current_user}
     organisation={@organisation}
     system={@system}
-    patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/#{@threat}"}
+    patch={~p"/organisations/#{@organisation.id}/threats/#{@threat}"}
   />
 </.modal>

@@ -4,15 +4,14 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   alias ThreatShield.Threats
 
   @impl true
-  def mount(%{"org_id" => org_id, "sys_id" => sys_id}, _session, socket) do
+  def mount(%{"org_id" => org_id}, _session, socket) do
     current_user = socket.assigns.current_user
-    system = Threats.get_system_with_threats(current_user, org_id, sys_id)
-    threats = system.threats
+    organisation = Threats.get_organisation_with_threats(current_user, org_id)
+    threats = organisation.threats
 
     socket =
       socket
-      |> assign(:organisation, system.organisation)
-      |> assign(:system, system)
+      |> assign(:organisation, organisation)
 
     {:ok, stream(socket, :threats, threats)}
   end

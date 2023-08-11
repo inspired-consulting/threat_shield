@@ -71,9 +71,9 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
   end
 
   defp save_threat(socket, :new, threat_params) do
-    %{current_user: user, system: system, organisation: organisation} = socket.assigns
+    %{current_user: user, organisation: organisation} = socket.assigns
 
-    case Threats.create_threat(user, system, organisation, threat_params) do
+    case Threats.create_threat(user, organisation, threat_params) do
       {:ok, threat} ->
         notify_parent({:saved, threat})
 

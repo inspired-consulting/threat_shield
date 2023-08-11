@@ -7,6 +7,7 @@ defmodule ThreatShield.Systems.System do
     field :name, :string
     field :description, :string
     belongs_to :organisation, ThreatShield.Organisations.Organisation
+
     has_many :threats, ThreatShield.Threats.Threat
 
     timestamps()

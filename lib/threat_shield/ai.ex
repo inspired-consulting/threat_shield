@@ -1,9 +1,8 @@
 defmodule ThreatShield.AI do
   alias ThreatShield.Organisations.Organisation
-  alias ThreatShield.Systems.System
   alias ThreatShield.Threats.Threat
 
-  def suggest_initial_threats(%Organisation{} = organisation, %System{} = system) do
+  def suggest_initial_threats_for_organisation(%Organisation{} = organisation) do
     messages = [
       %{
         role: "system",
@@ -15,8 +14,7 @@ defmodule ThreatShield.AI do
       },
       %{
         role: "user",
-        content:
-          "I work at a company in the field of #{organisation.industry}. The system can be described as follows: #{system.description}"
+        content: "I work at a company in the field of #{organisation.industry}."
       }
     ]
 
