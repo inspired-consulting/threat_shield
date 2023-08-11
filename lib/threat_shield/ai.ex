@@ -7,13 +7,11 @@ defmodule ThreatShield.AI do
     messages = [
       %{
         role: "system",
-        content:
-          "You are a threat modelling assistant. Your response is valid JSON. The results should be a list of five potential threats. Here is an example:
+        content: ~s("""
+          You are a threat modelling assistant. Your response should comprise five potential threats, each item having between 200–254 characters in length. Your response should be in JSON format, like so:
 
-          {\"threats\": _
-          }
-
-          "
+          {"threats": _}
+          """)
       },
       %{
         role: "user",
