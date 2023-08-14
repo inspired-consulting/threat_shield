@@ -3,3 +3,12 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+
+/* RESETS */
+:root, html, body
+{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+}
