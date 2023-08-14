@@ -27,9 +27,9 @@ defmodule ThreatShield.Organisations do
     full_user.organisations
   end
 
-  def get_organisation_for_user!(id, user) do
+  def get_organisation_for_user!(%User{} = user, org_id) do
     membership =
-      Repo.get_by!(Membership, user_id: user.id, organisation_id: id)
+      Repo.get_by!(Membership, user_id: user.id, organisation_id: org_id)
       |> Repo.preload(:organisation)
 
     membership.organisation

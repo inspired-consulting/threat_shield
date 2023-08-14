@@ -4,6 +4,9 @@ defmodule ThreatShield.Threats do
   """
 
   import Ecto.Query, warn: false
+
+  alias Ecto.Multi
+
   alias ThreatShield.Repo
 
   alias ThreatShield.Threats.Threat
@@ -89,18 +92,34 @@ defmodule ThreatShield.Threats do
   end
 
   def bulk_add_for_user_and_org(%User{} = user, %Organisation{} = organisation, threats) do
-    Repo.transaction(fn ->
-      Organisations.get_organisation_for_user!(user, organisation.id)
+    multi =
+      Multi.new()
+      |> Multi.exists?(:check_access, Organisations.is_member_query(user, organisation))
 
-      Enum.each(threats, fn threat ->
-        changeset =
-          threat
-          |> Ecto.Changeset.change()
-          |> Ecto.Changeset.put_assoc(:organisation, organisation)
+    {:ok, result} =
+      Enum.reduce(
+        threats,
+        multi,
+        fn threat, acc ->
+          Multi.insert(
+            acc,
+            {:insert_threat, threat.description},
+            threat
+            |> Ecto.Changeset.change()
+            |> Ecto.Changeset.put_assoc(:organisation, organisation)
+          )
+        end
+      )
+      |> Repo.transaction()
 
-        Repo.insert!(changeset)
-      end)
+    result
+    |> Enum.filter(fn {k, _v} ->
+      case k do
+        {:insert_threat, _} -> true
+        _ -> false
+      end
     end)
+    |> Enum.map(fn {_k, v} -> v end)
   end
 
   @doc """
