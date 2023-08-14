@@ -7,6 +7,7 @@ defmodule ThreatShield.Assets do
   alias ThreatShield.Repo
 
   alias ThreatShield.Assets.Asset
+  alias ThreatShield.Accounts.User
 
   @doc """
   Returns the list of assets.
@@ -36,7 +37,7 @@ defmodule ThreatShield.Assets do
 
   """
 
-  def get_asset!(%User{id: user_id} = user, asset_id) do
+  def get_asset!(%User{id: user_id}, asset_id) do
     Asset.get(asset_id)
     |> Asset.for_user(user_id)
     |> Repo.one!()

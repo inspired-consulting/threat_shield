@@ -4,7 +4,7 @@ defmodule ThreatShieldWeb.AssetLive.Show do
   alias ThreatShield.Assets
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(%{"org_id" => org_id}, _session, socket) do
     current_user = socket.assigns.current_user
     organisation = Organisations.get_organisation_for_user!(org_id, current_user)
 

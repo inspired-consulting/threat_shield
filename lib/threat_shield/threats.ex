@@ -40,8 +40,10 @@ defmodule ThreatShield.Threats do
       ** (Ecto.NoResultsError)
 
   """
-  def get_threat!(user, threat_id) do
-    Repo.one!(get_single_threat_query(user, threat_id))
+  def get_threat!(%User{id: user_id}, threat_id) do
+    Threat.get(threat_id)
+    |> Threat.for_user(user_id)
+    |> Repo.one!()
     |> Repo.preload(:organisation)
   end
 

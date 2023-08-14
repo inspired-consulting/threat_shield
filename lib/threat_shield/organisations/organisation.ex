@@ -14,6 +14,7 @@ defmodule ThreatShield.Organisations.Organisation do
     many_to_many :users, ThreatShield.Accounts.User, join_through: "memberships"
     has_many :systems, ThreatShield.Systems.System
     has_many :threats, ThreatShield.Threats.Threat
+    has_many :assets, ThreatShield.Assets.Asset
 
     timestamps()
   end
@@ -34,6 +35,10 @@ defmodule ThreatShield.Organisations.Organisation do
   end
 
   import Ecto.Query
+
+  def get(id) do
+    from(e in __MODULE__, as: :organisation, where: e.id == ^id)
+  end
 
   def for_user(query, user_id) do
     query
