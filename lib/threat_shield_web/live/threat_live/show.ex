@@ -35,7 +35,9 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
     threat = Threats.get_threat!(user, id)
     {:ok, _} = Threats.delete_threat_by_id(user, id)
 
-    {:noreply, stream_delete(socket, :threats, threat)}
+    organisation = socket.assigns.organisation
+
+    {:noreply, push_navigate(socket, to: "/organisations/#{organisation.id}/threats")}
   end
 
   defp page_title(:show), do: "Show Threat"

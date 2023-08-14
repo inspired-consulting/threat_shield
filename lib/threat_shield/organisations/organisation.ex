@@ -37,7 +37,7 @@ defmodule ThreatShield.Organisations.Organisation do
 
   def for_user(query, user_id) do
     query
-    |> join(:left, [organisation: o], assoc(o, :users), as: :user)
+    |> join(:inner, [organisation: o], assoc(o, :users), as: :user)
     |> where([user: u], u.id == ^user_id)
   end
 end

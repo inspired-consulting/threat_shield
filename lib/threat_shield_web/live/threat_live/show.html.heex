@@ -5,7 +5,6 @@
     <.link
       phx-click={JS.push("delete", value: %{threat_id: @threat.id})}
       data-confirm="Are you sure?"
-      navigate={~p"/organisations/#{@organisation.id}/threats"}
     >
       Delete
     </.link>
