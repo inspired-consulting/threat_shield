@@ -13,6 +13,7 @@ defmodule ThreatShield.Organisations.Organisation do
 
     many_to_many :users, ThreatShield.Accounts.User, join_through: "memberships"
     has_many :systems, ThreatShield.Systems.System
+    has_many :threats, ThreatShield.Threats.Threat
 
     timestamps()
   end
@@ -30,5 +31,13 @@ defmodule ThreatShield.Organisations.Organisation do
       :financial_information
     ])
     |> validate_required([:name])
+  end
+
+  import Ecto.Query
+
+  def for_user(query, user_id) do
+    query
+    |> join(:inner, [organisation: o], assoc(o, :users), as: :user)
+    |> where([user: u], u.id == ^user_id)
   end
 end

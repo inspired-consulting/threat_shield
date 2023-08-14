@@ -3,19 +3,18 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
 
   alias ThreatShield.Threats
   alias ThreatShield.Threats.Threat
-  alias ThreatShield.Systems
+  alias ThreatShield.Organisations
   alias ThreatShield.AI
 
   @impl true
-  def mount(%{"org_id" => org_id, "sys_id" => sys_id}, _session, socket) do
+  def mount(%{"org_id" => org_id}, _session, socket) do
     current_user = socket.assigns.current_user
-    system = Threats.get_system_with_threats(current_user, org_id, sys_id)
-    threats = system.threats
+    organisation = Threats.get_organisation_with_threats(current_user, org_id)
+    threats = organisation.threats
 
     socket =
       socket
-      |> assign(:organisation, system.organisation)
-      |> assign(:system, system)
+      |> assign(:organisation, organisation)
 
     {:ok, stream(socket, :threats, threats)}
   end
@@ -51,15 +50,6 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"threat_id" => id}, socket) do
-    user = socket.assigns.current_user
-    threat = Threats.get_threat!(user, id)
-    {:ok, _} = Threats.delete_threat_by_id(user, id)
-
-    {:noreply, stream_delete(socket, :threats, threat)}
-  end
-
-  @impl true
   def handle_event("ignore", %{"threat_id" => id}, socket) do
     user = socket.assigns.current_user
     {:ok, threat} = Threats.ignore_threat_by_id(user, id)
@@ -76,17 +66,16 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
   end
 
   @impl true
-  def handle_event("suggest", %{"sys_id" => sys_id}, socket) do
+  def handle_event("suggest", %{"org_id" => org_id}, socket) do
     user = socket.assigns.current_user
 
-    system = Systems.get_system_for_user(user, sys_id)
-    organisation = system.organisation
+    organisation = Organisations.get_organisation_for_user!(user, org_id)
 
     threats =
-      AI.suggest_initial_threats(organisation, system)
+      AI.suggest_initial_threats_for_organisation(organisation)
       |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
 
-    new_threats = Threats.bulk_add_for_user_and_system(user, system, threats)
+    new_threats = Threats.bulk_add_for_user_and_org(user, organisation, threats)
 
     {:noreply, stream(socket, :threats, new_threats)}
   end

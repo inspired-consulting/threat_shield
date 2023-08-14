@@ -1,10 +1,10 @@
 <.header>
   Listing Threats
   <:actions>
-    <.link phx-click={JS.push("suggest", value: %{sys_id: @system.id})}>
+    <.link phx-click={JS.push("suggest", value: %{org_id: @organisation.id})}>
       <.button>Suggest Threats</.button>
     </.link>
-    <.link patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/new"}>
+    <.link patch={~p"/organisations/#{@organisation.id}/threats/new"}>
       <.button>New Threat</.button>
     </.link>
   </:actions>
@@ -15,7 +15,7 @@
   rows={@streams.threats}
   row_click={
     fn {_id, threat} ->
-      JS.navigate(~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/#{threat}")
+      JS.navigate(~p"/organisations/#{@organisation.id}/threats/#{threat}")
     end
   }
 >
@@ -40,13 +40,13 @@
   </:action>
 </.table>
 
-<.back navigate={~p"/organisations/#{@organisation.id}/systems"}>Back to systems</.back>
+<.back navigate={~p"/organisations/#{@organisation.id}"}>Back to organisation</.back>
 
 <.modal
   :if={@live_action in [:new, :edit]}
   id="threat-modal"
   show
-  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats")}
+  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/threats")}
 >
   <.live_component
     module={ThreatShieldWeb.ThreatLive.FormComponent}
@@ -56,7 +56,6 @@
     threat={@threat}
     current_user={@current_user}
     organisation={@organisation}
-    system={@system}
-    patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats"}
+    patch={~p"/organisations/#{@organisation.id}/threats"}
   />
 </.modal>

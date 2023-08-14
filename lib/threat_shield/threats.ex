@@ -8,23 +8,18 @@ defmodule ThreatShield.Threats do
 
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Accounts.User
-  alias ThreatShield.Systems.System
-  alias ThreatShield.Systems
   alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Organisations.Membership
 
-  def get_system_with_threats(%User{} = user, org_id, sys_id) do
+  def get_organisation_with_threats(%User{} = user, org_id) do
     query =
       from m in Membership,
         where: m.user_id == ^user.id and m.organisation_id == ^org_id,
         join: o in assoc(m, :organisation),
-        join: s in assoc(o, :systems),
-        where: s.id == ^sys_id,
-        select: s
+        select: o
 
     Repo.one!(query)
-    |> Repo.preload(:organisation)
     |> Repo.preload(:threats)
   end
 
@@ -44,6 +39,7 @@ defmodule ThreatShield.Threats do
   """
   def get_threat!(user, threat_id) do
     Repo.one!(get_single_threat_query(user, threat_id))
+    |> Repo.preload(:organisation)
   end
 
   @doc """
@@ -60,14 +56,12 @@ defmodule ThreatShield.Threats do
   """
   def create_threat(
         %User{} = user,
-        %System{} = system,
         %Organisation{} = organisation,
         attrs \\ %{}
       ) do
     changeset =
-      %Threat{}
+      %Threat{organisation: organisation}
       |> Threat.changeset(attrs)
-      |> Ecto.Changeset.put_assoc(:system, system)
 
     Repo.transaction(fn ->
       Repo.one!(Organisations.is_member_query(user, organisation))
@@ -87,21 +81,22 @@ defmodule ThreatShield.Threats do
     Repo.transaction(fn ->
       changeset =
         Repo.one!(get_single_threat_query(user, threat_id))
+        |> Repo.preload(:organisation)
         |> Threat.changeset(%{is_accepted: target_value})
 
       Repo.update!(changeset)
     end)
   end
 
-  def bulk_add_for_user_and_system(%User{} = user, %System{} = system, threats) do
+  def bulk_add_for_user_and_org(%User{} = user, %Organisation{} = organisation, threats) do
     Repo.transaction(fn ->
-      Systems.get_system!(user, system.id)
+      Organisations.get_organisation_for_user!(user, organisation.id)
 
       Enum.each(threats, fn threat ->
         changeset =
           threat
           |> Ecto.Changeset.change()
-          |> Ecto.Changeset.put_assoc(:system, system)
+          |> Ecto.Changeset.put_assoc(:organisation, organisation)
 
         Repo.insert!(changeset)
       end)
@@ -144,10 +139,12 @@ defmodule ThreatShield.Threats do
 
   """
   def delete_threat_by_id(%User{} = user, threat_id) do
-    Repo.transaction(fn ->
-      threat = Repo.one!(get_single_threat_query(user, threat_id))
-      Repo.delete(threat)
-    end)
+    IO.inspect(user)
+
+    case Repo.delete_all(get_single_threat_query(user, threat_id)) do
+      {1, _} -> {:ok, 1}
+      _ -> {:error, :unauthorized}
+    end
   end
 
   @doc """
@@ -164,12 +161,7 @@ defmodule ThreatShield.Threats do
   end
 
   def get_single_threat_query(user, threat_id) do
-    from m in Membership,
-      where: m.user_id == ^user.id,
-      join: o in assoc(m, :organisation),
-      join: s in assoc(o, :systems),
-      join: t in assoc(s, :threats),
-      where: t.id == ^threat_id,
-      select: t
+    Threat.get(threat_id)
+    |> Threat.for_user(user.id)
   end
 end
