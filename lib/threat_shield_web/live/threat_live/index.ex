@@ -71,11 +71,11 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
 
     organisation = Organisations.get_organisation_for_user!(user, org_id)
 
-    threats =
+    threat_descriptions =
       AI.suggest_initial_threats_for_organisation(organisation)
-      |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
 
-    new_threats = Threats.bulk_add_for_user_and_org(user, organisation, threats)
+    new_threats =
+      Threats.bulk_add_for_user_and_org(user, organisation, threat_descriptions)
 
     {:noreply, stream(socket, :threats, new_threats)}
   end
