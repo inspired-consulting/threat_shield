@@ -8,34 +8,12 @@ defmodule ThreatShield.Assets do
 
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Accounts.User
+  alias ThreatShield.Organisations
+  alias ThreatShield.Organisations.Organisation
 
-  @doc """
-  Returns the list of assets.
-
-  ## Examples
-
-      iex> list_assets()
-      [%Asset{}, ...]
-
-  """
   def list_assets do
     Repo.all(Asset)
   end
-
-  @doc """
-  Gets a single asset.
-
-  Raises `Ecto.NoResultsError` if the Asset does not exist.
-
-  ## Examples
-
-      iex> get_asset!(123)
-      %Asset{}
-
-      iex> get_asset!(456)
-      ** (Ecto.NoResultsError)
-
-  """
 
   def get_asset!(%User{id: user_id}, asset_id) do
     Asset.get(asset_id)
@@ -44,68 +22,41 @@ defmodule ThreatShield.Assets do
     |> Repo.preload(:organisation)
   end
 
-  @doc """
-  Creates a asset.
+  def create_asset(%User{} = user, %Organisation{} = organisation, attrs \\ %{}) do
+    changeset =
+      %Asset{organisation: organisation}
+      |> Asset.changeset(attrs)
 
-  ## Examples
-
-      iex> create_asset(%{field: value})
-      {:ok, %Asset{}}
-
-      iex> create_asset(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_asset(attrs \\ %{}) do
-    %Asset{}
-    |> Asset.changeset(attrs)
-    |> Repo.insert()
+    Repo.transaction(fn ->
+      Repo.one!(Organisations.is_member_query(user, organisation))
+      Repo.insert!(changeset)
+    end)
   end
 
-  @doc """
-  Updates a asset.
+  def update_asset(%User{} = user, %Asset{} = asset, attrs) do
+    changeset =
+      asset
+      |> Asset.changeset(attrs)
 
-  ## Examples
-
-      iex> update_asset(asset, %{field: new_value})
-      {:ok, %Asset{}}
-
-      iex> update_asset(asset, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_asset(%Asset{} = asset, attrs) do
-    asset
-    |> Asset.changeset(attrs)
-    |> Repo.update()
+    Repo.transaction(fn ->
+      Repo.one!(get_single_asset_query(user, asset.id))
+      Repo.update!(changeset)
+    end)
   end
 
-  @doc """
-  Deletes a asset.
-
-  ## Examples
-
-      iex> delete_asset(asset)
-      {:ok, %Asset{}}
-
-      iex> delete_asset(asset)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_asset(%Asset{} = asset) do
-    Repo.delete(asset)
+  def delete_asset(%User{} = user, %Asset{} = asset) do
+    Repo.transaction(fn ->
+      Repo.one!(get_single_asset_query(user, asset.id))
+      Repo.delete!(asset)
+    end)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking asset changes.
-
-  ## Examples
-
-      iex> change_asset(asset)
-      %Ecto.Changeset{data: %Asset{}}
-
-  """
   def change_asset(%Asset{} = asset, attrs \\ %{}) do
     Asset.changeset(asset, attrs)
+  end
+
+  defp get_single_asset_query(user, asset_id) do
+    Asset.get(asset_id)
+    |> Asset.for_user(user.id)
   end
 end

@@ -20,7 +20,7 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:description]} type="text" label="Description" />
-        <.input field={@form[:status]} type="number" label="Status" />
+        <.input field={@form[:status]} type="text" label="Status" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Asset</.button>
         </:actions>
@@ -54,7 +54,9 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
   end
 
   defp save_asset(socket, :edit, asset_params) do
-    case Assets.update_asset(socket.assigns.asset, asset_params) do
+    user = socket.assigns.current_user
+
+    case Assets.update_asset(user, socket.assigns.asset, asset_params) do
       {:ok, asset} ->
         notify_parent({:saved, asset})
 
@@ -69,7 +71,10 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
   end
 
   defp save_asset(socket, :new, asset_params) do
-    case Assets.create_asset(asset_params) do
+    user = socket.assigns.current_user
+    organisation = socket.assigns.organisation
+
+    case Assets.create_asset(user, organisation, asset_params) do
       {:ok, asset} ->
         notify_parent({:saved, asset})
 

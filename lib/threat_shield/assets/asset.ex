@@ -7,7 +7,7 @@ defmodule ThreatShield.Assets.Asset do
   alias ThreatShield.Organisations.Organisation
 
   schema "assets" do
-    field :status, Ecto.Enum, values: [new: 1, ignored: 2, added: 3], null: false
+    field :status, Ecto.Enum, values: [new: 1, ignored: 2, added: 3], default: :new, null: false
     field :description, :string
 
     belongs_to :system, System
@@ -20,7 +20,7 @@ defmodule ThreatShield.Assets.Asset do
   def changeset(asset, attrs) do
     asset
     |> cast(attrs, [:description, :status])
-    |> validate_required([:description, :status, :organisation])
+    |> validate_required([:description, :organisation])
   end
 
   def get(id) do
