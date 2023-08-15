@@ -60,7 +60,7 @@ defmodule ThreatShieldWeb.AssetLive.Index do
   @impl true
   def handle_event("ignore", %{"asset_id" => id}, socket) do
     user = socket.assigns.current_user
-    asset = Assets.ignore_asset_by_id(user, id)
+    {:ok, asset} = Assets.ignore_asset_by_id(user, id)
 
     {:noreply, stream_insert(socket, :assets, asset)}
   end
@@ -68,7 +68,7 @@ defmodule ThreatShieldWeb.AssetLive.Index do
   @impl true
   def handle_event("add", %{"asset_id" => id}, socket) do
     user = socket.assigns.current_user
-    asset = Assets.add_asset_by_id(user, id)
+    {:ok, asset} = Assets.add_asset_by_id(user, id)
 
     {:noreply, stream_insert(socket, :assets, asset)}
   end
