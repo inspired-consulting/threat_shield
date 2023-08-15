@@ -2,7 +2,6 @@ defmodule ThreatShieldWeb.AssetLive.Index do
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Assets
-  alias ThreatShield.Organisations
   alias ThreatShield.Assets.Asset
 
   @impl true
@@ -27,7 +26,7 @@ defmodule ThreatShieldWeb.AssetLive.Index do
   defp apply_action(socket, :edit, %{"asset_id" => id}) do
     socket
     |> assign(:page_title, "Edit Asset")
-    |> assign(:asset, Assets.get_asset!(id))
+    |> assign(:asset, Assets.get_asset!(socket.assigns.current_user, id))
   end
 
   defp apply_action(socket, :new, _params) do

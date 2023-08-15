@@ -13,7 +13,6 @@ defmodule ThreatShield.Threats do
   alias ThreatShield.Accounts.User
   alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Organisation
-  alias ThreatShield.Organisations.Membership
 
   def get_organisation!(%User{} = user, org_id) do
     Organisations.get_organisation!(user, org_id)
@@ -154,8 +153,6 @@ defmodule ThreatShield.Threats do
 
   """
   def delete_threat_by_id(%User{} = user, threat_id) do
-    IO.inspect(user)
-
     case Repo.delete_all(get_single_threat_query(user, threat_id)) do
       {1, _} -> {:ok, 1}
       _ -> {:error, :unauthorized}

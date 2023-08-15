@@ -7,8 +7,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   def mount(%{"org_id" => org_id}, _session, socket) do
     user = socket.assigns.current_user
 
-    membership = Systems.list_systems_for_user_and_org(user, org_id)
-    organisation = membership.organisation
+    organisation = Systems.get_organisation!(user, org_id)
 
     socket =
       socket

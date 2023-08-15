@@ -7,7 +7,7 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
     current_user = socket.assigns.current_user
-    organisation = Organisations.get_organisation_for_user!(org_id, current_user)
+    organisation = Organisations.get_organisation!(current_user, org_id)
 
     socket =
       socket
@@ -32,7 +32,6 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
     user =
       socket.assigns.current_user
 
-    threat = Threats.get_threat!(user, id)
     {:ok, _} = Threats.delete_threat_by_id(user, id)
 
     organisation = socket.assigns.organisation
