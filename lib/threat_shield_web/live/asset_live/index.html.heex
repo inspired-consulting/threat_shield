@@ -10,7 +10,9 @@
 <.table
   id="assets"
   rows={@streams.assets}
-  row_click={fn {_id, asset} -> JS.navigate(~p"/organisations/#{@organisation.id}/assets/#{asset}") end}
+  row_click={
+    fn {_id, asset} -> JS.navigate(~p"/organisations/#{@organisation.id}/assets/#{asset}") end
+  }
 >
   <:col :let={{_id, asset}} label="Description"><%= asset.description %></:col>
   <:col :let={{_id, asset}} label="Status"><%= asset.status %></:col>
@@ -22,7 +24,7 @@
   </:action>
   <:action :let={{id, asset}}>
     <.link
-      phx-click={JS.push("delete", value: %{id: asset.id}) |> hide("##{id}")}
+      phx-click={JS.push("delete", value: %{asset_id: asset.id}) |> hide("##{id}")}
       data-confirm="Are you sure?"
     >
       Delete
@@ -30,7 +32,12 @@
   </:action>
 </.table>
 
-<.modal :if={@live_action in [:new, :edit]} id="asset-modal" show on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/assets")}>
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="asset-modal"
+  show
+  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/assets")}
+>
   <.live_component
     module={ThreatShieldWeb.AssetLive.FormComponent}
     id={@asset.id || :new}

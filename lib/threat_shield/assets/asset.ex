@@ -1,7 +1,6 @@
 defmodule ThreatShield.Assets.Asset do
   use Ecto.Schema
   import Ecto.Changeset
-  import Ecto.Query
 
   alias ThreatShield.Systems.System
   alias ThreatShield.Organisations.Organisation
@@ -22,6 +21,8 @@ defmodule ThreatShield.Assets.Asset do
     |> cast(attrs, [:description, :status])
     |> validate_required([:description, :organisation])
   end
+
+  import Ecto.Query
 
   def get(id) do
     from(e in __MODULE__, as: :asset, where: e.id == ^id)

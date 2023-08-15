@@ -48,9 +48,9 @@ defmodule ThreatShieldWeb.AssetLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"asset_id" => id}, socket) do
-    asset = Assets.get_asset!(id)
-    {:ok, _} = Assets.delete_asset(asset)
+  def handle_event("delete", %{"asset_id" => asset_id}, socket) do
+    asset = Assets.get_asset!(socket.assigns.current_user, asset_id)
+    {:ok, _} = Assets.delete_asset(socket.assigns.current_user, asset)
 
     {:noreply, stream_delete(socket, :assets, asset)}
   end
