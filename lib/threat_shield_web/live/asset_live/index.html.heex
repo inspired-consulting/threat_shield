@@ -33,6 +33,8 @@
   </:action>
 </.table>
 
+<.back navigate={~p"/organisations/#{@organisation.id}"}>Back to organisation</.back>
+
 <.modal
   :if={@live_action in [:new, :edit]}
   id="asset-modal"

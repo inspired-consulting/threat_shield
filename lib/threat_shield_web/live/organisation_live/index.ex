@@ -12,7 +12,6 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
     socket =
       socket
       |> assign(locations_options: locations_options)
-      |> IO.inspect(label: "SOCKET", pretty: true)
       |> stream_organisations()
 
     {:ok, socket}
@@ -63,7 +62,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
 
   @impl true
   def handle_event("delete", %{"org_id" => org_id}, socket) do
-    user = socket.assigns.user
+    user = socket.assigns.current_user
     organisation = Organisations.get_organisation!(user, org_id)
     {:ok, _} = Organisations.delete_organisation(organisation)
 

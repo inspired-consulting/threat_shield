@@ -61,7 +61,7 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
 
     case Assets.update_asset(user, socket.assigns.asset, asset_params) do
       {:ok, asset} ->
-        notify_parent({:saved, asset |> IO.inspect()})
+        notify_parent({:saved, asset})
 
         {:noreply,
          socket
