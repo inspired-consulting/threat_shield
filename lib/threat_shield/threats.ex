@@ -15,14 +15,8 @@ defmodule ThreatShield.Threats do
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Organisations.Membership
 
-  def get_organisation_with_threats(%User{} = user, org_id) do
-    query =
-      from m in Membership,
-        where: m.user_id == ^user.id and m.organisation_id == ^org_id,
-        join: o in assoc(m, :organisation),
-        select: o
-
-    Repo.one!(query)
+  def get_organisation!(%User{} = user, org_id) do
+    Organisations.get_organisation!(user, org_id)
     |> Repo.preload(:threats)
   end
 

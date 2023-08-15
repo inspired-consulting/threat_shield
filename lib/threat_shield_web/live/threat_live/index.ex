@@ -9,7 +9,7 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
     current_user = socket.assigns.current_user
-    organisation = Threats.get_organisation_with_threats(current_user, org_id)
+    organisation = Threats.get_organisation!(current_user, org_id)
     threats = organisation.threats
 
     socket =

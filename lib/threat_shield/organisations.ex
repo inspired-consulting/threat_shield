@@ -27,13 +27,6 @@ defmodule ThreatShield.Organisations do
     full_user.organisations
   end
 
-  def get_organisation_for_user!(%User{id: user_id}, org_id) do
-    Organisation.get(org_id)
-    |> Organisation.for_user(user_id)
-    |> Repo.one!()
-    |> Repo.preload(:assets)
-  end
-
   @doc """
   Gets a single organisation.
 
@@ -48,7 +41,11 @@ defmodule ThreatShield.Organisations do
       ** (Ecto.NoResultsError)
 
   """
-  def get_organisation!(id), do: Repo.get!(Organisation, id)
+  def get_organisation!(%User{id: user_id}, org_id) do
+    Organisation.get(org_id)
+    |> Organisation.for_user(user_id)
+    |> Repo.one!()
+  end
 
   @doc """
   Creates a organisation.

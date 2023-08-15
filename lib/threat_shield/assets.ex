@@ -11,8 +11,9 @@ defmodule ThreatShield.Assets do
   alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Organisation
 
-  def list_assets do
-    Repo.all(Asset)
+  def get_organisation!(%User{} = user, org_id) do
+    Organisations.get_organisation!(user, org_id)
+    |> Repo.preload(:assets)
   end
 
   def get_asset!(%User{id: user_id}, asset_id) do

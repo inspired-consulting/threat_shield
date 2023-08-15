@@ -13,9 +13,14 @@
   <:item title="Status"><%= @asset.status %></:item>
 </.list>
 
-<.back navigate={~p"/assets"}>Back to assets</.back>
+<.back navigate={~p"/organisations/#{@organisation.id}/assets"}>Back to assets</.back>
 
-<.modal :if={@live_action == :edit} id="asset-modal" show on_cancel={JS.patch(~p"/assets/#{@asset}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="asset-modal"
+  show
+  on_cancel={JS.patch(~p"/assets/#{@asset}")}
+>
   <.live_component
     module={ThreatShieldWeb.AssetLive.FormComponent}
     id={@asset.id}
