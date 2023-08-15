@@ -2,12 +2,15 @@ defmodule ThreatShieldWeb.AssetLive.Show do
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Assets
+  alias ThreatShield.Assets.Asset
   alias ThreatShield.Organisations
+
+  import ThreatShield.Assets.Asset, only: [list_system_options: 1, system_name: 1]
 
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
     current_user = socket.assigns.current_user
-    organisation = Organisations.get_organisation!(current_user, org_id)
+    organisation = Assets.get_organisation!(current_user, org_id)
 
     socket =
       socket

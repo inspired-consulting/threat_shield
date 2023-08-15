@@ -14,6 +14,7 @@
 <.list>
   <:item title="Description"><%= @asset.description %></:item>
   <:item title="Status"><%= @asset.status %></:item>
+  <:item title="System"><%= system_name(@asset) %></:item>
 </.list>
 
 <.back navigate={~p"/organisations/#{@organisation.id}/assets"}>Back to assets</.back>
@@ -32,6 +33,7 @@
     asset={@asset}
     current_user={@current_user}
     organisation={@organisation}
+    system_options={list_system_options(@organisation)}
     patch={~p"/organisations/#{@organisation.id}/assets/#{@asset}"}
   />
 </.modal>

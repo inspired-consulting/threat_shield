@@ -4,6 +4,8 @@ defmodule ThreatShieldWeb.AssetLive.Index do
   alias ThreatShield.Assets
   alias ThreatShield.Assets.Asset
 
+  import ThreatShield.Assets.Asset, only: [list_system_options: 1, system_name: 1]
+
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
     current_user = socket.assigns.current_user

@@ -20,6 +20,9 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:description]} type="text" label="Description" />
+
+        <.input field={@form[:system_id]} type="select" label="System" options={@system_options} />
+
         <.input field={@form[:status]} type="text" label="Status" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Asset</.button>
