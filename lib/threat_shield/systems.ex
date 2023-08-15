@@ -9,59 +9,16 @@ defmodule ThreatShield.Systems do
   alias ThreatShield.Accounts.User
   alias ThreatShield.Systems.System
   alias ThreatShield.Organisations
-  alias ThreatShield.Organisations.Membership
 
-  @doc """
-  Returns the list of systems.
-
-  ## Examples
-
-      iex> list_systems()
-      [%System{}, ...]
-
-  """
   def get_organisation!(user, org_id) do
     Organisations.get_organisation!(user, org_id)
     |> Repo.preload(:systems)
   end
 
-  @doc """
-  Gets a single system.
-
-  Raises `Ecto.NoResultsError` if the System does not exist.
-
-  ## Examples
-
-      iex> get_system!(123)
-      %System{}
-
-      iex> get_system!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_system!(%User{} = user, sys_id) do
-    query =
-      from m in Membership,
-        where: m.user_id == ^user.id,
-        join: o in assoc(m, :organisation),
-        join: s in assoc(o, :systems),
-        where: s.id == ^sys_id,
-        select: s
-
-    Repo.one!(query)
-  end
-
-  def get_system_for_user(%User{} = user, sys_id) do
-    query =
-      from m in Membership,
-        where: m.user_id == ^user.id,
-        join: o in assoc(m, :organisation),
-        join: s in assoc(o, :systems),
-        where: s.id == ^sys_id,
-        select: s
-
-    Repo.one!(query)
-    |> Repo.preload(:organisation)
+  def get_system!(%User{id: user_id}, sys_id) do
+    System.get(sys_id)
+    |> System.for_user(user_id)
+    |> Repo.one!()
   end
 
   @doc """
