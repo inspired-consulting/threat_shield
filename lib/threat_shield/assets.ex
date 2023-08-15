@@ -31,7 +31,10 @@ defmodule ThreatShield.Assets do
 
     Repo.transaction(fn ->
       Repo.one!(Organisations.is_member_query(user, organisation))
+
       Repo.insert!(changeset)
+      |> Repo.reload!()
+      |> Repo.preload(:system)
     end)
   end
 
@@ -42,7 +45,10 @@ defmodule ThreatShield.Assets do
 
     Repo.transaction(fn ->
       Repo.one!(get_single_asset_query(user, asset.id))
+
       Repo.update!(changeset)
+      |> Repo.reload!()
+      |> Repo.preload(:system)
     end)
   end
 
