@@ -29,6 +29,10 @@ defmodule ThreatShield.Assets.Asset do
   def system_name(%__MODULE__{system: %{name: name}}), do: name
   def system_name(_), do: "None"
 
+  def needs_review(asset) do
+    asset.status == :new
+  end
+
   import Ecto.Query
 
   def get(id) do

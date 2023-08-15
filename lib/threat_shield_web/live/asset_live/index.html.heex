@@ -24,6 +24,17 @@
     <.link patch={~p"/organisations/#{@organisation.id}/assets/#{asset}/edit"}>Edit</.link>
   </:action>
   <:action :let={{id, asset}}>
+    <%= if needs_review(asset) do %>
+      <.link
+        phx-click={JS.push("ignore", value: %{asset_id: asset.id})}
+        data-confirm="Are you sure?"
+      >
+        Ignore
+      </.link>
+      <.link phx-click={JS.push("add", value: %{asset_id: asset.id})} data-confirm="Are you sure?">
+        Add
+      </.link>
+    <% end %>
     <.link
       phx-click={JS.push("delete", value: %{asset_id: asset.id}) |> hide("##{id}")}
       data-confirm="Are you sure?"
