@@ -9,11 +9,13 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   end
 
   @impl true
-  def handle_params(%{"org_id" => id}, _, socket) do
+  def handle_params(%{"org_id" => org_id}, _, socket) do
+    user = socket.assigns.current_user
+
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:organisation, Organisations.get_organisation!(id))}
+     |> assign(:organisation, Organisations.get_organisation!(user, org_id))}
   end
 
   defp page_title(:show), do: "Show Organisation"

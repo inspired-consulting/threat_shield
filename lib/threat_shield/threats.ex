@@ -13,16 +13,9 @@ defmodule ThreatShield.Threats do
   alias ThreatShield.Accounts.User
   alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Organisation
-  alias ThreatShield.Organisations.Membership
 
-  def get_organisation_with_threats(%User{} = user, org_id) do
-    query =
-      from m in Membership,
-        where: m.user_id == ^user.id and m.organisation_id == ^org_id,
-        join: o in assoc(m, :organisation),
-        select: o
-
-    Repo.one!(query)
+  def get_organisation!(%User{} = user, org_id) do
+    Organisations.get_organisation!(user, org_id)
     |> Repo.preload(:threats)
   end
 
@@ -40,8 +33,10 @@ defmodule ThreatShield.Threats do
       ** (Ecto.NoResultsError)
 
   """
-  def get_threat!(user, threat_id) do
-    Repo.one!(get_single_threat_query(user, threat_id))
+  def get_threat!(%User{id: user_id}, threat_id) do
+    Threat.get(threat_id)
+    |> Threat.for_user(user_id)
+    |> Repo.one!()
     |> Repo.preload(:organisation)
   end
 
@@ -158,8 +153,6 @@ defmodule ThreatShield.Threats do
 
   """
   def delete_threat_by_id(%User{} = user, threat_id) do
-    IO.inspect(user)
-
     case Repo.delete_all(get_single_threat_query(user, threat_id)) do
       {1, _} -> {:ok, 1}
       _ -> {:error, :unauthorized}

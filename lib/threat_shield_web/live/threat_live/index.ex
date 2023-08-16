@@ -9,7 +9,7 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
     current_user = socket.assigns.current_user
-    organisation = Threats.get_organisation_with_threats(current_user, org_id)
+    organisation = Threats.get_organisation!(current_user, org_id)
     threats = organisation.threats
 
     socket =
@@ -69,7 +69,7 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
   def handle_event("suggest", %{"org_id" => org_id}, socket) do
     user = socket.assigns.current_user
 
-    organisation = Organisations.get_organisation_for_user!(user, org_id)
+    organisation = Organisations.get_organisation!(user, org_id)
 
     threat_descriptions =
       AI.suggest_initial_threats_for_organisation(organisation)
