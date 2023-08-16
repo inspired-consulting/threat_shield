@@ -28,8 +28,6 @@ defmodule ThreatShield.Assets do
   end
 
   def create_asset(%User{} = user, %Organisation{} = organisation, attrs \\ %{}) do
-    IO.inspect(attrs)
-
     changeset =
       %Asset{organisation: organisation}
       |> Asset.changeset(attrs)
@@ -45,8 +43,6 @@ defmodule ThreatShield.Assets do
   end
 
   def update_asset(%User{} = user, %Asset{} = asset, attrs) do
-    attrs |> IO.inspect()
-
     changeset =
       asset
       |> Asset.changeset(attrs)
