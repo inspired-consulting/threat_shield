@@ -4,10 +4,13 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   alias ThreatShield.Threats
   alias ThreatShield.Organisations
 
+  import ThreatShield.Threats.Threat, only: [system_name: 1]
+  import ThreatShield.Organisations.Organisation, only: [list_system_options: 1]
+
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
     current_user = socket.assigns.current_user
-    organisation = Organisations.get_organisation!(current_user, org_id)
+    organisation = Threats.get_organisation!(current_user, org_id)
 
     socket =
       socket

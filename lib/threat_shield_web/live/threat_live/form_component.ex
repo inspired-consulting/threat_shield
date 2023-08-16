@@ -20,6 +20,7 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:description]} type="text" label="Description" />
+        <.input field={@form[:system_id]} type="select" label="System" options={@system_options} />
         <:actions>
           <.button phx-disable-with="Saving...">Save Threat</.button>
         </:actions>

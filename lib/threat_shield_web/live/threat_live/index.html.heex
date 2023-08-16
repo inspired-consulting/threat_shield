@@ -20,6 +20,7 @@
   }
 >
   <:col :let={{_id, threat}} label="Description"><%= threat.description %></:col>
+  <:col :let={{_id, asset}} label="System"><%= system_name(asset) %></:col>
 
   <:action :let={{_id, threat}}>
     <%= if threat.is_candidate do %>
@@ -55,6 +56,7 @@
     threat={@threat}
     current_user={@current_user}
     organisation={@organisation}
+    system_options={list_system_options(@organisation)}
     patch={~p"/organisations/#{@organisation.id}/threats"}
   />
 </.modal>

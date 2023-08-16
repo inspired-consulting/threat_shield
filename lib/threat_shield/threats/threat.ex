@@ -18,9 +18,12 @@ defmodule ThreatShield.Threats.Threat do
   @doc false
   def changeset(threat, attrs) do
     threat
-    |> cast(attrs, [:description, :is_candidate])
+    |> cast(attrs, [:description, :is_candidate, :system_id])
     |> validate_required([:description, :is_candidate, :organisation])
   end
+
+  def system_name(%__MODULE__{system: %{name: name}}), do: name
+  def system_name(_), do: "None"
 
   import Ecto.Query
 

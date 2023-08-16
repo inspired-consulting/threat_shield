@@ -34,6 +34,10 @@ defmodule ThreatShield.Organisations.Organisation do
     |> validate_required([:name])
   end
 
+  def list_system_options(%__MODULE__{systems: systems}) do
+    [{"None", nil} | Enum.map(systems, fn s -> {s.name, s.id} end)]
+  end
+
   import Ecto.Query
 
   def get(id) do
