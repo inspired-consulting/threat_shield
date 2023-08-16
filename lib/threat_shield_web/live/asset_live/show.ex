@@ -28,6 +28,16 @@ defmodule ThreatShieldWeb.AssetLive.Show do
      |> assign(:asset, Assets.get_asset!(user, asset_id))}
   end
 
+  @impl true
+  def handle_event("delete", %{"asset_id" => asset_id}, socket) do
+    organisation = socket.assigns.organisation
+
+    asset = Assets.get_asset!(socket.assigns.current_user, asset_id)
+    {:ok, _} = Assets.delete_asset(socket.assigns.current_user, asset)
+
+    {:noreply, push_navigate(socket, to: "/organisations/#{organisation.id}/assets")}
+  end
+
   defp page_title(:show), do: "Show Asset"
   defp page_title(:edit), do: "Edit Asset"
 end

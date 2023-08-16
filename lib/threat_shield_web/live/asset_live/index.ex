@@ -5,7 +5,7 @@ defmodule ThreatShieldWeb.AssetLive.Index do
   alias ThreatShield.Assets.Asset
 
   import ThreatShield.Assets.Asset,
-    only: [list_system_options: 1, system_name: 1, needs_review: 1]
+    only: [list_system_options: 1, system_name: 1]
 
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
@@ -47,14 +47,6 @@ defmodule ThreatShieldWeb.AssetLive.Index do
   @impl true
   def handle_info({ThreatShieldWeb.AssetLive.FormComponent, {:saved, asset}}, socket) do
     {:noreply, stream_insert(socket, :assets, asset)}
-  end
-
-  @impl true
-  def handle_event("delete", %{"asset_id" => asset_id}, socket) do
-    asset = Assets.get_asset!(socket.assigns.current_user, asset_id)
-    {:ok, _} = Assets.delete_asset(socket.assigns.current_user, asset)
-
-    {:noreply, stream_delete(socket, :assets, asset)}
   end
 
   @impl true

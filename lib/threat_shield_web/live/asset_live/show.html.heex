@@ -3,6 +3,12 @@
   <:subtitle>This is a asset record from your database.</:subtitle>
   <:actions>
     <.link
+      phx-click={JS.push("delete", value: %{asset_id: @asset.id})}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+    <.link
       patch={~p"/organisations/#{@organisation.id}/assets/#{@asset}/show/edit"}
       phx-click={JS.push_focus()}
     >

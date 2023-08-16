@@ -21,26 +21,36 @@
     <div class="sr-only">
       <.link navigate={~p"/organisations/#{@organisation.id}/assets/#{asset}"}>Show</.link>
     </div>
-    <.link patch={~p"/organisations/#{@organisation.id}/assets/#{asset}/edit"}>Edit</.link>
   </:action>
-  <:action :let={{id, asset}}>
-    <%= if needs_review(asset) do %>
-      <.link
-        phx-click={JS.push("ignore", value: %{asset_id: asset.id})}
-        data-confirm="Are you sure?"
-      >
-        Ignore
-      </.link>
-      <.link phx-click={JS.push("add", value: %{asset_id: asset.id})} data-confirm="Are you sure?">
-        Add
-      </.link>
+  <:action :let={{_id, asset}}>
+    <%= case asset.status do %>
+      <% :new -> %>
+        <.link
+          phx-click={JS.push("ignore", value: %{asset_id: asset.id})}
+          data-confirm="Are you sure?"
+        >
+          Ignore
+        </.link>
+        <.link phx-click={JS.push("add", value: %{asset_id: asset.id})} data-confirm="Are you sure?">
+          Add
+        </.link>
+
+    <% :ignored -> %>
+        <.link
+          phx-click={JS.push("add", value: %{asset_id: asset.id})}
+          data-confirm="Are you sure?"
+        >
+          Add
+        </.link>
+
+      <% :added -> %>
+        <.link
+          phx-click={JS.push("ignore", value: %{asset_id: asset.id})}
+          data-confirm="Are you sure?"
+        >
+          Ignore
+        </.link>
     <% end %>
-    <.link
-      phx-click={JS.push("delete", value: %{asset_id: asset.id}) |> hide("##{id}")}
-      data-confirm="Are you sure?"
-    >
-      Delete
-    </.link>
   </:action>
 </.table>
 
