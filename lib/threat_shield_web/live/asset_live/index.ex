@@ -6,7 +6,10 @@ defmodule ThreatShieldWeb.AssetLive.Index do
   alias ThreatShield.AI
 
   import ThreatShield.Assets.Asset,
-    only: [list_system_options: 1, system_name: 1]
+    only: [system_name: 1]
+
+  import ThreatShield.Organisations.Organisation,
+    only: [list_system_options: 1]
 
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do

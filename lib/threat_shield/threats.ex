@@ -13,45 +13,22 @@ defmodule ThreatShield.Threats do
   alias ThreatShield.Accounts.User
   alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Systems.System
 
   def get_organisation!(%User{} = user, org_id) do
     Organisations.get_organisation!(user, org_id)
-    |> Repo.preload(:threats)
+    |> Repo.preload(threats: :system)
+    |> Repo.preload(:systems)
   end
 
-  @doc """
-  Gets a single threat.
-
-  Raises `Ecto.NoResultsError` if the Threat does not exist.
-
-  ## Examples
-
-      iex> get_threat!(123)
-      %Threat{}
-
-      iex> get_threat!(456)
-      ** (Ecto.NoResultsError)
-
-  """
   def get_threat!(%User{id: user_id}, threat_id) do
     Threat.get(threat_id)
     |> Threat.for_user(user_id)
     |> Repo.one!()
     |> Repo.preload(:organisation)
+    |> Repo.preload(:system)
   end
 
-  @doc """
-  Creates a threat.
-
-  ## Examples
-
-      iex> create_threat(%{field: value})
-      {:ok, %Threat{}}
-
-      iex> create_threat(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def create_threat(
         %User{} = user,
         %Organisation{} = organisation,
@@ -62,6 +39,7 @@ defmodule ThreatShield.Threats do
       |> Threat.changeset(attrs)
 
     Repo.transaction(fn ->
+      check_related_system_in_threat_changeset(changeset, user)
       Repo.one!(Organisations.is_member_query(user, organisation))
       Repo.insert!(changeset)
     end)
@@ -109,41 +87,18 @@ defmodule ThreatShield.Threats do
     |> Enum.map(fn {_k, v} -> v end)
   end
 
-  @doc """
-  Updates a threat.
-
-  ## Examples
-
-      iex> update_threat(threat, %{field: new_value})
-      {:ok, %Threat{}}
-
-      iex> update_threat(threat, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def update_threat(%User{} = user, %Threat{} = threat, attrs) do
     changeset =
       threat
       |> Threat.changeset(attrs)
 
     Repo.transaction(fn ->
+      check_related_system_in_threat_changeset(changeset, user)
       Repo.one!(get_single_threat_query(user, threat.id))
       Repo.update!(changeset)
     end)
   end
 
-  @doc """
-  Deletes a threat.
-
-  ## Examples
-
-      iex> delete_threat(threat)
-      {:ok, %Threat{}}
-
-      iex> delete_threat(threat)
-      {:error, %Ecto.Changeset{}}
-
-  """
   def delete_threat_by_id(%User{} = user, threat_id) do
     case Repo.delete_all(get_single_threat_query(user, threat_id)) do
       {1, _} -> {:ok, 1}
@@ -162,6 +117,16 @@ defmodule ThreatShield.Threats do
   """
   def change_threat(%Threat{} = threat, attrs \\ %{}) do
     Threat.changeset(threat, attrs)
+  end
+
+  defp check_related_system_in_threat_changeset(%{changes: %{system_id: sys_id}}, user)
+       when not is_nil(sys_id) do
+    System.get(sys_id)
+    |> System.for_user(user.id)
+    |> Repo.one!()
+  end
+
+  defp check_related_system_in_threat_changeset(_, _user) do
   end
 
   def get_single_threat_query(user, threat_id) do

@@ -6,6 +6,11 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
   alias ThreatShield.Organisations
   alias ThreatShield.AI
 
+  import ThreatShield.Threats.Threat,
+    only: [system_name: 1]
+
+  import ThreatShield.Organisations.Organisation, only: [list_system_options: 1]
+
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
     current_user = socket.assigns.current_user
