@@ -8,7 +8,7 @@ defmodule ThreatShield.AssetsTest do
 
     import ThreatShield.AssetsFixtures
 
-    @invalid_attrs %{status: nil, description: nil}
+    @invalid_attrs %{is_candidate: nil, description: nil}
 
     test "list_assets/0 returns all assets" do
       asset = asset_fixture()
@@ -21,10 +21,10 @@ defmodule ThreatShield.AssetsTest do
     end
 
     test "create_asset/1 with valid data creates a asset" do
-      valid_attrs = %{status: 42, description: "some description"}
+      valid_attrs = %{is_candidate: 42, description: "some description"}
 
       assert {:ok, %Asset{} = asset} = Assets.create_asset(valid_attrs)
-      assert asset.status == 42
+      assert asset.is_candidate == 42
       assert asset.description == "some description"
     end
 
@@ -34,10 +34,10 @@ defmodule ThreatShield.AssetsTest do
 
     test "update_asset/2 with valid data updates the asset" do
       asset = asset_fixture()
-      update_attrs = %{status: 43, description: "some updated description"}
+      update_attrs = %{is_candidate: 43, description: "some updated description"}
 
       assert {:ok, %Asset{} = asset} = Assets.update_asset(asset, update_attrs)
-      assert asset.status == 43
+      assert asset.is_candidate == 43
       assert asset.description == "some updated description"
     end
 

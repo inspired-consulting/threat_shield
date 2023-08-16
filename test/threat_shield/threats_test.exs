@@ -8,7 +8,7 @@ defmodule ThreatShield.ThreatsTest do
 
     import ThreatShield.ThreatsFixtures
 
-    @invalid_attrs %{description: nil, is_accepted: nil}
+    @invalid_attrs %{description: nil, is_candidate: nil}
 
     test "list_threats/0 returns all threats" do
       threat = threat_fixture()
@@ -21,11 +21,11 @@ defmodule ThreatShield.ThreatsTest do
     end
 
     test "create_threat/1 with valid data creates a threat" do
-      valid_attrs = %{description: "some description", is_accepted: true}
+      valid_attrs = %{description: "some description", is_candidate: true}
 
       assert {:ok, %Threat{} = threat} = Threats.create_threat(valid_attrs)
       assert threat.description == "some description"
-      assert threat.is_accepted == true
+      assert threat.is_candidate == true
     end
 
     test "create_threat/1 with invalid data returns error changeset" do
@@ -34,11 +34,11 @@ defmodule ThreatShield.ThreatsTest do
 
     test "update_threat/2 with valid data updates the threat" do
       threat = threat_fixture()
-      update_attrs = %{description: "some updated description", is_accepted: false}
+      update_attrs = %{description: "some updated description", is_candidate: false}
 
       assert {:ok, %Threat{} = threat} = Threats.update_threat(threat, update_attrs)
       assert threat.description == "some updated description"
-      assert threat.is_accepted == false
+      assert threat.is_candidate == false
     end
 
     test "update_threat/2 with invalid data returns error changeset" do

@@ -4,9 +4,9 @@ defmodule ThreatShieldWeb.ThreatLiveTest do
   import Phoenix.LiveViewTest
   import ThreatShield.ThreatsFixtures
 
-  @create_attrs %{description: "some description", is_accepted: true}
-  @update_attrs %{description: "some updated description", is_accepted: false}
-  @invalid_attrs %{description: nil, is_accepted: false}
+  @create_attrs %{description: "some description", is_candidate: true}
+  @update_attrs %{description: "some updated description", is_candidate: false}
+  @invalid_attrs %{description: nil, is_candidate: false}
 
   defp create_threat(_) do
     threat = threat_fixture()

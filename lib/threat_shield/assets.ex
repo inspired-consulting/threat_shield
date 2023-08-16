@@ -63,17 +63,13 @@ defmodule ThreatShield.Assets do
     Asset.changeset(asset, attrs)
   end
 
-  def add_asset_by_id(user, id), do: update_status_for_id(user, id, :added)
-
-  def ignore_asset_by_id(user, id), do: update_status_for_id(user, id, :ignored)
-
-  defp update_status_for_id(%User{id: user_id}, asset_id, target_value) do
+  def add_asset_by_id(%User{id: user_id}, asset_id) do
     Repo.transaction(fn ->
       Asset.get(asset_id)
       |> Asset.for_user(user_id)
       |> Repo.one!()
       |> Repo.preload([:organisation, :system])
-      |> Asset.changeset(%{status: target_value})
+      |> Asset.changeset(%{is_candidate: false})
       |> Repo.update!()
     end)
   end
