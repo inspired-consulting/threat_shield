@@ -76,7 +76,7 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
     organisation = Organisations.get_organisation!(user, org_id)
 
     threat_descriptions =
-      AI.suggest_initial_threats_for_organisation(organisation)
+      AI.suggest_threats_for_organisation(organisation)
 
     new_threats =
       Threats.bulk_add_for_user_and_org(user, organisation, threat_descriptions)

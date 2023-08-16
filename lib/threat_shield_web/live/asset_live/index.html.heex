@@ -1,6 +1,9 @@
 <.header>
   Listing Assets
   <:actions>
+    <.link phx-click={JS.push("suggest", value: %{org_id: @organisation.id})}>
+      <.button>Suggest Assets</.button>
+    </.link>
     <.link patch={~p"/organisations/#{@organisation.id}/assets/new"}>
       <.button>New Asset</.button>
     </.link>

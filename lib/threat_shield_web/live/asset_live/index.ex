@@ -3,6 +3,7 @@ defmodule ThreatShieldWeb.AssetLive.Index do
 
   alias ThreatShield.Assets
   alias ThreatShield.Assets.Asset
+  alias ThreatShield.AI
 
   import ThreatShield.Assets.Asset,
     only: [list_system_options: 1, system_name: 1]
@@ -65,5 +66,20 @@ defmodule ThreatShieldWeb.AssetLive.Index do
     {:ok, asset} = Assets.add_asset_by_id(user, id)
 
     {:noreply, stream_insert(socket, :assets, asset)}
+  end
+
+  @impl true
+  def handle_event("suggest", %{"org_id" => org_id}, socket) do
+    user = socket.assigns.current_user
+
+    organisation = Assets.get_organisation!(user, org_id)
+
+    asset_descriptions =
+      AI.suggest_assets_for_organisation(organisation)
+
+    asset_candidates =
+      Assets.bulk_add_asset_candidates(user, organisation, asset_descriptions)
+
+    {:noreply, stream(socket, :assets, asset_candidates)}
   end
 end
