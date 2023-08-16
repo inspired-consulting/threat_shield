@@ -20,16 +20,15 @@
   }
 >
   <:col :let={{_id, threat}} label="Description"><%= threat.description %></:col>
-  <:col :let={{_id, threat}} label="Is candidate"><%= threat.is_candidate %></:col>
+
   <:action :let={{_id, threat}}>
     <%= if threat.is_candidate do %>
       <.link
-        phx-click={JS.push("ignore", value: %{threat_id: threat.id})}
+        phx-click={JS.push("delete", value: %{threat_id: threat.id})}
         data-confirm="Are you sure?"
       >
         Ignore
       </.link>
-    <% else %>
       <.link
         phx-click={JS.push("add", value: %{threat_id: threat.id})}
         data-confirm="Are you sure?"
