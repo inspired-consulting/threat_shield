@@ -4,9 +4,9 @@ defmodule ThreatShieldWeb.AssetLiveTest do
   import Phoenix.LiveViewTest
   import ThreatShield.AssetsFixtures
 
-  @create_attrs %{status: 42, description: "some description"}
-  @update_attrs %{status: 43, description: "some updated description"}
-  @invalid_attrs %{status: nil, description: nil}
+  @create_attrs %{is_candidate: 42, description: "some description"}
+  @update_attrs %{is_candidate: 43, description: "some updated description"}
+  @invalid_attrs %{is_candidate: nil, description: nil}
 
   defp create_asset(_) do
     asset = asset_fixture()

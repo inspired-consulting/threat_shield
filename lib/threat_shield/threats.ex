@@ -80,7 +80,7 @@ defmodule ThreatShield.Threats do
       changeset =
         Repo.one!(get_single_threat_query(user, threat_id))
         |> Repo.preload(:organisation)
-        |> Threat.changeset(%{is_accepted: target_value})
+        |> Threat.changeset(%{is_candidate: target_value})
 
       Repo.update!(changeset)
     end)

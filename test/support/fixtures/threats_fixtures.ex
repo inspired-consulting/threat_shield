@@ -12,7 +12,7 @@ defmodule ThreatShield.ThreatsFixtures do
       attrs
       |> Enum.into(%{
         description: "some description",
-        is_accepted: true
+        is_candidate: true
       })
       |> ThreatShield.Threats.create_threat()
 

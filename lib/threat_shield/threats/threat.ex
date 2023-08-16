@@ -7,7 +7,7 @@ defmodule ThreatShield.Threats.Threat do
 
   schema "threats" do
     field :description, :string
-    field :is_accepted, :boolean, default: false
+    field :is_candidate, :boolean, default: false
 
     belongs_to :system, System
     belongs_to :organisation, Organisation
@@ -18,8 +18,8 @@ defmodule ThreatShield.Threats.Threat do
   @doc false
   def changeset(threat, attrs) do
     threat
-    |> cast(attrs, [:description, :is_accepted])
-    |> validate_required([:description, :is_accepted, :organisation])
+    |> cast(attrs, [:description, :is_candidate])
+    |> validate_required([:description, :is_candidate, :organisation])
   end
 
   import Ecto.Query

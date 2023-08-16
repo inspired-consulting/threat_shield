@@ -11,7 +11,7 @@ defmodule ThreatShield.AssetsFixtures do
     {:ok, asset} =
       attrs
       |> Enum.into(%{
-        status: 42,
+        is_candidate: 42,
         description: "some description"
       })
       |> ThreatShield.Assets.create_asset()
