@@ -6,6 +6,8 @@ defmodule ThreatShield.Assets do
   import Ecto.Query, warn: false
   alias ThreatShield.Repo
 
+  alias Ecto.Multi
+
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Accounts.User
   alias ThreatShield.Organisations
@@ -72,6 +74,37 @@ defmodule ThreatShield.Assets do
       |> Asset.changeset(%{is_candidate: false})
       |> Repo.update!()
     end)
+  end
+
+  def bulk_add_asset_candidates(%User{} = user, %Organisation{} = organisation, assets) do
+    multi =
+      Multi.new()
+      |> Multi.exists?(:check_access, Organisations.is_member_query(user, organisation))
+
+    {:ok, result} =
+      Enum.reduce(
+        assets,
+        multi,
+        fn asset, acc ->
+          Multi.insert(
+            acc,
+            {:insert_asset, asset.description},
+            asset
+            |> Ecto.Changeset.change()
+            |> Ecto.Changeset.put_assoc(:organisation, organisation)
+          )
+        end
+      )
+      |> Repo.transaction()
+
+    result
+    |> Enum.filter(fn {k, _v} ->
+      case k do
+        {:insert_asset, _} -> true
+        _ -> false
+      end
+    end)
+    |> Enum.map(fn {_k, v} -> v end)
   end
 
   defp get_single_asset_query(user, asset_id) do
