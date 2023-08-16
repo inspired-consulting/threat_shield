@@ -23,15 +23,15 @@
   </:action>
   <:action :let={{_id, asset}}>
     <%= if asset.is_candidate do %>
-        <.link
-          phx-click={JS.push("ignore", value: %{asset_id: asset.id})}
-          data-confirm="Are you sure?"
-        >
-          Ignore
-        </.link>
-        <.link phx-click={JS.push("add", value: %{asset_id: asset.id})} data-confirm="Are you sure?">
-          Add
-        </.link>
+      <.link
+        phx-click={JS.push("delete", value: %{asset_id: asset.id})}
+        data-confirm="Are you sure?"
+      >
+        Ignore
+      </.link>
+      <.link phx-click={JS.push("add", value: %{asset_id: asset.id})} data-confirm="Are you sure?">
+        Add
+      </.link>
     <% end %>
   </:action>
 </.table>

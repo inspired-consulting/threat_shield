@@ -50,11 +50,13 @@ defmodule ThreatShieldWeb.AssetLive.Index do
   end
 
   @impl true
-  def handle_event("ignore", %{"asset_id" => id}, socket) do
-    user = socket.assigns.current_user
-    {:ok, asset} = Assets.ignore_asset_by_id(user, id)
+  def handle_event("delete", %{"asset_id" => asset_id}, socket) do
+    organisation = socket.assigns.organisation
 
-    {:noreply, stream_insert(socket, :assets, asset)}
+    asset = Assets.get_asset!(socket.assigns.current_user, asset_id)
+    {:ok, _} = Assets.delete_asset(socket.assigns.current_user, asset)
+
+    {:noreply, push_navigate(socket, to: "/organisations/#{organisation.id}/assets")}
   end
 
   @impl true
