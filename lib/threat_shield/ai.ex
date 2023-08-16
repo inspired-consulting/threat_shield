@@ -40,6 +40,6 @@ defmodule ThreatShield.AI do
     %{"threats" => content} = data
 
     content
-    |> Enum.map(fn d -> %Threat{description: d} end)
+    |> Enum.map(fn d -> %Threat{description: d, is_candidate: true} end)
   end
 end

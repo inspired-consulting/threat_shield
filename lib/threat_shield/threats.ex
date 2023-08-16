@@ -67,20 +67,12 @@ defmodule ThreatShield.Threats do
     end)
   end
 
-  def ignore_threat_by_id(%User{} = user, threat_id) do
-    update_acceptance_for_id(user, threat_id, false)
-  end
-
   def add_threat_by_id(%User{} = user, threat_id) do
-    update_acceptance_for_id(user, threat_id, true)
-  end
-
-  defp update_acceptance_for_id(%User{} = user, threat_id, target_value) do
     Repo.transaction(fn ->
       changeset =
         Repo.one!(get_single_threat_query(user, threat_id))
         |> Repo.preload(:organisation)
-        |> Threat.changeset(%{is_candidate: target_value})
+        |> Threat.changeset(%{is_candidate: false})
 
       Repo.update!(changeset)
     end)
