@@ -23,8 +23,13 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:location]} type="text" label="Location" />
-        <%= for attribute_key <- attribute_keys() do %>
+        <.input
+          field={@form[:location]}
+          type="select"
+          label="Choose your location"
+          options={@locations_options}
+        />
+        <%= for attribute_key <- @attribute_keys do %>
           <.input
             name={attribute_key}
             value={Map.get(@attribute_map, attribute_key, "")}
