@@ -48,10 +48,26 @@ defmodule ThreatShield.AI do
 
     user_prompt =
       """
-      I work at a company in the field of #{organisation.industry}. My systems are: #{Enum.join(Enum.map(organisation.systems, fn sys -> sys.attributes end), "\n")}
+      I work at a company in the field of #{organisation.industry}. #{generate_systems_description(organisation)}
       """
 
     make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
+  end
+
+  defp generate_systems_description(%Organisation{systems: systems}) do
+    case systems do
+      [] ->
+        ""
+
+      list ->
+        "My systems are:\n" <>
+          (list
+           |> Enum.map(fn sys -> sys.attributes end)
+           |> Enum.map(fn attributes ->
+             Enum.map_join(attributes, "\n", fn {key, val} -> ~s{"#{key}: ", "#{val}"} end)
+           end)
+           |> Enum.join("\n"))
+    end
   end
 
   defp get_content_from_reponse(response, root_key) do

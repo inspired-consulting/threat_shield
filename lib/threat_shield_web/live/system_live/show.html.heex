@@ -14,6 +14,11 @@
 <.list>
   <:item title="Name"><%= @system.name %></:item>
   <:item title="Description"><%= @system.description %></:item>
+  <:item title="Attributes">
+    <%= for {key, value} <- @system.attributes do %>
+      <div><%= "#{key} → #{value}" %></div>
+    <% end %>
+  </:item>
 </.list>
 
 <.back navigate={~p"/organisations/#{@organisation.id}/systems"}>Back to systems</.back>
