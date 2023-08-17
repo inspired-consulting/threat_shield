@@ -16,7 +16,6 @@
 >
   <:col :let={{_id, system}} label="Name"><%= system.name %></:col>
   <:col :let={{_id, system}} label="Description"><%= system.description %></:col>
-  <:col :let={{_id, system}} label="Attributes"><%= system.attributes %></:col>
   <:action :let={{_id, system}}>
     <div class="sr-only">
       <.link navigate={~p"/organisations/#{@organisation.id}/systems/#{system}"}>Show</.link>
@@ -49,8 +48,7 @@
     system={@system}
     organisation={@organisation}
     current_user={@current_user}
-    attributes={@attributes}
-
+    attribute_keys={@attribute_keys}
     patch={~p"/organisations/#{@organisation.id}/systems"}
   />
 </.modal>

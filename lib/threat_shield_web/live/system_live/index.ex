@@ -4,7 +4,7 @@ defmodule ThreatShieldWeb.SystemLive.Index do
   alias ThreatShield.Systems
   alias ThreatShield.Systems.System
 
-  @attributes ["Database", "Application Framework", "Authentication Framework"]
+  @attribute_keys ["Database", "Application Framework", "Authentication Framework"]
 
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
@@ -17,7 +17,7 @@ defmodule ThreatShieldWeb.SystemLive.Index do
       socket
       |> assign(:organisation, organisation)
       |> assign(:systems, systems)
-      |> assign(:attributes, @attributes)
+      |> assign(:attribute_keys, @attribute_keys)
 
     {:ok, stream(socket, :systems, systems)}
   end
@@ -39,14 +39,14 @@ defmodule ThreatShieldWeb.SystemLive.Index do
     socket
     |> assign(:page_title, "New System")
     |> assign(:system, %System{})
-    |> assign(:attributes, @attributes)
+    |> assign(:attribute_keys, @attribute_keys)
   end
 
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Systems")
     |> assign(:system, nil)
-    |> assign(:attributes, @attributes)
+    |> assign(:attribute_keys, @attribute_keys)
   end
 
   @impl true

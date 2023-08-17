@@ -3,6 +3,8 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
 
   alias ThreatShield.Systems
 
+  @attribute_keys ["Database", "Application Framework", "Authentication Framework"]
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -21,8 +23,13 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
       >
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:description]} type="text" label="Description" />
-        <%= for attribute <- @attributes do %>
-          <.input field={@form[:attributes]} type="text" label={attribute} />
+        <%= for attribute_key <- @attribute_keys do %>
+          <.input
+            name={attribute_key}
+            value={Map.get(@attribute_map, attribute_key, "")}
+            type="text"
+            label={attribute_key}
+          />
           <%!-- <%= for {attribute, idx} <- Enum.with_index(@attributes) do %>
           <%= text_input(:attributes, "attribute_#{idx}", value: attribute, class: "form-input") %>
         <% end %> --%>
@@ -37,16 +44,27 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
 
   @impl true
   def update(%{system: system} = assigns, socket) do
-    changeset = Systems.change_system(system)
+    changeset =
+      Systems.change_system(system) |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
+
+    attribute_map =
+      case system.attributes do
+        nil -> Map.new()
+        map -> map
+      end
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_form(changeset)}
+     |> assign_form(changeset)
+     |> assign(:attribute_map, attribute_map)
+     |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")}
   end
 
   @impl true
-  def handle_event("validate", %{"system" => system_params}, socket) do
+  def handle_event("validate", %{"system" => system_params} = params, socket) do
+    params |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
+
     changeset =
       socket.assigns.system
       |> Systems.change_system(system_params)
@@ -55,13 +73,24 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
     {:noreply, assign_form(socket, changeset)}
   end
 
-  def handle_event("save", %{"system" => system_params}, socket) do
-    save_system(socket, socket.assigns.action, system_params)
+  def handle_event("save", %{"system" => system_params} = params, socket) do
+    attributes = extract_attributes_from_params(params)
+
+    save_system(socket, socket.assigns.action, Map.put(system_params, "attributes", attributes))
+  end
+
+  defp extract_attributes_from_params(params) do
+    @attribute_keys
+    |> Enum.map(fn key -> {key, Map.get(params, key, "")} end)
+    |> Map.new()
   end
 
   defp save_system(socket, :edit, system_params) do
     user = socket.assigns.current_user
     organisation = socket.assigns.organisation
+
+    socket |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
+    system_params |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
 
     case Systems.update_system(user, organisation, socket.assigns.system, system_params) do
       {:ok, system} ->

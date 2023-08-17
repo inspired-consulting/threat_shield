@@ -5,7 +5,7 @@ defmodule ThreatShield.Systems.System do
   alias ThreatShield.Organisations.Organisation
 
   schema "systems" do
-    field :attributes, :string
+    field :attributes, :map
     field :name, :string
     field :description, :string
     belongs_to :organisation, ThreatShield.Organisations.Organisation
