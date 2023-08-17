@@ -17,6 +17,8 @@ defmodule ThreatShield.Systems.System do
 
   @doc false
   def changeset(system, attrs) do
+    IO.inspect(attrs)
+
     system
     |> cast(attrs, [:name, :description, :attributes])
     |> validate_required([:name, :description])
