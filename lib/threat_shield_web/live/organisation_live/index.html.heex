@@ -15,16 +15,11 @@
   }
 >
   <:col :let={{_id, organisation}} label="Name"><%= organisation.name %></:col>
-  <:col :let={{_id, organisation}} label="Industry"><%= organisation.industry %></:col>
-  <:col :let={{_id, organisation}} label="Legal Form"><%= organisation.legal_form %></:col>
-  <:col :let={{_id, organisation}} label="Location/Region"><%= organisation.location %></:col>
-  <:col :let={{_id, organisation}} label="Type of Business">
-    <%= organisation.type_of_business %>
-  </:col>
-  <:col :let={{_id, organisation}} label="Size"><%= organisation.size %></:col>
-  <:col :let={{_id, organisation}} label="Financial Information">
-    <%= organisation.financial_information %>
-  </:col>
+  <%!-- <:col :let={{_id, organisation}} label="Attributes">
+    <%= for {key, value} <- organisation.attributes do %>
+      <div><%= "#{key} → #{value}" %></div>
+    <% end %>
+  </:col> --%>
   <:action :let={{_id, organisation}}>
     <div class="sr-only">
       <.link navigate={~p"/organisations/#{organisation}/systems"}>Show</.link>
@@ -63,6 +58,7 @@
     organisation={@organisation}
     current_user={@current_user}
     locations_options={@locations_options}
+    attribute_keys={@attribute_keys}
     patch={~p"/organisations"}
   />
 </.modal>

@@ -4,6 +4,14 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
 
   alias ThreatShield.Organisations
 
+  @attribute_keys [
+    "Industry",
+    "Legal Form",
+    "Type of Business",
+    "Size",
+    "Financial Information"
+  ]
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -21,19 +29,15 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:industry]} type="text" label="Industry" />
-        <.input field={@form[:legal_form]} type="text" label="Legal Form" />
-
-        <.input
-          field={@form[:location]}
-          type="select"
-          label="Choose your location"
-          options={@locations_options}
-        />
-
-        <.input field={@form[:type_of_business]} type="text" label="Type of Business" />
-        <.input field={@form[:size]} type="text" label="Size" />
-        <.input field={@form[:financial_information]} type="text" label="Financial Information" />
+        <.input field={@form[:location]} type="text" label="Location" />
+        <%= for attribute_key <- @attribute_keys do %>
+          <.input
+            name={attribute_key}
+            value={Map.get(@attribute_map, attribute_key, "")}
+            type="text"
+            label={attribute_key}
+          />
+        <% end %>
         <:actions>
           <.button phx-disable-with="Saving...">Save Organisation</.button>
         </:actions>
@@ -46,10 +50,17 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   def update(%{organisation: organisation} = assigns, socket) do
     changeset = Organisations.change_organisation(organisation)
 
+    attribute_map =
+      case organisation.attributes do
+        nil -> Map.new()
+        map -> map
+      end
+
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_form(changeset)}
+     |> assign_form(changeset)
+     |> assign(:attribute_map, attribute_map)}
   end
 
   @impl true
@@ -62,8 +73,20 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
     {:noreply, assign_form(socket, changeset)}
   end
 
-  def handle_event("save", %{"organisation" => organisation_params}, socket) do
-    save_organisation(socket, socket.assigns.action, organisation_params)
+  def handle_event("save", %{"organisation" => organisation_params} = params, socket) do
+    attributes = extract_attributes_from_params(params)
+
+    save_organisation(
+      socket,
+      socket.assigns.action,
+      Map.put(organisation_params, "attributes", attributes)
+    )
+  end
+
+  defp extract_attributes_from_params(params) do
+    @attribute_keys
+    |> Enum.map(fn key -> {key, Map.get(params, key, "")} end)
+    |> Map.new()
   end
 
   defp save_organisation(socket, :edit, organisation_params) do

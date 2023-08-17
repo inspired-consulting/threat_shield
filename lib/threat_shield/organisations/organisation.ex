@@ -4,12 +4,8 @@ defmodule ThreatShield.Organisations.Organisation do
 
   schema "organisations" do
     field :name, :string
-    field :industry, :string
-    field :legal_form, :string
     field :location, :string
-    field :type_of_business, :string
-    field :size, :integer
-    field :financial_information, :string
+    field :attributes, :map
 
     many_to_many :users, ThreatShield.Accounts.User, join_through: "memberships"
     has_many :systems, ThreatShield.Systems.System
@@ -24,14 +20,14 @@ defmodule ThreatShield.Organisations.Organisation do
     organisation
     |> cast(attrs, [
       :name,
-      :industry,
-      :legal_form,
       :location,
-      :type_of_business,
-      :size,
-      :financial_information
+      :attributes
     ])
     |> validate_required([:name])
+  end
+
+  def attribute_keys() do
+    ["Industry", "Legal Form", "Type of Business", "Size", "Financial Information"]
   end
 
   def list_system_options(%__MODULE__{systems: systems}) do

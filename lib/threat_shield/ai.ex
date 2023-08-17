@@ -34,7 +34,7 @@ defmodule ThreatShield.AI do
     {"assets": _}
     """
 
-    user_prompt = "I work at a company in the field of #{organisation.industry}."
+    user_prompt = "I work at a company in the field of #{organisation.attributes["Industry"]}"
 
     make_chatgpt_request(system_prompt, user_prompt, &get_assets_from_response/1)
   end
@@ -48,7 +48,7 @@ defmodule ThreatShield.AI do
 
     user_prompt =
       """
-      I work at a company in the field of #{organisation.industry}. #{generate_systems_description(organisation)}
+      I work at a company in the field of #{organisation.attributes["Industry"]}. #{generate_systems_description(organisation)}
       """
 
     make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
