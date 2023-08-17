@@ -4,13 +4,7 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
 
   alias ThreatShield.Organisations
 
-  @attribute_keys [
-    "Industry",
-    "Legal Form",
-    "Type of Business",
-    "Size",
-    "Financial Information"
-  ]
+  import ThreatShield.Organisations.Organisation, only: [attribute_keys: 0]
 
   @impl true
   def render(assigns) do
@@ -30,7 +24,7 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
       >
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:location]} type="text" label="Location" />
-        <%= for attribute_key <- @attribute_keys do %>
+        <%= for attribute_key <- attribute_keys() do %>
           <.input
             name={attribute_key}
             value={Map.get(@attribute_map, attribute_key, "")}
@@ -84,7 +78,7 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   end
 
   defp extract_attributes_from_params(params) do
-    @attribute_keys
+    attribute_keys()
     |> Enum.map(fn key -> {key, Map.get(params, key, "")} end)
     |> Map.new()
   end
