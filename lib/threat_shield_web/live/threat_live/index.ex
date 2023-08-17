@@ -3,7 +3,6 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
 
   alias ThreatShield.Threats
   alias ThreatShield.Threats.Threat
-  alias ThreatShield.Organisations
   alias ThreatShield.AI
 
   import ThreatShield.Threats.Threat,
@@ -78,7 +77,7 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
   def handle_event("suggest", %{"org_id" => org_id}, socket) do
     user = socket.assigns.current_user
 
-    organisation = Organisations.get_organisation!(user, org_id)
+    organisation = Threats.get_organisation!(user, org_id)
 
     threat_descriptions =
       AI.suggest_threats_for_organisation(organisation)

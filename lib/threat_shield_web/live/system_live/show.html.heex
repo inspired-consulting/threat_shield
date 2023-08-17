@@ -14,7 +14,11 @@
 <.list>
   <:item title="Name"><%= @system.name %></:item>
   <:item title="Description"><%= @system.description %></:item>
-  <:item title="Attributes"><%= @system.attributes %></:item>
+  <:item title="Attributes">
+    <%= for {key, value} <- @system.attributes do %>
+      <div><%= "#{key} → #{value}" %></div>
+    <% end %>
+  </:item>
 </.list>
 
 <.back navigate={~p"/organisations/#{@organisation.id}/systems"}>Back to systems</.back>
@@ -33,6 +37,7 @@
     system={@system}
     organisation={@organisation}
     current_user={@current_user}
+    attribute_keys={@attribute_keys}
     patch={~p"/organisations/#{@organisation.id}/systems/#{@system}"}
   />
 </.modal>

@@ -2,7 +2,6 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Threats
-  alias ThreatShield.Organisations
 
   import ThreatShield.Threats.Threat, only: [system_name: 1]
   import ThreatShield.Organisations.Organisation, only: [list_system_options: 1]

@@ -3,6 +3,8 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
 
   alias ThreatShield.Systems
 
+  import ThreatShield.Systems.System, only: [attribute_keys: 0]
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -21,7 +23,14 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
       >
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:description]} type="text" label="Description" />
-        <.input field={@form[:attributes]} type="text" label="Attributes" />
+        <%= for attribute_key <- attribute_keys() do %>
+          <.input
+            name={attribute_key}
+            value={Map.get(@attribute_map, attribute_key, "")}
+            type="text"
+            label={attribute_key}
+          />
+        <% end %>
         <:actions>
           <.button phx-disable-with="Saving...">Save System</.button>
         </:actions>
@@ -32,12 +41,20 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
 
   @impl true
   def update(%{system: system} = assigns, socket) do
-    changeset = Systems.change_system(system)
+    changeset =
+      Systems.change_system(system)
+
+    attribute_map =
+      case system.attributes do
+        nil -> Map.new()
+        map -> map
+      end
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_form(changeset)}
+     |> assign_form(changeset)
+     |> assign(:attribute_map, attribute_map)}
   end
 
   @impl true
@@ -50,8 +67,16 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
     {:noreply, assign_form(socket, changeset)}
   end
 
-  def handle_event("save", %{"system" => system_params}, socket) do
-    save_system(socket, socket.assigns.action, system_params)
+  def handle_event("save", %{"system" => system_params} = params, socket) do
+    attributes = extract_attributes_from_params(params)
+
+    save_system(socket, socket.assigns.action, Map.put(system_params, "attributes", attributes))
+  end
+
+  defp extract_attributes_from_params(params) do
+    attribute_keys()
+    |> Enum.map(fn key -> {key, Map.get(params, key, "")} end)
+    |> Map.new()
   end
 
   defp save_system(socket, :edit, system_params) do

@@ -2,14 +2,12 @@ defmodule ThreatShield.Organisations.Organisation do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias ThreatShield.Systems.System
+
   schema "organisations" do
     field :name, :string
-    field :industry, :string
-    field :legal_form, :string
     field :location, :string
-    field :type_of_business, :string
-    field :size, :integer
-    field :financial_information, :string
+    field :attributes, :map
 
     many_to_many :users, ThreatShield.Accounts.User, join_through: "memberships"
     has_many :systems, ThreatShield.Systems.System
@@ -24,18 +22,40 @@ defmodule ThreatShield.Organisations.Organisation do
     organisation
     |> cast(attrs, [
       :name,
-      :industry,
-      :legal_form,
       :location,
-      :type_of_business,
-      :size,
-      :financial_information
+      :attributes
     ])
     |> validate_required([:name])
   end
 
+  def attribute_keys() do
+    [
+      "Industry",
+      "Legal Form",
+      "Type of Business",
+      "Size",
+      "Financial Information"
+    ]
+  end
+
   def list_system_options(%__MODULE__{systems: systems}) do
     [{"None", nil} | Enum.map(systems, fn s -> {s.name, s.id} end)]
+  end
+
+  def describe(%__MODULE__{name: name, attributes: attributes, systems: systems}) do
+    attribute_description =
+      "It has the following attributes:\n" <>
+        (attributes
+         |> Enum.filter(fn {_, val} -> val != "" end)
+         |> Enum.map_join("\n", fn {key, val} -> ~s{"#{key}: ", "#{val}"} end))
+
+    system_description =
+      "It has the following systems:\n" <>
+        (systems
+         |> Enum.map(fn sys -> System.describe(sys) end)
+         |> Enum.join("\n"))
+
+    "The name of my organisation is #{name}." <> attribute_description <> system_description
   end
 
   import Ecto.Query

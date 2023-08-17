@@ -5,6 +5,8 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Const.Locations
 
+  import ThreatShield.Organisations.Organisation, only: [attribute_keys: 0]
+
   @impl true
   def mount(_params, _session, socket) do
     locations_options = Locations.list_locations()
@@ -13,6 +15,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
       socket
       |> assign(locations_options: locations_options)
       |> stream_organisations()
+      |> assign(:attribute_keys, attribute_keys())
 
     {:ok, socket}
   end
@@ -44,12 +47,14 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
     socket
     |> assign(:page_title, "New Organisation")
     |> assign(:organisation, %Organisation{users: [current_user]})
+    |> assign(:attribute_keys, attribute_keys())
   end
 
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Organisations")
     |> assign(:organisation, nil)
+    |> assign(:attribute_keys, attribute_keys())
   end
 
   @impl true

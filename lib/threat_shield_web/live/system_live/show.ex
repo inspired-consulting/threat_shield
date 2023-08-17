@@ -3,6 +3,8 @@ defmodule ThreatShieldWeb.SystemLive.Show do
 
   alias ThreatShield.Systems
 
+  import ThreatShield.Systems.System, only: [attribute_keys: 0]
+
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
     user = socket.assigns.current_user
@@ -23,7 +25,8 @@ defmodule ThreatShieldWeb.SystemLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:system, Systems.get_system!(user, id))}
+     |> assign(:system, Systems.get_system!(user, id))
+     |> assign(:attribute_keys, attribute_keys())}
   end
 
   defp page_title(:show), do: "Show System"

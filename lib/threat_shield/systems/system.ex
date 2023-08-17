@@ -22,6 +22,20 @@ defmodule ThreatShield.Systems.System do
     |> validate_required([:name, :description])
   end
 
+  def attribute_keys() do
+    ["Database", "Application Framework", "Authentication Framework"]
+  end
+
+  def describe(%__MODULE__{name: name, description: description, attributes: attributes}) do
+    attribute_description =
+      "It has the following attributes:\n" <>
+        (attributes
+         |> Enum.filter(fn {_, val} -> val != "" end)
+         |> Enum.map_join("\n", fn {key, val} -> ~s{"#{key}: ", "#{val}"} end))
+
+    "The system #{name} can be described as follows:\n" <> description <> attribute_description
+  end
+
   import Ecto.Query
 
   def get(id) do

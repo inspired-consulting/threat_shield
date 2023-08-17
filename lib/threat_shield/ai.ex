@@ -29,12 +29,12 @@ defmodule ThreatShield.AI do
 
   def suggest_assets_for_organisation(%Organisation{} = organisation) do
     system_prompt = """
-    You are a threat modelling assistant. Your response should comprise five potential assets, each item having between 200–254 characters in length. Your response should be in JSON format, like so:
+    You are a threat modelling assistant. Your response should comprise five potential assets, each item having between 200–254 characters in length. Each item is simply a string. Your response should be in JSON format, like so:
 
     {"assets": _}
     """
 
-    user_prompt = "I work at a company in the field of #{organisation.industry}."
+    user_prompt = "I work at this organisation: #{Organisation.describe(organisation)}"
 
     make_chatgpt_request(system_prompt, user_prompt, &get_assets_from_response/1)
   end
@@ -46,7 +46,10 @@ defmodule ThreatShield.AI do
     {"threats": _}
     """
 
-    user_prompt = "I work at a company in the field of #{organisation.industry}."
+    user_prompt =
+      """
+      I work at this organisation: #{Organisation.describe(organisation)}
+      """
 
     make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
   end
@@ -64,6 +67,7 @@ defmodule ThreatShield.AI do
 
   defp get_assets_from_response(response) do
     get_content_from_reponse(response, "assets")
+    |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
     |> Enum.map(fn d -> %Asset{description: d, is_candidate: true} end)
   end
 
