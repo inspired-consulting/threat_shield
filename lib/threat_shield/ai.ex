@@ -46,7 +46,7 @@ defmodule ThreatShield.AI do
     {"threats": _}
     """
 
-    user_prompt = "I work at a company in the field of #{organisation.industry}."
+    user_prompt = "I work at a company in the field of #{organisation.industry}. These"
 
     make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
   end

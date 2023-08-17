@@ -21,7 +21,12 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
       >
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:description]} type="text" label="Description" />
-        <.input field={@form[:attributes]} type="text" label="Attributes" />
+        <%= for attribute <- @attributes do %>
+          <.input field={@form[:attributes]} type="text" label={attribute} />
+          <%!-- <%= for {attribute, idx} <- Enum.with_index(@attributes) do %>
+          <%= text_input(:attributes, "attribute_#{idx}", value: attribute, class: "form-input") %>
+        <% end %> --%>
+        <% end %>
         <:actions>
           <.button phx-disable-with="Saving...">Save System</.button>
         </:actions>
