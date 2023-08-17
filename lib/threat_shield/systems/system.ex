@@ -17,11 +17,13 @@ defmodule ThreatShield.Systems.System do
 
   @doc false
   def changeset(system, attrs) do
-    IO.inspect(attrs)
-
     system
     |> cast(attrs, [:name, :description, :attributes])
     |> validate_required([:name, :description])
+  end
+
+  def attribute_keys() do
+    ["Database", "Application Framework", "Authentication Framework"]
   end
 
   import Ecto.Query

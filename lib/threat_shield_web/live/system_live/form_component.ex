@@ -30,9 +30,6 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
             type="text"
             label={attribute_key}
           />
-          <%!-- <%= for {attribute, idx} <- Enum.with_index(@attributes) do %>
-          <%= text_input(:attributes, "attribute_#{idx}", value: attribute, class: "form-input") %>
-        <% end %> --%>
         <% end %>
         <:actions>
           <.button phx-disable-with="Saving...">Save System</.button>
@@ -45,7 +42,7 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
   @impl true
   def update(%{system: system} = assigns, socket) do
     changeset =
-      Systems.change_system(system) |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
+      Systems.change_system(system)
 
     attribute_map =
       case system.attributes do
@@ -57,14 +54,11 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
      socket
      |> assign(assigns)
      |> assign_form(changeset)
-     |> assign(:attribute_map, attribute_map)
-     |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")}
+     |> assign(:attribute_map, attribute_map)}
   end
 
   @impl true
-  def handle_event("validate", %{"system" => system_params} = params, socket) do
-    params |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
-
+  def handle_event("validate", %{"system" => system_params}, socket) do
     changeset =
       socket.assigns.system
       |> Systems.change_system(system_params)
@@ -88,9 +82,6 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
   defp save_system(socket, :edit, system_params) do
     user = socket.assigns.current_user
     organisation = socket.assigns.organisation
-
-    socket |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
-    system_params |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
 
     case Systems.update_system(user, organisation, socket.assigns.system, system_params) do
       {:ok, system} ->
