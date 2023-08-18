@@ -24,22 +24,18 @@ defmodule ThreatShield.Risks do
     |> Repo.one!()
   end
 
-  @doc """
-  Creates a risk.
+  def create_risk(%User{id: user_id}, threat_id, attrs \\ %{}) do
+    Repo.transaction(fn ->
+      threat =
+        Threat.get(threat_id)
+        |> Threat.for_user(user_id)
+        |> Repo.one!()
 
-  ## Examples
-
-      iex> create_risk(%{field: value})
-      {:ok, %Risk{}}
-
-      iex> create_risk(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_risk(attrs \\ %{}) do
-    %Risk{}
-    |> Risk.changeset(attrs)
-    |> Repo.insert()
+      %Risk{}
+      |> Risk.changeset(attrs)
+      |> Ecto.Changeset.put_assoc(:threat, threat)
+      |> Repo.insert!()
+    end)
   end
 
   def update_risk(%User{id: user_id}, %Risk{id: risk_id} = risk, attrs) do
@@ -50,7 +46,7 @@ defmodule ThreatShield.Risks do
 
       risk
       |> Risk.changeset(attrs)
-      |> Repo.update()
+      |> Repo.update!()
     end)
   end
 

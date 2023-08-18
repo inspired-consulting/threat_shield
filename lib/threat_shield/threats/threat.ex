@@ -34,7 +34,7 @@ defmodule ThreatShield.Threats.Threat do
   end
 
   def for_user(query, user_id) do
-    join(query, :left, [threat: t], assoc(t, :organisation), as: :organisation)
+    join(query, :inner, [threat: t], assoc(t, :organisation), as: :organisation)
     |> Organisation.for_user(user_id)
   end
 
