@@ -94,6 +94,16 @@ defmodule ThreatShieldWeb.Router do
            ThreatLive.Show,
            :edit
 
+      live "/organisations/:org_id/threats/:threat_id/risks", RiskLive.Index, :index
+      live "/organisations/:org_id/threats/:threat_id/risks/new", RiskLive.Index, :new
+      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/edit", RiskLive.Index, :edit
+
+      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.Show, :show
+
+      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/show/edit",
+           RiskLive.Show,
+           :edit
+
       live "/organisations/:org_id/assets", AssetLive.Index, :index
       live "/organisations/:org_id/assets/new", AssetLive.Index, :new
       live "/organisations/:org_id/assets/:asset_id/edit", AssetLive.Index, :edit
