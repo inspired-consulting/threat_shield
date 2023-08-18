@@ -1,0 +1,44 @@
+<.header>
+  Listing Risks
+  <:actions>
+    <.link patch={~p"/risks/new"}>
+      <.button>New Risk</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="risks"
+  rows={@streams.risks}
+  row_click={fn {_id, risk} -> JS.navigate(~p"/risks/#{risk}") end}
+>
+  <:col :let={{_id, risk}} label="Name"><%= risk.name %></:col>
+  <:col :let={{_id, risk}} label="Description"><%= risk.description %></:col>
+  <:col :let={{_id, risk}} label="Estimated cost"><%= risk.estimated_cost %></:col>
+  <:col :let={{_id, risk}} label="Probability"><%= risk.probability %></:col>
+  <:action :let={{_id, risk}}>
+    <div class="sr-only">
+      <.link navigate={~p"/risks/#{risk}"}>Show</.link>
+    </div>
+    <.link patch={~p"/risks/#{risk}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, risk}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: risk.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="risk-modal" show on_cancel={JS.patch(~p"/risks")}>
+  <.live_component
+    module={ThreatShieldWeb.RiskLive.FormComponent}
+    id={@risk.id || :new}
+    title={@page_title}
+    action={@live_action}
+    risk={@risk}
+    patch={~p"/risks"}
+  />
+</.modal>
