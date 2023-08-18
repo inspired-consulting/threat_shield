@@ -3,9 +3,15 @@ defmodule ThreatShieldWeb.RiskLive.Index do
 
   alias ThreatShield.Risks
   alias ThreatShield.Risks.Risk
+  alias ThreatShield.Threats.Threat
+  alias ThreatShield.Threats
+  alias Organisations.Organisation
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(%{"org_id" => org_id, "threat_id" => treat_id}, _session, socket) do
+    current_user = socket.assigns.current_user
+    organisation = Threats.get_organisation!(current_user, org_id)
+
     {:ok, stream(socket, :risks, Risks.list_risks())}
   end
 
@@ -14,7 +20,7 @@ defmodule ThreatShieldWeb.RiskLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
+  defp apply_action(socket, :edit, %{"threat_id" => id}) do
     socket
     |> assign(:page_title, "Edit Risk")
     |> assign(:risk, Risks.get_risk!(id))
@@ -38,7 +44,7 @@ defmodule ThreatShieldWeb.RiskLive.Index do
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
+  def handle_event("delete", %{"threat_id" => id}, socket) do
     risk = Risks.get_risk!(id)
     {:ok, _} = Risks.delete_risk(risk)
 
