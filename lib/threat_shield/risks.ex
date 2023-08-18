@@ -5,37 +5,24 @@ defmodule ThreatShield.Risks do
 
   import Ecto.Query, warn: false
   alias ThreatShield.Repo
+  alias ThreatShield.Accounts.User
 
   alias ThreatShield.Risks.Risk
+  alias ThreatShield.Threats.Threat
 
-  @doc """
-  Returns the list of risks.
-
-  ## Examples
-
-      iex> list_risks()
-      [%Risk{}, ...]
-
-  """
-  def list_risks do
-    Repo.all(Risk)
+  def get_risk!(%User{id: user_id}, risk_id) do
+    Risk.get(risk_id)
+    |> Risk.for_user(user_id)
+    |> Repo.one!()
   end
 
-  @doc """
-  Gets a single risk.
-
-  Raises `Ecto.NoResultsError` if the Risk does not exist.
-
-  ## Examples
-
-      iex> get_risk!(123)
-      %Risk{}
-
-      iex> get_risk!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_risk!(id), do: Repo.get!(Risk, id)
+  def get_threat!(%User{id: user_id}, org_id, threat_id) do
+    Threat.get(threat_id)
+    |> Threat.for_user(user_id)
+    |> Threat.where_organisation(org_id)
+    |> Threat.with_organisation_and_risks()
+    |> Repo.one!()
+  end
 
   @doc """
   Creates a risk.
@@ -55,38 +42,23 @@ defmodule ThreatShield.Risks do
     |> Repo.insert()
   end
 
-  @doc """
-  Updates a risk.
+  def update_risk(%User{id: user_id}, %Risk{id: risk_id} = risk, attrs) do
+    Repo.transaction(fn ->
+      Risk.get(risk_id)
+      |> Risk.for_user(user_id)
+      |> Repo.one!()
 
-  ## Examples
-
-      iex> update_risk(risk, %{field: new_value})
-      {:ok, %Risk{}}
-
-      iex> update_risk(risk, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_risk(%Risk{} = risk, attrs) do
-    risk
-    |> Risk.changeset(attrs)
-    |> Repo.update()
+      risk
+      |> Risk.changeset(attrs)
+      |> Repo.update()
+    end)
   end
 
-  @doc """
-  Deletes a risk.
-
-  ## Examples
-
-      iex> delete_risk(risk)
-      {:ok, %Risk{}}
-
-      iex> delete_risk(risk)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_risk(%Risk{} = risk) do
-    Repo.delete(risk)
+  def delete_risk_by_id!(%User{id: user_id}, id) do
+    Risk.get(id)
+    |> Risk.for_user(user_id)
+    |> Risk.select()
+    |> Repo.delete_all()
   end
 
   @doc """

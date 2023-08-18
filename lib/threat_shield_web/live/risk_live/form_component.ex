@@ -56,7 +56,9 @@ defmodule ThreatShieldWeb.RiskLive.FormComponent do
   end
 
   defp save_risk(socket, :edit, risk_params) do
-    case Risks.update_risk(socket.assigns.risk, risk_params) do
+    %{current_user: user, risk: risk} = socket.assigns |> IO.inspect()
+
+    case Risks.update_risk(user, risk, risk_params) do
       {:ok, risk} ->
         notify_parent({:saved, risk})
 

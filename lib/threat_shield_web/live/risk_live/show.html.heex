@@ -2,7 +2,12 @@
   Risk <%= @risk.id %>
   <:subtitle>This is a risk record from your database.</:subtitle>
   <:actions>
-    <.link patch={~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk}/show/edit"} phx-click={JS.push_focus()}>
+    <.link
+      patch={
+        ~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk}/show/edit"
+      }
+      phx-click={JS.push_focus()}
+    >
       <.button>Edit risk</.button>
     </.link>
   </:actions>
@@ -15,9 +20,18 @@
   <:item title="Probability"><%= @risk.probability %></:item>
 </.list>
 
-<.back navigate={~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks"}>Back to risks</.back>
+<.back navigate={~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks"}>
+  Back to risks
+</.back>
 
-<.modal :if={@live_action == :edit} id="risk-modal" show on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="risk-modal"
+  show
+  on_cancel={
+    JS.patch(~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk}")
+  }
+>
   <.live_component
     module={ThreatShieldWeb.RiskLive.FormComponent}
     id={@risk.id}
@@ -26,6 +40,7 @@
     risk={@risk}
     organisation={@organisation}
     threat={@threat}
+    current_user={@current_user}
     patch={~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk}"}
   />
 </.modal>

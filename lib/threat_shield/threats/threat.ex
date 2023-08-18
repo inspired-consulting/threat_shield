@@ -12,6 +12,8 @@ defmodule ThreatShield.Threats.Threat do
     belongs_to :system, System
     belongs_to :organisation, Organisation
 
+    has_many :risks, ThreatShield.Risks.Risk
+
     timestamps()
   end
 
@@ -32,7 +34,15 @@ defmodule ThreatShield.Threats.Threat do
   end
 
   def for_user(query, user_id) do
-    join(query, :inner, [threat: t], assoc(t, :organisation), as: :organisation)
+    join(query, :left, [threat: t], assoc(t, :organisation), as: :organisation)
     |> Organisation.for_user(user_id)
+  end
+
+  def where_organisation(query, org_id) do
+    where(query, [organisation: o], o.id == ^org_id)
+  end
+
+  def with_organisation_and_risks(query) do
+    preload(query, [threat: t], [:organisation, :risks])
   end
 end

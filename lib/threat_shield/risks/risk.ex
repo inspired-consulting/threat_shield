@@ -33,4 +33,8 @@ defmodule ThreatShield.Risks.Risk do
     join(query, :inner, [risk: r], assoc(r, :threat), as: :threat)
     |> Threat.for_user(user_id)
   end
+
+  def select(query) do
+    select(query, [risk: r], r)
+  end
 end
