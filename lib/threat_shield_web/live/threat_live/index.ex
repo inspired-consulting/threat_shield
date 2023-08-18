@@ -18,7 +18,10 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
 
     socket =
       socket
-      |> assign(:organisation, organisation)
+      |> assign(
+        organisation: organisation,
+        asking_ai: nil
+      )
 
     {:ok, stream(socket, :threats, threats)}
   end
@@ -53,6 +56,13 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
     {:noreply, stream_insert(socket, :threats, threat)}
   end
 
+  def handle_info({_from, {:ai_results, new_threats}}, socket) do
+    %{asking_ai: ref} = socket.assigns
+
+    Process.demonitor(ref, [:flush])
+    {:noreply, socket |> assign(asking_ai: nil) |> stream(:threats, new_threats)}
+  end
+
   @impl true
   def handle_event("add", %{"threat_id" => id}, socket) do
     user = socket.assigns.current_user
@@ -66,17 +76,25 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
     user =
       socket.assigns.current_user
 
+    threat = Threats.get_threat!(user, id)
     {:ok, _} = Threats.delete_threat_by_id(user, id)
 
-    organisation = socket.assigns.organisation
-
-    {:noreply, push_navigate(socket, to: "/organisations/#{organisation.id}/threats")}
+    {:noreply, stream_delete(socket, :threats, threat)}
   end
 
   @impl true
   def handle_event("suggest", %{"org_id" => org_id}, socket) do
     user = socket.assigns.current_user
 
+    task =
+      Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
+        ask_ai(user, org_id)
+      end)
+
+    {:noreply, socket |> assign(asking_ai: task.ref)}
+  end
+
+  defp ask_ai(user, org_id) do
     organisation = Threats.get_organisation!(user, org_id)
 
     threat_descriptions =
@@ -85,6 +103,6 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
     new_threats =
       Threats.bulk_add_for_user_and_org(user, organisation, threat_descriptions)
 
-    {:noreply, stream(socket, :threats, new_threats)}
+    {:ai_results, new_threats}
   end
 end

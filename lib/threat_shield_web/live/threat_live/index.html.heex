@@ -1,9 +1,13 @@
 <.header>
   Listing Threats
   <:actions>
-    <.link phx-click={JS.push("suggest", value: %{org_id: @organisation.id})}>
-      <.button>Suggest Threats</.button>
-    </.link>
+    <.button
+      disabled={not is_nil(@asking_ai)}
+      phx-click="suggest"
+      phx-value-org_id={@organisation.id}
+    >
+      Suggest Threats
+    </.button>
     <.link patch={~p"/organisations/#{@organisation.id}/threats/new"}>
       <.button>New Threat</.button>
     </.link>

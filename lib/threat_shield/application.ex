@@ -8,6 +8,7 @@ defmodule ThreatShield.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      {Task.Supervisor, name: ThreatShield.TaskSupervisor},
       # Start the Telemetry supervisor
       ThreatShieldWeb.Telemetry,
       # Start the Ecto repository

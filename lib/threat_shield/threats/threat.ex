@@ -43,6 +43,8 @@ defmodule ThreatShield.Threats.Threat do
   end
 
   def with_organisation_and_risks(query) do
-    preload(query, [threat: t], [:organisation, :risks])
+    query
+    |> join(:left, [threat: t], assoc(t, :risks), as: :risks)
+    |> preload([organisation: o, risks: r], organisation: o, risks: r)
   end
 end
