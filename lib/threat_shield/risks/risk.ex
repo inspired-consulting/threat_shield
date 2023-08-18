@@ -22,4 +22,15 @@ defmodule ThreatShield.Risks.Risk do
     |> cast(attrs, [:name, :description, :estimated_cost, :probability])
     |> validate_required([:name, :description])
   end
+
+  import Ecto.Query
+
+  def get(id) do
+    from(e in __MODULE__, as: :risk, where: e.id == ^id)
+  end
+
+  def for_user(query, user_id) do
+    join(query, :inner, [risk: r], assoc(r, :threat), as: :threat)
+    |> Threat.for_user(user_id)
+  end
 end
