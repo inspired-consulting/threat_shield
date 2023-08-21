@@ -91,7 +91,11 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
         ask_ai(user, org_id)
       end)
 
-    {:noreply, socket |> assign(asking_ai: task.ref)}
+    socket =
+      socket
+      |> assign(asking_ai: task.ref)
+
+    {:noreply, socket}
   end
 
   defp ask_ai(user, org_id) do

@@ -10,5 +10,20 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
 
+#suggest-spinner{
+  display: block;
+  position: fixed;
+  top: calc(50% - 5rem);
+  left: calc(50% - 5rem);
+  width: 10rem;
+  height: 10rem;
+  transform: translate(-50%, -50%);
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

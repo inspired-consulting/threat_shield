@@ -61,17 +61,24 @@ defmodule ThreatShield.Threats do
       Multi.new()
       |> Multi.exists?(:check_access, Organisations.is_member_query(user, organisation))
 
+    threat_changesets =
+      Enum.map(
+        threats,
+        fn threat ->
+          Ecto.Changeset.change(threat)
+          |> Ecto.Changeset.put_assoc(:organisation, organisation)
+        end
+      )
+
     {:ok, result} =
       Enum.reduce(
-        threats,
+        threat_changesets,
         multi,
-        fn threat, acc ->
+        fn changeset, acc ->
           Multi.insert(
             acc,
-            {:insert_threat, threat.description},
-            threat
-            |> Ecto.Changeset.change()
-            |> Ecto.Changeset.put_assoc(:organisation, organisation)
+            {:insert_threat, changeset},
+            changeset
           )
         end
       )

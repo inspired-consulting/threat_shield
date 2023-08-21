@@ -20,7 +20,10 @@ defmodule ThreatShieldWeb.AssetLive.Index do
 
     socket =
       socket
-      |> assign(:organisation, organisation)
+      |> assign(
+        organisation: organisation,
+        asking_ai: nil
+      )
 
     {:ok, stream(socket, :assets, assets)}
   end
@@ -53,6 +56,13 @@ defmodule ThreatShieldWeb.AssetLive.Index do
     {:noreply, stream_insert(socket, :assets, asset)}
   end
 
+  def handle_info({_from, {:ai_results, new_assets}}, socket) do
+    %{asking_ai: ref} = socket.assigns
+
+    Process.demonitor(ref, [:flush])
+    {:noreply, socket |> assign(asking_ai: nil) |> stream(:assets, new_assets)}
+  end
+
   @impl true
   def handle_event("delete", %{"asset_id" => asset_id}, socket) do
     organisation = socket.assigns.organisation
@@ -75,6 +85,19 @@ defmodule ThreatShieldWeb.AssetLive.Index do
   def handle_event("suggest", %{"org_id" => org_id}, socket) do
     user = socket.assigns.current_user
 
+    task =
+      Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
+        ask_ai(user, org_id)
+      end)
+
+    socket =
+      socket
+      |> assign(asking_ai: task.ref)
+
+    {:noreply, socket}
+  end
+
+  defp ask_ai(user, org_id) do
     organisation = Assets.get_organisation!(user, org_id)
 
     asset_descriptions =
@@ -83,6 +106,6 @@ defmodule ThreatShieldWeb.AssetLive.Index do
     asset_candidates =
       Assets.bulk_add_asset_candidates(user, organisation, asset_descriptions)
 
-    {:noreply, stream(socket, :assets, asset_candidates)}
+    {:ai_results, asset_candidates}
   end
 end
