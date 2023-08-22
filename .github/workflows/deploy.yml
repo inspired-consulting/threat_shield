@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - main
+      - 56-setup-dev-environment-devtreatshieldeu
 
 jobs:
   deploy:
@@ -22,4 +22,4 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl --kubeconfig=kubeconfig.yaml config view
+          kubectl --kubeconfig=kubeconfig.yaml
