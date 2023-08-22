@@ -16,4 +16,4 @@ jobs:
       - name: Set up kubectl
         run: |
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig.yaml
-          kubectl config view
+          kubectl config view --kubeconfig kubeconfig.yaml
