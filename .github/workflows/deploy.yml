@@ -16,4 +16,8 @@ jobs:
       - name: Set up kubectl
         run: |
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig.yaml
+          kubectl config set-context --current --namespace=threatshield --kubeconfig kubeconfig.yaml
           kubectl config view --kubeconfig kubeconfig.yaml
+      - name: Test kubectl
+        run: |
+          kubectl get pods -n threatshield --kubeconfig kubeconfig.yaml
