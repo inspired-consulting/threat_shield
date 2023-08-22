@@ -41,4 +41,9 @@ npm-debug.log
 # Ignore Elixir LS generated files
 .elixir_ls/
 
+# Deployment related
+/kubernetes/
+.envrc
+
+
 

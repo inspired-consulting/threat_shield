@@ -1,0 +1,25 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up kubectl
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
+          kubectl --kubeconfig=kubeconfig.yaml config use-context ${{ env.CONTEXT_NAME }}
+        env:
+          CONTEXT_NAME: ${{ env.CONTEXT_NAME }}
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl --kubeconfig=kubeconfig.yaml config view
