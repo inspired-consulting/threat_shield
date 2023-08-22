@@ -16,9 +16,9 @@ jobs:
       - name: Set up kubectl
         run: |
           echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
-          kubectl config use-context ${{ env.CONTEXT_NAME }}
+          kubectl config use-context threatshield-context
         env:
-          CONTEXT_NAME: ${{ env.CONTEXT_NAME }}
+          CONTEXT_NAME: threatshield-context
 
       - name: Deploy to Kubernetes
         run: |
