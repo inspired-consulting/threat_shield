@@ -22,4 +22,4 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl --kubeconfig=kubeconfig.yaml
+          kubectl --kubeconfig=kubeconfig.yaml config view
