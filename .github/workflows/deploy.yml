@@ -16,10 +16,10 @@ jobs:
       - name: Set up kubectl
         run: |
           echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
-          kubectl --kubeconfig=kubeconfig.yaml config use-context ${{ env.CONTEXT_NAME }}
+          kubectl config use-context ${{ env.CONTEXT_NAME }}
         env:
           CONTEXT_NAME: ${{ env.CONTEXT_NAME }}
 
       - name: Deploy to Kubernetes
         run: |
-          kubectl --kubeconfig=kubeconfig.yaml config view
+          kubectl config view
