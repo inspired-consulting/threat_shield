@@ -115,3 +115,15 @@ Run the following command in your terminal to access the database container:
 ```bash
 docker exec -it ThreatShield-db /bin/sh
 ```
+
+## CI/CD
+
+- More context: [Setup Kubernetes secret](https://nicwortel.nl/blog/2022/continuous-deployment-to-kubernetes-with-github-actions#creating-the-image-pull-secret)
+
+```bash
+kubectl create secret docker-registry github-container-registry \
+  --namespace=threatshield \
+  --docker-server=ghcr.io \
+  --docker-username=<github-username> \
+  --docker-password=<token>
+```
