@@ -1,0 +1,23 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - 56-setup-dev-environment-devthreatshieldeu
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up kubectl
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig.yaml
+          kubectl config set-context --current --namespace=threatshield --kubeconfig kubeconfig.yaml
+          kubectl config view --kubeconfig kubeconfig.yaml
+      - name: Deploy
+        run: |
+          kubectl get pods -n threatshield --kubeconfig kubeconfig.yaml
