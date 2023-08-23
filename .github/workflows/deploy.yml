@@ -19,6 +19,9 @@ jobs:
           kubectl config set-context --current --namespace=threatshield --kubeconfig kubeconfig.yaml
           kubectl config view --kubeconfig kubeconfig.yaml
       - name: Deploy
+        env:
+          KUBECONFIG_PATH: kubeconfig.yaml
+          KUBERNETES_MANIFEST: deployment/nginx-deployment.yaml
         run: |
-          kubectl apply -f kubernetes/nginx/nginx-deployment.yaml --kubeconfig kubeconfig.yaml
-          kubectl get pods --kubeconfig kubeconfig.yaml
+          kubectl apply -f $KUBERNETES_MANIFEST --kubeconfig $KUBECONFIG_PATH
+          kubectl get pods --kubeconfig $KUBECONFIG_PATH
