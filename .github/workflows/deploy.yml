@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - 56-setup-dev-environment-devthreatshieldeu
+      - 62-techstory-cicd-for-deployment
 
 jobs:
   deploy:
@@ -17,7 +17,7 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig.yaml
           kubectl config set-context --current --namespace=threatshield --kubeconfig kubeconfig.yaml
-          kubectl config view --kubeconfig kubeconfig.yaml
       - name: Deploy
         run: |
-          kubectl get pods -n threatshield --kubeconfig kubeconfig.yaml
+          kubectl apply -f kubernetes/nginx/nginx-deployment.yaml --kubeconfig kubeconfig.yaml
+          kubectl get pods --kubeconfig kubeconfig.yaml
