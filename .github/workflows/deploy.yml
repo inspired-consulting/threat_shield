@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - 62-techstory-cicd-for-deployment
+      - main
 
 jobs:
   deploy:
