@@ -20,5 +20,5 @@ jobs:
           kubectl config view --kubeconfig kubeconfig.yaml
       - name: Deploy
         run: |
-          kubectl apply -f nginx-deployment.yaml --kubeconfig kubeconfig.yaml
+          kubectl apply -f kubernetes/nginx/nginx-deployment.yaml --kubeconfig kubeconfig.yaml
           kubectl get pods --kubeconfig kubeconfig.yaml
