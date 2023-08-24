@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - 63-techstory-setup-of-deployment-on-inspired-kubernetes-cluster
+      - main
 
 jobs:
   deploy:
