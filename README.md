@@ -8,17 +8,23 @@ In short, ThreatShield is your Intelligent Threat Analysis Companion.
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
+- [ThreatShield](#threatshield)
+  - [Development setup](#development-setup)
   - [Configuration](#configuration)
-- [Usage](#usage)
-  - [Running the application](#running-the-application)
-  - [Stopping the application](#stopping-the-application)
-  - [Access the app container](#access-the-app-container)
-  - [Access the database container](#access-the-database-container)
+  - [Development setup with docker](#development-setup-with-docker)
+    - [Prerequisites for docker](#prerequisites-for-docker)
+    - [Usage with docker](#usage-with-docker)
+      - [Building and running the application](#building-and-running-the-application)
+      - [Accessing the containers](#accessing-the-containers)
+      - [Stopping the containers/application](#stopping-the-containersapplication)
+  - [Development setup with CLI tools](#development-setup-with-cli-tools)
+    - [Prerequisites for CLI tools](#prerequisites-for-cli-tools)
+    - [Usage with CLI tools](#usage-with-cli-tools)
+      - [Running the application](#running-the-application)
+      - [Stopping the server/application](#stopping-the-serverapplication)
+  - [CI/CD Deployment](#cicd-deployment)
 
-## Local development setup
+## Development setup
 
 Clone this repo and switch to `threat_shield`:
 
@@ -30,17 +36,19 @@ git clone git@github.com:inspired-consulting/ThreatShields.git
 
 The Threat Shield application requires the environment variables that are defined in the `.env` file provided to you. Copy the file into the root of this application.
 
-## Local development setup with docker
+## Development setup with docker
 
-### Prerequisites
+### Prerequisites for docker
 
 To run the Threat Shield application, you will need the following installed on your system:
 
 - [Docker](https://www.docker.com/get-started)
 
-## Usage
+### Usage with docker
 
-Build and start the Docker image:
+#### Building and running the application
+
+Build and start the app:
 
 ```bash
 cd threat_shield
@@ -48,11 +56,45 @@ cd threat_shield
 docker compose up --build
 ```
 
+Start the app:
+
+```bash
+cd threat_shield
+
+docker compose up
+```
+
 Navigate to [localhost:4000](http://localhost:4000) in your browser, you're set to go.
 
-## Local development setup with CLI tools
+#### Accessing the containers
 
-### Prerequisites
+To access the app container, you can use the following command:
+
+```bash
+docker exec -it ThreatShield-server /bin/sh
+```
+
+To access the database container, you can use the following command:
+
+```bash
+docker exec -it ThreatShield-db /bin/sh
+```
+
+#### Stopping the containers/application
+
+Run the following command in your terminal to stop the Docker container via docker compose:
+
+```bash
+docker compose down
+```
+
+or
+
+Use the `CMD+D`, or `Ctrl+D` respectively, command in your terminal to stop the application.
+
+## Development setup with CLI tools
+
+### Prerequisites for CLI tools
 
 You will need the following installed on your system:
 
@@ -62,7 +104,7 @@ You will need the following installed on your system:
 
 If you use asdf, you can install these dependencies with `asdf install`.
 
-You also need to setup a PostgreSQL database. For local development, you can use Docker, e.g.:
+You also need to set up a PostgreSQL database. For local development, you can use Docker, e.g.:
 
 ```bash
 docker run -e POSTGRES_USER=threat_shield -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=threat_shield -p 5432:5432 --name threat-shield-db -d postgres:14
@@ -74,15 +116,11 @@ For local testing a separate DB is necessary. You can create this besides the de
 docker exec -it threat-shield-db psql -h localhost -U threat_shield -c "CREATE DATABASE threat_shield_test;"
 ```
 
-### Configuration
+### Usage with CLI tools
 
-The Threat Shield application requires the environment variables that are defined in the .env file provided to you. Copy the file into the root of this application.
+#### Running the application
 
-## Usage
-
-### Running the application
-
-Build and start the Docker image via docker compose:
+To start your Phoenix server:
 
 ```bash
 cd threat_shield
@@ -92,33 +130,13 @@ mix phx.server
 
 Navigate to [localhost:4000](http://localhost:4000) in your browser, you're set to go.
 
-### Stopping the application
+#### Stopping the server/application
 
-Run the following command in your terminal to stop the Docker container via docker compose:
+Use the `CMD+C`, or `Ctrl+C` respectively, command twice in your terminal to stop the application.`
 
-```bash
-docker compose down
-```
+## CI/CD Deployment
 
-### Access the app container
-
-Run the following command in your terminal to access the app container:
-
-```bash
-docker exec -it ThreatShield-server /bin/sh
-```
-
-### Access the database container
-
-Run the following command in your terminal to access the database container:
-
-```bash
-docker exec -it ThreatShield-db /bin/sh
-```
-
-## CI/CD
-
-- More context: [Setup Kubernetes secret](https://nicwortel.nl/blog/2022/continuous-deployment-to-kubernetes-with-github-actions#creating-the-image-pull-secret)
+To create a secret for the GitHub Container Registry to pull the image from, run the following command:
 
 ```bash
 kubectl create secret docker-registry github-container-registry \
@@ -127,3 +145,5 @@ kubectl create secret docker-registry github-container-registry \
   --docker-username=<github-username> \
   --docker-password=<token>
 ```
+
+For more context: [Set up Kubernetes secret](https://nicwortel.nl/blog/2022/continuous-deployment-to-kubernetes-with-github-actions#creating-the-image-pull-secret).
