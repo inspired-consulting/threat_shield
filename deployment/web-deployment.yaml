@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: web
+          image: ghcr.io/inspired-consulting/threat_shield-app:latest
+          ports:
+            - containerPort: 4000
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_HOST
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_DB
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: OPENAI_API_KEY
+            - name: OPENAI_ORG_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: web-secret
+                  key: OPENAI_ORG_KEY
+      imagePullSecrets:
+        - name: github-container-registry

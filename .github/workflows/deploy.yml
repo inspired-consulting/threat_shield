@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches:
-      - main
+      - 63-techstory-setup-of-deployment-on-inspired-kubernetes-cluster
 
 jobs:
   deploy:
@@ -17,10 +17,27 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > kubeconfig.yaml
           kubectl config set-context --current --namespace=threatshield --kubeconfig kubeconfig.yaml
-      - name: Deploy
+
+      - name: Deploy Web Application
         env:
           KUBECONFIG_PATH: kubeconfig.yaml
-          KUBERNETES_MANIFEST: deployment/nginx-deployment.yaml
         run: |
-          kubectl apply -f $KUBERNETES_MANIFEST --kubeconfig $KUBECONFIG_PATH
+          kubectl apply -f deployment/web-deployment.yaml --kubeconfig $KUBECONFIG_PATH
+
+      - name: Deploy Database
+        env:
+          KUBECONFIG_PATH: kubeconfig.yaml
+        run: |
+          kubectl apply -f deployment/db-deployment.yaml --kubeconfig $KUBECONFIG_PATH
+
+      - name: Run Migrations
+        env:
+          KUBECONFIG_PATH: kubeconfig.yaml
+        run: |
+          kubectl apply -f job/migration-job.yaml --kubeconfig $KUBECONFIG_PATH
+
+      - name: Check Deployment Status
+        env:
+          KUBECONFIG_PATH: kubeconfig.yaml
+        run: |
           kubectl get pods --kubeconfig $KUBECONFIG_PATH
