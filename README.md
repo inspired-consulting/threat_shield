@@ -90,7 +90,7 @@ docker compose down
 
 or
 
-Use the `CMD+D`, or `Ctrl+D` respectively, command in your terminal to stop the application.
+use the `Ctrl+C` command twice in your terminal to stop the application.
 
 ## Development setup with CLI tools
 
@@ -132,7 +132,7 @@ Navigate to [localhost:4000](http://localhost:4000) in your browser, you're set 
 
 #### Stopping the server/application
 
-Use the `CMD+C`, or `Ctrl+C` respectively, command twice in your terminal to stop the application.`
+Use the `Ctrl+C` command twice in your terminal to stop the application.
 
 ## CI/CD Deployment
 
