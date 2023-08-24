@@ -34,7 +34,7 @@ jobs:
         env:
           KUBECONFIG_PATH: kubeconfig.yaml
         run: |
-          kubectl apply -f job/migration-job.yaml --kubeconfig $KUBECONFIG_PATH
+          kubectl apply -f deployment/migration-job.yaml --kubeconfig $KUBECONFIG_PATH
 
       - name: Check Deployment Status
         env:
