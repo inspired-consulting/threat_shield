@@ -2,16 +2,16 @@ defmodule ThreatShieldWeb.OrganisationLiveTest do
   use ThreatShieldWeb.ConnCase
 
   import Phoenix.LiveViewTest
-  import ThreatShield.OrganisationsFixtures
 
   @create_attrs %{name: "some name"}
   @update_attrs %{name: "some updated name"}
   @invalid_attrs %{name: nil}
 
-  defp create_organisation(_) do
-    organisation = organisation_fixture()
-    %{organisation: organisation}
-  end
+defp create_organisation(_) do
+  {:ok, user} = ThreatShield.Accounts.register_user(%{email: "user@example.com", password: "newsafepassword"})
+      {:ok, organisation} = ThreatShield.Organisations.create_organisation(%{name: "Test Org"}, user)
+      %{organisation: organisation}
+    end
 
   describe "Index" do
     setup [:create_organisation]
@@ -98,7 +98,7 @@ defmodule ThreatShieldWeb.OrganisationLiveTest do
       assert show_live |> element("a", "Edit") |> render_click() =~
                "Edit Organisation"
 
-      assert_patch(show_live, ~p"/organisations/#{organisation}/show/edit")
+      assert_patch(show_live, ~p"/organisations/#{organisation}/edit")
 
       assert show_live
              |> form("#organisation-form", organisation: @invalid_attrs)

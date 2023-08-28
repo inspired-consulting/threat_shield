@@ -19,7 +19,7 @@ defmodule ThreatShield.MixProject do
   def application do
     [
       mod: {ThreatShield.Application, []},
-      extra_applications: [:dotenv, :logger, :runtime_tools]
+      extra_applications: [:dotenv, :logger, :runtime_tools, :bcrypt_elixir]
     ]
   end
 
@@ -32,7 +32,7 @@ defmodule ThreatShield.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:bcrypt_elixir, "~> 3.0"},
+      {:bcrypt_elixir, "~> 3.1"},
       {:phoenix, "~> 1.7.7"},
       {:phoenix_ecto, "~> 4.4"},
       {:dotenv, "~> 3.1.0"},

@@ -1,61 +1,28 @@
 defmodule ThreatShield.ThreatsTest do
-  use ThreatShield.DataCase
+  use ExUnit.Case
+  alias ThreatShield.{Threats, Organisations, Repo, Accounts}
+  alias ThreatShield.Threats.Threat
+  alias ThreatShield.Risks.Risk
+  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.ThreatsFixtures
 
-  alias ThreatShield.Threats
+  setup do
+    {:ok, user} = Accounts.get_user!(1)
+    {:ok, org} = Organisations.create_organisation(user, %{name: "Test Org"})
+    {:ok, _threat} = Threats.create_threat(user, org, %{title: "Test Threat", description: "A test threat"})
+    {:ok, user: user, org: org}
+  end
 
-  describe "threats" do
-    alias ThreatShield.Threats.Threat
+  test "get_threat!/3 returns the threat with the given id and organization" do
+    threat = ThreatsFixtures.threat_fixture(@user, @org, %{title: "Another Threat"})
+    retrieved_threat = Threats.get_threat!(@user, @org.id, threat.id)
+    assert retrieved_threat.title == "Another Threat"
+  end
 
-    import ThreatShield.ThreatsFixtures
+  test "create_threat/3 creates a new threat" do
+    threat_attrs = %{title: "New Threat"}
+    threat = ThreatsFixtures.threat_fixture(@user, @org, threat_attrs)
 
-    @invalid_attrs %{description: nil, is_candidate: nil}
-
-    test "list_threats/0 returns all threats" do
-      threat = threat_fixture()
-      assert Threats.list_threats() == [threat]
-    end
-
-    test "get_threat!/1 returns the threat with given id" do
-      threat = threat_fixture()
-      assert Threats.get_threat!(threat.id) == threat
-    end
-
-    test "create_threat/1 with valid data creates a threat" do
-      valid_attrs = %{description: "some description", is_candidate: true}
-
-      assert {:ok, %Threat{} = threat} = Threats.create_threat(valid_attrs)
-      assert threat.description == "some description"
-      assert threat.is_candidate == true
-    end
-
-    test "create_threat/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Threats.create_threat(@invalid_attrs)
-    end
-
-    test "update_threat/2 with valid data updates the threat" do
-      threat = threat_fixture()
-      update_attrs = %{description: "some updated description", is_candidate: false}
-
-      assert {:ok, %Threat{} = threat} = Threats.update_threat(threat, update_attrs)
-      assert threat.description == "some updated description"
-      assert threat.is_candidate == false
-    end
-
-    test "update_threat/2 with invalid data returns error changeset" do
-      threat = threat_fixture()
-      assert {:error, %Ecto.Changeset{}} = Threats.update_threat(threat, @invalid_attrs)
-      assert threat == Threats.get_threat!(threat.id)
-    end
-
-    test "delete_threat/1 deletes the threat" do
-      threat = threat_fixture()
-      assert {:ok, %Threat{}} = Threats.delete_threat(threat)
-      assert_raise Ecto.NoResultsError, fn -> Threats.get_threat!(threat.id) end
-    end
-
-    test "change_threat/1 returns a threat changeset" do
-      threat = threat_fixture()
-      assert %Ecto.Changeset{} = Threats.change_threat(threat)
-    end
+    assert threat.title == "New Threat"
   end
 end

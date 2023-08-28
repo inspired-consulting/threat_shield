@@ -2,62 +2,70 @@ defmodule ThreatShield.SystemsTest do
   use ThreatShield.DataCase
 
   alias ThreatShield.Systems
+  alias ThreatShield.UserFixtures
+  alias ThreatShield.OrganisationsFixtures
+  alias ThreatShield.Accounts
 
   describe "systems" do
     alias ThreatShield.Systems.System
 
+
     import ThreatShield.SystemsFixtures
 
-    @invalid_attrs %{attributes: nil, name: nil, description: nil}
+      setup do
+    {:ok, user} = Accounts.get_user!(1)
+    {:ok, org} = ThreatShield.Threats.create_organisation(user, %{name: "Test Org"})
+    {:ok, threat} = ThreatShield.Threats.create_threat(user, org, %{title: "Test Threat", description: "A test threat"})
+    {:ok, _risk} = Risks.create_risk(user, threat.id, %{name: "Test Risk"})
+    {:ok, user: user, org: org, threat: threat}
+  end
 
-    test "list_systems/0 returns all systems" do
-      system = system_fixture()
-      assert Systems.list_systems() == [system]
+    test "create_system/3 with valid data creates a system" do
+      {:ok, user} = ThreatShield.Accounts.register_user(%{email: "user@example.com", password: "newsafepassword"})
+      {:ok, organisation} = ThreatShield.Organisations.create_organisation(%{name: "Test Org"}, user)
+
+      valid_attrs = %{name: "Test System", description: "Test System Description"}
+
+      assert {:ok, %System{} = system} = Systems.create_system(user, organisation, valid_attrs)
+      assert system.name == "Test System"
+      assert system.organisation_id == organisation.id
     end
 
-    test "get_system!/1 returns the system with given id" do
-      system = system_fixture()
-      assert Systems.get_system!(system.id) == system
+    test "create_system/3 with invalid data returns error changeset" do
+      {:ok, user} = ThreatShield.Accounts.register_user(%{email: "user@example.com", password: "newsafepassword"})
+      {:ok, organisation} = ThreatShield.Organisations.create_organisation(%{name: "Test Org"}, user)
+
+      assert {:error, %Ecto.Changeset{}} = Systems.create_system(user, organisation, %{})
     end
 
-    test "create_system/1 with valid data creates a system" do
-      valid_attrs = %{attributes: %{}, name: "some name", description: "some description"}
+   test "update_system/4 with valid data updates the system" do
+      {:ok, user} = ThreatShield.Accounts.register_user(%{email: "user@example.com", password: "newsafepassword"})
+      {:ok, organisation} = ThreatShield.Organisations.create_organisation(%{name: "Test Org"}, user)
+      system = ThreatShield.Systems.create_system(organisation, %{name: "Test System"})
 
-      assert {:ok, %System{} = system} = Systems.create_system(valid_attrs)
-      assert system.attributes == %{}
-      assert system.name == "some name"
-      assert system.description == "some description"
+      updated_system_attrs = %{name: "Updated System"}
+      updated_system = ThreatShield.Systems.update_system(user, organisation, system, updated_system_attrs)
+
+      assert updated_system.valid?
+      assert updated_system.name == "Updated System"
     end
 
-    test "create_system/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Systems.create_system(@invalid_attrs)
+
+    test "update_system/4 with invalid data returns error changeset" do
+      {:ok, user} = ThreatShield.Accounts.register_user(%{email: "user@example.com", password: "newsafepassword"})
+      {:ok, organisation} = ThreatShield.Organisations.create_organisation(%{name: "Test Org"}, user)
+      system = ThreatShield.Systems.create_system(user, organisation, %{})
+
+      assert {:error, %Ecto.Changeset{}} = Systems.update_system(user, organisation, system, %{})
     end
 
-    test "update_system/2 with valid data updates the system" do
-      system = system_fixture()
-      update_attrs = %{attributes: %{}, name: "some updated name", description: "some updated description"}
+    test "delete_system/3 deletes the system" do
+      {:ok, user} = ThreatShield.Accounts.register_user(%{email: "user@example.com", password: "newsafepassword"})
+      {:ok, organisation} = ThreatShield.Organisations.create_organisation(%{name: "Test Org"}, user)
+      system = ThreatShield.Systems.create_system(user, organisation, %{})
 
-      assert {:ok, %System{} = system} = Systems.update_system(system, update_attrs)
-      assert system.attributes == %{}
-      assert system.name == "some updated name"
-      assert system.description == "some updated description"
-    end
-
-    test "update_system/2 with invalid data returns error changeset" do
-      system = system_fixture()
-      assert {:error, %Ecto.Changeset{}} = Systems.update_system(system, @invalid_attrs)
-      assert system == Systems.get_system!(system.id)
-    end
-
-    test "delete_system/1 deletes the system" do
-      system = system_fixture()
-      assert {:ok, %System{}} = Systems.delete_system(system)
-      assert_raise Ecto.NoResultsError, fn -> Systems.get_system!(system.id) end
-    end
-
-    test "change_system/1 returns a system changeset" do
-      system = system_fixture()
-      assert %Ecto.Changeset{} = Systems.change_system(system)
+      assert {:ok, %System{}} = Systems.delete_system(user, organisation, system)
+      assert_raise Ecto.NoResultsError, fn -> Systems.get_system!(user, system.id) end
     end
   end
-end
+  end

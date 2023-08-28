@@ -7,14 +7,15 @@ defmodule ThreatShield.AssetsFixtures do
   @doc """
   Generate a asset.
   """
-  def asset_fixture(attrs \\ %{}) do
+  def asset_fixture(user, organisation, attrs \\ %{}) do
+
     {:ok, asset} =
       attrs
       |> Enum.into(%{
         is_candidate: 42,
         description: "some description"
       })
-      |> ThreatShield.Assets.create_asset()
+      |> ThreatShield.Assets.create_asset(user, organisation)
 
     asset
   end

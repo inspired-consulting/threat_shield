@@ -9,8 +9,9 @@ defmodule ThreatShieldWeb.AssetLiveTest do
   @invalid_attrs %{is_candidate: nil, description: nil}
 
   defp create_asset(_) do
-    asset = asset_fixture()
-    %{asset: asset}
+{:ok, user} = ThreatShield.Accounts.register_user(%{email: "user@example.com", password: "newsafepassword"})
+    {:ok, organisation} = ThreatShield.Organisations.create_organisation(%{name: "Test Org"}, user)
+    asset_fixture(user, organisation, @create_attrs)
   end
 
   describe "Index" do
