@@ -17,6 +17,7 @@ In short, ThreatShield is your Intelligent Threat Analysis Companion.
       - [Building and running the application](#building-and-running-the-application)
       - [Accessing the containers](#accessing-the-containers)
       - [Stopping the containers/application](#stopping-the-containersapplication)
+    - [Testing your application](#testing-your-application)
   - [Development setup with CLI tools](#development-setup-with-cli-tools)
     - [Prerequisites for CLI tools](#prerequisites-for-cli-tools)
     - [Usage with CLI tools](#usage-with-cli-tools)
@@ -91,6 +92,14 @@ docker compose down
 or
 
 use the `Ctrl+C` command twice in your terminal to stop the application.
+
+### Testing your application
+
+To run the tests, access the app container, and use the following command:
+
+```bash
+MIX_ENV=test mix test
+```
 
 ## Development setup with CLI tools
 
