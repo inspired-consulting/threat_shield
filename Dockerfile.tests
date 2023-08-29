@@ -1,0 +1,31 @@
+# Second stage: Run tests
+FROM elixir:1.15.4-alpine as test_environment
+
+ENV LANG=C.UTF-8
+ENV MIX_ENV=dev
+
+# Install inotify-tools for live-reload during development
+RUN apk add --no-cache inotify-tools build-base npm
+
+# Install Hex and Rebar
+RUN mix local.hex --force && mix local.rebar --force
+
+COPY mix.exs mix.lock ./
+COPY config/ ./config/
+
+RUN mix deps.get --only test
+RUN mix deps.compile
+
+# Install a real database
+RUN apk add --no-cache postgres
+
+# Create a database user and database
+RUN sudo -u postgres createuser -s test_user
+RUN sudo -u postgres createdb -O test_user test_db
+
+# Connect to the database
+RUN echo "host=localhost port=5432 user=test_user dbname=test_db password=test" >> .env
+
+COPY . .
+
+CMD ["mix", "test"]

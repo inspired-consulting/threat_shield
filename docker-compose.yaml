@@ -15,6 +15,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      tests:
+        condition: service_completed_successfully
     container_name: ThreatShield-server
     networks:
       - threatshield-network
@@ -41,11 +43,26 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - web
+      db:
+        condition: service_healthy
     command: ["mix", "ecto.migrate"]
     env_file:
       - .env
     container_name: ThreatShield-migration
+    networks:
+      - threatshield-network
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+      args:
+        - MIX_ENV=test
+    depends_on:
+      migration:
+        condition: service_completed_successfully
+    env_file:
+      - .env
+    container_name: ThreatShield-tests
     networks:
       - threatshield-network
 
