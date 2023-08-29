@@ -1,25 +1,36 @@
 defmodule ThreatShield.OrganisationsTest do
   use ExUnit.Case
-  alias ThreatShield.{Organisations, Repo, Accounts}
+  use ThreatShield.DataCase
+
+  alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.OrganisationsFixtures
+  alias ThreatShield.AccountsFixtures
 
-  setup do
-    {:ok, user} = Accounts.get_user!(1)
-    {:ok, _org} = Organisations.create_organisation(user, %{name: "Test Org"})
-    {:ok, user: user}
-  end
+  describe "organisations" do
+    test "create_organisation/2 with valid data creates an organisation" do
+      user = AccountsFixtures.user_fixture()
+      valid_attrs = %{name: "some name"}
 
-  test "create_organisation/2 creates a new organisation" do
-    org_attrs = %{name: "New Org"}
-    organisation = OrganisationsFixtures.organisation_fixture(@user, org_attrs)
+      assert {:ok, %Organisation{}} =
+               Organisations.create_organisation(valid_attrs, user)
+    end
 
-    assert organisation.name == "New Org"
-  end
+    test "create_organisation/2 with invalid data returns error changeset" do
+      user = AccountsFixtures.user_fixture()
 
-  test "get_organisation!/2 returns the organisation with the given id" do
-    organisation = OrganisationsFixtures.organisation_fixture(@user, %{name: "Another Org"})
-    retrieved_organisation = Organisations.get_organisation!(@user, organisation.id)
-    assert retrieved_organisation.name == "Another Org"
+      assert {:error, %Ecto.Changeset{}} = Organisations.create_organisation(%{}, user)
+    end
+
+    test "update_organisation/3 with valid data updates the organisation" do
+      user = AccountsFixtures.user_fixture()
+      organisation = OrganisationsFixtures.organisation_fixture(user)
+
+      updated_attrs = %{name: "Updated Name"}
+      updated_organisation = Organisations.update_organisation(organisation, user, updated_attrs)
+
+      assert {:ok, %Organisation{} = organisation} = updated_organisation
+      assert organisation.name == "Updated Name"
+    end
   end
 end

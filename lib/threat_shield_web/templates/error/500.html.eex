@@ -1,0 +1,11 @@
+<article class="container">
+  <header class="text-right">
+    <h1 class="text-cf-blue-300">500</h1>
+  </header>
+  <main class="lg:pl-10 lg:text-xl">
+    <p><%= dgettext("errors", "We're sorry, this should not have happened. There was an error at our server.") %></p>
+  </main>
+  <footer class="text-right">
+    <button type="button" class="btn-primary" onclick="window.history.back();"> <%= dgettext("errors", "Go back") %> </button>
+  </footer>
+</article>

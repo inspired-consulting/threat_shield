@@ -8,10 +8,11 @@ defmodule ThreatShield.ThreatsFixtures do
   Generate a threat.
   """
 
-    def threat_fixture(user, organisation, attrs \\ %{}) do
+  def threat_fixture(user, organisation, attrs \\ %{}) do
     default_attrs = %{
       description: "some description",
-      is_candidate: true
+      organisation: "some organisation",
+      is_candidate: false
     }
 
     all_attrs = Map.merge(default_attrs, attrs)

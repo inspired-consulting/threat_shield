@@ -8,15 +8,14 @@ defmodule ThreatShield.AssetsFixtures do
   Generate a asset.
   """
   def asset_fixture(user, organisation, attrs \\ %{}) do
+    default_attrs = %{
+      description: "some description",
+      organisation: "some organisation"
+    }
 
-    {:ok, asset} =
-      attrs
-      |> Enum.into(%{
-        is_candidate: 42,
-        description: "some description"
-      })
-      |> ThreatShield.Assets.create_asset(user, organisation)
+    merged_attrs = Map.merge(default_attrs, attrs)
 
+    {:ok, asset} = ThreatShield.Assets.create_asset(user, organisation, merged_attrs)
     asset
   end
 end

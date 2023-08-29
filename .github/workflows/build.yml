@@ -34,6 +34,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Tests
+        uses: ./.github/workflows/test.yml
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
