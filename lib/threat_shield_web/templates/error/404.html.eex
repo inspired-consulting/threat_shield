@@ -1,0 +1,11 @@
+<article class="container">
+  <header class="text-right">
+    <h1 class="text-cf-blue-300">404</h1>
+  </header>
+  <main class="lg:pl-10 lg:text-xl">
+    <p> <%= dgettext("errors", "Sorry, the page you are looking for does not exist.") %> </p>
+  </main>
+  <footer class="text-right">
+    <button type="button" class="btn-primary" onclick="window.history.back();"> <%= dgettext("errors", "Go back") %> </button>
+  </footer>
+</article>

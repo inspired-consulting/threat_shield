@@ -7,7 +7,7 @@ defmodule ThreatShield.SystemsFixtures do
   @doc """
   Generate a system.
   """
-  def system_fixture(attrs \\ %{}) do
+  def system_fixture(user, organisation, attrs \\ %{}) do
     {:ok, system} =
       attrs
       |> Enum.into(%{
@@ -15,7 +15,7 @@ defmodule ThreatShield.SystemsFixtures do
         name: "some name",
         description: "some description"
       })
-      |> ThreatShield.Systems.create_system()
+      |> ThreatShield.Systems.create_system(user, organisation)
 
     system
   end

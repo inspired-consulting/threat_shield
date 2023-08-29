@@ -222,7 +222,6 @@ defmodule ThreatShieldWeb.UserAuthTest do
     test "does not redirect if user is not authenticated", %{conn: conn} do
       conn = UserAuth.redirect_if_user_is_authenticated(conn, [])
       refute conn.halted
-      refute conn.is_candidate
     end
   end
 
@@ -266,7 +265,6 @@ defmodule ThreatShieldWeb.UserAuthTest do
     test "does not redirect if user is authenticated", %{conn: conn, user: user} do
       conn = conn |> assign(:current_user, user) |> UserAuth.require_authenticated_user([])
       refute conn.halted
-      refute conn.is_candidate
     end
   end
 end

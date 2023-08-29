@@ -15,10 +15,11 @@ defmodule ThreatShield.Organisations do
 
   ## Examples
 
-      iex> list_organisations()
-      [%Organisation{}, ...]
+      iex> list_organisations(user)
+      [%Organisation{}, %Organisation{}]
 
   """
+
   def list_organisations(user) do
     full_user =
       Repo.get(User, user.id)
@@ -27,38 +28,12 @@ defmodule ThreatShield.Organisations do
     full_user.organisations
   end
 
-  @doc """
-  Gets a single organisation.
-
-  Raises `Ecto.NoResultsError` if the Organisation does not exist.
-
-  ## Examples
-
-      iex> get_organisation!(123)
-      %Organisation{}
-
-      iex> get_organisation!(456)
-      ** (Ecto.NoResultsError)
-
-  """
   def get_organisation!(%User{id: user_id}, org_id) do
     Organisation.get(org_id)
     |> Organisation.for_user(user_id)
     |> Repo.one!()
   end
 
-  @doc """
-  Creates a organisation.
-
-  ## Examples
-
-      iex> create_organisation(%{field: value})
-      {:ok, %Organisation{}}
-
-      iex> create_organisation(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def create_organisation(attrs \\ %{}, %User{} = current_user) do
     %Organisation{}
     |> Organisation.changeset(attrs)
@@ -66,18 +41,6 @@ defmodule ThreatShield.Organisations do
     |> Repo.insert()
   end
 
-  @doc """
-  Updates a organisation.
-
-  ## Examples
-
-      iex> update_organisation(organisation, %{field: new_value})
-      {:ok, %Organisation{}}
-
-      iex> update_organisation(organisation, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def update_organisation(%Organisation{} = organisation, %User{} = user, attrs) do
     changeset =
       organisation
@@ -89,31 +52,10 @@ defmodule ThreatShield.Organisations do
     end)
   end
 
-  @doc """
-  Deletes a organisation.
-
-  ## Examples
-
-      iex> delete_organisation(organisation)
-      {:ok, %Organisation{}}
-
-      iex> delete_organisation(organisation)
-      {:error, %Ecto.Changeset{}}
-
-  """
   def delete_organisation(%Organisation{} = organisation) do
     Repo.delete(organisation)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking organisation changes.
-
-  ## Examples
-
-      iex> change_organisation(organisation)
-      %Ecto.Changeset{data: %Organisation{}}
-
-  """
   def change_organisation(%Organisation{} = organisation, attrs \\ %{}) do
     Organisation.changeset(organisation, attrs)
   end
