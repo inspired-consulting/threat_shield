@@ -19,8 +19,9 @@ jobs:
       - name: Set up Elixir and Mix
         uses: erlef/setup-beam@v1
         with:
-          otp-version: 22.2
+          otp-version: 25.0
           elixir-version: 1.12.3
+          version-type: strict
 
       - name: Install dependencies
         run: mix deps.get
