@@ -15,8 +15,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      tests:
-        condition: service_completed_successfully
     container_name: ThreatShield-server
     networks:
       - threatshield-network
@@ -29,7 +27,7 @@ services:
     env_file:
       - .env
     ports:
-      - "5432:5432"
+      - "15432:5432"
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 5s
