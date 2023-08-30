@@ -29,7 +29,7 @@ services:
     env_file:
       - .env
     ports:
-      - "5432:5432"
+      - "15432:5432"
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 5s
@@ -55,11 +55,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.tests
-      args:
-        - MIX_ENV=test
     depends_on:
-      migration:
-        condition: service_completed_successfully
+      - db
     env_file:
       - .env
     container_name: ThreatShield-tests
