@@ -16,13 +16,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Load environment variables from .env file
-        run: echo "POSTGRES_DB=$(cat .env | grep POSTGRES_DB | cut -d '=' -f2)" >> $GITHUB_ENV
-      - run: echo "POSTGRES_USER=$(cat .env | grep POSTGRES_USER | cut -d '=' -f2)" >> $GITHUB_ENV
-      - run: echo "POSTGRES_PASSWORD=$(cat .env | grep POSTGRES_PASSWORD | cut -d '=' -f2)" >> $GITHUB_ENV
-      - run: echo "POSTGRES_HOST=$(cat .env | grep POSTGRES_HOST | cut -d '=' -f2)" >> $GITHUB_ENV
-      - run: echo "POSTGRES_PORT=$(cat .env | grep POSTGRES_PORT | cut -d '=' -f2)" >> $GITHUB_ENV
-
       - name: Set up Elixir and Mix
         uses: erlef/setup-beam@v1
         with:
