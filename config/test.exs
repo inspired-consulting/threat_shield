@@ -13,8 +13,6 @@ config :threat_shield, ThreatShield.Repo,
   password: System.get_env("POSTGRES_PASSWORD", "secret"),
   hostname: System.get_env("POSTGRES_HOST", "localhost"),
   database: "threat_shield_test#{System.get_env("MIX_TEST_PARTITION")}",
-  pool: Ecto.Adapters.SQL.Sandbox,
-  pool_mode: :shared,
   pool_size: 10
 
 # We don't run a server during test. If one is required,

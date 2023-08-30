@@ -26,6 +26,14 @@ jobs:
       - name: Install dependencies
         run: mix deps.get
 
+      - name: Print Environment Variables
+        run: |
+          echo "POSTGRES_DB: $POSTGRES_DB"
+          echo "POSTGRES_USER: $POSTGRES_USER"
+          echo "POSTGRES_PASSWORD: $POSTGRES_PASSWORD"
+          echo "POSTGRES_HOST: $POSTGRES_HOST"
+          echo "POSTGRES_PORT: $POSTGRES_PORT"
+
       - name: Run tests
         run: mix test
 
