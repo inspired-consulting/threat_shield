@@ -35,7 +35,3 @@ jobs:
 
       - name: Run tests
         run: mix test
-
-      - name: Set workflow status to failed if any step fails
-        if: ${{ failure() }}
-        run: exit 1

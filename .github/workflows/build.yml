@@ -1,12 +1,6 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - preparation-branch-for-tests-in-pipeline
-  pull_request:
-    branches:
-      - main
   workflow_run:
     workflows: ["Run Tests"]
     types:
