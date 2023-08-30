@@ -20,7 +20,7 @@ jobs:
         uses: erlef/setup-beam@v1
         with:
           otp-version: 25.0
-          elixir-version: 1.12.3
+          elixir-version: 1.15
           version-type: strict
 
       - name: Install dependencies
