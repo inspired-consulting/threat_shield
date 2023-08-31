@@ -12,7 +12,7 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage organisation records in your database.</:subtitle>
+        <:subtitle>Please fill out this form as detailed as possible:</:subtitle>
       </.header>
 
       <.simple_form

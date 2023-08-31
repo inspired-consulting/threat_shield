@@ -71,6 +71,8 @@ defmodule ThreatShieldWeb.Router do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
+      live "/threatboard", DashboardLive, :index
+
       live "/organisations", OrganisationLive.Index, :index
       live "/organisations/new", OrganisationLive.Index, :new
       live "/organisations/:org_id", OrganisationLive.Show, :show

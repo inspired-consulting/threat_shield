@@ -2,6 +2,26 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@font-face {
+  font-family: "Avenir";
+  src: url("../fonts/Avenir.ttc") format("truetype");
+}
+
+@font-face {
+  font-family: "Chicago";
+  src: url("../fonts/Chicago.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Optima";
+  src: url("../fonts/Optima_regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Nexa";
+  src: url("../fonts/NexaBook.otf") format("opentype");
+}
+
 /* This file is for your main application CSS */
 
 /* RESETS */
@@ -10,8 +30,35 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  /* Set the default colors: */
+  --primary-color: #1A1C8E;
+  --secondary-color: #D4AF34;
+
+  /* Font-Families */
+  --font-primary: "Nexa"
 }
 
+body {
+  font-family: var(--font-primary);
+  font-kerning: auto;
+  color: var(--primary-color);
+}
+
+ /* h1 {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-gap: 2rem;
+  align-items: center;
+  justify-items: center;
+}
+
+h1:before, h1:after {
+  content: "";
+  height: 0.05rem;
+  width: 25rem;
+  background-color: var(--primary-color);
+} */
 
 /* User indicator for waiting */
 #suggest-spinner{
@@ -28,9 +75,4 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-} 
-
-.icon-color path {
-  fill: var(--secondary-color);
 }
-
