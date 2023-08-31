@@ -12,6 +12,8 @@
   box-sizing: border-box;
 }
 
+
+/* User indicator for waiting */
 #suggest-spinner{
   display: block;
   position: fixed;
@@ -26,4 +28,9 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+} 
+
+.icon-color path {
+  fill: var(--secondary-color);
 }
+

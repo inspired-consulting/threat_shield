@@ -2,7 +2,7 @@
   Listing Organisations
   <:actions>
     <.link patch={~p"/organisations/new"}>
-      <.button>New Organisation</.button>
+      <.button >New Organisation</.button>
     </.link>
   </:actions>
 </.header>
@@ -42,7 +42,10 @@
   </:action>
 </.table>
 
-<.link navigate={~p"/"}>Back</.link>
+<.link navigate={~p"/"}>
+  <.button>Back to Dashboard</.button>
+</.link>
+
 
 <.modal
   :if={@live_action in [:new, :edit]}

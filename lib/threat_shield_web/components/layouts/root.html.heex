@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.openai.com;"/>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.openai.com; img-src 'self' data:"/>
     <.live_title suffix=" · Phoenix Framework">
       <%= assigns[:page_title] || "ThreatShield" %>
     </.live_title>
@@ -14,7 +14,7 @@
 
 
   </head>
-  <body class=" antialiased">
+  <body class="antialiased">
     <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
       <%= if @current_user do %>
         <li class="text-[0.8125rem] leading-6 text-black">
