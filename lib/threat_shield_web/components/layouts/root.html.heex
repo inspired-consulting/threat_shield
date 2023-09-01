@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.openai.com;"/>
+    <%!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.openai.com; img-src 'self' data:; script-src 'self' nonce-#{ThreatShieldWeb.Helpers.generate_nonce()}; style-src 'self' 'unsafe-inline';" /> --%>
     <.live_title suffix=" · Phoenix Framework">
       <%= assigns[:page_title] || "ThreatShield" %>
     </.live_title>
@@ -14,49 +14,67 @@
 
 
   </head>
-  <body class=" antialiased">
-    <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
-      <%= if @current_user do %>
-        <li class="text-[0.8125rem] leading-6 text-black">
-          <%= @current_user.email %>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/settings"}
-            class="text-[0.8125rem] leading-6 text-black font-semibold hover:underline"
-          >
-            Settings
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/log_out"}
-            method="delete"
-            class="text-[0.8125rem] leading-6 text-black font-semibold hover:underline"
-          >
-            Log out
-          </.link>
-        </li>
-      <% else %>
-        <li>
-          <.link
-            href={~p"/users/register"}
-            class="text-[0.8125rem] leading-6 text-black font-semibold hover:underline"
-          >
-            Register
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/log_in"}
-            class="text-[0.8125rem] leading-6 text-black font-semibold hover:underline"
-          >
-            Log in
-          </.link>
-        </li>
-      <% end %>
-    </ul>
-
+  <body class="antialiased">
+    <nav>
+      <ul class="relative z-10 flex gap-4 px-4 sm:px-6 lg:px-8 justify-end">
+        <%= if @current_user do %>
+          <li class="relative user-dropdown text-[0.8125rem] leading-loose text-primary_col-600 font-semibold hover:cursor-pointer">
+            <%= @current_user.email %>
+          </li>
+          <ul class="absolute user-menu hidden right-0 mt-10 py-2 w-48 bg-white rounded-sm shadow-xl">
+            <li class="px-4 py-2">
+              <.link
+                href={~p"/users/settings"}
+                class="text-[0.8125rem] leading-6 text-primary_col-600 hover:underline"
+              >
+                Settings
+              </.link>
+            </li>
+            <li class="px-4 py-2">
+              <.link
+                href={~p"/users/log_out"}
+                method="delete"
+                class="text-[0.8125rem] leading-6 text-primary_col-600 hover:underline"
+              >
+                Log out
+              </.link>
+            </li>
+          </ul>
+        <% else %>
+          <li>
+            <.link
+              href={~p"/users/register"}
+              class="text-[0.8125rem] leading-6 text-primary_col-600 font-semibold hover:underline"
+            >
+              Register
+            </.link>
+          </li>
+          <li>
+            <.link
+              href={~p"/users/log_in"}
+              class="text-[0.8125rem] leading-6 text-primary_col-600 font-semibold hover:underline"
+            >
+              Log in
+            </.link>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
     <%= @inner_content %>
+
+    <script nonce={ThreatShieldWeb.Helpers.generate_nonce()}>
+        document.addEventListener("DOMContentLoaded", function () {
+          const userDropdown = document.querySelector(".user-dropdown");
+          const userMenu = document.querySelector(".user-menu");
+
+          userDropdown.addEventListener("click", () => {
+            userMenu.classList.toggle("hidden");
+          });
+
+          userDropdown.addEventListener("mouseover", () => {
+            userMenu.classList.toggle("hidden");
+          });
+        });
+    </script>
   </body>
 </html>

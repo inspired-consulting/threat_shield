@@ -11,6 +11,7 @@ defmodule ThreatShieldWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+    # plug :helpers
   end
 
   pipeline :api do
@@ -21,6 +22,7 @@ defmodule ThreatShieldWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/release_tag", PageController, :show_release_tag
   end
 
   # Other scopes may use custom stacks.
@@ -68,6 +70,8 @@ defmodule ThreatShieldWeb.Router do
       on_mount: [{ThreatShieldWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      live "/threatboard", DashboardLive, :index
 
       live "/organisations", OrganisationLive.Index, :index
       live "/organisations/new", OrganisationLive.Index, :new

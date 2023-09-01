@@ -11,7 +11,7 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage system records in your database.</:subtitle>
+        <:subtitle>Please fill out this form as detailed as possible:</:subtitle>
       </.header>
 
       <.simple_form
