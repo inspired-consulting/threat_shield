@@ -19,9 +19,7 @@ defmodule ThreatShieldWeb.Helpers do
   end
 
   def generate_nonce() do
-    # 16 bytes (128 bits) for the nonce
-    random_bytes = :crypto.strong_rand_bytes(16)
-    base64_nonce = Base.encode64(random_bytes)
-    String.replace(base64_nonce, "/", "_")
+    :crypto.strong_rand_bytes(8)
+    |> Base.url_encode64()
   end
 end

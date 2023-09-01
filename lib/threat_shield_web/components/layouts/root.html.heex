@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
-    <%!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://api.openai.com; img-src 'self' data:; script-src 'self' nonce-#{ThreatShieldWeb.Helpers.generate_nonce()}; style-src 'self' 'unsafe-inline';" /> --%>
+    <meta http-equiv="Content-Security-Policy" content={"default-src 'self' https://api.openai.com; img-src 'self' data:; script-src 'self' 'nonce-#{ThreatShieldWeb.Helpers.generate_nonce()}'; style-src 'self' 'unsafe-inline';"} />
     <.live_title suffix=" · Phoenix Framework">
       <%= assigns[:page_title] || "ThreatShield" %>
     </.live_title>
@@ -62,7 +62,7 @@
     </nav>
     <%= @inner_content %>
 
-    <script nonce={ThreatShieldWeb.Helpers.generate_nonce()}>
+    <script nonce={"#{raw(ThreatShieldWeb.Helpers.generate_nonce())}"}>
         document.addEventListener("DOMContentLoaded", function () {
           const userDropdown = document.querySelector(".user-dropdown");
           const userMenu = document.querySelector(".user-menu");
