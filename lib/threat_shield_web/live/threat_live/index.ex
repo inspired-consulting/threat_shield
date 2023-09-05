@@ -16,14 +16,14 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
     organisation = Threats.get_organisation!(current_user, org_id)
     threats = organisation.threats
 
-    socket =
-      socket
-      |> assign(
-        organisation: organisation,
-        asking_ai: nil
-      )
-
-    {:ok, stream(socket, :threats, threats)}
+    {:ok,
+     socket
+     |> assign(
+       organisation: organisation,
+       asking_ai: nil,
+       threat_suggestions: []
+     )
+     |> stream(:threats, threats)}
   end
 
   @impl true

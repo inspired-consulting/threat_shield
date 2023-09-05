@@ -6,7 +6,6 @@ defmodule ThreatShield.Assets.Asset do
   alias ThreatShield.Organisations.Organisation
 
   schema "assets" do
-    field :is_candidate, :boolean, default: false
     field :description, :string
 
     belongs_to :system, System

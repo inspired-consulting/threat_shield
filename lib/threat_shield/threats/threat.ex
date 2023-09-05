@@ -7,7 +7,6 @@ defmodule ThreatShield.Threats.Threat do
 
   schema "threats" do
     field :description, :string
-    field :is_candidate, :boolean, default: false
 
     belongs_to :system, System
     belongs_to :organisation, Organisation

@@ -13,8 +13,7 @@ defmodule ThreatShield.ThreatsTest do
       organisation = OrganisationsFixtures.organisation_fixture(user)
 
       valid_attrs = %{
-        description: "some description",
-        is_candidate: false,
+        description: "some description"
         organisation: "some organisation"
       }
 
