@@ -45,14 +45,15 @@ defmodule ThreatShield.Threats do
     end)
   end
 
-  def add_threat_by_id(%User{} = user, threat_id) do
+  def add_threat_with_description(%User{} = user, org_id, description) do
     Repo.transaction(fn ->
-      changeset =
-        Repo.one!(get_single_threat_query(user, threat_id))
-        |> Repo.preload(:organisation)
-        |> Threat.changeset(%{is_candidate: false})
+      organisation = Organisations.get_organisation!(user, org_id)
 
-      Repo.update!(changeset)
+      changeset =
+        %Threat{organisation: organisation, description: description}
+        |> Ecto.Changeset.change()
+
+      Repo.insert!(changeset)
     end)
   end
 

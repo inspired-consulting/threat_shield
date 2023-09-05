@@ -19,8 +19,8 @@ defmodule ThreatShield.Threats.Threat do
   @doc false
   def changeset(threat, attrs) do
     threat
-    |> cast(attrs, [:description, :is_candidate, :system_id])
-    |> validate_required([:description, :is_candidate, :organisation])
+    |> cast(attrs, [:description, :system_id])
+    |> validate_required([:description, :organisation])
   end
 
   def system_name(%__MODULE__{system: %{name: name}}), do: name

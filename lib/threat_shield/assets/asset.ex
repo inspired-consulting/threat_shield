@@ -17,7 +17,7 @@ defmodule ThreatShield.Assets.Asset do
   @doc false
   def changeset(asset, attrs) do
     asset
-    |> cast(attrs, [:description, :is_candidate, :system_id])
+    |> cast(attrs, [:description, :system_id])
     |> validate_required([:description, :organisation])
   end
 

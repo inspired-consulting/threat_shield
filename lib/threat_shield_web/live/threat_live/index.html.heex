@@ -14,18 +14,22 @@
   </:actions>
 </.header>
 
-<.table id="threats" rows={@threat_suggestions}>
-  <:col :let={{_id, threat}} label="Description"><%= threat.description %></:col>
+<.table
+  :if={not Enum.empty?(@threat_suggestions)}
+  id="threat_suggestions"
+  rows={@threat_suggestions}
+>
+  <:col :let={suggestion} label="Description"><%= suggestion.description %></:col>
 
-  <:action :let={{_id, threat}}>
+  <:action :let={suggestion}>
     <.link
-      phx-click={JS.push("delete", value: %{threat_id: threat.id})}
+      phx-click={JS.push("delete", value: %{description: suggestion.description})}
       data-confirm="Are you sure?"
     >
       Ignore
     </.link>
     <.link
-      phx-click={JS.push("add", value: %{threat_id: threat.description})}
+      phx-click={JS.push("add", value: %{description: suggestion.description})}
       data-confirm="Are you sure?"
     >
       Add

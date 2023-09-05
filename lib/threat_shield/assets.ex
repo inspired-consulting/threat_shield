@@ -84,7 +84,7 @@ defmodule ThreatShield.Assets do
       |> Asset.for_user(user_id)
       |> Repo.one!()
       |> Repo.preload([:organisation, :system])
-      |> Asset.changeset(%{is_candidate: false})
+      |> Asset.changeset(%{})
       |> Repo.update!()
     end)
   end

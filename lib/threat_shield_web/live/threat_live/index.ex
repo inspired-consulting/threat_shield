@@ -60,26 +60,39 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
     %{asking_ai: ref} = socket.assigns
 
     Process.demonitor(ref, [:flush])
-    {:noreply, socket |> assign(asking_ai: nil) |> stream(:threats, new_threats)}
+
+    {:noreply,
+     socket
+     |> assign(
+       asking_ai: nil,
+       threat_suggestions: socket.assigns.threat_suggestions ++ new_threats
+     )}
   end
 
   @impl true
-  def handle_event("add", %{"threat_id" => id}, socket) do
+  def handle_event("add", %{"description" => description}, socket) do
     user = socket.assigns.current_user
-    {:ok, threat} = Threats.add_threat_by_id(user, id)
+    org_id = socket.assigns.organisation.id
 
-    {:noreply, stream_insert(socket, :threats, threat)}
+    {:ok, threat} = Threats.add_threat_with_description(user, org_id, description)
+
+    suggestions =
+      Enum.filter(socket.assigns.threat_suggestions, fn s -> s.description != description end)
+      |> Enum.to_list()
+
+    {:noreply,
+     socket
+     |> stream_insert(:threats, threat)
+     |> assign(:threat_suggestions, suggestions)}
   end
 
   @impl true
-  def handle_event("delete", %{"threat_id" => id}, socket) do
-    user =
-      socket.assigns.current_user
+  def handle_event("delete", %{"description" => description}, socket) do
+    suggestions =
+      Enum.filter(socket.assigns.threat_suggestions, fn s -> s.description != description end)
+      |> Enum.to_list()
 
-    threat = Threats.get_threat!(user, id)
-    {:ok, _} = Threats.delete_threat_by_id(user, id)
-
-    {:noreply, stream_delete(socket, :threats, threat)}
+    {:noreply, socket |> assign(:threat_suggestions, suggestions)}
   end
 
   @impl true
@@ -104,9 +117,6 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
     threat_descriptions =
       AI.suggest_threats_for_organisation(organisation)
 
-    new_threats =
-      Threats.bulk_add_for_user_and_org(user, organisation, threat_descriptions)
-
-    {:ai_results, new_threats}
+    {:ai_results, threat_descriptions}
   end
 end
