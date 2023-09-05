@@ -4,6 +4,21 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
   alias ThreatShield.Accounts
   alias ThreatShield.Accounts.User
 
+  @steps [
+    :email,
+    :password,
+    :organisation
+  ]
+
+  defp is_hidden?(field, progress) do
+    visible_steps =
+      @steps
+      |> Enum.reverse()
+      |> Enum.drop_while(fn step -> step != progress end)
+
+    field not in visible_steps
+  end
+
   def render(assigns) do
     ~H"""
     <div class="mx-auto max-w-sm">
@@ -34,8 +49,17 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
           Oops, something went wrong! Please check the errors below.
         </.error>
 
+        <section>
         <.input field={@form[:email]} type="email" label="Email" required />
+        </section>
+
+        <section hidden={is_hidden?(:password, @progress)}>
         <.input field={@form[:password]} type="password" label="Password" required />
+        </section>
+
+        <section hidden={is_hidden?(:organisation, @progress)}>
+        <.input field={@form[:organisation]} type="text" label="Organisation Name" />
+        </section>
 
         <:actions>
           <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
@@ -48,9 +72,15 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
   def mount(_params, _session, socket) do
     changeset = Accounts.change_user_registration(%User{})
 
+    first_step = List.first(@steps)
+
     socket =
       socket
-      |> assign(trigger_submit: false, check_errors: false)
+      |> assign(
+        trigger_submit: false,
+        check_errors: false,
+        progress: first_step
+      )
       |> assign_form(changeset)
 
     {:ok, socket, temporary_assigns: [form: nil]}
