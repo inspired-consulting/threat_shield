@@ -7,7 +7,7 @@ defmodule ThreatShieldWeb.AssetLiveTest do
   alias ThreatShield.OrganisationsFixtures
   alias ThreatShieldWe
 
-  @create_attrs %{is_candidate: false, description: "some description"}
+  @create_attrs %{description: "some description"}
 
   defp create_asset(_) do
     user = AccountsFixtures.user_fixture()

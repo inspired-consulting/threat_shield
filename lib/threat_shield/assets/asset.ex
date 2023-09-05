@@ -6,7 +6,6 @@ defmodule ThreatShield.Assets.Asset do
   alias ThreatShield.Organisations.Organisation
 
   schema "assets" do
-    field :is_candidate, :boolean, default: false
     field :description, :string
 
     belongs_to :system, System
@@ -18,7 +17,7 @@ defmodule ThreatShield.Assets.Asset do
   @doc false
   def changeset(asset, attrs) do
     asset
-    |> cast(attrs, [:description, :is_candidate, :system_id])
+    |> cast(attrs, [:description, :system_id])
     |> validate_required([:description, :organisation])
   end
 
