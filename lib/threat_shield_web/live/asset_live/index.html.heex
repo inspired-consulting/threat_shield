@@ -14,6 +14,19 @@
   </:actions>
 </.header>
 
+<.table :if={not Enum.empty?(@asset_suggestions)} id="asset_suggestions" rows={@asset_suggestions}>
+  <:col :let={suggestion} label="Description"><%= suggestion.description %></:col>
+
+  <:action :let={suggestion}>
+    <.link phx-click={JS.push("delete", value: %{description: suggestion.description})}>
+      Ignore
+    </.link>
+    <.link phx-click={JS.push("add", value: %{description: suggestion.description})}>
+      Add
+    </.link>
+  </:action>
+</.table>
+
 <.table
   id="assets"
   rows={@streams.assets}
@@ -27,19 +40,6 @@
     <div class="sr-only">
       <.link navigate={~p"/organisations/#{@organisation.id}/assets/#{asset}"}>Show</.link>
     </div>
-  </:action>
-  <:action :let={{_id, asset}}>
-    <%= if asset.is_candidate do %>
-      <.link
-        phx-click={JS.push("delete", value: %{asset_id: asset.id})}
-        data-confirm="Are you sure?"
-      >
-        Ignore
-      </.link>
-      <.link phx-click={JS.push("add", value: %{asset_id: asset.id})} data-confirm="Are you sure?">
-        Add
-      </.link>
-    <% end %>
   </:action>
 </.table>
 

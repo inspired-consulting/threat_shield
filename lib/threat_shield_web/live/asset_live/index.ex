@@ -22,7 +22,8 @@ defmodule ThreatShieldWeb.AssetLive.Index do
       socket
       |> assign(
         organisation: organisation,
-        asking_ai: nil
+        asking_ai: nil,
+        asset_suggestions: []
       )
 
     {:ok, stream(socket, :assets, assets)}
@@ -60,25 +61,36 @@ defmodule ThreatShieldWeb.AssetLive.Index do
     %{asking_ai: ref} = socket.assigns
 
     Process.demonitor(ref, [:flush])
-    {:noreply, socket |> assign(asking_ai: nil) |> stream(:assets, new_assets)}
+
+    {:noreply,
+     socket
+     |> assign(
+       asking_ai: nil,
+       asset_suggestions: socket.assigns.asset_suggestions ++ new_assets
+     )}
   end
 
   @impl true
-  def handle_event("delete", %{"asset_id" => asset_id}, socket) do
-    organisation = socket.assigns.organisation
+  def handle_event("delete", %{"description" => description}, socket) do
+    suggestions =
+      Enum.filter(socket.assigns.asset_suggestions, fn s -> s.description != description end)
+      |> Enum.to_list()
 
-    asset = Assets.get_asset!(socket.assigns.current_user, asset_id)
-    {:ok, _} = Assets.delete_asset(socket.assigns.current_user, asset)
-
-    {:noreply, push_navigate(socket, to: "/organisations/#{organisation.id}/assets")}
+    {:noreply, socket |> assign(asset_suggestions: suggestions)}
   end
 
   @impl true
-  def handle_event("add", %{"asset_id" => id}, socket) do
+  def handle_event("add", %{"description" => description}, socket) do
     user = socket.assigns.current_user
-    {:ok, asset} = Assets.add_asset_by_id(user, id)
+    org_id = socket.assigns.organisation.id
 
-    {:noreply, stream_insert(socket, :assets, asset)}
+    {:ok, asset} = Assets.add_asset_with_description(user, org_id, description)
+
+    suggestions =
+      Enum.filter(socket.assigns.asset_suggestions, fn s -> s.description != description end)
+      |> Enum.to_list()
+
+    {:noreply, socket |> stream_insert(:assets, asset) |> assign(:asset_suggestions, suggestions)}
   end
 
   @impl true
@@ -100,12 +112,9 @@ defmodule ThreatShieldWeb.AssetLive.Index do
   defp ask_ai(user, org_id) do
     organisation = Assets.get_organisation!(user, org_id)
 
-    asset_descriptions =
+    new_assets =
       AI.suggest_assets_for_organisation(organisation)
 
-    asset_candidates =
-      Assets.bulk_add_asset_candidates(user, organisation, asset_descriptions)
-
-    {:ai_results, asset_candidates}
+    {:ai_results, new_assets}
   end
 end

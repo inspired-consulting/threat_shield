@@ -22,16 +22,10 @@
   <:col :let={suggestion} label="Description"><%= suggestion.description %></:col>
 
   <:action :let={suggestion}>
-    <.link
-      phx-click={JS.push("delete", value: %{description: suggestion.description})}
-      data-confirm="Are you sure?"
-    >
+    <.link phx-click={JS.push("delete", value: %{description: suggestion.description})}>
       Ignore
     </.link>
-    <.link
-      phx-click={JS.push("add", value: %{description: suggestion.description})}
-      data-confirm="Are you sure?"
-    >
+    <.link phx-click={JS.push("add", value: %{description: suggestion.description})}>
       Add
     </.link>
   </:action>
