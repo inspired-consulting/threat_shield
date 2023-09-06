@@ -53,22 +53,27 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
           Oops, something went wrong! Please check the errors below.
         </.error>
 
-        <section>
-        <.input field={@form[:email]} type="email" label="Email" required />
+        <section class="chat-input">
+          <.input
+            field={@form[:email]}
+            type="email"
+            label="Please provide your mail address"
+            required
+          />
         </section>
 
-        <section :if={not is_hidden?(:password, @progress)}>
-        <.input field={@form[:password]} type="password" label="Password" required />
+        <section :if={not is_hidden?(:password, @progress)} class="chat-input">
+          <.input field={@form[:password]} type="password" label="Please choose a password" required />
         </section>
 
-        <section :if={not is_hidden?(:organisation, @progress)}>
-        <.input field={@form[:organisation]} type="text" label="Organisation Name" />
+        <section :if={not is_hidden?(:organisation, @progress)} class="chat-input">
+          <.input field={@form[:organisation]} type="text" label="Please name your organisation" />
         </section>
 
         <:actions>
-     <%= if is_in_last_step?(@progress) do %>
-     <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
-      <% end %>
+          <%= if is_in_last_step?(@progress) do %>
+            <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
+          <% end %>
         </:actions>
       </.simple_form>
     </div>

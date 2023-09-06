@@ -76,3 +76,36 @@ h1:before, h1:after {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+
+/* Style the sections */
+section {
+  margin-bottom: 20px; /* Add some space between sections */
+}
+
+/* Style the input fields */
+.chat-input input {
+  width: 90%;
+  padding: 1rem;
+  margin: 1rem;
+  border: 0.1rem solid #ccc;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Style the labels */
+.chat-input label {
+  white-space: nowrap;
+  overflow: hidden;
+  margin: 1rem;
+  animation: typeText 3s steps(25) 1s forwards;
+}
+
+@keyframes typeText {
+  from {
+    width: 0;
+    }
+  to {
+    width: 100%;
+  }
+}
