@@ -4,6 +4,7 @@ defmodule ThreatShield.Accounts do
   """
 
   import Ecto.Query, warn: false
+  alias ThreatShield.Organisations
   alias ThreatShield.Repo
 
   alias ThreatShield.Accounts.{User, UserToken, UserNotifier}
@@ -78,6 +79,18 @@ defmodule ThreatShield.Accounts do
     %User{}
     |> User.registration_changeset(attrs)
     |> Repo.insert()
+  end
+
+  def register_user_with_organisation(%{"organisation" => name} = attrs) do
+    Repo.transaction(fn ->
+      {:ok, user} = register_user(attrs)
+
+      if name != "" do
+        {:ok, _} = Organisations.create_organisation(%{name: name}, user)
+      end
+
+      user
+    end)
   end
 
   @doc """

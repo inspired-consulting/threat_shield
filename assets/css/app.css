@@ -76,3 +76,50 @@ h1:before, h1:after {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+
+/* CHAT */
+
+/* Style the chat labels */
+.chat-input label {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: typeText 3s steps(25) 1s forwards;
+}
+
+
+/* Style the fake input fields */
+.chat-input .fake-input-box {
+  width: 70%;
+  padding: 1rem;
+  font-size: 0.9rem;
+  background-color: #f3f1f1;
+  color: black;
+  border: 0.1rem solid var(--primary-color);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* Style the input fields */
+.chat-input div input {
+  padding: 1rem;
+  background-color: #218aff;
+  color: white;
+  border: 0.1rem solid var(--primary-color);
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.chat-input div {
+  width: 90%;
+}
+
+@keyframes typeText {
+  from {
+    width: 0;
+    }
+  to {
+    width: 100%;
+  }
+}
