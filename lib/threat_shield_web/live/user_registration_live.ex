@@ -54,20 +54,24 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
         </.error>
 
         <section class="chat-input">
-          <.input
-            field={@form[:email]}
-            type="email"
-            label="Please provide your mail address"
-            required
-          />
+          <div class="fake-input-box">
+            <label for id="email">Please provide your mail address</label>
+          </div>
+          <.input field={@form[:email]} type="email" required />
         </section>
 
         <section :if={not is_hidden?(:password, @progress)} class="chat-input">
-          <.input field={@form[:password]} type="password" label="Please choose a password" required />
+          <div class="fake-input-box">
+            <label for id="password">Please provide a password</label>
+          </div>
+          <.input field={@form[:password]} type="password" required />
         </section>
 
         <section :if={not is_hidden?(:organisation, @progress)} class="chat-input">
-          <.input field={@form[:organisation]} type="text" label="Please name your organisation" />
+          <div class="fake-input-box">
+            <label for id="organisation">Please name your organisation</label>
+          </div>
+          <.input field={@form[:organisation]} type="text" label="Please" />
         </section>
 
         <:actions>
