@@ -24,7 +24,7 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
   end
 
   defp form_section_classes(name, progress) do
-    "chat-input" <>
+    "chat-input grid justify-items-stretch" <>
       if is_hidden?(name, progress) do
         " hidden"
       else
@@ -62,33 +62,46 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
           Oops, something went wrong! Please check the errors below.
         </.error>
 
-        <section class="chat-input">
-          <div class="fake-input-box">
+        <section class="chat-input grid justify-items-stretch">
+          <div class="fake-input-box justify-self-start">
             <label for id="email">Please provide your mail address</label>
           </div>
-          <.input field={@form[:email]} type="email" required />
+          <div class="justify-self-end">
+            <.input field={@form[:email]} type="email" required />
+          </div>
         </section>
 
         <section class={form_section_classes(:password, @progress)}>
-          <div class="fake-input-box">
+          <div class="fake-input-box justify-self-start">
             <label for id="password">Please provide a password</label>
           </div>
-          <.input field={@form[:password]} type="password" required />
+          <div class="justify-self-end">
+            <.input field={@form[:password]} type="password" required />
+          </div>
         </section>
 
         <section class={form_section_classes(:organisation, @progress)}>
-          <div class="fake-input-box">
+          <div class="fake-input-box justify-self-start">
             <label for id="organisation">Please name your organisation</label>
           </div>
-          <.input field={@form[:organisation]} type="text" label="Please" />
+          <div class="justify-self-end">
+            <.input field={@form[:organisation]} type="text" />
+          </div>
         </section>
 
         <:actions>
-     <%= if is_in_last_step?(@progress) do %>
-     <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
-     <% else %>
-     <.button type="button" phx-click={JS.push("continue")} disabled={!@can_continue} class="w-full">Continue</.button>
-      <% end %>
+          <%= if is_in_last_step?(@progress) do %>
+            <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
+          <% else %>
+            <.button
+              type="button"
+              phx-click={JS.push("continue")}
+              disabled={!@can_continue}
+              class="w-full"
+            >
+              Continue
+            </.button>
+          <% end %>
         </:actions>
       </.simple_form>
     </div>

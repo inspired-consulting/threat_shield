@@ -85,37 +85,35 @@ h1:before, h1:after {
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
-  margin: 1rem;
   animation: typeText 3s steps(25) 1s forwards;
 }
 
-.chat-input {
-  margin-bottom: 2rem;
-}
-
-/* Style the input fields */
-.chat-input input {
-  width: 90%;
-  padding: 1rem;
-  margin: 0.5rem 1rem;
-  border: 0.1rem solid var(--primary-color);
-  border-radius: 0.5rem;
-  font-size: 0.9rem;
-}
 
 /* Style the fake input fields */
 .chat-input .fake-input-box {
-display: block;
-  width: 90%;
-  margin: 0.5rem 1rem;
+  width: 70%;
   padding: 1rem;
   font-size: 0.9rem;
-  background-color: white;
+  background-color: #f3f1f1;
+  color: black;
   border: 0.1rem solid var(--primary-color);
   border-radius: 0.5rem;
   overflow: hidden;
 }
 
+/* Style the input fields */
+.chat-input div input {
+  padding: 1rem;
+  background-color: #218aff;
+  color: white;
+  border: 0.1rem solid var(--primary-color);
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.chat-input div {
+  width: 90%;
+}
 
 @keyframes typeText {
   from {
