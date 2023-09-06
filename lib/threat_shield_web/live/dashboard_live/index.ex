@@ -1,11 +1,9 @@
-defmodule ThreatShieldWeb.DashboardLive do
+defmodule ThreatShieldWeb.DashboardLive.Index do
   use ThreatShieldWeb, :live_view
-
-  alias ThreatShieldWeb.OrganisationLive.Index
-  alias ThreatShieldWeb.ThreatLive.Index
 
   alias ThreatShield.Organisations
 
+  @impl true
   def mount(params, _session, socket) do
     user = socket.assigns.current_user
 
@@ -32,13 +30,5 @@ defmodule ThreatShieldWeb.DashboardLive do
 
   def handle_event("show_risks", _params, socket) do
     {:noreply, assign(socket, active_component: :risks)}
-  end
-
-  def render(assigns) do
-    active_component = Map.get(assigns, :active_component)
-
-    ~L"""
-      <p><%= @organisation.name %></p>
-    """
   end
 end
