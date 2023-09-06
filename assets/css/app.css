@@ -45,20 +45,7 @@ body {
   color: var(--primary-color);
 }
 
- /* h1 {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  grid-gap: 2rem;
-  align-items: center;
-  justify-items: center;
-}
-
-h1:before, h1:after {
-  content: "";
-  height: 0.05rem;
-  width: 25rem;
-  background-color: var(--primary-color);
-} */
+/* USER INDICATOR */
 
 /* User indicator for waiting */
 #suggest-spinner{
