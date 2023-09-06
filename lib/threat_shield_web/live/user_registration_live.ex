@@ -19,6 +19,10 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
     field not in visible_steps
   end
 
+  defp is_in_last_step?(progress) do
+    progress == List.last(@steps)
+  end
+
   def render(assigns) do
     ~H"""
     <div class="mx-auto max-w-sm">
@@ -53,16 +57,18 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
         <.input field={@form[:email]} type="email" label="Email" required />
         </section>
 
-        <section hidden={is_hidden?(:password, @progress)}>
+        <section :if={not is_hidden?(:password, @progress)}>
         <.input field={@form[:password]} type="password" label="Password" required />
         </section>
 
-        <section hidden={is_hidden?(:organisation, @progress)}>
+        <section :if={not is_hidden?(:organisation, @progress)}>
         <.input field={@form[:organisation]} type="text" label="Organisation Name" />
         </section>
 
         <:actions>
-          <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
+     <%= if is_in_last_step?(@progress) do %>
+     <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
+      <% end %>
         </:actions>
       </.simple_form>
     </div>
@@ -111,10 +117,38 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
     form = to_form(changeset, as: "user")
 
+    advance_progress(socket, changeset)
+
     if changeset.valid? do
-      assign(socket, form: form, check_errors: false)
+      socket
+      |> advance_progress(changeset)
+      |> assign(form: form, check_errors: false)
     else
-      assign(socket, form: form)
+      socket
+      |> advance_progress(changeset)
+      |> assign(form: form)
     end
+  end
+
+  defp advance_progress(socket, changeset) do
+    progress = socket.assigns.progress
+
+    if !Keyword.has_key?(changeset.errors, progress) do
+      advance_progress(socket)
+    else
+      socket
+    end
+  end
+
+  defp advance_progress(socket) do
+    current = socket.assigns.progress
+
+    new =
+      @steps
+      |> Enum.reverse()
+      |> Enum.take_while(fn s -> s != current end)
+      |> List.last(List.last(@steps))
+
+    assign(socket, progress: new)
   end
 end
