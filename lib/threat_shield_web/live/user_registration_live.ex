@@ -91,13 +91,15 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
 
         <:actions>
           <%= if is_in_last_step?(@progress) do %>
-            <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
+            <.button phx-disable-with="Creating account..." class="min-w-fit">
+              Create an account
+            </.button>
           <% else %>
             <.button
               type="button"
               phx-click={JS.push("continue")}
               disabled={!@can_continue}
-              class="w-full"
+              class="min-w-fit"
             >
               Continue
             </.button>
