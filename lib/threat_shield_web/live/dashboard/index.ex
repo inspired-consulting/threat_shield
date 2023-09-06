@@ -3,10 +3,23 @@ defmodule ThreatShieldWeb.DashboardLive do
 
   alias ThreatShieldWeb.OrganisationLive.Index
   alias ThreatShieldWeb.ThreatLive.Index
-  alias ThreatShieldWeb.RiskLive.Index
 
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, active_component: :organisations)}
+  alias ThreatShield.Organisations
+
+  def mount(params, _session, socket) do
+    user = socket.assigns.current_user
+
+    org_id = Map.get(params, "org_id")
+
+    if org_id do
+      org = Organisations.get_organisation!(user, org_id)
+      {:ok, assign(socket, :organisation, org)}
+    else
+      case Organisations.get_first_organisation_if_existent(user) do
+        {:ok, org} -> {:ok, assign(socket, :organisation, org)}
+        _ -> {:ok, redirect(socket, to: "/organisations/new")}
+      end
+    end
   end
 
   def handle_event("show_organisations", _params, socket) do
@@ -25,7 +38,7 @@ defmodule ThreatShieldWeb.DashboardLive do
     active_component = Map.get(assigns, :active_component)
 
     ~L"""
-
+      <p><%= @organisation.name %></p>
     """
   end
 end

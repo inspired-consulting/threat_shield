@@ -34,6 +34,13 @@ defmodule ThreatShield.Organisations do
     |> Repo.one!()
   end
 
+  def get_first_organisation_if_existent(user) do
+    case list_organisations(user) do
+      [first | _] -> {:ok, first}
+      _ -> {:error, nil}
+    end
+  end
+
   def create_organisation(attrs \\ %{}, %User{} = current_user) do
     %Organisation{}
     |> Organisation.changeset(attrs)

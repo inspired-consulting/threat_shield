@@ -11,7 +11,6 @@ defmodule ThreatShieldWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
-    # plug :helpers
   end
 
   pipeline :api do
@@ -71,12 +70,14 @@ defmodule ThreatShieldWeb.Router do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
-      live "/threatboard", DashboardLive, :index
+      live "/dashboard", DashboardLive, :index
 
       live "/organisations", OrganisationLive.Index, :index
       live "/organisations/new", OrganisationLive.Index, :new
       live "/organisations/:org_id", OrganisationLive.Show, :show
       live "/organisations/:org_id/edit", OrganisationLive.Index, :edit
+
+      live "/organisations/:org_id/dashboard", DashboardLive, :index
 
       live "/organisations/:org_id/systems", SystemLive.Index, :index
       live "/organisations/:org_id/systems/new", SystemLive.Index, :new
