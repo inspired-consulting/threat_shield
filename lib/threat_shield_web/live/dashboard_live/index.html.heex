@@ -1,1 +1,11 @@
-test
+<.link patch={~p"/organisations/#{@organisation.id}/systems"}>
+  <.button>Systems</.button>
+</.link>
+
+<.link patch={~p"/organisations/#{@organisation.id}/assets"}>
+  <.button>Assets</.button>
+</.link>
+
+<.link patch={~p"/organisations/#{@organisation.id}/threats?suggest=true"}>
+  <.button>Suggest Threats</.button>
+</.link>
