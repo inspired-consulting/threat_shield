@@ -9,3 +9,9 @@
 <.link patch={~p"/organisations/#{@organisation.id}/threats?suggest=true"}>
   <.button>Suggest Threats</.button>
 </.link>
+
+<.live_component
+  module={ThreatShieldWeb.ThreatLive.ThreatComponent}
+  id="threats"
+  threats={@streams.threats}
+/>

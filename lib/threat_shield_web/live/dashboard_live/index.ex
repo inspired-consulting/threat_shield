@@ -10,25 +10,17 @@ defmodule ThreatShieldWeb.DashboardLive.Index do
     org_id = Map.get(params, "org_id")
 
     if org_id do
-      org = Organisations.get_organisation!(user, org_id)
-      {:ok, assign(socket, :organisation, org)}
+      org = Organisations.get_organisation_for_dashboard!(user, org_id)
+
+      {:ok,
+       socket
+       |> assign(:organisation, org)
+       |> stream(:threats, org.threats)}
     else
       case Organisations.get_first_organisation_if_existent(user) do
-        {:ok, org} -> {:ok, assign(socket, :organisation, org)}
+        {:ok, org} -> {:ok, socket |> assign(:organisation, org) |> stream(:threats, org.threats)}
         _ -> {:ok, redirect(socket, to: "/organisations/new")}
       end
     end
-  end
-
-  def handle_event("show_organisations", _params, socket) do
-    {:noreply, assign(socket, active_component: :organisations)}
-  end
-
-  def handle_event("show_threats", _params, socket) do
-    {:noreply, assign(socket, active_component: :threats)}
-  end
-
-  def handle_event("show_risks", _params, socket) do
-    {:noreply, assign(socket, active_component: :risks)}
   end
 end
