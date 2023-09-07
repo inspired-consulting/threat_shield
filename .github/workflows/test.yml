@@ -66,7 +66,7 @@ jobs:
             ${{ runner.os }}-mix-${{ env.cache-name }}-
 
       # Step: Define how to cache the `_build` directory. After the first run,
-      # this speeds up tests runs a lot. This includes not re-compiling our
+      # this speeds up tests runs a lot. This includes not recompiling our
       # project's downloaded deps every run.
       - name: Cache compiled build
         id: cache-build
