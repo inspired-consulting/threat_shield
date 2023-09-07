@@ -8,10 +8,10 @@ defmodule ThreatShieldWeb.Navigation do
     <nav>
       <ul class="relative z-10 flex gap-4 px-4 sm:px-6 lg:px-8 justify-end">
         <%= if assigns[:organisation] do %>
-          <li class="relative user-dropdown text-[0.8125rem] leading-loose text-primary_col-600 font-semibold hover:cursor-pointer">
+          <li class="relative nav-dropdown text-[0.8125rem] leading-loose text-primary_col-600 font-semibold hover:cursor-pointer">
             <%= @organisation.name %>
           </li>
-          <ul class="absolute user-menu hidden right-10 mt-10 py-2 w-48 bg-white rounded-sm shadow-xl">
+          <ul class="absolute nav-menu hidden right-10 mt-10 py-2 w-48 bg-white rounded-sm shadow-xl">
             <li class="px-4 py-2">
               <a
                 href="/organisations"
@@ -23,10 +23,10 @@ defmodule ThreatShieldWeb.Navigation do
           </ul>
         <% end %>
         <%= if @current_user do %>
-          <li class="relative user-dropdown text-[0.8125rem] leading-loose text-primary_col-600 font-semibold hover:cursor-pointer">
+          <li class="relative nav-dropdown text-[0.8125rem] leading-loose text-primary_col-600 font-semibold hover:cursor-pointer">
             <%= @current_user.email %>
           </li>
-          <ul class="absolute user-menu hidden right-0 mt-10 py-2 w-48 bg-white rounded-sm shadow-xl">
+          <ul class="absolute nav-menu hidden right-0 mt-10 py-2 w-48 bg-white rounded-sm shadow-xl">
             <li class="px-4 py-2">
               <a
                 href="/users/settings"
