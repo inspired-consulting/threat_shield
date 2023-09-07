@@ -10,8 +10,18 @@
   <.button>Suggest Threats</.button>
 </.link>
 
+<h2>Threats</h2>
 <.live_component
   module={ThreatShieldWeb.ThreatLive.ThreatComponent}
   id="threats"
   threats={@streams.threats}
 />
+
+<h2>Risks</h2>
+<%= for {_id, threat} <- @streams.threats, !Enum.empty?(threat.risks) do %>
+  <.live_component
+    module={ThreatShieldWeb.RiskLive.RiskComponent}
+    id={"risks_for_threat_#{threat.id}"}
+    threat={threat}
+  />
+<% end %>

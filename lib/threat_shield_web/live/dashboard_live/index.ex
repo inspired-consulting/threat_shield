@@ -14,13 +14,21 @@ defmodule ThreatShieldWeb.DashboardLive.Index do
 
       {:ok,
        socket
-       |> assign(:organisation, org)
-       |> stream(:threats, org.threats)}
+       |> get_dashboard_data(org)}
     else
       case Organisations.get_first_organisation_if_existent(user) do
-        {:ok, org} -> {:ok, socket |> assign(:organisation, org) |> stream(:threats, org.threats)}
-        _ -> {:ok, redirect(socket, to: "/organisations/new")}
+        {:ok, org} ->
+          {:ok, socket |> get_dashboard_data(org)}
+
+        _ ->
+          {:ok, redirect(socket, to: "/organisations/new")}
       end
     end
+  end
+
+  defp get_dashboard_data(socket, organisation) do
+    socket
+    |> assign(:organisation, organisation)
+    |> stream(:threats, organisation.threats)
   end
 end
