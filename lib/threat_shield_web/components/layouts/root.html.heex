@@ -62,7 +62,7 @@
     </nav>
     <%= @inner_content %>
 
-    <script nonce={"#{raw(ThreatShieldWeb.Helpers.generate_nonce())}"}>
+    <script nonce={ThreatShieldWeb.Helpers.generate_nonce()}>
         document.addEventListener("DOMContentLoaded", function () {
           const userDropdown = document.querySelector(".user-dropdown");
           const userMenu = document.querySelector(".user-menu");
