@@ -1,8 +1,6 @@
 defmodule ThreatShieldWeb.Navigation do
   use Phoenix.Component
 
-  alias Phoenix.LiveView.JS
-
   def render(assigns) do
     ~H"""
     <nav>
