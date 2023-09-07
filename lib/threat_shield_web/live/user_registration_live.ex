@@ -132,7 +132,7 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
     user_params |> IO.inspect()
 
     case Accounts.register_user_with_organisation(user_params) do
-      {:ok, user} ->
+      {:ok, {:ok, user}} ->
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
             user,
@@ -142,7 +142,7 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
         changeset = Accounts.change_user_registration(user)
         {:noreply, socket |> assign(trigger_submit: true) |> assign_form(changeset)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
+      {_, {:error, %Ecto.Changeset{} = changeset}} ->
         {:noreply, socket |> assign(check_errors: true) |> assign_form(changeset)}
     end
   end

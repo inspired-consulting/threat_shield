@@ -11,17 +11,30 @@
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
-
-
   </head>
   <body class="antialiased">
     <nav>
       <ul class="relative z-10 flex gap-4 px-4 sm:px-6 lg:px-8 justify-end">
-        <%= if @current_user do %>
-          <li class="relative user-dropdown text-[0.8125rem] leading-loose text-primary_col-600 font-semibold hover:cursor-pointer">
-            <%= @current_user.email %>
+        <%= if assigns[:organisation] do %>
+        <li id="org-dropdown" class="relative nav-dropdown text-[0.8125rem] leading-loose text-primary_col-600 font-semibold hover:cursor-pointer" onclick="toggleDropdown(id)">
+          <%= @organisation.name %>
+        
+        <ul class="absolute org-dropdown-menu hidden mt-4 py-2 w-48 bg-white rounded-sm shadow-xl">
+          <li class="px-4 py-2">
+            <.link
+              href={~p"/organisations"}
+              class="text-[0.8125rem] leading-6 text-primary_col-600 hover:underline"
+            >
+              List organisation
+            </.link>
           </li>
-          <ul class="absolute user-menu hidden right-0 mt-10 py-2 w-48 bg-white rounded-sm shadow-xl">
+        </ul>
+        </li>
+          <%end %>
+        <%= if @current_user do %>
+          <li id="user-dropdown" class="relative nav-dropdown text-[0.8125rem] leading-loose text-primary_col-600 font-semibold hover:cursor-pointer" onclick="toggleDropdown(id)">
+            <%= @current_user.email %>
+          <ul class="absolute user-dropdown-menu hidden mt-4 py-2 w-48 bg-white rounded-sm shadow-xl">
             <li class="px-4 py-2">
               <.link
                 href={~p"/users/settings"}
@@ -40,6 +53,7 @@
               </.link>
             </li>
           </ul>
+          </li>
         <% else %>
           <li>
             <.link
@@ -62,19 +76,22 @@
     </nav>
     <%= @inner_content %>
 
-    <script nonce={ThreatShieldWeb.Helpers.generate_nonce()}>
-        document.addEventListener("DOMContentLoaded", function () {
-          const userDropdown = document.querySelector(".user-dropdown");
-          const userMenu = document.querySelector(".user-menu");
+    <script>
+      function toggleDropdown(id) {
 
-          userDropdown.addEventListener("click", () => {
-            userMenu.classList.toggle("hidden");
-          });
+        const navDropdown = document.getElementById(id);
+        const navMenu = navDropdown.firstElementChild;
 
-          userDropdown.addEventListener("mouseover", () => {
-            userMenu.classList.toggle("hidden");
-          });
+        if (navMenu) {
+          navMenu.classList.toggle("hidden");
+        }
+        
+        document.addEventListener("click", (e) => {
+          if (e.target.closest(".nav-dropdown") !== navDropdown) {
+            navMenu.classList.add("hidden");
+          }
         });
+      }
     </script>
   </body>
 </html>

@@ -34,6 +34,27 @@ defmodule ThreatShield.Organisations do
     |> Repo.one!()
   end
 
+  def get_organisation_for_dashboard!(%User{id: user_id}, org_id) do
+    Organisation.get(org_id)
+    |> Organisation.for_user(user_id)
+    |> Organisation.with_threats()
+    |> Organisation.with_risks()
+    |> Repo.one!()
+  end
+
+  def get_first_organisation_if_existent(user) do
+    first_org =
+      case list_organisations(user) do
+        [first | _] -> first
+        _ -> nil
+      end
+
+    case first_org do
+      nil -> {:error, nil}
+      org -> {:ok, get_organisation_for_dashboard!(user, org.id)}
+    end
+  end
+
   def create_organisation(attrs \\ %{}, %User{} = current_user) do
     %Organisation{}
     |> Organisation.changeset(attrs)
