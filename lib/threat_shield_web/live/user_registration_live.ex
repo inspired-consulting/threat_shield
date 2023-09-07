@@ -129,8 +129,6 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
   end
 
   def handle_event("save", %{"user" => user_params}, socket) do
-    user_params |> IO.inspect()
-
     case Accounts.register_user_with_organisation(user_params) do
       {:ok, {:ok, user}} ->
         {:ok, _} =
