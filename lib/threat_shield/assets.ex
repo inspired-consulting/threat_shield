@@ -78,46 +78,16 @@ defmodule ThreatShield.Assets do
     Asset.changeset(asset, attrs)
   end
 
-  def add_asset_by_id(%User{id: user_id}, asset_id) do
+  def add_asset_with_description(%User{} = user, org_id, description) do
     Repo.transaction(fn ->
-      Asset.get(asset_id)
-      |> Asset.for_user(user_id)
-      |> Repo.one!()
-      |> Repo.preload([:organisation, :system])
-      |> Asset.changeset(%{is_candidate: false})
-      |> Repo.update!()
+      organisation = Organisations.get_organisation!(user, org_id)
+
+      changeset =
+        %Asset{organisation: organisation, description: description}
+        |> Ecto.Changeset.change()
+
+      Repo.insert!(changeset)
     end)
-  end
-
-  def bulk_add_asset_candidates(%User{} = user, %Organisation{} = organisation, assets) do
-    multi =
-      Multi.new()
-      |> Multi.exists?(:check_access, Organisations.is_member_query(user, organisation))
-
-    {:ok, result} =
-      Enum.reduce(
-        assets,
-        multi,
-        fn asset, acc ->
-          Multi.insert(
-            acc,
-            {:insert_asset, asset.description},
-            asset
-            |> Ecto.Changeset.change()
-            |> Ecto.Changeset.put_assoc(:organisation, organisation)
-          )
-        end
-      )
-      |> Repo.transaction()
-
-    result
-    |> Enum.filter(fn {k, _v} ->
-      case k do
-        {:insert_asset, _} -> true
-        _ -> false
-      end
-    end)
-    |> Enum.map(fn {_k, v} -> v end)
   end
 
   defp get_single_asset_query(user, asset_id) do

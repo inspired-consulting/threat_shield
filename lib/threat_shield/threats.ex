@@ -45,53 +45,16 @@ defmodule ThreatShield.Threats do
     end)
   end
 
-  def add_threat_by_id(%User{} = user, threat_id) do
+  def add_threat_with_description(%User{} = user, org_id, description) do
     Repo.transaction(fn ->
+      organisation = Organisations.get_organisation!(user, org_id)
+
       changeset =
-        Repo.one!(get_single_threat_query(user, threat_id))
-        |> Repo.preload(:organisation)
-        |> Threat.changeset(%{is_candidate: false})
+        %Threat{organisation: organisation, description: description}
+        |> Ecto.Changeset.change()
 
-      Repo.update!(changeset)
+      Repo.insert!(changeset)
     end)
-  end
-
-  def bulk_add_for_user_and_org(%User{} = user, %Organisation{} = organisation, threats) do
-    multi =
-      Multi.new()
-      |> Multi.exists?(:check_access, Organisations.is_member_query(user, organisation))
-
-    threat_changesets =
-      Enum.map(
-        threats,
-        fn threat ->
-          Ecto.Changeset.change(threat)
-          |> Ecto.Changeset.put_assoc(:organisation, organisation)
-        end
-      )
-
-    {:ok, result} =
-      Enum.reduce(
-        threat_changesets,
-        multi,
-        fn changeset, acc ->
-          Multi.insert(
-            acc,
-            {:insert_threat, changeset},
-            changeset
-          )
-        end
-      )
-      |> Repo.transaction()
-
-    result
-    |> Enum.filter(fn {k, _v} ->
-      case k do
-        {:insert_threat, _} -> true
-        _ -> false
-      end
-    end)
-    |> Enum.map(fn {_k, v} -> v end)
   end
 
   def update_threat(%User{} = user, %Threat{} = threat, attrs) do
