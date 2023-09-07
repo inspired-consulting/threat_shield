@@ -3,25 +3,22 @@ name: Run Tests
 on:
   push:
     branches:
-      - preparation-branch-for-tests-in-pipeline
-  pull_request:
-    branches:
-      - main
+      - "*"
 
 jobs:
   run-tests:
     services:
-          db:
-            image: postgres:12
-            ports: ['5432:5432']
-            env:
-              POSTGRES_USER: threat_shield
-              POSTGRES_PASSWORD: secret
-            options: >-
-              --health-cmd pg_isready
-              --health-interval 10s
-              --health-timeout 5s
-              --health-retries 5
+      db:
+        image: postgres:12
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_USER: threat_shield
+          POSTGRES_PASSWORD: secret
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     runs-on: ubuntu-latest
 
@@ -56,7 +53,7 @@ jobs:
           elixir-version: 1.15
           version-type: strict
 
-  # Step: Define how to cache deps. Restores existing cache if present.
+      # Step: Define how to cache deps. Restores existing cache if present.
       - name: Cache deps
         id: cache-deps
         uses: actions/cache@v3
