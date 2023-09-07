@@ -38,8 +38,8 @@ defmodule ThreatShield.Organisations do
     Organisation.get(org_id)
     |> Organisation.for_user(user_id)
     |> Organisation.with_threats()
+    |> Organisation.with_risks()
     |> Repo.one!()
-    |> Repo.preload(threats: :risks)
   end
 
   def get_first_organisation_if_existent(user) do

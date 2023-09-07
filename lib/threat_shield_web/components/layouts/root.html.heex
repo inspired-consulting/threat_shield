@@ -11,27 +11,25 @@
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
-
-
   </head>
   <body class="antialiased">
     <nav>
       <ul class="relative z-10 flex gap-4 px-4 sm:px-6 lg:px-8 justify-end">
         <%= if assigns[:organisation] do %>
-        <li class="relative nav-dropdown text-[0.8125rem] leading-loose text-primary_col-600 font-semibold hover:cursor-pointer">
-          <%= @organisation.name %>
-        </li>
-        <ul class="absolute nav-menu hidden right-0 mt-10 py-2 w-48 bg-white rounded-sm shadow-xl">
-          <li class="px-4 py-2">
-            <.link
-              href={~p"/organisations"}
-              class="text-[0.8125rem] leading-6 text-primary_col-600 hover:underline"
-            >
-              List organisation
-            </.link>
+          <li class="relative nav-dropdown text-[0.8125rem] leading-loose text-primary_col-600 font-semibold hover:cursor-pointer">
+            <%= @organisation.name %>
           </li>
-        </ul>
-          <%end %>
+          <ul class="absolute nav-menu hidden right-0 mt-10 py-2 w-48 bg-white rounded-sm shadow-xl">
+            <li class="px-4 py-2">
+              <.link
+                href={~p"/organisations"}
+                class="text-[0.8125rem] leading-6 text-primary_col-600 hover:underline"
+              >
+                List organisation
+              </.link>
+            </li>
+          </ul>
+        <% end %>
         <%= if @current_user do %>
           <li class="relative nav-dropdown text-[0.8125rem] leading-loose text-primary_col-600 font-semibold hover:cursor-pointer">
             <%= @current_user.email %>
@@ -78,18 +76,33 @@
     <%= @inner_content %>
 
     <script nonce={ThreatShieldWeb.Helpers.generate_nonce()}>
-        document.addEventListener("DOMContentLoaded", function () {
-          const navDropdown = document.querySelector(".nav-dropdown");
-          const navMenu = document.querySelector(".nav-menu");
+      <<<<<<< HEAD
+              document.addEventListener("DOMContentLoaded", function () {
+                const navDropdown = document.querySelector(".nav-dropdown");
+                const navMenu = document.querySelector(".nav-menu");
 
-          navDropdown.addEventListener("click", () => {
-            navMenu.classList.toggle("hidden");
-          });
+                navDropdown.addEventListener("click", () => {
+                  navMenu.classList.toggle("hidden");
+                });
 
-          navDropdown.addEventListener("mouseover", () => {
-            navMenu.classList.toggle("hidden");
-          });
-        });
+                navDropdown.addEventListener("mouseover", () => {
+                  navMenu.classList.toggle("hidden");
+                });
+      =======
+            document.addEventListener("DOMContentLoaded", function () {
+              const userDropdown = document.querySelector(".user-dropdown");
+              const userMenu = document.querySelector(".user-menu");
+
+              userDropdown.addEventListener("click", () => {
+                userMenu.classList.toggle("hidden");
+      >>>>>>> e7fa563 (improved query)
+              });
+
+              userDropdown.addEventListener("mouseover", () => {
+                userMenu.classList.toggle("hidden");
+              });
+            });
+          
     </script>
   </body>
 </html>
