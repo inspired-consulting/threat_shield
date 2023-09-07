@@ -17,6 +17,24 @@
   --secondary-color: #D4AF34;
 }
 
+/* HEADINGS */
+
+h2 {
+  color: var( --primary-color);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  margin-top: 5rem;
+}
+
+h3 {
+  color: var( --secondary-color);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+
 /* USER INDICATOR */
 
 /* User indicator for waiting */
