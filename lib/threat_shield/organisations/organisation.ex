@@ -69,4 +69,10 @@ defmodule ThreatShield.Organisations.Organisation do
     |> join(:inner, [organisation: o], assoc(o, :users), as: :user)
     |> where([user: u], u.id == ^user_id)
   end
+
+  def with_threats(query) do
+    query
+    |> join(:left, [organisation: o], assoc(o, :threats), as: :threats)
+    |> preload([threats: t], threats: t)
+  end
 end

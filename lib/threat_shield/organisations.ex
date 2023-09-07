@@ -37,8 +37,9 @@ defmodule ThreatShield.Organisations do
   def get_organisation_for_dashboard!(%User{id: user_id}, org_id) do
     Organisation.get(org_id)
     |> Organisation.for_user(user_id)
+    |> Organisation.with_threats()
     |> Repo.one!()
-    |> Repo.preload(threats: [:system, :risks])
+    |> Repo.preload(threats: :risks)
   end
 
   def get_first_organisation_if_existent(user) do
