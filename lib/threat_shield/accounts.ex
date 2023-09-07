@@ -83,13 +83,17 @@ defmodule ThreatShield.Accounts do
 
   def register_user_with_organisation(%{"organisation" => name} = attrs) do
     Repo.transaction(fn ->
-      {:ok, user} = register_user(attrs)
+      case register_user(attrs) do
+        {:ok, user} ->
+          if name != "" do
+            {:ok, _} = Organisations.create_organisation(%{name: name}, user)
+          end
 
-      if name != "" do
-        {:ok, _} = Organisations.create_organisation(%{name: name}, user)
+          {:ok, user}
+
+        {:error, changeset} ->
+          {:error, changeset}
       end
-
-      user
     end)
   end
 
