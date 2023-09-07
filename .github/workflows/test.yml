@@ -15,7 +15,8 @@ jobs:
             image: postgres:12
             ports: ['5432:5432']
             env:
-              POSTGRES_PASSWORD: postgres
+              POSTGRES_USER: threat_shield
+              POSTGRES_PASSWORD: secret
             options: >-
               --health-cmd pg_isready
               --health-interval 10s
