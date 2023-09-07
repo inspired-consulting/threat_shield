@@ -21,6 +21,7 @@ defmodule ThreatShieldWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/release_tag", PageController, :show_release_tag
   end
 
   # Other scopes may use custom stacks.
@@ -69,10 +70,14 @@ defmodule ThreatShieldWeb.Router do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
+      live "/dashboard", DashboardLive.Index, :index
+
       live "/organisations", OrganisationLive.Index, :index
       live "/organisations/new", OrganisationLive.Index, :new
       live "/organisations/:org_id", OrganisationLive.Show, :show
       live "/organisations/:org_id/edit", OrganisationLive.Index, :edit
+
+      live "/organisations/:org_id/dashboard", DashboardLive.Index, :index
 
       live "/organisations/:org_id/systems", SystemLive.Index, :index
       live "/organisations/:org_id/systems/new", SystemLive.Index, :new

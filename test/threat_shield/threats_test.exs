@@ -14,7 +14,6 @@ defmodule ThreatShield.ThreatsTest do
 
       valid_attrs = %{
         description: "some description",
-        is_candidate: false,
         organisation: "some organisation"
       }
 

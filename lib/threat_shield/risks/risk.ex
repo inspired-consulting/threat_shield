@@ -9,7 +9,6 @@ defmodule ThreatShield.Risks.Risk do
     field :description, :string
     field :estimated_cost, :integer
     field :probability, :float
-    field :is_candidate, :boolean, default: false
 
     belongs_to :threat, Threat
 

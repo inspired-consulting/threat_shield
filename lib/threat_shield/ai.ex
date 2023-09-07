@@ -68,11 +68,11 @@ defmodule ThreatShield.AI do
   defp get_assets_from_response(response) do
     get_content_from_reponse(response, "assets")
     |> IO.inspect(label: "#{__ENV__.file}:#{__ENV__.line}")
-    |> Enum.map(fn d -> %Asset{description: d, is_candidate: true} end)
+    |> Enum.map(fn d -> %Asset{description: d} end)
   end
 
   defp get_threats_from_response(response) do
     get_content_from_reponse(response, "threats")
-    |> Enum.map(fn d -> %Threat{description: d, is_candidate: true} end)
+    |> Enum.map(fn d -> %Threat{description: d} end)
   end
 end

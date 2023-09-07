@@ -11,8 +11,7 @@ defmodule ThreatShield.ThreatsFixtures do
   def threat_fixture(user, organisation, attrs \\ %{}) do
     default_attrs = %{
       description: "some description",
-      organisation: "some organisation",
-      is_candidate: false
+      organisation: "some organisation"
     }
 
     all_attrs = Map.merge(default_attrs, attrs)

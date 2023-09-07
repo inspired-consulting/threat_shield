@@ -7,7 +7,7 @@ defmodule ThreatShieldWeb.ThreatLiveTest do
   alias ThreatShield.OrganisationsFixtures
   alias ThreatShield.ThreatsFixtures
 
-  @create_attrs %{description: "some description", is_candidate: true}
+  @create_attrs %{description: "some description"}
 
   defp create_threat(_) do
     user = AccountsFixtures.user_fixture()
