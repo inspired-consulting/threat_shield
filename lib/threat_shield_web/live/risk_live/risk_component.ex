@@ -5,10 +5,12 @@ defmodule ThreatShieldWeb.RiskLive.RiskComponent do
   def render(assigns) do
     ~H"""
     <div class="risks">
-    <h3><%= @threat.description %></h3>
     <.table
       id={"risks_for_threat_#{@threat.id}"}
       rows={@threat.risks}
+      row_click={
+        fn risk -> JS.navigate(~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{risk.id}") end
+        }
     >
     <:col :let={risk} label="Name"><%= risk.name %></:col>
       <:col :let={risk} label="Description"><%= risk.description %></:col>

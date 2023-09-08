@@ -22,9 +22,9 @@ defmodule ThreatShield.Threats do
   def get_threat!(%User{id: user_id}, threat_id) do
     Threat.get(threat_id)
     |> Threat.for_user(user_id)
+    |> Threat.with_system()
+    |> Threat.with_organisation_and_risks()
     |> Repo.one!()
-    |> Repo.preload(:organisation)
-    |> Repo.preload(:system)
   end
 
   def create_threat(
