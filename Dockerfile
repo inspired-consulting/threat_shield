@@ -7,7 +7,7 @@ ENV MIX_ENV=dev
 WORKDIR /app
 
 # Install inotify-tools for live-reload during development
-RUN apk add --no-cache inotify-tools build-base npm
+RUN apk add --no-cache inotify-tools build-base npm git
 
 # Install Hex and Rebar
 RUN mix local.hex --force && mix local.rebar --force

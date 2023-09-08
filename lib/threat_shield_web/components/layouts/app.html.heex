@@ -5,9 +5,8 @@
         <img src={~p"/images/logo.svg"} width="50" />
       </a>
       <p class="text-primary_col-500 rounded-full px-2 font-medium leading-6">
-        v<%= Application.spec(:phoenix, :vsn) %>
-      </p>
-      <%!-- <p><%= ThreatShieldWeb.Helpers.git_release_tag() %></p> --%>
+      <%= ThreatShieldWeb.Helpers.get_git_release_tag() %></p>
+
 
       </div>
   </div>
