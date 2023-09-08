@@ -15,9 +15,4 @@ defmodule ThreatShieldWeb.Helpers do
         ""
     end
   end
-
-  def generate_nonce() do
-    :crypto.strong_rand_bytes(8)
-    |> Base.url_encode64()
-  end
 end
