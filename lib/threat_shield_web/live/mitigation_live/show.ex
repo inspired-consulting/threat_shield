@@ -1,0 +1,30 @@
+defmodule ThreatShieldWeb.MitigationLive.Show do
+  use ThreatShieldWeb, :live_view
+
+  alias ThreatShield.Mitigations
+
+  @impl true
+  def mount(%{"risk_id" => risk_id}, _session, socket) do
+    user = socket.assigns.current_user
+    risk = Mitigations.get_risk!(user, risk_id)
+
+    {:ok,
+     socket
+     |> assign(risk: risk)
+     |> assign(threat: risk.threat)
+     |> assign(organisation: risk.threat.organisation)}
+  end
+
+  @impl true
+  def handle_params(%{"mitigation_id" => id}, _, socket) do
+    user = socket.assigns.current_user
+
+    {:noreply,
+     socket
+     |> assign(:page_title, page_title(socket.assigns.live_action))
+     |> assign(:mitigation, Mitigations.get_mitigation!(user, id))}
+  end
+
+  defp page_title(:show), do: "Show Mitigation"
+  defp page_title(:edit), do: "Edit Mitigation"
+end
