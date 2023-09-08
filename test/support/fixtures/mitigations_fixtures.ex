@@ -7,15 +7,16 @@ defmodule ThreatShield.MitigationsFixtures do
   @doc """
   Generate a mitigation.
   """
-  def mitigation_fixture(attrs \\ %{}) do
-    {:ok, mitigation} =
+  def mitigation_fixture(user, risk, attrs \\ %{}) do
+    attrs =
       attrs
       |> Enum.into(%{
         name: "some name",
         description: "some description",
         is_implemented: true
       })
-      |> ThreatShield.Mitigations.create_mitigation()
+
+    {:ok, mitigation} = ThreatShield.Mitigations.create_mitigation(user, risk, attrs)
 
     mitigation
   end

@@ -8,7 +8,7 @@ defmodule ThreatShield.RisksFixtures do
   Generate a risk.
   """
   def risk_fixture(user, threat_id, attrs \\ %{}) do
-    {:ok, risk} =
+    attrs =
       attrs
       |> Enum.into(%{
         name: "some name",
@@ -16,7 +16,8 @@ defmodule ThreatShield.RisksFixtures do
         estimated_cost: 42,
         probability: 120.5
       })
-      |> ThreatShield.Risks.create_risk(user, threat_id)
+
+    {:ok, risk} = ThreatShield.Risks.create_risk(user, threat_id, attrs)
 
     risk
   end
