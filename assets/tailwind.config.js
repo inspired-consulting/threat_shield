@@ -20,7 +20,7 @@ module.exports = {
           300: "#8086FF",
           400: "#4D59FF",
           500: "#1A1C8E",
-          600: "#17196B", // Default primary color
+          600: "#17196B",
           700: "#13134D",
           800: "#0E0F36",
           900: "#0A0B24",
@@ -30,7 +30,7 @@ module.exports = {
           200: "#FFF3B3",
           300: "#FFEB80",
           400: "#FFE34D",
-          500: "#D4AF34", // Default secondary color
+          500: "#D4AF34",
           600: "#A08026",
           700: "#71501A",
           800: "#482E0E",
