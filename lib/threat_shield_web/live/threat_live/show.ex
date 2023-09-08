@@ -62,7 +62,16 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
 
   @impl true
   def handle_info({ThreatShieldWeb.ThreatLive.FormComponent, {:saved, threat}}, socket) do
-    {:noreply, socket |> assign(threat: threat) |> assign(page_title: "Show threat")}
+    current_user = socket.assigns.current_user
+    threat = Threats.get_threat!(current_user, threat.id)
+
+    socket =
+      socket
+      |> assign(:threat, threat)
+      |> assign(:organisation, threat.organisation)
+      |> assign(:page_title, page_title(socket.assigns.live_action))
+
+    {:noreply, socket}
   end
 
   defp page_title(:show), do: "Show Threat"
