@@ -5,8 +5,6 @@ defmodule ThreatShield.Threats do
 
   import Ecto.Query, warn: false
 
-  alias Ecto.Multi
-
   alias ThreatShield.Repo
 
   alias ThreatShield.Threats.Threat

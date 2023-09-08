@@ -41,11 +41,23 @@ services:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - web
+      db:
+        condition: service_healthy
     command: ["mix", "ecto.migrate"]
     env_file:
       - .env
     container_name: ThreatShield-migration
+    networks:
+      - threatshield-network
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.tests
+    depends_on:
+      - db
+    env_file:
+      - .env
+    container_name: ThreatShield-tests
     networks:
       - threatshield-network
 

@@ -1,3 +1,4 @@
+# First stage: Build the development environment
 FROM elixir:1.15.4-alpine as dev_environment
 
 ENV LANG=C.UTF-8
@@ -27,3 +28,17 @@ RUN mix deps.get && mix deps.compile
 # Set the default command to run when starting the container
 CMD ["/app/entrypoint.sh"]
 
+# Second stage: Run tests
+# FROM dev_environment as test_stage
+
+# ENV MIX_ENV=test
+
+# COPY mix.exs mix.lock ./
+# COPY config/ ./config/
+
+# RUN mix deps.get --only test
+# RUN mix deps.compile
+
+# COPY . .
+
+# CMD ["mix", "test"]

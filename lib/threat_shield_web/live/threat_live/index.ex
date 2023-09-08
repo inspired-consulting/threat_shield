@@ -11,19 +11,27 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
   import ThreatShield.Organisations.Organisation, only: [list_system_options: 1]
 
   @impl true
-  def mount(%{"org_id" => org_id}, _session, socket) do
+  def mount(%{"org_id" => org_id} = params, _session, socket) do
+    suggest = Map.has_key?(params, "suggest")
+
     current_user = socket.assigns.current_user
     organisation = Threats.get_organisation!(current_user, org_id)
     threats = organisation.threats
 
-    {:ok,
-     socket
-     |> assign(
-       organisation: organisation,
-       asking_ai: nil,
-       threat_suggestions: []
-     )
-     |> stream(:threats, threats)}
+    socket =
+      socket
+      |> assign(
+        organisation: organisation,
+        asking_ai: nil,
+        threat_suggestions: []
+      )
+      |> stream(:threats, threats)
+
+    if suggest do
+      {:ok, start_suggestions(org_id, socket)}
+    else
+      {:ok, socket}
+    end
   end
 
   @impl true
@@ -97,6 +105,10 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
 
   @impl true
   def handle_event("suggest", %{"org_id" => org_id}, socket) do
+    {:noreply, start_suggestions(org_id, socket)}
+  end
+
+  defp start_suggestions(org_id, socket) do
     user = socket.assigns.current_user
 
     task =
@@ -104,11 +116,8 @@ defmodule ThreatShieldWeb.ThreatLive.Index do
         ask_ai(user, org_id)
       end)
 
-    socket =
-      socket
-      |> assign(asking_ai: task.ref)
-
-    {:noreply, socket}
+    socket
+    |> assign(asking_ai: task.ref)
   end
 
   defp ask_ai(user, org_id) do

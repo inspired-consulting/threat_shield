@@ -2,25 +2,6 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-@font-face {
-  font-family: "Avenir";
-  src: url("../fonts/Avenir.ttc") format("truetype");
-}
-
-@font-face {
-  font-family: "Chicago";
-  src: url("../fonts/Chicago.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Optima";
-  src: url("../fonts/Optima_regular.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Nexa";
-  src: url("../fonts/NexaBook.otf") format("opentype");
-}
 
 /* This file is for your main application CSS */
 
@@ -34,31 +15,27 @@
   /* Set the default colors: */
   --primary-color: #1A1C8E;
   --secondary-color: #D4AF34;
-
-  /* Font-Families */
-  --font-primary: "Nexa"
 }
 
-body {
-  font-family: var(--font-primary);
-  font-kerning: auto;
-  color: var(--primary-color);
+/* HEADINGS */
+
+h2 {
+  color: var( --primary-color);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  margin-top: 5rem;
 }
 
- /* h1 {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  grid-gap: 2rem;
-  align-items: center;
-  justify-items: center;
+h3 {
+  color: var( --secondary-color);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
-h1:before, h1:after {
-  content: "";
-  height: 0.05rem;
-  width: 25rem;
-  background-color: var(--primary-color);
-} */
+
+/* USER INDICATOR */
 
 /* User indicator for waiting */
 #suggest-spinner{
@@ -75,4 +52,51 @@ h1:before, h1:after {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+
+/* CHAT */
+
+/* Style the chat labels */
+.chat-input label {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: typeText 3s steps(25) 1s forwards;
+}
+
+
+/* Style the fake input fields */
+.chat-input .fake-input-box {
+  width: 70%;
+  padding: 1rem;
+  font-size: 0.9rem;
+  background-color: #f3f1f1;
+  color: black;
+  border: 0.1rem solid var(--primary-color);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* Style the input fields */
+.chat-input div input {
+  padding: 1rem;
+  background-color: #218aff;
+  color: white;
+  border: 0.1rem solid var(--primary-color);
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.chat-input div {
+  width: 90%;
+}
+
+@keyframes typeText {
+  from {
+    width: 0;
+    }
+  to {
+    width: 100%;
+  }
 }

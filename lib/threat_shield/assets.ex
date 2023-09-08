@@ -6,8 +6,6 @@ defmodule ThreatShield.Assets do
   import Ecto.Query, warn: false
   alias ThreatShield.Repo
 
-  alias Ecto.Multi
-
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Accounts.User
   alias ThreatShield.Systems.System
