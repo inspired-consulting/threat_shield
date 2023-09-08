@@ -8,7 +8,7 @@
       <.button><%= dgettext("common", "Delete") %></.button>
     </.link>
     <.link
-      patch={~p"/organisations/#{@organisation.id}/threats/#{@threat}/show/edit"}
+      patch={~p"/organisations/#{@organisation.id}/threats/#{@threat}/edit"}
       phx-click={JS.push_focus()}
     >
       <.button><%= dgettext("common", "Edit") %></.button>
@@ -22,19 +22,30 @@
 </.list>
 
 <h2><%= dgettext("risks", "Risks") %></h2>
-<.live_component
-  module={ThreatShieldWeb.RiskLive.RiskComponent}
-  organisation={@organisation}
-  id={"risks_for_threat_#{@threat.id}"}
-  threat={@threat}
-/>
+
+<.link patch={~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/new"}>
+  <.button>New Risk</.button>
+</.link>
+
+<%= if !Enum.empty?(@threat.risks) do %>
+  <.live_component
+    module={ThreatShieldWeb.RiskLive.RiskComponent}
+    organisation={@organisation}
+    id={"risks_for_threat_#{@threat.id}"}
+    threat={@threat}
+  />
+<% else %>
+  <p>
+    There are no risks associated with this threat. You may add them manually or have them suggested using the buttons above.
+  </p>
+<% end %>
 
 <.back navigate={~p"/organisations/#{@organisation.id}/threats"}>
   Back to threats (Changeme)
 </.back>
 
 <.modal
-  :if={@live_action == :edit}
+  :if={@live_action == :edit_threat}
   id="threat-modal"
   show
   on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/threats/#{@threat}")}
@@ -49,5 +60,24 @@
     organisation={@organisation}
     system_options={list_system_options(@organisation)}
     patch={~p"/organisations/#{@organisation.id}/threats/#{@threat}"}
+  />
+</.modal>
+
+<.modal
+  :if={@live_action in [:new_risk]}
+  id="risk-modal"
+  show
+  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/threats/#{@threat.id}")}
+>
+  <.live_component
+    module={ThreatShieldWeb.RiskLive.FormComponent}
+    id={@risk.id || :new}
+    title={@page_title}
+    action={@live_action}
+    organisation={@organisation}
+    threat={@threat}
+    risk={@risk}
+    current_user={@current_user}
+    patch={~p"/organisations/#{@organisation.id}/threats/#{@threat.id}"}
   />
 </.modal>

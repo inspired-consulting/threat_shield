@@ -89,8 +89,8 @@ defmodule ThreatShieldWeb.Router do
       live "/organisations/:org_id/threats/new", ThreatLive.Index, :new
 
       live "/organisations/:org_id/threats/:threat_id/edit",
-           ThreatLive.Index,
-           :edit
+           ThreatLive.Show,
+           :edit_threat
 
       live "/organisations/:org_id/threats/:threat_id", ThreatLive.Show, :show
 
@@ -99,8 +99,11 @@ defmodule ThreatShieldWeb.Router do
            :edit
 
       live "/organisations/:org_id/threats/:threat_id/risks", RiskLive.Index, :index
-      live "/organisations/:org_id/threats/:threat_id/risks/new", RiskLive.Index, :new
-      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/edit", RiskLive.Index, :edit
+      live "/organisations/:org_id/threats/:threat_id/risks/new", ThreatLive.Show, :new_risk
+
+      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/edit",
+           ThreatLive.Index,
+           :edit
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.Show, :show
 
