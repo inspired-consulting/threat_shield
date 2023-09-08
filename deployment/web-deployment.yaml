@@ -15,6 +15,7 @@ spec:
       containers:
         - name: web
           image: ghcr.io/inspired-consulting/threat_shield-app:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 4000
           env:
