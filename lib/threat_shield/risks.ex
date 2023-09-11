@@ -4,7 +4,6 @@ defmodule ThreatShield.Risks do
   """
 
   import Ecto.Query, warn: false
-  alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Repo
   alias ThreatShield.Accounts.User
 

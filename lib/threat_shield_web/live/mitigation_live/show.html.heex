@@ -1,6 +1,5 @@
 <.header>
-  Mitigation <%= @mitigation.id %>
-  <:subtitle>This is a mitigation record from your database.</:subtitle>
+  <%= dgettext("mitigations", "Mitigation") %>
   <:actions>
     <.link
       phx-click={JS.push("delete", value: %{mitigation_id: @mitigation.id})}

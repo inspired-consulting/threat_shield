@@ -106,17 +106,9 @@ defmodule ThreatShieldWeb.Router do
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.Show, :show
 
-      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations",
-           MitigationLive.Index,
-           :index
-
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/new",
            RiskLive.Show,
            :new_mitigation
-
-      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id/edit",
-           MitigationLive.Index,
-           :edit
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id",
            MitigationLive.Show,
