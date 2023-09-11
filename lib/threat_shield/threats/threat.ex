@@ -16,6 +16,16 @@ defmodule ThreatShield.Threats.Threat do
     timestamps()
   end
 
+  def describe(%__MODULE__{description: description, system: system}) do
+    system_description =
+      case system do
+        nil -> ""
+        system -> " It belongs to the following system: " <> System.describe(system)
+      end
+
+    description <> system_description
+  end
+
   @doc false
   def changeset(threat, attrs) do
     threat
