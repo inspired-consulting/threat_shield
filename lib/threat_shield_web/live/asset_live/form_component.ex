@@ -72,7 +72,7 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
     end
   end
 
-  defp save_asset(socket, :new, asset_params) do
+  defp save_asset(socket, :new_asset, asset_params) do
     user = socket.assigns.current_user
     organisation = socket.assigns.organisation
 

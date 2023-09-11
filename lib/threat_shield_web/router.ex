@@ -119,7 +119,7 @@ defmodule ThreatShieldWeb.Router do
            :edit_mitigation
 
       live "/organisations/:org_id/assets", AssetLive.Index, :index
-      live "/organisations/:org_id/assets/new", AssetLive.Index, :new
+      live "/organisations/:org_id/assets/new", OrganisationLive.Show, :new_asset
       live "/organisations/:org_id/assets/:asset_id/edit", AssetLive.Index, :edit
 
       live "/organisations/:org_id/assets/:asset_id", AssetLive.Show, :show
