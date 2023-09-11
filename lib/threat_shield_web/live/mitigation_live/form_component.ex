@@ -54,7 +54,7 @@ defmodule ThreatShieldWeb.MitigationLive.FormComponent do
     save_mitigation(socket, socket.assigns.action, mitigation_params)
   end
 
-  defp save_mitigation(socket, :edit, mitigation_params) do
+  defp save_mitigation(socket, :edit_mitigation, mitigation_params) do
     case Mitigations.update_mitigation(socket.assigns.mitigation, mitigation_params) do
       {:ok, mitigation} ->
         notify_parent({:saved, mitigation})
@@ -69,7 +69,7 @@ defmodule ThreatShieldWeb.MitigationLive.FormComponent do
     end
   end
 
-  defp save_mitigation(socket, :new, mitigation_params) do
+  defp save_mitigation(socket, :new_mitigation, mitigation_params) do
     %{user: user, risk: risk} = socket.assigns
 
     case Mitigations.create_mitigation(user, risk, mitigation_params) do

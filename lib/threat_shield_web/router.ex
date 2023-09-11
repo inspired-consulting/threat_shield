@@ -101,22 +101,18 @@ defmodule ThreatShieldWeb.Router do
       live "/organisations/:org_id/threats/:threat_id/risks/new", ThreatLive.Show, :new_risk
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/edit",
-           ThreatLive.Index,
-           :edit
+           RiskLive.Show,
+           :edit_risk
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.Show, :show
-
-      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/show/edit",
-           RiskLive.Show,
-           :edit
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations",
            MitigationLive.Index,
            :index
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/new",
-           MitigationLive.Index,
-           :new
+           RiskLive.Show,
+           :new_mitigation
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id/edit",
            MitigationLive.Index,
@@ -128,7 +124,7 @@ defmodule ThreatShieldWeb.Router do
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id/show/edit",
            MitigationLive.Show,
-           :edit
+           :edit_mitigation
 
       live "/organisations/:org_id/assets", AssetLive.Index, :index
       live "/organisations/:org_id/assets/new", AssetLive.Index, :new

@@ -25,6 +25,21 @@ defmodule ThreatShieldWeb.MitigationLive.Show do
      |> assign(:mitigation, Mitigations.get_mitigation!(user, id))}
   end
 
+  @impl true
+  def handle_event("delete", %{"mitigation_id" => id}, socket) do
+    current_user = socket.assigns.current_user
+    organisation = socket.assigns.organisation
+    risk = socket.assigns.risk
+    threat = socket.assigns.threat
+
+    {1, [_mitigation | _]} = Mitigations.delete_mitigation_by_id!(current_user, id)
+
+    {:noreply,
+     push_navigate(socket,
+       to: "/organisations/#{organisation.id}/threats/#{threat.id}/risks/#{risk.id}"
+     )}
+  end
+
   defp page_title(:show), do: "Show Mitigation"
-  defp page_title(:edit), do: "Edit Mitigation"
+  defp page_title(:edit_mitigation), do: "Edit Mitigation"
 end

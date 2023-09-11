@@ -3,6 +3,7 @@ defmodule ThreatShield.AI do
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Risks.Risk
+  alias ThreatShield.Mitigations.Mitigation
 
   defp make_chatgpt_request(system_prompt, user_prompt, response_extractor) do
     messages = [
@@ -70,6 +71,21 @@ defmodule ThreatShield.AI do
     make_chatgpt_request(system_prompt, user_prompt, &get_risks_from_response/1)
   end
 
+  def suggest_mitigations_for_risk(%Risk{} = risk) do
+    system_prompt = """
+    You are a threat modelling assistant. Your response should comprise five potential mitigations for a given risk, each item having a name between 5-20 characters in length and a description between 200–254 characters in length. Your response should be in JSON format, like so:
+
+    {"mitigations": [{"name": _, "description": _}, _ ]}
+    """
+
+    user_prompt =
+      """
+      I work at this organisation: #{Organisation.describe(risk.threat.organisation)}. The risk that I want mitigations for is: #{Risk.describe(risk)}.
+      """
+
+    make_chatgpt_request(system_prompt, user_prompt, &get_mitigations_from_response/1)
+  end
+
   defp get_content_from_reponse(response, root_key) do
     [first_choice | _] = response.choices
     %{"message" => message} = first_choice
@@ -94,5 +110,10 @@ defmodule ThreatShield.AI do
   defp get_risks_from_response(response) do
     get_content_from_reponse(response, "risks")
     |> Enum.map(fn %{"name" => n, "description" => d} -> %Risk{name: n, description: d} end)
+  end
+
+  defp get_mitigations_from_response(response) do
+    get_content_from_reponse(response, "mitigations")
+    |> Enum.map(fn %{"name" => n, "description" => d} -> %Mitigation{name: n, description: d} end)
   end
 end

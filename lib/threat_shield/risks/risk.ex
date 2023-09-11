@@ -18,6 +18,10 @@ defmodule ThreatShield.Risks.Risk do
     timestamps()
   end
 
+  def describe(%__MODULE__{description: description, threat: threat}) do
+    description <> " " <> Threat.describe(threat)
+  end
+
   @doc false
   def changeset(risk, attrs) do
     risk
@@ -36,6 +40,13 @@ defmodule ThreatShield.Risks.Risk do
     |> Threat.for_user(user_id)
   end
 
+  def preload_threat(query) do
+    query
+    |> preload([threat: t], threat: t)
+    |> join(:left, [threat: t], assoc(t, :system), as: :threat_system)
+    |> preload([threat: t, threat_system: s], threat: {t, system: s})
+  end
+
   def with_mitigations(query) do
     query
     |> join(:left, [risk: r], assoc(r, :mitigations), as: :mitigations)
@@ -45,6 +56,14 @@ defmodule ThreatShield.Risks.Risk do
   def with_organisation(query) do
     query
     |> preload([threat: t, organisation: o], threat: {t, organisation: o})
+  end
+
+  def with_org_systems(query) do
+    query
+    |> join(:left, [organisation: o], assoc(o, :systems), as: :systems)
+    |> preload([threat: t, organisation: o, systems: s],
+      threat: {t, organisation: {o, systems: s}}
+    )
   end
 
   def select(query) do

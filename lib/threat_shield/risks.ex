@@ -4,6 +4,7 @@ defmodule ThreatShield.Risks do
   """
 
   import Ecto.Query, warn: false
+  alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Repo
   alias ThreatShield.Accounts.User
 
@@ -13,6 +14,10 @@ defmodule ThreatShield.Risks do
   def get_risk!(%User{id: user_id}, risk_id) do
     Risk.get(risk_id)
     |> Risk.for_user(user_id)
+    |> Risk.preload_threat()
+    |> Risk.with_organisation()
+    |> Risk.with_org_systems()
+    |> Risk.with_mitigations()
     |> Repo.one!()
   end
 

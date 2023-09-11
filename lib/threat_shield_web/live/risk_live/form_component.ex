@@ -55,7 +55,7 @@ defmodule ThreatShieldWeb.RiskLive.FormComponent do
     save_risk(socket, socket.assigns.action, risk_params)
   end
 
-  defp save_risk(socket, :edit, risk_params) do
+  defp save_risk(socket, :edit_risk, risk_params) do
     %{current_user: user, risk: risk} = socket.assigns
 
     case Risks.update_risk(user, risk, risk_params) do

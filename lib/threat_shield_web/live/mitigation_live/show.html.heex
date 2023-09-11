@@ -3,6 +3,12 @@
   <:subtitle>This is a mitigation record from your database.</:subtitle>
   <:actions>
     <.link
+      phx-click={JS.push("delete", value: %{mitigation_id: @mitigation.id})}
+      data-confirm="Are you sure?"
+    >
+      <.button><%= dgettext("common", "Delete") %></.button>
+    </.link>
+    <.link
       patch={
         ~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/#{@mitigation}/show/edit"
       }
@@ -26,7 +32,7 @@
 </.back>
 
 <.modal
-  :if={@live_action == :edit}
+  :if={@live_action == :edit_mitigation}
   id="mitigation-modal"
   show
   on_cancel={
