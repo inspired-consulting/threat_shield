@@ -1,0 +1,1262 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/threat_shield/const/locations.ex:319
+#, elixir-autogen, elixir-format
+msgid "Please choose your country"
+msgstr "Please choose your country"
+
+#: lib/threat_shield/const/locations.ex:10
+#, elixir-autogen, elixir-format
+msgid "Afghanistan"
+msgstr "Afghanistan"
+
+#: lib/threat_shield/const/locations.ex:13
+#, elixir-autogen, elixir-format
+msgid "Albania"
+msgstr "Albania"
+
+#: lib/threat_shield/const/locations.ex:77
+#, elixir-autogen, elixir-format
+msgid "Algeria"
+msgstr "Algeria"
+
+#: lib/threat_shield/const/locations.ex:18
+#, elixir-autogen, elixir-format
+msgid "American Samoa"
+msgstr "American Samoa"
+
+#: lib/threat_shield/const/locations.ex:8
+#, elixir-autogen, elixir-format
+msgid "Andorra"
+msgstr "Andorra"
+
+#: lib/threat_shield/const/locations.ex:15
+#, elixir-autogen, elixir-format
+msgid "Angola"
+msgstr "Angola"
+
+#: lib/threat_shield/const/locations.ex:12
+#, elixir-autogen, elixir-format
+msgid "Anguilla"
+msgstr "Anguilla"
+
+#: lib/threat_shield/const/locations.ex:16
+#, elixir-autogen, elixir-format
+msgid "Antarctica"
+msgstr "Antarctica"
+
+#: lib/threat_shield/const/locations.ex:11
+#, elixir-autogen, elixir-format
+(msgid ".+?")
+(msgstr msgid "Antigua and Barbuda") 
+
+#: lib/threat_shield/const/locations.ex:17
+#, elixir-autogen, elixir-format
+msgid "Argentina"
+msgstr "Argentina"
+
+#: lib/threat_shield/const/locations.ex:14
+#, elixir-autogen, elixir-format
+msgid "Armenia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:21
+#, elixir-autogen, elixir-format
+msgid "Aruba"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:20
+#, elixir-autogen, elixir-format
+msgid "Australia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:19
+#, elixir-autogen, elixir-format
+msgid "Austria"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:23
+#, elixir-autogen, elixir-format
+msgid "Azerbaijan"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:43
+#, elixir-autogen, elixir-format
+msgid "Bahamas"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:30
+#, elixir-autogen, elixir-format
+msgid "Bahrain"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:26
+#, elixir-autogen, elixir-format
+msgid "Bangladesh"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:25
+#, elixir-autogen, elixir-format
+msgid "Barbados"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:47
+#, elixir-autogen, elixir-format
+msgid "Belarus"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:27
+#, elixir-autogen, elixir-format
+msgid "Belgium"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:48
+#, elixir-autogen, elixir-format
+msgid "Belize"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:32
+#, elixir-autogen, elixir-format
+msgid "Benin"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:34
+#, elixir-autogen, elixir-format
+msgid "Bermuda"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:44
+#, elixir-autogen, elixir-format
+msgid "Bhutan"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:36
+#, elixir-autogen, elixir-format
+msgid "Bolivia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:40
+#, elixir-autogen, elixir-format
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:24
+#, elixir-autogen, elixir-format
+msgid "Bosnia and Herzegovina"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:46
+#, elixir-autogen, elixir-format
+msgid "Botswana"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:45
+#, elixir-autogen, elixir-format
+msgid "Bouvet Island"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:42
+#, elixir-autogen, elixir-format
+msgid "Brazil"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:136
+#, elixir-autogen, elixir-format
+msgid "British Indian Ocean Territory"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:35
+#, elixir-autogen, elixir-format
+msgid "Brunei Darussalam"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:29
+#, elixir-autogen, elixir-format
+msgid "Bulgaria"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:28
+#, elixir-autogen, elixir-format
+msgid "Burkina Faso"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:31
+#, elixir-autogen, elixir-format
+msgid "Burundi"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:67
+#, elixir-autogen, elixir-format
+msgid "Cabo Verde"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:148
+#, elixir-autogen, elixir-format
+msgid "Cambodia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:62
+#, elixir-autogen, elixir-format
+msgid "Cameroon"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:49
+#, elixir-autogen, elixir-format
+msgid "Canada"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:159
+#, elixir-autogen, elixir-format
+msgid "Cayman Islands"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:56
+#, elixir-autogen, elixir-format
+msgid "Central African Republic"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:258
+#, elixir-autogen, elixir-format
+msgid "Chad"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:61
+#, elixir-autogen, elixir-format
+msgid "Chile"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:63
+#, elixir-autogen, elixir-format
+msgid "China"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:69
+#, elixir-autogen, elixir-format
+msgid "Christmas Island"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:50
+#, elixir-autogen, elixir-format
+msgid "Cocos (Keeling) Islands"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:64
+#, elixir-autogen, elixir-format
+msgid "Colombia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:150
+#, elixir-autogen, elixir-format
+msgid "Comoros"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:57
+#, elixir-autogen, elixir-format
+msgid "Congo"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:54
+#, elixir-autogen, elixir-format
+msgid "Congo, Democratic Republic of the"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:60
+#, elixir-autogen, elixir-format
+msgid "Cook Islands"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:65
+#, elixir-autogen, elixir-format
+msgid "Costa Rica"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:125
+#, elixir-autogen, elixir-format
+msgid "Croatia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:66
+#, elixir-autogen, elixir-format
+msgid "Cuba"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:68
+#, elixir-autogen, elixir-format
+msgid "Curaçao"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:70
+#, elixir-autogen, elixir-format
+msgid "Cyprus"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:71
+#, elixir-autogen, elixir-format
+msgid "Czech Republic"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:59
+#, elixir-autogen, elixir-format
+msgid "Côte d'Ivoire"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:74
+#, elixir-autogen, elixir-format
+msgid "Denmark"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:73
+#, elixir-autogen, elixir-format
+msgid "Djibouti"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:75
+#, elixir-autogen, elixir-format
+msgid "Dominica"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:76
+#, elixir-autogen, elixir-format
+msgid "Dominican Republic"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:78
+#, elixir-autogen, elixir-format
+msgid "Ecuador"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:80
+#, elixir-autogen, elixir-format
+msgid "Egypt"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:253
+#, elixir-autogen, elixir-format
+msgid "El Salvador"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:107
+#, elixir-autogen, elixir-format
+msgid "Equatorial Guinea"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:82
+#, elixir-autogen, elixir-format
+msgid "Eritrea"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:79
+#, elixir-autogen, elixir-format
+msgid "Estonia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:256
+#, elixir-autogen, elixir-format
+msgid "Eswatini"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:84
+#, elixir-autogen, elixir-format
+msgid "Ethiopia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:87
+#, elixir-autogen, elixir-format
+msgid "Falkland Islands (Malvinas)"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:93
+#, elixir-autogen, elixir-format
+msgid "Faroe Islands"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:86
+#, elixir-autogen, elixir-format
+msgid "Fiji"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:85
+#, elixir-autogen, elixir-format
+msgid "Finland"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:94
+#, elixir-autogen, elixir-format
+msgid "France"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:99
+#, elixir-autogen, elixir-format
+msgid "French Guiana"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:214
+#, elixir-autogen, elixir-format
+msgid "French Polynesia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:259
+#, elixir-autogen, elixir-format
+msgid "French Southern Territories"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:95
+#, elixir-autogen, elixir-format
+msgid "Gabon"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:104
+#, elixir-autogen, elixir-format
+msgid "Gambia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:98
+#, elixir-autogen, elixir-format
+msgid "Georgia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:72
+#, elixir-autogen, elixir-format
+msgid "Germany"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:101
+#, elixir-autogen, elixir-format
+msgid "Ghana"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:102
+#, elixir-autogen, elixir-format
+msgid "Gibraltar"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:108
+#, elixir-autogen, elixir-format
+msgid "Greece"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:103
+#, elixir-autogen, elixir-format
+msgid "Greenland"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:97
+#, elixir-autogen, elixir-format
+msgid "Grenada"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:106
+#, elixir-autogen, elixir-format
+msgid "Guadeloupe"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:115
+#, elixir-autogen, elixir-format
+msgid "Guam"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:114
+#, elixir-autogen, elixir-format
+msgid "Guatemala"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:100
+#, elixir-autogen, elixir-format
+msgid "Guernsey"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:105
+#, elixir-autogen, elixir-format
+msgid "Guinea"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:116
+#, elixir-autogen, elixir-format
+msgid "Guinea-Bissau"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:117
+#, elixir-autogen, elixir-format
+msgid "Guyana"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:126
+#, elixir-autogen, elixir-format
+msgid "Haiti"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:122
+#, elixir-autogen, elixir-format
+msgid "Heard Island and McDonald Islands"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:290
+#, elixir-autogen, elixir-format
+msgid "Holy See (Vatican City State)"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:124
+#, elixir-autogen, elixir-format
+msgid "Honduras"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:118
+#, elixir-autogen, elixir-format
+msgid "Hong Kong"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:127
+#, elixir-autogen, elixir-format
+msgid "Hungary"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:140
+#, elixir-autogen, elixir-format
+msgid "Iceland"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:132
+#, elixir-autogen, elixir-format
+msgid "India"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:128
+#, elixir-autogen, elixir-format
+msgid "Indonesia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:139
+#, elixir-autogen, elixir-format
+msgid "Iran, Islamic Republic of"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:138
+#, elixir-autogen, elixir-format
+msgid "Iraq"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:129
+#, elixir-autogen, elixir-format
+msgid "Ireland"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:131
+#, elixir-autogen, elixir-format
+msgid "Isle of Man"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:130
+#, elixir-autogen, elixir-format
+msgid "Israel"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:141
+#, elixir-autogen, elixir-format
+msgid "Italy"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:143
+#, elixir-autogen, elixir-format
+msgid "Jamaica"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:145
+#, elixir-autogen, elixir-format
+msgid "Japan"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:142
+#, elixir-autogen, elixir-format
+msgid "Jersey"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:144
+#, elixir-autogen, elixir-format
+msgid "Jordan"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:160
+#, elixir-autogen, elixir-format
+msgid "Kazakhstan"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:146
+#, elixir-autogen, elixir-format
+msgid "Kenya"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:149
+#, elixir-autogen, elixir-format
+msgid "Kiribati"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:155
+#, elixir-autogen, elixir-format
+msgid "Korea, Democratic People's Republic of"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:157
+#, elixir-autogen, elixir-format
+msgid "Korea, Republic of"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:158
+#, elixir-autogen, elixir-format
+msgid "Kuwait"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:147
+#, elixir-autogen, elixir-format
+msgid "Kyrgyzstan"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:164
+#, elixir-autogen, elixir-format
+msgid "Lao People's Democratic Republic"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:174
+#, elixir-autogen, elixir-format
+msgid "Latvia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:166
+#, elixir-autogen, elixir-format
+msgid "Lebanon"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:171
+#, elixir-autogen, elixir-format
+msgid "Lesotho"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:170
+#, elixir-autogen, elixir-format
+msgid "Liberia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:175
+#, elixir-autogen, elixir-format
+msgid "Libya"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:168
+#, elixir-autogen, elixir-format
+msgid "Liechtenstein"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:172
+#, elixir-autogen, elixir-format
+msgid "Lithuania"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:173
+#, elixir-autogen, elixir-format
+msgid "Luxembourg"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:187
+#, elixir-autogen, elixir-format
+msgid "Macao"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:181
+#, elixir-autogen, elixir-format
+msgid "Madagascar"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:195
+#, elixir-autogen, elixir-format
+msgid "Malawi"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:197
+#, elixir-autogen, elixir-format
+msgid "Malaysia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:194
+#, elixir-autogen, elixir-format
+msgid "Maldives"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:184
+#, elixir-autogen, elixir-format
+msgid "Mali"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:192
+#, elixir-autogen, elixir-format
+msgid "Malta"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:182
+#, elixir-autogen, elixir-format
+msgid "Marshall Islands"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:189
+#, elixir-autogen, elixir-format
+msgid "Martinique"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:190
+#, elixir-autogen, elixir-format
+msgid "Mauritania"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:193
+#, elixir-autogen, elixir-format
+msgid "Mauritius"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:309
+#, elixir-autogen, elixir-format
+msgid "Mayotte"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:196
+#, elixir-autogen, elixir-format
+msgid "Mexico"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:91
+#, elixir-autogen, elixir-format
+msgid "Micronesia, Federated States of"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:178
+#, elixir-autogen, elixir-format
+msgid "Moldova, Republic of"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:177
+#, elixir-autogen, elixir-format
+msgid "Monaco"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:186
+#, elixir-autogen, elixir-format
+msgid "Mongolia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:179
+#, elixir-autogen, elixir-format
+msgid "Montenegro"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:191
+#, elixir-autogen, elixir-format
+msgid "Montserrat"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:176
+#, elixir-autogen, elixir-format
+msgid "Morocco"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:198
+#, elixir-autogen, elixir-format
+msgid "Mozambique"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:185
+#, elixir-autogen, elixir-format
+msgid "Myanmar"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:199
+#, elixir-autogen, elixir-format
+msgid "Namibia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:208
+#, elixir-autogen, elixir-format
+msgid "Nauru"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:207
+#, elixir-autogen, elixir-format
+msgid "Nepal"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:205
+#, elixir-autogen, elixir-format
+msgid "Netherlands"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:200
+#, elixir-autogen, elixir-format
+msgid "New Caledonia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:210
+#, elixir-autogen, elixir-format
+msgid "New Zealand"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:204
+#, elixir-autogen, elixir-format
+msgid "Nicaragua"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:201
+#, elixir-autogen, elixir-format
+msgid "Niger"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:203
+#, elixir-autogen, elixir-format
+msgid "Nigeria"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:209
+#, elixir-autogen, elixir-format
+msgid "Niue"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:202
+#, elixir-autogen, elixir-format
+msgid "Norfolk Island"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:183
+#, elixir-autogen, elixir-format
+msgid "North Macedonia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:188
+#, elixir-autogen, elixir-format
+msgid "Northern Mariana Islands"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:206
+#, elixir-autogen, elixir-format
+msgid "Norway"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:211
+#, elixir-autogen, elixir-format
+msgid "Oman"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:217
+#, elixir-autogen, elixir-format
+msgid "Pakistan"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:224
+#, elixir-autogen, elixir-format
+msgid "Palau"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:222
+#, elixir-autogen, elixir-format
+msgid "Palestine, State of"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:212
+#, elixir-autogen, elixir-format
+msgid "Panama"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:215
+#, elixir-autogen, elixir-format
+msgid "Papua New Guinea"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:225
+#, elixir-autogen, elixir-format
+msgid "Paraguay"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:213
+#, elixir-autogen, elixir-format
+msgid "Peru"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:216
+#, elixir-autogen, elixir-format
+msgid "Philippines"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:220
+#, elixir-autogen, elixir-format
+msgid "Pitcairn"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:218
+#, elixir-autogen, elixir-format
+msgid "Poland"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:223
+#, elixir-autogen, elixir-format
+msgid "Portugal"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:221
+#, elixir-autogen, elixir-format
+msgid "Puerto Rico"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:226
+#, elixir-autogen, elixir-format
+msgid "Qatar"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:228
+#, elixir-autogen, elixir-format
+msgid "Romania"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:230
+#, elixir-autogen, elixir-format
+msgid "Russia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:231
+#, elixir-autogen, elixir-format
+msgid "Rwanda"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:227
+#, elixir-autogen, elixir-format
+msgid "Réunion"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:33
+#, elixir-autogen, elixir-format
+msgid "Saint Barthélemy"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:241
+#, elixir-autogen, elixir-format
+msgid "Saint Helena, Ascension and Tristan da Cunha"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:151
+#, elixir-autogen, elixir-format
+msgid "Saint Kitts and Nevis"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:167
+#, elixir-autogen, elixir-format
+msgid "Saint Lucia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:180
+#, elixir-autogen, elixir-format
+msgid "Saint Martin (French part)"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:219
+#, elixir-autogen, elixir-format
+msgid "Saint Pierre and Miquelon"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:295
+#, elixir-autogen, elixir-format
+msgid "Saint Vincent and the Grenadines"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:307
+#, elixir-autogen, elixir-format
+msgid "Samoa"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:247
+#, elixir-autogen, elixir-format
+msgid "San Marino"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:252
+#, elixir-autogen, elixir-format
+msgid "Sao Tome and Principe"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:232
+#, elixir-autogen, elixir-format
+msgid "Saudi Arabia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:248
+#, elixir-autogen, elixir-format
+msgid "Senegal"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:229
+#, elixir-autogen, elixir-format
+msgid "Serbia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:234
+#, elixir-autogen, elixir-format
+msgid "Seychelles"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:246
+#, elixir-autogen, elixir-format
+msgid "Sierra Leone"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:237
+#, elixir-autogen, elixir-format
+msgid "Singapore"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:254
+#, elixir-autogen, elixir-format
+msgid "Sint Maarten (Dutch part)"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:245
+#, elixir-autogen, elixir-format
+msgid "Slovakia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:243
+#, elixir-autogen, elixir-format
+msgid "Slovenia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:233
+#, elixir-autogen, elixir-format
+msgid "Solomon Islands"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:249
+#, elixir-autogen, elixir-format
+msgid "Somalia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:310
+#, elixir-autogen, elixir-format
+msgid "South Africa"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:112
+#, elixir-autogen, elixir-format
+msgid "South Georgia and the South Sandwich Islands"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:251
+#, elixir-autogen, elixir-format
+msgid "South Sudan"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:83
+#, elixir-autogen, elixir-format
+msgid "Spain"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:169
+#, elixir-autogen, elixir-format
+msgid "Sri Lanka"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:235
+#, elixir-autogen, elixir-format
+msgid "Sudan"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:250
+#, elixir-autogen, elixir-format
+msgid "Suriname"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:244
+#, elixir-autogen, elixir-format
+msgid "Svalbard and Jan Mayen"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:236
+#, elixir-autogen, elixir-format
+msgid "Sweden"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:58
+#, elixir-autogen, elixir-format
+msgid "Switzerland"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:255
+#, elixir-autogen, elixir-format
+msgid "Syrian Arab Republic"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:271
+#, elixir-autogen, elixir-format
+msgid "Taiwan, Province of China"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:262
+#, elixir-autogen, elixir-format
+msgid "Tajikistan"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:275
+#, elixir-autogen, elixir-format
+msgid "Tanzania, United Republic of"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:261
+#, elixir-autogen, elixir-format
+msgid "Thailand"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:264
+#, elixir-autogen, elixir-format
+msgid "Timor-Leste"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:260
+#, elixir-autogen, elixir-format
+msgid "Togo"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:263
+#, elixir-autogen, elixir-format
+msgid "Tokelau"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:267
+#, elixir-autogen, elixir-format
+msgid "Tonga"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:269
+#, elixir-autogen, elixir-format
+msgid "Trinidad and Tobago"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:266
+#, elixir-autogen, elixir-format
+msgid "Tunisia"
+msgstr "Tunisia"
+
+#: lib/threat_shield/const/locations.ex:268
+#, elixir-autogen, elixir-format
+msgid "Turkey"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:265
+#, elixir-autogen, elixir-format
+msgid "Turkmenistan"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:257
+#, elixir-autogen, elixir-format
+msgid "Turks and Caicos Islands"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:270
+#, elixir-autogen, elixir-format
+msgid "Tuvalu"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:278
+#, elixir-autogen, elixir-format
+msgid "Uganda"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:277
+#, elixir-autogen, elixir-format
+msgid "Ukraine"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:9
+#, elixir-autogen, elixir-format
+msgid "United Arab Emirates"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:96
+#, elixir-autogen, elixir-format
+msgid "United Kingdom"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:284
+#, elixir-autogen, elixir-format
+msgid "United States"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:282
+#, elixir-autogen, elixir-format
+msgid "United States Minor Outlying Islands"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:285
+#, elixir-autogen, elixir-format
+msgid "Uruguay"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:286
+#, elixir-autogen, elixir-format
+msgid "Uzbekistan"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:305
+#, elixir-autogen, elixir-format
+msgid "Vanuatu"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:300
+#, elixir-autogen, elixir-format
+msgid "Venezuela, Bolivarian Republic of"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:304
+#, elixir-autogen, elixir-format
+msgid "Viet Nam"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:302
+#, elixir-autogen, elixir-format
+msgid "Virgin Islands, British"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:303
+#, elixir-autogen, elixir-format
+msgid "Virgin Islands, U.S."
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:306
+#, elixir-autogen, elixir-format
+msgid "Wallis and Futuna"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:81
+#, elixir-autogen, elixir-format
+msgid "Western Sahara"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:308
+#, elixir-autogen, elixir-format
+msgid "Yemen"
+msgstr "Yemen"
+
+#: lib/threat_shield/const/locations.ex:311
+#, elixir-autogen, elixir-format
+msgid "Zambia"
+msgstr ""
+
+#: lib/threat_shield/const/locations.ex:312
+#, elixir-autogen, elixir-format
+msgid "Zimbabwe"
+msgstr "Zimbabwe"
+
+#: lib/threat_shield/const/locations.ex:22
+#, elixir-autogen, elixir-format
+msgid "Åland Islands"
+msgstr "Åland Islands"
