@@ -250,6 +250,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
     * You may also set `type="select"` to render a `<select>` tag
 
+
     * `type="checkbox"` is used exclusively to render boolean values
 
     * For live file uploads, see `Phoenix.Component.live_file_input/1`
@@ -331,6 +332,9 @@ defmodule ThreatShieldWeb.CoreComponents do
         multiple={@multiple}
         {@rest}
       >
+        <%!-- <option value="" disabled selected>
+          <%= dgettext("organisation", "Please choose your country") %>
+        </option> --%>
         <option :if={@prompt} value=""><%= @prompt %></option>
         <%= Phoenix.HTML.Form.options_for_select(@options, @value) %>
       </select>

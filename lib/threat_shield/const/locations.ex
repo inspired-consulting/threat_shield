@@ -1,6 +1,8 @@
 defmodule ThreatShield.Const.Locations do
   alias ThreatShield.Const.Locations
 
+  import ThreatShieldWeb.Gettext
+
   def predefined_locations() do
     [
       %{iso_code: "AD", flag: "🇦🇩", name: "Andorra"},
@@ -258,8 +260,11 @@ defmodule ThreatShield.Const.Locations do
 
   def list_locations() do
     Locations.predefined_locations()
-    |> Enum.map(fn location ->
-      {"#{location.flag} #{location.name}", location.iso_code}
+    |> Enum.sort_by(& &1.name)
+    |> Enum.reduce([{dgettext("organisation", "Please choose your country"), ""}], fn location,
+                                                                                      acc ->
+      [{"#{location.name} #{location.flag}", location.iso_code} | acc]
     end)
+    |> Enum.reverse()
   end
 end
