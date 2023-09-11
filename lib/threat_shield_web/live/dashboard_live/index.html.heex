@@ -19,10 +19,11 @@
 
 <h2>Risks</h2>
 <%= for {_id, threat} <- @streams.threats, !Enum.empty?(threat.risks) do %>
-  <h3><%= @threat.description %></h3>
+  <h3><%= threat.description %></h3>
   <.live_component
     module={ThreatShieldWeb.RiskLive.RiskComponent}
     id={"risks_for_threat_#{threat.id}"}
+    organisation={@organisation}
     threat={threat}
   />
 <% end %>
