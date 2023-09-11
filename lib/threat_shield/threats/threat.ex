@@ -67,4 +67,10 @@ defmodule ThreatShield.Threats.Threat do
     |> join(:left, [threat: t], assoc(t, :system), as: :system)
     |> preload([system: s], system: s)
   end
+
+  def with_org_systems(query) do
+    query
+    |> join(:left, [organisation: o], assoc(o, :systems), as: :systems)
+    |> preload([organisation: o, systems: s], organisation: {o, systems: s})
+  end
 end

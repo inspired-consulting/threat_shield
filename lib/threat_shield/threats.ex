@@ -24,7 +24,7 @@ defmodule ThreatShield.Threats do
     |> Threat.for_user(user_id)
     |> Threat.with_system()
     |> Threat.with_organisation_and_risks()
-    |> Organisation.with_systems()
+    |> Threat.with_org_systems()
     |> Repo.one!()
   end
 

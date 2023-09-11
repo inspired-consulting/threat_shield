@@ -46,7 +46,7 @@ defmodule ThreatShield.MitigationsTest do
       %{user: user, risk: risk} = user_risk_fixture()
 
       assert {:error, %Ecto.Changeset{}} =
-               Mitigations.create_mitigation(user, risk, @invalid_attrs) |> IO.inspect()
+               Mitigations.create_mitigation(user, risk, @invalid_attrs)
     end
   end
 end

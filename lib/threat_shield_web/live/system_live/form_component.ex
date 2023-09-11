@@ -97,7 +97,7 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
     end
   end
 
-  defp save_system(socket, :new, system_params) do
+  defp save_system(socket, :new_system, system_params) do
     user = socket.assigns.current_user
     organisation = socket.assigns.organisation
 
