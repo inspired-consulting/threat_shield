@@ -1,10 +1,12 @@
 defmodule ThreatShieldWeb.OrganisationLive.Show do
+  alias ThreatShield.Threats.Threat
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Organisations
   alias ThreatShield.Const.Locations
 
   alias ThreatShield.Assets
+  alias ThreatShield.Threats
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Systems.System
   alias ThreatShield.AI
@@ -24,7 +26,9 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
      |> assign(:organisation, organisation)
      |> assign(locations_options: Locations.list_locations())
      |> assign(:asking_ai_for_assets, nil)
-     |> assign(:asset_suggestions, [])}
+     |> assign(:asking_ai_for_threats, nil)
+     |> assign(:asset_suggestions, [])
+     |> assign(:threat_suggestions, [])}
   end
 
   @impl true
@@ -34,6 +38,11 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
 
   defp apply_action(socket, :show, _params) do
     socket
+  end
+
+  defp apply_action(socket, :edit_organisation, _params) do
+    socket
+    |> assign(:page_title, "Edit Organisation")
   end
 
   defp apply_action(socket, :new_system, _params) do
@@ -46,6 +55,12 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
     socket
     |> assign(:page_title, "New Asset")
     |> assign(:asset, %Asset{})
+  end
+
+  defp apply_action(socket, :new_threat, _params) do
+    socket
+    |> assign(:page_title, "New Threat")
+    |> assign(:threat, %Threat{})
   end
 
   @impl true
@@ -79,7 +94,19 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
      socket |> assign(organisation: updated_org) |> assign(page_title: "Show Organisation")}
   end
 
-  def handle_info({_from, {:ai_results, new_assets}}, socket) do
+  @impl true
+  def handle_info({ThreatShieldWeb.ThreatLive.FormComponent, {:saved, threat}}, socket) do
+    stale_org = socket.assigns.organisation
+    user = socket.assigns.current_user
+
+    new_threat_with_system = Threats.get_threat!(user, threat.id)
+    updated_org = %{stale_org | threats: stale_org.threats ++ [new_threat_with_system]}
+
+    {:noreply,
+     socket |> assign(organisation: updated_org) |> assign(page_title: "Show Organisation")}
+  end
+
+  def handle_info({_from, {:ai_results_assets, new_assets}}, socket) do
     %{asking_ai_for_assets: ref} = socket.assigns
 
     Process.demonitor(ref, [:flush])
@@ -89,6 +116,19 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
      |> assign(
        asking_ai_for_assets: nil,
        asset_suggestions: socket.assigns.asset_suggestions ++ new_assets
+     )}
+  end
+
+  def handle_info({_from, {:ai_results_threats, new_threats}}, socket) do
+    %{asking_ai_for_threats: ref} = socket.assigns
+
+    Process.demonitor(ref, [:flush])
+
+    {:noreply,
+     socket
+     |> assign(
+       asking_ai_for_threats: nil,
+       threat_suggestions: socket.assigns.threat_suggestions ++ new_threats
      )}
   end
 
@@ -110,7 +150,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
 
     task =
       Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
-        ask_ai(user, org_id)
+        ask_ai_for_assets(user, org_id)
       end)
 
     socket =
@@ -120,12 +160,37 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
     {:noreply, socket}
   end
 
+  @impl true
+  def handle_event("suggest_threats", %{"org_id" => org_id}, socket) do
+    user = socket.assigns.current_user
+
+    task =
+      Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
+        ask_ai_for_threats(user, org_id)
+      end)
+
+    socket =
+      socket
+      |> assign(asking_ai_for_threats: task.ref)
+
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("ignore_asset", %{"description" => description}, socket) do
     suggestions =
       Enum.filter(socket.assigns.asset_suggestions, fn s -> s.description != description end)
       |> Enum.to_list()
 
     {:noreply, socket |> assign(asset_suggestions: suggestions)}
+  end
+
+  def handle_event("ignore_threat", %{"description" => description}, socket) do
+    suggestions =
+      Enum.filter(socket.assigns.threat_suggestions, fn s -> s.description != description end)
+      |> Enum.to_list()
+
+    {:noreply, socket |> assign(threat_suggestions: suggestions)}
   end
 
   @impl true
@@ -139,18 +204,50 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
       Enum.filter(socket.assigns.asset_suggestions, fn s -> s.description != description end)
       |> Enum.to_list()
 
-      stale_organisation = socket.assigns.organisation
-      updated_organisation = %{stale_organisation | assets: stale_organisation.assets ++ [asset]}
+    stale_organisation = socket.assigns.organisation
+    updated_organisation = %{stale_organisation | assets: stale_organisation.assets ++ [asset]}
 
-    {:noreply, socket |> assign(:organisation, updated_organisation) |> assign(:asset_suggestions, suggestions)}
+    {:noreply,
+     socket
+     |> assign(:organisation, updated_organisation)
+     |> assign(:asset_suggestions, suggestions)}
   end
 
-  defp ask_ai(user, org_id) do
+  @impl true
+  def handle_event("add_threat", %{"description" => description}, socket) do
+    user = socket.assigns.current_user
+    org_id = socket.assigns.organisation.id
+
+    {:ok, threat} = Threats.add_threat_with_description(user, org_id, description)
+
+    suggestions =
+      Enum.filter(socket.assigns.threat_suggestions, fn s -> s.description != description end)
+      |> Enum.to_list()
+
+    stale_organisation = socket.assigns.organisation
+    updated_organisation = %{stale_organisation | threats: stale_organisation.threats ++ [threat]}
+
+    {:noreply,
+     socket
+     |> assign(:organisation, updated_organisation)
+     |> assign(:threat_suggestions, suggestions)}
+  end
+
+  defp ask_ai_for_assets(user, org_id) do
     organisation = Assets.get_organisation!(user, org_id)
 
     new_assets =
       AI.suggest_assets_for_organisation(organisation)
 
-    {:ai_results, new_assets}
+    {:ai_results_assets, new_assets}
+  end
+
+  defp ask_ai_for_threats(user, org_id) do
+    organisation = Threats.get_organisation!(user, org_id)
+
+    new_threats =
+      AI.suggest_threats_for_organisation(organisation)
+
+    {:ai_results_threats, new_threats}
   end
 end

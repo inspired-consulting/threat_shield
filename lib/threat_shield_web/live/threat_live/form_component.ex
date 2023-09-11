@@ -70,7 +70,7 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
     end
   end
 
-  defp save_threat(socket, :new, threat_params) do
+  defp save_threat(socket, :new_threat, threat_params) do
     %{current_user: user, organisation: organisation} = socket.assigns
 
     case Threats.create_threat(user, organisation, threat_params) do

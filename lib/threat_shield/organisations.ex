@@ -32,6 +32,7 @@ defmodule ThreatShield.Organisations do
     Organisation.get(org_id)
     |> Organisation.for_user(user_id)
     |> Organisation.with_systems()
+    |> Organisation.with_threats()
     |> Organisation.with_assets()
     |> Repo.one!()
   end
