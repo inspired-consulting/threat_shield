@@ -10,13 +10,13 @@ defmodule ThreatShieldWeb.AssetLive.AssetComponent do
     <div class="assets">
     <.table
       id={"assets_for_org_#{@organisation.id}"}
-      rows={@organisation.assets}
+      rows={@assets}
       row_click={
         fn asset -> JS.navigate(~p"/organisations/#{@organisation.id}/assets/#{asset.id}") end
         }
     >
       <:col :let={asset} label="Description"><%= asset.description %></:col>
-       <:col :let={asset} label="System"><%= system_name(asset) %></:col>
+       <:col :let={asset} label="System" :if={!assigns[:hide_system]}><%= system_name(asset) %></:col>
     </.table>
     </div>
     """

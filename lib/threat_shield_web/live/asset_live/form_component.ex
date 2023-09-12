@@ -20,8 +20,7 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:description]} type="text" label="Description" />
-
-        <.input field={@form[:system_id]} type="select" label="System" options={@system_options} />
+        <.input field={@form[:system_id]} :if={assigns[:system_options]} type="select" label="System" options={@system_options} />
 
         <:actions>
           <.button phx-disable-with="Saving...">Save Asset</.button>
@@ -43,8 +42,11 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"asset" => asset_params}, socket) do
+    socket.assigns |> IO.inspect()
+
     changeset =
       socket.assigns.asset
+      |> update_with_fixed_system(socket)
       |> Assets.change_asset(asset_params)
       |> Map.put(:action, :validate)
 
@@ -58,7 +60,11 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
   defp save_asset(socket, :edit, asset_params) do
     user = socket.assigns.current_user
 
-    case Assets.update_asset(user, socket.assigns.asset, asset_params) do
+    case Assets.update_asset(
+           user,
+           socket.assigns.asset,
+           asset_params |> update_with_fixed_system(socket)
+         ) do
       {:ok, asset} ->
         notify_parent({:saved, asset})
 
@@ -76,7 +82,7 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
     user = socket.assigns.current_user
     organisation = socket.assigns.organisation
 
-    case Assets.create_asset(user, organisation, asset_params) do
+    case Assets.create_asset(user, organisation, asset_params |> update_with_fixed_system(socket)) do
       {:ok, asset} ->
         notify_parent({:saved, asset})
 
@@ -87,6 +93,13 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
+    end
+  end
+
+  defp update_with_fixed_system(asset_params, socket) do
+    case socket.assigns[:fixed_system] do
+      nil -> asset_params
+      sys -> asset_params |> Map.put("system_id", sys.id)
     end
   end
 

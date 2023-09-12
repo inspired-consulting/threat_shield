@@ -11,6 +11,7 @@ defmodule ThreatShield.Systems.System do
     belongs_to :organisation, ThreatShield.Organisations.Organisation
 
     has_many :threats, ThreatShield.Threats.Threat
+    has_many :assets, ThreatShield.Assets.Asset
 
     timestamps()
   end
@@ -43,7 +44,29 @@ defmodule ThreatShield.Systems.System do
   end
 
   def for_user(query, user_id) do
-    join(query, :inner, [system: s], assoc(s, :organisation), as: :organisation)
+    query
+    |> join(:inner, [system: s], assoc(s, :organisation), as: :organisation)
     |> Organisation.for_user(user_id)
+  end
+
+  def preload_organisation(query) do
+    query
+    |> preload([organisation: o], organisation: o)
+  end
+
+  def with_assets(query) do
+    query
+    |> join(:left, [system: s], assoc(s, :assets), as: :assets)
+    |> preload([assets: a], assets: a)
+  end
+
+  def with_threats(query) do
+    query
+    |> join(:left, [system: s], assoc(s, :threats), as: :threats)
+    |> preload([threats: t], threats: t)
+  end
+
+  def select(query) do
+    select(query, [system: s], s)
   end
 end

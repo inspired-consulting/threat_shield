@@ -4,6 +4,7 @@ defmodule ThreatShield.AI do
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Risks.Risk
   alias ThreatShield.Mitigations.Mitigation
+  alias ThreatShield.Systems.System
 
   defp make_chatgpt_request(system_prompt, user_prompt, response_extractor) do
     messages = [
@@ -37,6 +38,21 @@ defmodule ThreatShield.AI do
     """
 
     user_prompt = "I work at this organisation: #{Organisation.describe(organisation)}"
+
+    make_chatgpt_request(system_prompt, user_prompt, &get_assets_from_response/1)
+  end
+
+  def suggest_assets_for_system(%System{} = system) do
+    system_prompt = """
+    You are a threat modelling assistant. Your response should comprise five potential assets, each item having between 200–254 characters in length. Each item is simply a string. Your response should be in JSON format, like so:
+
+    {"assets": _}
+    """
+
+    user_prompt =
+      """
+      I use this system: #{System.describe(system)}.
+      """
 
     make_chatgpt_request(system_prompt, user_prompt, &get_assets_from_response/1)
   end

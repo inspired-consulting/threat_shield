@@ -18,6 +18,9 @@ defmodule ThreatShield.Systems do
   def get_system!(%User{id: user_id}, sys_id) do
     System.get(sys_id)
     |> System.for_user(user_id)
+    |> System.with_assets()
+    |> System.with_threats()
+    |> System.preload_organisation()
     |> Repo.one!()
   end
 
@@ -85,6 +88,13 @@ defmodule ThreatShield.Systems do
       Repo.one!(Organisations.is_member_query(user, organisation))
       Repo.delete(system)
     end)
+  end
+
+  def delete_sys_by_id!(%User{id: user_id}, id) do
+    System.get(id)
+    |> System.for_user(user_id)
+    |> System.select()
+    |> Repo.delete_all()
   end
 
   @doc """
