@@ -63,10 +63,6 @@
   </p>
 <% end %>
 
-<.back navigate={~p"/organisations/#{@organisation.id}/threats"}>
-  Back to threats (Changeme)
-</.back>
-
 <.modal
   :if={@live_action == :edit_threat}
   id="threat-modal"
