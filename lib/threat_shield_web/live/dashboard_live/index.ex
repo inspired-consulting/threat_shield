@@ -29,6 +29,6 @@ defmodule ThreatShieldWeb.DashboardLive.Index do
   defp get_dashboard_data(socket, organisation) do
     socket
     |> assign(:organisation, organisation)
-    |> stream(:threats, organisation.threats)
+    |> assign(:threats, organisation.threats)
   end
 end
