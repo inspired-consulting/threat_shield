@@ -6,6 +6,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Assets
   alias ThreatShield.Threats.Threat
+  alias ThreatShield.Threats
   alias ThreatShield.AI
   import ThreatShield.Systems.System, only: [attribute_keys: 0]
 
@@ -76,6 +77,14 @@ defmodule ThreatShieldWeb.SystemLive.Show do
     {:noreply, socket |> assign(system: updated_sys) |> assign(page_title: "Show System")}
   end
 
+  @impl true
+  def handle_info({ThreatShieldWeb.ThreatLive.FormComponent, {:saved, threat}}, socket) do
+    stale_sys = socket.assigns.system
+    updated_sys = %{stale_sys | threats: stale_sys.threats ++ [threat]}
+
+    {:noreply, socket |> assign(system: updated_sys) |> assign(page_title: "Show System")}
+  end
+
   def handle_info({_from, {:ai_results_assets, new_assets}}, socket) do
     %{asking_ai_for_assets: ref} = socket.assigns
 
@@ -86,6 +95,19 @@ defmodule ThreatShieldWeb.SystemLive.Show do
      |> assign(
        asking_ai_for_assets: nil,
        asset_suggestions: socket.assigns.asset_suggestions ++ new_assets
+     )}
+  end
+
+  def handle_info({_from, {:ai_results_threats, threats}}, socket) do
+    %{asking_ai_for_threats: ref} = socket.assigns
+
+    Process.demonitor(ref, [:flush])
+
+    {:noreply,
+     socket
+     |> assign(
+       asking_ai_for_threats: nil,
+       threat_suggestions: socket.assigns.threat_suggestions ++ threats
      )}
   end
 
@@ -118,12 +140,37 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   end
 
   @impl true
+  def handle_event("suggest_threats", %{"sys_id" => sys_id}, socket) do
+    user = socket.assigns.current_user
+
+    task =
+      Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
+        ask_ai_for_threats(user, sys_id)
+      end)
+
+    socket =
+      socket
+      |> assign(asking_ai_for_threats: task.ref)
+
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("ignore_asset", %{"description" => description}, socket) do
     suggestions =
       Enum.filter(socket.assigns.asset_suggestions, fn s -> s.description != description end)
       |> Enum.to_list()
 
     {:noreply, socket |> assign(asset_suggestions: suggestions)}
+  end
+
+  @impl true
+  def handle_event("ignore_threat", %{"description" => description}, socket) do
+    suggestions =
+      Enum.filter(socket.assigns.threat_suggestions, fn s -> s.description != description end)
+      |> Enum.to_list()
+
+    {:noreply, socket |> assign(threat_suggestions: suggestions)}
   end
 
   @impl true
@@ -146,6 +193,26 @@ defmodule ThreatShieldWeb.SystemLive.Show do
      |> assign(:asset_suggestions, suggestions)}
   end
 
+  @impl true
+  def handle_event("add_threat", %{"description" => description}, socket) do
+    user = socket.assigns.current_user
+    system = socket.assigns.system
+
+    {:ok, threat} = Threats.add_threat_with_description(user, system, description)
+
+    suggestions =
+      Enum.filter(socket.assigns.threat_suggestions, fn s -> s.description != description end)
+      |> Enum.to_list()
+
+    stale_sys = socket.assigns.system
+    updated_sys = %{stale_sys | threats: stale_sys.threats ++ [threat]}
+
+    {:noreply,
+     socket
+     |> assign(:system, updated_sys)
+     |> assign(:threat_suggestions, suggestions)}
+  end
+
   defp ask_ai_for_assets(user, sys_id) do
     system = Systems.get_system!(user, sys_id)
 
@@ -153,5 +220,14 @@ defmodule ThreatShieldWeb.SystemLive.Show do
       AI.suggest_assets_for_system(system)
 
     {:ai_results_assets, new_assets}
+  end
+
+  defp ask_ai_for_threats(user, sys_id) do
+    system = Systems.get_system!(user, sys_id)
+
+    new_threats =
+      AI.suggest_threats_for_system(system)
+
+    {:ai_results_threats, new_threats}
   end
 end

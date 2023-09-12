@@ -24,10 +24,8 @@
   <:item title="Is implemented"><%= @mitigation.is_implemented %></:item>
 </.list>
 
-<.back navigate={
-  ~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk.id}/mitigations"
-}>
-  Back to mitigations
+<.back navigate={~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk.id}"}>
+  Back to risk
 </.back>
 
 <.modal

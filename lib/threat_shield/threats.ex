@@ -12,6 +12,7 @@ defmodule ThreatShield.Threats do
   alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Systems.System
+  alias ThreatShield.Systems
 
   def get_organisation!(%User{} = user, org_id) do
     Organisations.get_organisation!(user, org_id)
@@ -40,6 +41,18 @@ defmodule ThreatShield.Threats do
     Repo.transaction(fn ->
       check_related_system_in_threat_changeset(changeset, user)
       Repo.one!(Organisations.is_member_query(user, organisation))
+      Repo.insert!(changeset)
+    end)
+  end
+
+  def add_threat_with_description(%User{} = user, %System{id: sys_id}, description) do
+    Repo.transaction(fn ->
+      system = Systems.get_system!(user, sys_id)
+
+      changeset =
+        %Threat{system: system, organisation: system.organisation, description: description}
+        |> Ecto.Changeset.change()
+
       Repo.insert!(changeset)
     end)
   end

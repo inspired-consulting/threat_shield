@@ -16,7 +16,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatComponent do
         }
     >
       <:col :let={threat} label="Description"><%= threat.description %></:col>
-      <:col :let={threat} label="System"><%= system_name(threat) %></:col>
+      <:col :if={!assigns[:hide_system]} :let={threat} label="System"><%= system_name(threat) %></:col>
     </.table>
     </div>
     """

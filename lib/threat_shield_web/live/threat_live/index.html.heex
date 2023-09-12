@@ -44,7 +44,7 @@
   <:col :let={{_id, asset}} label="System"><%= system_name(asset) %></:col>
 
   <:action :let={{_id, threat}}>
-    <.link navigate={~p"/organisations/#{@organisation.id}/threats/#{threat.id}/risks"}>
+    <.link navigate={~p"/organisations/#{@organisation.id}/threats/#{threat.id}"}>
       Risks
     </.link>
   </:action>

@@ -72,6 +72,21 @@ defmodule ThreatShield.AI do
     make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
   end
 
+  def suggest_threats_for_system(%System{} = system) do
+    system_prompt = """
+    You are a threat modelling assistant. Your response should comprise five potential threats, each item having between 200–254 characters in length. Your response should be in JSON format, like so:
+
+    {"threats": _}
+    """
+
+    user_prompt =
+      """
+      I use this system: #{System.describe(system)}.
+      """
+
+    make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
+  end
+
   def suggest_risks_for_threat(%Threat{} = threat) do
     system_prompt = """
     You are a threat modelling assistant. Your response should comprise five potential risks for a given threat, each item having a name between 5-20 characters in length and a description between 200–254 characters in length. Your response should be in JSON format, like so:
