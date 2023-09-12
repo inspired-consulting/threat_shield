@@ -10,7 +10,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatComponent do
     <div class="threats">
     <.table
       id="threats"
-      rows={@organisation.threats}
+      rows={@threats}
       row_click={
         fn threat -> JS.navigate(~p"/organisations/#{@organisation.id}/threats/#{threat.id}") end
         }

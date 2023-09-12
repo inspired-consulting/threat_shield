@@ -85,6 +85,7 @@ defmodule ThreatShieldWeb.Router do
       live "/organisations/:org_id/systems/:sys_id", SystemLive.Show, :show
       live "/organisations/:org_id/systems/:sys_id/show/edit", SystemLive.Show, :edit
       live "/organisations/:org_id/systems/:sys_id/assets/new", SystemLive.Show, :new_asset
+      live "/organisations/:org_id/systems/:sys_id/threats/new", SystemLive.Show, :new_threat
 
       live "/organisations/:org_id/threats", ThreatLive.Index, :index
       live "/organisations/:org_id/threats/new", OrganisationLive.Show, :new_threat
