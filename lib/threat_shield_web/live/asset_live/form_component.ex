@@ -42,7 +42,7 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"asset" => asset_params}, socket) do
-    socket.assigns |> IO.inspect()
+    socket.assigns
 
     changeset =
       socket.assigns.asset
