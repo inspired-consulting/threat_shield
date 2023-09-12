@@ -83,6 +83,12 @@ defmodule ThreatShield.Organisations.Organisation do
     |> preload([threats: t, risks: r], threats: {t, risks: r})
   end
 
+  def with_mitigations(query) do
+    query
+    |> join(:left, [risks: r], assoc(r, :mitigations), as: :mitigations)
+    |> preload([threats: t, mitigations: m, risks: r], threats: {t, risks: {r, mitigations: m}})
+  end
+
   def with_systems(query) do
     query
     |> join(:left, [organisation: o], assoc(o, :systems), as: :systems)

@@ -28,3 +28,17 @@
     threat={threat}
   />
 <% end %>
+
+<h2>Mitigations</h2>
+<%= for threat <- @threats, !Enum.empty?(threat.risks) do %>
+  <%= for risk <- threat.risks, !Enum.empty?(risk.mitigations) do %>
+    <h3><%= risk.name %></h3>
+    <.live_component
+      module={ThreatShieldWeb.MitigationLive.MitigationComponent}
+      id={"mitigations_for_risk_#{risk.id}"}
+      organisation={@organisation}
+      threat={threat}
+      risk={risk}
+    />
+  <% end %>
+<% end %>
