@@ -79,7 +79,7 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
     |> Map.new()
   end
 
-  defp save_system(socket, :edit, system_params) do
+  defp save_system(socket, :edit_system, system_params) do
     user = socket.assigns.current_user
     organisation = socket.assigns.organisation
 
@@ -97,7 +97,7 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
     end
   end
 
-  defp save_system(socket, :new, system_params) do
+  defp save_system(socket, :new_system, system_params) do
     user = socket.assigns.current_user
     organisation = socket.assigns.organisation
 

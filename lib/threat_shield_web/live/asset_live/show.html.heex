@@ -1,12 +1,11 @@
 <.header>
-  Asset <%= @asset.id %>
-  <:subtitle>This is a asset record from your database.</:subtitle>
+  <%= dgettext("assets", "Asset") %>
   <:actions>
     <.link
       phx-click={JS.push("delete", value: %{asset_id: @asset.id})}
       data-confirm="Are you sure?"
     >
-      Delete
+      <.button><%= dgettext("common", "Delete") %></.button>
     </.link>
     <.link
       patch={~p"/organisations/#{@organisation.id}/assets/#{@asset}/show/edit"}

@@ -31,6 +31,9 @@ defmodule ThreatShield.Organisations do
   def get_organisation!(%User{id: user_id}, org_id) do
     Organisation.get(org_id)
     |> Organisation.for_user(user_id)
+    |> Organisation.with_systems()
+    |> Organisation.with_threats()
+    |> Organisation.with_assets()
     |> Repo.one!()
   end
 
@@ -84,5 +87,12 @@ defmodule ThreatShield.Organisations do
   def is_member_query(user, organisation) do
     from m in Membership,
       where: m.organisation_id == ^organisation.id and m.user_id == ^user.id
+  end
+
+  def delete_org_by_id!(%User{id: user_id}, id) do
+    Organisation.get(id)
+    |> Organisation.for_user(user_id)
+    |> Organisation.select()
+    |> Repo.delete_all()
   end
 end

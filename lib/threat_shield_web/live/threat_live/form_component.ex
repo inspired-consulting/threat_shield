@@ -20,7 +20,7 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:description]} type="text" label="Description" />
-        <.input field={@form[:system_id]} type="select" label="System" options={@system_options} />
+        <.input field={@form[:system_id]} :if={assigns[:system_options]} type="select" label="System" options={@system_options} />
         <:actions>
           <.button phx-disable-with="Saving...">Save Threat</.button>
         </:actions>
@@ -43,6 +43,7 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
   def handle_event("validate", %{"threat" => threat_params}, socket) do
     changeset =
       socket.assigns.threat
+      |> update_with_fixed_system(socket)
       |> Threats.change_threat(threat_params)
       |> Map.put(:action, :validate)
 
@@ -53,10 +54,14 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
     save_threat(socket, socket.assigns.action, threat_params)
   end
 
-  defp save_threat(socket, :edit, threat_params) do
+  defp save_threat(socket, :edit_threat, threat_params) do
     user = socket.assigns.current_user
 
-    case Threats.update_threat(user, socket.assigns.threat, threat_params) do
+    case Threats.update_threat(
+           user,
+           socket.assigns.threat,
+           threat_params |> update_with_fixed_system(socket)
+         ) do
       {:ok, threat} ->
         notify_parent({:saved, threat})
 
@@ -70,10 +75,14 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
     end
   end
 
-  defp save_threat(socket, :new, threat_params) do
+  defp save_threat(socket, :new_threat, threat_params) do
     %{current_user: user, organisation: organisation} = socket.assigns
 
-    case Threats.create_threat(user, organisation, threat_params) do
+    case Threats.create_threat(
+           user,
+           organisation,
+           threat_params |> update_with_fixed_system(socket)
+         ) do
       {:ok, threat} ->
         notify_parent({:saved, threat})
 
@@ -84,6 +93,13 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
+    end
+  end
+
+  defp update_with_fixed_system(threat_params, socket) do
+    case socket.assigns[:fixed_system] do
+      nil -> threat_params
+      sys -> threat_params |> Map.put("system_id", sys.id)
     end
   end
 

@@ -39,7 +39,7 @@ defmodule ThreatShieldWeb.AssetLive.Show do
     asset = Assets.get_asset!(socket.assigns.current_user, asset_id)
     {:ok, _} = Assets.delete_asset(socket.assigns.current_user, asset)
 
-    {:noreply, push_navigate(socket, to: "/organisations/#{organisation.id}/assets")}
+    {:noreply, push_navigate(socket, to: "/organisations/#{organisation.id}")}
   end
 
   defp page_title(:show), do: "Show Asset"
