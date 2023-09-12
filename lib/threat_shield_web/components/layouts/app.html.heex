@@ -5,10 +5,13 @@
         <img src={~p"/images/logo.svg"} width="50" />
       </a>
       <p class="text-primary_col-500 rounded-full px-2 font-medium leading-6">
-      <%= ThreatShieldWeb.Helpers.get_git_release_tag() %></p>
+        <%= ThreatShieldWeb.Helpers.get_git_release_tag() %>
+      </p>
 
-
-      </div>
+      <%= if assigns[:breadcrumbs] do %>
+        <ThreatShieldWeb.Breadcrumbs.breadcrumb breadcrumbs={@breadcrumbs} context={assigns} />
+      <% end %>
+    </div>
   </div>
 </header>
 <main class="px-12 py-20">
@@ -17,6 +20,4 @@
     <%= @inner_content %>
   </div>
 </main>
-<footer>
-
-</footer>
+<footer></footer>

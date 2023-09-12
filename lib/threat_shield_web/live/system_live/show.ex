@@ -9,6 +9,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   alias ThreatShield.Threats
   alias ThreatShield.AI
   import ThreatShield.Systems.System, only: [attribute_keys: 0]
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
 
   @impl true
   def mount(%{"sys_id" => id}, _session, socket) do
@@ -28,8 +29,11 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   end
 
   @impl true
-  def handle_params(params, _, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  def handle_params(params, url, socket) do
+    {:noreply,
+     socket
+     |> add_breadcrumbs(url)
+     |> apply_action(socket.assigns.live_action, params)}
   end
 
   defp apply_action(socket, :show, _params) do

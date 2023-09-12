@@ -14,6 +14,8 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   import ThreatShield.Organisations.Organisation,
     only: [attribute_keys: 0, list_system_options: 1]
 
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
     user = socket.assigns.current_user
@@ -32,8 +34,11 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   end
 
   @impl true
-  def handle_params(params, _, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  def handle_params(params, url, socket) do
+    {:noreply,
+     socket
+     |> add_breadcrumbs(url)
+     |> apply_action(socket.assigns.live_action, params)}
   end
 
   defp apply_action(socket, :show, _params) do
