@@ -18,9 +18,9 @@ defmodule ThreatShield.Application do
       # Start Finch
       {Finch, name: ThreatShield.Finch},
       # Start the Endpoint (http/https)
-      ThreatShieldWeb.Endpoint
+      ThreatShieldWeb.Endpoint,
       # Start a worker by calling: ThreatShield.Worker.start_link(arg)
-      # {ThreatShield.Worker, arg}
+      ThreatShield.Periodically
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

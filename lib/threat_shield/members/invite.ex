@@ -50,6 +50,11 @@ defmodule ThreatShield.Members.Invite do
     |> where([invite: i], i.token == ^token)
   end
 
+  def where_expired(query) do
+    query
+    |> where([invite: i], i.inserted_at < ^cutoff_time())
+  end
+
   def with_time_limit(query) do
     query
     |> where([invite: i], i.inserted_at >= ^cutoff_time())

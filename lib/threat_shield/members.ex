@@ -31,7 +31,7 @@ defmodule ThreatShield.Members do
     |> Repo.one()
   end
 
-  def join_with_token(%User{id: user_id} = user, token) do
+  def join_with_token(%User{} = user, token) do
     case Repo.transaction(fn ->
            invite = get_invite_by_token(token)
 
@@ -103,6 +103,13 @@ defmodule ThreatShield.Members do
       {1, [invite]} -> {:ok, invite}
       _ -> {:error}
     end
+  end
+
+  def delete_expired_invites() do
+    Invite.from()
+    |> Invite.where_expired()
+    |> Invite.select()
+    |> Repo.delete_all()
   end
 
   def update_invite(%Invite{} = invite, attrs) do
