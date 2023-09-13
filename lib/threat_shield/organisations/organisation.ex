@@ -4,6 +4,8 @@ defmodule ThreatShield.Organisations.Organisation do
 
   alias ThreatShield.Systems.System
 
+  import ThreatShield.Members.Invite, only: [cutoff_time: 0]
+
   schema "organisations" do
     field :name, :string
     field :location, :string

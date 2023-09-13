@@ -2,6 +2,8 @@ defmodule ThreatShield.Members.Invite do
   use Ecto.Schema
   import Ecto.Changeset
 
+  import ThreatShield.Const.RetentionTimes, only: [invite_lifetime_in_seconds: 0]
+
   schema "invites" do
     field :token, :string
     field :email, :string
@@ -9,6 +11,11 @@ defmodule ThreatShield.Members.Invite do
     belongs_to :organisation, ThreatShield.Organisations.Organisation
 
     timestamps()
+  end
+
+  def cutoff_time() do
+    NaiveDateTime.utc_now()
+    |> NaiveDateTime.add(-invite_lifetime_in_seconds())
   end
 
   @doc false
@@ -24,6 +31,10 @@ defmodule ThreatShield.Members.Invite do
     ThreatShieldWeb.Endpoint.url() <> "/join/" <> token
   end
 
+  def expiration_point(%__MODULE__{inserted_at: inserted_at}) do
+    NaiveDateTime.add(inserted_at, invite_lifetime_in_seconds())
+  end
+
   import Ecto.Query
 
   def get(id) do
@@ -37,6 +48,11 @@ defmodule ThreatShield.Members.Invite do
   def for_token(query, token) do
     query
     |> where([invite: i], i.token == ^token)
+  end
+
+  def with_time_limit(query) do
+    query
+    |> where([invite: i], i.inserted_at >= ^cutoff_time())
   end
 
   def with_organisation(query) do

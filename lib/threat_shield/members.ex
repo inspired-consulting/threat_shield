@@ -19,6 +19,7 @@ defmodule ThreatShield.Members do
     |> Organisation.for_user(user_id)
     |> Organisation.with_memberships()
     |> Organisation.with_invites()
+    |> IO.inspect()
     |> Repo.one()
   end
 
@@ -26,6 +27,7 @@ defmodule ThreatShield.Members do
     Invite.from()
     |> Invite.for_token(token)
     |> Invite.with_organisation()
+    |> Invite.with_time_limit()
     |> Repo.one()
   end
 
