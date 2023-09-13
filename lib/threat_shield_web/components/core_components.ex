@@ -332,9 +332,6 @@ defmodule ThreatShieldWeb.CoreComponents do
         multiple={@multiple}
         {@rest}
       >
-        <%!-- <option value="" disabled selected>
-          <%= dgettext("organisation", "Please choose your country") %>
-        </option> --%>
         <option :if={@prompt} value=""><%= @prompt %></option>
         <%= Phoenix.HTML.Form.options_for_select(@options, @value) %>
       </select>
