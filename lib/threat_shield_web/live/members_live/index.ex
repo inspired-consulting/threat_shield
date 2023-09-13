@@ -5,6 +5,8 @@ defmodule ThreatShieldWeb.MembersLive.Index do
   alias ThreatShield.Members
   alias ThreatShield.Members.Invite
 
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
     user = socket.assigns.current_user
@@ -16,8 +18,11 @@ defmodule ThreatShieldWeb.MembersLive.Index do
   end
 
   @impl true
-  def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  def handle_params(params, url, socket) do
+    {:noreply,
+     socket
+     |> add_breadcrumbs(url)
+     |> apply_action(socket.assigns.live_action, params)}
   end
 
   defp apply_action(socket, :new_invite, _params) do

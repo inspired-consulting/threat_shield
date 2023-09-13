@@ -28,22 +28,24 @@
   </:col>
 </.table>
 
-<h3><%= dgettext("organisation", "Pending invites") %></h3>
-<.table id="invites" rows={@organisation.invites}>
-  <:col :let={invite} label="Email"><%= invite.email %></:col>
-  <:col :let={invite} label="Created"><%= invite.inserted_at %></:col>
-  <:col :let={invite}>
-    <div class="text-right">
-      <.button
-        phx-click="revoke_invite"
-        phx-value-invite_id={invite.id}
-        data-confirm={"Do you really want to revoke the invite for #{invite.email}?"}
-      >
-        <%= dgettext("common", "Revoke") %>
-      </.button>
-    </div>
-  </:col>
-</.table>
+<%= if not Enum.empty?(@organisation.invites) do %>
+  <h3><%= dgettext("organisation", "Pending invites") %></h3>
+  <.table id="invites" rows={@organisation.invites}>
+    <:col :let={invite} label="Email"><%= invite.email %></:col>
+    <:col :let={invite} label="Created"><%= invite.inserted_at %></:col>
+    <:col :let={invite}>
+      <div class="text-right">
+        <.button
+          phx-click="revoke_invite"
+          phx-value-invite_id={invite.id}
+          data-confirm={"Do you really want to revoke the invite for #{invite.email}?"}
+        >
+          <%= dgettext("common", "Revoke") %>
+        </.button>
+      </div>
+    </:col>
+  </.table>
+<% end %>
 
 <.modal
   :if={@live_action == :new_invite}
