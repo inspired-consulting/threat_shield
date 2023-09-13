@@ -12,7 +12,7 @@ defmodule ThreatShield.Breadcrumbs do
 
   def breadcrumb_lookup() do
     %{
-      :home => %{name: "Home", path: "/"},
+      :home => %{name: "Home", path: "/dashboard"},
       :organisations => %{name: "Organisation", path: "/organisations/:org_id"},
       :assets => %{name: "Asset", path: "/organisations/:org_id/assets/:asset_id"},
       :systems => %{name: "System", path: "/organisations/:org_id/systems/:sys_id"},
