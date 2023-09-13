@@ -69,10 +69,6 @@
   </p>
 <% end %>
 
-<.back navigate={~p"/organisations/#{@organisation.id}/threats/#{@threat.id}"}>
-  Back to risks
-</.back>
-
 <.modal
   :if={@live_action == :edit_risk}
   id="risk-modal"

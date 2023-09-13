@@ -1,4 +1,7 @@
 defmodule ThreatShieldWeb.Helpers do
+  import Phoenix.Component
+  alias ThreatShieldWeb.Endpoint
+
   @moduledoc """
   Helpers are functions that can be used in your contexts.
   """
@@ -14,5 +17,16 @@ defmodule ThreatShieldWeb.Helpers do
       _ ->
         ""
     end
+  end
+
+  def add_breadcrumbs(socket, url) do
+    breadcrumbs =
+      url
+      |> String.replace_prefix(Endpoint.url(), "")
+      |> String.split("/")
+      |> Enum.map(fn key -> Map.get(ThreatShield.Breadcrumbs.relevant_url_parts(), key) end)
+      |> Enum.filter(&(!is_nil(&1)))
+
+    assign(socket, :breadcrumbs, [:home | breadcrumbs])
   end
 end

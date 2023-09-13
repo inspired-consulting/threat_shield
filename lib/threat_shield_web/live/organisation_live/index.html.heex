@@ -2,7 +2,7 @@
   Listing Organisations
   <:actions>
     <.link patch={~p"/organisations/new"}>
-      <.button >New Organisation</.button>
+      <.button>New Organisation</.button>
     </.link>
   </:actions>
 </.header>
@@ -10,9 +10,7 @@
 <.table
   id="organisations"
   rows={@streams.organisations}
-  row_click={
-    fn {_id, organisation} -> JS.navigate(~p"/organisations/#{organisation}") end
-  }
+  row_click={fn {_id, organisation} -> JS.navigate(~p"/organisations/#{organisation}") end}
 >
   <:col :let={{_id, organisation}} label="Name"><%= organisation.name %></:col>
   <:col :let={{_id, organisation}} label="Attributes">
@@ -21,10 +19,6 @@
     <% end %>
   </:col>
 </.table>
-
-<.back navigate={~p"/dashboard"}>Back to Dashboard</.back>
-
-
 
 <.modal
   :if={@live_action in [:new, :edit]}
