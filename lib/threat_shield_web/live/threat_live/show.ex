@@ -8,6 +8,7 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
 
   import ThreatShield.Threats.Threat, only: [system_name: 1]
   import ThreatShield.Organisations.Organisation, only: [list_system_options: 1]
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
 
   @impl true
   def mount(%{"threat_id" => threat_id}, _session, socket) do
@@ -41,8 +42,11 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   end
 
   @impl true
-  def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  def handle_params(params, url, socket) do
+    {:noreply,
+     socket
+     |> add_breadcrumbs(url)
+     |> apply_action(socket.assigns.live_action, params)}
   end
 
   @impl true

@@ -9,6 +9,8 @@ defmodule ThreatShieldWeb.AssetLive.Show do
   import ThreatShield.Organisations.Organisation,
     only: [list_system_options: 1]
 
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
     current_user = socket.assigns.current_user
@@ -22,12 +24,13 @@ defmodule ThreatShieldWeb.AssetLive.Show do
   end
 
   @impl true
-  def handle_params(%{"asset_id" => asset_id}, _, socket) do
+  def handle_params(%{"asset_id" => asset_id}, url, socket) do
     user =
       socket.assigns.current_user
 
     {:noreply,
      socket
+     |> add_breadcrumbs(url)
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:asset, Assets.get_asset!(user, asset_id))}
   end

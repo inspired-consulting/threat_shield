@@ -3,6 +3,8 @@ defmodule ThreatShieldWeb.MitigationLive.Show do
 
   alias ThreatShield.Mitigations
 
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+
   @impl true
   def mount(%{"risk_id" => risk_id}, _session, socket) do
     user = socket.assigns.current_user
@@ -16,11 +18,12 @@ defmodule ThreatShieldWeb.MitigationLive.Show do
   end
 
   @impl true
-  def handle_params(%{"mitigation_id" => id}, _, socket) do
+  def handle_params(%{"mitigation_id" => id}, url, socket) do
     user = socket.assigns.current_user
 
     {:noreply,
      socket
+     |> add_breadcrumbs(url)
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:mitigation, Mitigations.get_mitigation!(user, id))}
   end

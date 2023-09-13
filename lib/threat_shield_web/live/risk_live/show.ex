@@ -6,6 +6,8 @@ defmodule ThreatShieldWeb.RiskLive.Show do
   alias ThreatShield.Mitigations
   alias ThreatShield.AI
 
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+
   @impl true
   def mount(%{"risk_id" => risk_id}, _session, socket) do
     user = socket.assigns.current_user
@@ -22,8 +24,11 @@ defmodule ThreatShieldWeb.RiskLive.Show do
   end
 
   @impl true
-  def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  def handle_params(params, url, socket) do
+    {:noreply,
+     socket
+     |> add_breadcrumbs(url)
+     |> apply_action(socket.assigns.live_action, params)}
   end
 
   defp apply_action(socket, :edit_risk, _params) do

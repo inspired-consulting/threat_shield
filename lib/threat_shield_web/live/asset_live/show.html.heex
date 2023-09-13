@@ -21,8 +21,6 @@
   <:item title="System"><%= system_name(@asset) %></:item>
 </.list>
 
-<.back navigate={~p"/organisations/#{@organisation.id}/assets"}>Back to assets</.back>
-
 <.modal
   :if={@live_action == :edit}
   id="asset-modal"
