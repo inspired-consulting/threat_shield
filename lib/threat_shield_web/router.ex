@@ -71,10 +71,15 @@ defmodule ThreatShieldWeb.Router do
 
       live "/dashboard", DashboardLive.Index, :index
 
+      live "/join/:token", MembersLive.Join, :join
+
       live "/organisations", OrganisationLive.Index, :index
       live "/organisations/new", OrganisationLive.Index, :new
       live "/organisations/:org_id", OrganisationLive.Show, :show
       live "/organisations/:org_id/edit", OrganisationLive.Show, :edit_organisation
+
+      live "/organisations/:org_id/members", MembersLive.Index, :index
+      live "/organisations/:org_id/members/new", MembersLive.Index, :new_invite
 
       live "/organisations/:org_id/dashboard", DashboardLive.Index, :index
 

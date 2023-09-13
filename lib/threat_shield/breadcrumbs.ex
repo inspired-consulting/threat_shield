@@ -6,7 +6,8 @@ defmodule ThreatShield.Breadcrumbs do
       "systems" => :systems,
       "threats" => :threats,
       "risks" => :risks,
-      "mitigations" => :mitigations
+      "mitigations" => :mitigations,
+      "members" => :members
     }
   end
 
@@ -22,6 +23,10 @@ defmodule ThreatShield.Breadcrumbs do
         name: "Mitigation",
         path:
           "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id"
+      },
+      :members => %{
+        name: "Members",
+        path: "organisations/:org_id/members"
       }
     }
   end

@@ -1,0 +1,11 @@
+<%= if is_nil(@invite) do %>
+  <h2><%= dgettext("organisation", "The token you used seems to be invalid") %></h2>
+<% else %>
+  <h2>
+    <%= dgettext("organisation", "You've been invited to join") <>
+      " " <> @invite.organisation.name %>
+  </h2>
+  <.button phx-click="join" phx-value-token={@invite.token}>
+    <%= dgettext("organisation", "Join") %>
+  </.button>
+<% end %>

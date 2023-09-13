@@ -1,0 +1,68 @@
+<.header>
+  <%= dgettext("organisation", "Members") %>
+  <:actions>
+    <.link patch={~p"/organisations/#{@organisation.id}/members/new"}>
+      <.button><%= dgettext("organisation", "Invite") %></.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="memberships" rows={@organisation.memberships}>
+  <:col :let={membership} label="User"><%= membership.user.email %></:col>
+  <:col :let={membership}>
+    <%= if length(@organisation.memberships) > 1 do %>
+      <div class="text-right">
+        <.button
+          phx-click="delete_membership"
+          phx-value-membership_id={membership.id}
+          data-confirm={"Do you really want to remove #{membership.user.email} from #{@organisation.name}?"}
+        >
+          <%= if membership.user.id == @current_user.id do %>
+            <%= dgettext("common", "Leave") %>
+          <% else %>
+            <%= dgettext("common", "Delete") %>
+          <% end %>
+        </.button>
+      </div>
+    <% end %>
+  </:col>
+</.table>
+
+<%= if not Enum.empty?(@organisation.invites) do %>
+  <h3><%= dgettext("organisation", "Pending invites") %></h3>
+  <.table id="invites" rows={@organisation.invites}>
+    <:col :let={invite} label="Email"><%= invite.email %></:col>
+    <:col :let={invite} label="Expiration Date">
+      <%= ThreatShield.Members.Invite.expiration_point(invite) %>
+    </:col>
+    <:col :let={invite}>
+      <div class="text-right">
+        <.button
+          phx-click="revoke_invite"
+          phx-value-invite_id={invite.id}
+          data-confirm={"Do you really want to revoke the invite for #{invite.email}?"}
+        >
+          <%= dgettext("common", "Revoke") %>
+        </.button>
+      </div>
+    </:col>
+  </.table>
+<% end %>
+
+<.modal
+  :if={@live_action == :new_invite}
+  id="invite-modal"
+  show
+  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/members")}
+>
+  <.live_component
+    module={ThreatShieldWeb.MembersLive.FormComponent}
+    id={@invite.id || :new}
+    title={@page_title}
+    action={@live_action}
+    invite={@invite}
+    organisation={@organisation}
+    current_user={@current_user}
+    patch={~p"/organisations/#{@organisation.id}/members"}
+  />
+</.modal>

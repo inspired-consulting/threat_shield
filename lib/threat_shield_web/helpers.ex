@@ -29,4 +29,9 @@ defmodule ThreatShieldWeb.Helpers do
 
     assign(socket, :breadcrumbs, [:home | breadcrumbs])
   end
+
+  def generate_token() do
+    :crypto.strong_rand_bytes(128)
+    |> Base.url_encode64(padding: false)
+  end
 end
