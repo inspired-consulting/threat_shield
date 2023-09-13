@@ -20,6 +20,10 @@ defmodule ThreatShield.Members.Invite do
     |> validate_length(:email, max: 160)
   end
 
+  def generate_url(%__MODULE__{token: token}) do
+    ThreatShieldWeb.Endpoint.url() <> "/join/" <> token
+  end
+
   import Ecto.Query
 
   def get(id) do

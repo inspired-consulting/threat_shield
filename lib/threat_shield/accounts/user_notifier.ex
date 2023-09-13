@@ -2,6 +2,7 @@ defmodule ThreatShield.Accounts.UserNotifier do
   import Swoosh.Email
 
   alias ThreatShield.Mailer
+  alias ThreatShield.Members.Invite
 
   # Delivers the email using the application mailer.
   defp deliver(recipient, subject, body) do
@@ -72,6 +73,24 @@ defmodule ThreatShield.Accounts.UserNotifier do
     #{url}
 
     If you didn't request this change, please ignore this.
+
+    ==============================
+    """)
+  end
+
+  @doc """
+  Deliver organisation invites.
+  """
+  def deliver_invite(%Invite{} = invite) do
+    deliver(invite.email, "Organisation invite", """
+
+    ==============================
+
+    Hi,
+
+    You have been invited to join #{invite.organisation.name} on ThreatShield 🙂 Follow the link below to accept the invite:
+
+    #{ThreatShield.Members.Invite.generate_url(invite)}
 
     ==============================
     """)

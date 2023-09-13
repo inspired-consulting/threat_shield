@@ -1,4 +1,5 @@
 defmodule ThreatShieldWeb.MembersLive.Index do
+  alias ThreatShield.Accounts.UserNotifier
   alias ThreatShield.Organisations.Membership
   use ThreatShieldWeb, :live_view
 
@@ -39,6 +40,8 @@ defmodule ThreatShieldWeb.MembersLive.Index do
 
   @impl true
   def handle_info({ThreatShieldWeb.MembersLive.FormComponent, {:saved, invite}}, socket) do
+    UserNotifier.deliver_invite(invite)
+
     {:noreply,
      socket
      |> assign(
