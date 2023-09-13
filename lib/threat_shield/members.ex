@@ -22,6 +22,34 @@ defmodule ThreatShield.Members do
     |> Repo.one()
   end
 
+  def get_invite_by_token(token) do
+    Invite.from()
+    |> Invite.for_token(token)
+    |> Invite.with_organisation()
+    |> Repo.one()
+  end
+
+  def join_with_token(%User{id: user_id} = user, token) do
+    case Repo.transaction(fn ->
+           invite = get_invite_by_token(token)
+
+           if not is_nil(invite) do
+             membership =
+               %Membership{user: user, organisation: invite.organisation}
+               |> Repo.insert!()
+
+             Repo.delete(invite)
+             {:ok, membership}
+           else
+             {:error, :invalid_token}
+           end
+         end) do
+      {:ok, {:ok, membership}} -> {:ok, membership}
+      {:ok, {:error, err}} -> {:error, err}
+      {:error, err} -> {:error, err}
+    end
+  end
+
   def create_invite(%User{id: user_id}, %Organisation{id: org_id}, attrs \\ %{}) do
     token = generate_token()
 

@@ -26,6 +26,21 @@ defmodule ThreatShield.Members.Invite do
     from(e in __MODULE__, as: :invite, where: e.id == ^id)
   end
 
+  def from() do
+    from(e in __MODULE__, as: :invite)
+  end
+
+  def for_token(query, token) do
+    query
+    |> where([invite: i], i.token == ^token)
+  end
+
+  def with_organisation(query) do
+    query
+    |> join(:left, [invite: i], assoc(i, :organisation), as: :organisation)
+    |> preload([organisation: o], organisation: o)
+  end
+
   def for_user(query, user_id) do
     query
     |> join(:inner, [invite: i], assoc(i, :organisation), as: :organisation)
