@@ -51,21 +51,6 @@ defmodule ThreatShieldWeb.MembersLive.FormComponent do
     save_invite(socket, socket.assigns.action, invite_params)
   end
 
-  defp save_invite(socket, :edit, invite_params) do
-    case Members.update_invite(socket.assigns.invite, invite_params) do
-      {:ok, invite} ->
-        notify_parent({:saved, invite})
-
-        {:noreply,
-         socket
-         |> put_flash(:info, "Invites updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
-  end
-
   defp save_invite(socket, :new_invite, invite_params) do
     organisation = socket.assigns.organisation
     user = socket.assigns.current_user

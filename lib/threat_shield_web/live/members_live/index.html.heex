@@ -7,12 +7,42 @@
   </:actions>
 </.header>
 
-<.table id="memberships" rows={@streams.memberships}>
-  <:col :let={{_id, membership}} label="User"><%= membership.user.email %></:col>
+<.table id="memberships" rows={@organisation.memberships}>
+  <:col :let={membership} label="User"><%= membership.user.email %></:col>
+  <:col :let={membership}>
+    <%= if length(@organisation.memberships) > 1 do %>
+      <div class="text-right">
+        <.button
+          phx-click="delete_membership"
+          phx-value-membership_id={membership.id}
+          data-confirm={"Do you really want to remove #{membership.user.email} from #{@organisation.name}?"}
+        >
+          <%= if membership.user.id == @current_user.id do %>
+            <%= dgettext("common", "Leave") %>
+          <% else %>
+            <%= dgettext("common", "Delete") %>
+          <% end %>
+        </.button>
+      </div>
+    <% end %>
+  </:col>
 </.table>
 
-<.table id="invites" rows={@streams.invites}>
-  <:col :let={{_id, invite}} label="Invited users"><%= invite.email %></:col>
+<h3><%= dgettext("organisation", "Pending invites") %></h3>
+<.table id="invites" rows={@organisation.invites}>
+  <:col :let={invite} label="Email"><%= invite.email %></:col>
+  <:col :let={invite} label="Created"><%= invite.inserted_at %></:col>
+  <:col :let={invite}>
+    <div class="text-right">
+      <.button
+        phx-click="revoke_invite"
+        phx-value-invite_id={invite.id}
+        data-confirm={"Do you really want to revoke the invite for #{invite.email}?"}
+      >
+        <%= dgettext("common", "Revoke") %>
+      </.button>
+    </div>
+  </:col>
 </.table>
 
 <.modal

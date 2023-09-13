@@ -1,4 +1,5 @@
 defmodule ThreatShieldWeb.MembersLive.Index do
+  alias ThreatShield.Organisations.Membership
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Members
@@ -11,9 +12,7 @@ defmodule ThreatShieldWeb.MembersLive.Index do
 
     {:ok,
      socket
-     |> assign(:organisation, organisation)
-     |> stream(:memberships, organisation.memberships)
-     |> stream(:invites, organisation.invites)}
+     |> assign(:organisation, organisation)}
   end
 
   @impl true
@@ -34,15 +33,60 @@ defmodule ThreatShieldWeb.MembersLive.Index do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.MembersLive.FormComponent, {:saved, invites}}, socket) do
-    {:noreply, stream_insert(socket, :invites, invites)}
+  def handle_info({ThreatShieldWeb.MembersLive.FormComponent, {:saved, invite}}, socket) do
+    {:noreply,
+     socket
+     |> assign(
+       organisation: %{
+         socket.assigns.organisation
+         | invites: socket.assigns.organisation.invites ++ [invite]
+       }
+     )}
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    invites = Members.get_invites!(id)
-    {:ok, _} = Members.delete_invites(invites)
+  def handle_event("delete_membership", %{"membership_id" => id}, socket) do
+    user = socket.assigns.current_user
+    organisation = socket.assigns.organisation
 
-    {:noreply, stream_delete(socket, :invites_collection, invites)}
+    {:ok, membership} = Members.delete_membership_by_id(user, organisation.id, id)
+
+    user_id = user.id
+
+    case membership do
+      %Membership{user_id: ^user_id} ->
+        {:noreply, push_navigate(socket, to: "/dashboard")}
+
+      membership ->
+        {:noreply,
+         socket
+         |> assign(
+           organisation: %{
+             socket.assigns.organisation
+             | memberships: delete_by_id(socket.assigns.organisation.memberships, membership.id)
+           }
+         )}
+    end
+  end
+
+  @impl true
+  def handle_event("revoke_invite", %{"invite_id" => id}, socket) do
+    user = socket.assigns.current_user
+
+    {:ok, invite} = Members.delete_invite_by_id(user, id)
+
+    {:noreply,
+     socket
+     |> assign(
+       organisation: %{
+         socket.assigns.organisation
+         | invites: delete_by_id(socket.assigns.organisation.invites, invite.id)
+       }
+     )}
+  end
+
+  defp delete_by_id(list, id) do
+    index = Enum.find_index(list, fn item -> item.id == id end)
+    List.delete_at(list, index)
   end
 end

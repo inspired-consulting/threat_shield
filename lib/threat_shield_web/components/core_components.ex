@@ -250,7 +250,6 @@ defmodule ThreatShieldWeb.CoreComponents do
 
     * You may also set `type="select"` to render a `<select>` tag
 
-
     * `type="checkbox"` is used exclusively to render boolean values
 
     * For live file uploads, see `Phoenix.Component.live_file_input/1`
@@ -486,7 +485,7 @@ defmodule ThreatShieldWeb.CoreComponents do
             phx-click={@row_click && @row_click.(row)}
             class={["relative p-0", @row_click && "hover:cursor-pointer"]}
           >
-            <div class="block py-4 pr-6">
+            <div class="block py-4 pr-0">
               <span class="absolute -inset-y-px -right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
               <span class={["relative", i == 0 && "font-semibold text-primary_col-600"]}>
                 <%= render_slot(col, @row_item.(row)) %>

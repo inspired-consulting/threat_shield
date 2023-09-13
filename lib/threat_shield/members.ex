@@ -4,11 +4,11 @@ defmodule ThreatShield.Members do
   """
 
   import Ecto.Query, warn: false
+  alias ThreatShield.Organisations.Membership
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Repo
 
   alias ThreatShield.Members.Invite
-  alias ThreatShield.Members
   alias ThreatShield.Accounts.User
   alias ThreatShield.Organisations.Organisation
 
@@ -22,34 +22,6 @@ defmodule ThreatShield.Members do
     |> Repo.one()
   end
 
-  @doc """
-  Gets a single invite.
-
-  Raises `Ecto.NoResultsError` if the Invites does not exist.
-
-  ## Examples
-
-      iex> get_invite!(123)
-      %Invites{}
-
-      iex> get_invite!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_invite!(id), do: Repo.get!(Invites, id)
-
-  @doc """
-  Creates a invite.
-
-  ## Examples
-
-      iex> create_invite(%{field: value})
-      {:ok, %Invites{}}
-
-      iex> create_invite(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def create_invite(%User{id: user_id}, %Organisation{id: org_id}, attrs \\ %{}) do
     token = generate_token()
 
@@ -70,49 +42,45 @@ defmodule ThreatShield.Members do
     end
   end
 
-  @doc """
-  Updates a invite.
+  def delete_membership_by_id(%User{id: user_id}, org_id, membership_id) do
+    case Repo.transaction(fn ->
+           organisation =
+             Organisation.get(org_id)
+             |> Organisation.for_user(user_id)
+             |> Organisation.with_memberships()
+             |> Repo.one!()
 
-  ## Examples
+           if length(organisation.memberships) >= 2 do
+             Membership.get(membership_id)
+             |> Membership.for_user(user_id)
+             |> Membership.select()
+             |> Repo.delete_all()
+           else
+             {:error, :last_member}
+           end
+         end) do
+      {:ok, {1, [membership]}} -> {:ok, membership}
+      {:ok, {:error, err}} -> {:error, err}
+      {:error, err} -> {:error, err}
+    end
+  end
 
-      iex> update_invite(invite, %{field: new_value})
-      {:ok, %Invites{}}
+  def delete_invite_by_id(%User{id: user_id}, invite_id) do
+    case Invite.get(invite_id)
+         |> Invite.for_user(user_id)
+         |> Invite.select()
+         |> Repo.delete_all() do
+      {1, [invite]} -> {:ok, invite}
+      _ -> {:error}
+    end
+  end
 
-      iex> update_invite(invite, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def update_invite(%Invite{} = invite, attrs) do
     invite
     |> Invite.changeset(attrs)
     |> Repo.update()
   end
 
-  @doc """
-  Deletes a invite.
-
-  ## Examples
-
-      iex> delete_invite(invite)
-      {:ok, %Invites{}}
-
-      iex> delete_invite(invite)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_invite(%Invite{} = invite) do
-    Repo.delete(invite)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking invite changes.
-
-  ## Examples
-
-      iex> change_invite(invite)
-      %Ecto.Changeset{data: %Invites{}}
-
-  """
   def change_invite(%Invite{} = invite, attrs \\ %{}) do
     Invite.changeset(invite, attrs)
   end
