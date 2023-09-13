@@ -1,6 +1,10 @@
 <.header>
   <%= dgettext("organisations", "Organisation") %>
   <:actions>
+    <.link navigate={~p"/organisations/#{@organisation}/members"}>
+      <.button><%= dgettext("organisation", "Members") %></.button>
+    </.link>
+
     <.link
       phx-click={JS.push("delete", value: %{organisation_id: @organisation.id})}
       data-confirm="Are you sure?"

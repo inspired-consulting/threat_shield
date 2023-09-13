@@ -10,9 +10,12 @@ defmodule ThreatShield.Organisations.Organisation do
     field :attributes, :map
 
     many_to_many :users, ThreatShield.Accounts.User, join_through: "memberships"
+
+    has_many :memberships, ThreatShield.Organisations.Membership
     has_many :systems, ThreatShield.Systems.System
     has_many :threats, ThreatShield.Threats.Threat
     has_many :assets, ThreatShield.Assets.Asset
+    has_many :invites, ThreatShield.Members.Invite
 
     timestamps()
   end
@@ -100,6 +103,19 @@ defmodule ThreatShield.Organisations.Organisation do
     |> join(:left, [organisation: o], assoc(o, :assets), as: :assets)
     |> join(:left, [assets: a], assoc(a, :system), as: :asset_systems)
     |> preload([assets: a, asset_systems: s], assets: {a, system: s})
+  end
+
+  def with_memberships(query) do
+    query
+    |> join(:left, [organisation: o], assoc(o, :memberships), as: :memberships)
+    |> join(:left, [memberships: m], assoc(m, :user), as: :membership_users)
+    |> preload([memberships: m, membership_users: u], memberships: {m, user: u})
+  end
+
+  def with_invites(query) do
+    query
+    |> join(:left, [organisation: o], assoc(o, :invites), as: :invites)
+    |> preload([invites: i], invites: i)
   end
 
   def select(query) do
