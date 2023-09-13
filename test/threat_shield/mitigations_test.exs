@@ -26,8 +26,6 @@ defmodule ThreatShield.MitigationsTest do
   describe "mitigations" do
     alias ThreatShield.Mitigations.Mitigation
 
-    import ThreatShield.MitigationsFixtures
-
     @invalid_attrs %{name: nil, description: nil, is_implemented: nil}
 
     test "create_mitigation/1 with valid data creates a mitigation" do

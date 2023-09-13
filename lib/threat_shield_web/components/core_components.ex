@@ -250,6 +250,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
     * You may also set `type="select"` to render a `<select>` tag
 
+
     * `type="checkbox"` is used exclusively to render boolean values
 
     * For live file uploads, see `Phoenix.Component.live_file_input/1`
