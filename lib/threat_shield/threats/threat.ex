@@ -16,6 +16,16 @@ defmodule ThreatShield.Threats.Threat do
     timestamps()
   end
 
+  def describe(%__MODULE__{description: description, system: system}) do
+    system_description =
+      case system do
+        nil -> ""
+        system -> " It belongs to the following system: " <> System.describe(system)
+      end
+
+    description <> system_description
+  end
+
   @doc false
   def changeset(threat, attrs) do
     threat
@@ -50,5 +60,17 @@ defmodule ThreatShield.Threats.Threat do
     query
     |> join(:left, [threat: t], assoc(t, :risks), as: :risks)
     |> preload([organisation: o, risks: r], organisation: o, risks: r)
+  end
+
+  def with_system(query) do
+    query
+    |> join(:left, [threat: t], assoc(t, :system), as: :system)
+    |> preload([system: s], system: s)
+  end
+
+  def with_org_systems(query) do
+    query
+    |> join(:left, [organisation: o], assoc(o, :systems), as: :systems)
+    |> preload([organisation: o, systems: s], organisation: {o, systems: s})
   end
 end

@@ -74,23 +74,25 @@ defmodule ThreatShieldWeb.Router do
       live "/organisations", OrganisationLive.Index, :index
       live "/organisations/new", OrganisationLive.Index, :new
       live "/organisations/:org_id", OrganisationLive.Show, :show
-      live "/organisations/:org_id/edit", OrganisationLive.Index, :edit
+      live "/organisations/:org_id/edit", OrganisationLive.Show, :edit_organisation
 
       live "/organisations/:org_id/dashboard", DashboardLive.Index, :index
 
       live "/organisations/:org_id/systems", SystemLive.Index, :index
-      live "/organisations/:org_id/systems/new", SystemLive.Index, :new
-      live "/organisations/:org_id/systems/:sys_id/edit", SystemLive.Index, :edit
+      live "/organisations/:org_id/systems/new", OrganisationLive.Show, :new_system
+      live "/organisations/:org_id/systems/:sys_id/edit", SystemLive.Show, :edit_system
 
       live "/organisations/:org_id/systems/:sys_id", SystemLive.Show, :show
       live "/organisations/:org_id/systems/:sys_id/show/edit", SystemLive.Show, :edit
+      live "/organisations/:org_id/systems/:sys_id/assets/new", SystemLive.Show, :new_asset
+      live "/organisations/:org_id/systems/:sys_id/threats/new", SystemLive.Show, :new_threat
 
       live "/organisations/:org_id/threats", ThreatLive.Index, :index
-      live "/organisations/:org_id/threats/new", ThreatLive.Index, :new
+      live "/organisations/:org_id/threats/new", OrganisationLive.Show, :new_threat
 
       live "/organisations/:org_id/threats/:threat_id/edit",
-           ThreatLive.Index,
-           :edit
+           ThreatLive.Show,
+           :edit_threat
 
       live "/organisations/:org_id/threats/:threat_id", ThreatLive.Show, :show
 
@@ -98,27 +100,17 @@ defmodule ThreatShieldWeb.Router do
            ThreatLive.Show,
            :edit
 
-      live "/organisations/:org_id/threats/:threat_id/risks", RiskLive.Index, :index
-      live "/organisations/:org_id/threats/:threat_id/risks/new", RiskLive.Index, :new
-      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/edit", RiskLive.Index, :edit
+      live "/organisations/:org_id/threats/:threat_id/risks/new", ThreatLive.Show, :new_risk
+
+      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/edit",
+           RiskLive.Show,
+           :edit_risk
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.Show, :show
 
-      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/show/edit",
-           RiskLive.Show,
-           :edit
-
-      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations",
-           MitigationLive.Index,
-           :index
-
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/new",
-           MitigationLive.Index,
-           :new
-
-      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id/edit",
-           MitigationLive.Index,
-           :edit
+           RiskLive.Show,
+           :new_mitigation
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id",
            MitigationLive.Show,
@@ -126,10 +118,10 @@ defmodule ThreatShieldWeb.Router do
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id/show/edit",
            MitigationLive.Show,
-           :edit
+           :edit_mitigation
 
       live "/organisations/:org_id/assets", AssetLive.Index, :index
-      live "/organisations/:org_id/assets/new", AssetLive.Index, :new
+      live "/organisations/:org_id/assets/new", OrganisationLive.Show, :new_asset
       live "/organisations/:org_id/assets/:asset_id/edit", AssetLive.Index, :edit
 
       live "/organisations/:org_id/assets/:asset_id", AssetLive.Show, :show

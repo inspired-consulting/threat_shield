@@ -10,16 +10,8 @@
 #
 msgid ""
 msgstr ""
-<<<<<<< HEAD
-=======
 
-#: lib/threat_shield_web/live/threat_live/show.html.heex:8
+#: lib/threat_shield_web/live/threat_live/show.html.heex:24
 #, elixir-autogen, elixir-format
-msgid "Delete"
+msgid "Risks"
 msgstr ""
-
-#: lib/threat_shield_web/live/threat_live/show.html.heex:14
-#, elixir-autogen, elixir-format
-msgid "Edit"
-msgstr ""
->>>>>>> main

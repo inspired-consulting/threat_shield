@@ -134,4 +134,18 @@ defmodule ThreatShield.Mitigations do
     |> Mitigation.select()
     |> Repo.delete_all()
   end
+
+  def add_mitigation(%User{id: user_id}, risk_id, name, description) do
+    Repo.transaction(fn ->
+      risk =
+        Risk.get(risk_id)
+        |> Risk.for_user(user_id)
+        |> Repo.one!()
+
+      %Mitigation{name: name, description: description}
+      |> change_mitigation()
+      |> Ecto.Changeset.put_assoc(:risk, risk)
+      |> Repo.insert!()
+    end)
+  end
 end

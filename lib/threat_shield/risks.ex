@@ -13,6 +13,10 @@ defmodule ThreatShield.Risks do
   def get_risk!(%User{id: user_id}, risk_id) do
     Risk.get(risk_id)
     |> Risk.for_user(user_id)
+    |> Risk.preload_threat()
+    |> Risk.with_organisation()
+    |> Risk.with_org_systems()
+    |> Risk.with_mitigations()
     |> Repo.one!()
   end
 
@@ -68,5 +72,19 @@ defmodule ThreatShield.Risks do
   """
   def change_risk(%Risk{} = risk, attrs \\ %{}) do
     Risk.changeset(risk, attrs)
+  end
+
+  def add_risk(%User{id: user_id}, threat_id, name, description) do
+    Repo.transaction(fn ->
+      threat =
+        Threat.get(threat_id)
+        |> Threat.for_user(user_id)
+        |> Repo.one!()
+
+      %Risk{name: name, description: description}
+      |> change_risk()
+      |> Ecto.Changeset.put_assoc(:threat, threat)
+      |> Repo.insert!()
+    end)
   end
 end

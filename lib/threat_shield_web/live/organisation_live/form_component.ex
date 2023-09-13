@@ -88,8 +88,8 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
     |> Map.new()
   end
 
-  defp save_organisation(socket, :edit, organisation_params) do
-    %{current_user: current_user} = socket.assigns
+  defp save_organisation(socket, :edit_organisation, organisation_params) do
+    current_user = socket.assigns.current_user
 
     case Organisations.update_organisation(
            socket.assigns.organisation,

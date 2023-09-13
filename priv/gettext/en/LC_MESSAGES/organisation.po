@@ -14,57 +14,57 @@ msgstr ""
 #: lib/threat_shield/const/locations.ex:319
 #, elixir-autogen, elixir-format
 msgid "Please choose your country"
-msgstr "Please choose your country"
+msgstr ""
 
 #: lib/threat_shield/const/locations.ex:10
 #, elixir-autogen, elixir-format
 msgid "Afghanistan"
-msgstr "Afghanistan"
+msgstr ""
 
 #: lib/threat_shield/const/locations.ex:13
 #, elixir-autogen, elixir-format
 msgid "Albania"
-msgstr "Albania"
+msgstr ""
 
 #: lib/threat_shield/const/locations.ex:77
 #, elixir-autogen, elixir-format
 msgid "Algeria"
-msgstr "Algeria"
+msgstr ""
 
 #: lib/threat_shield/const/locations.ex:18
 #, elixir-autogen, elixir-format
 msgid "American Samoa"
-msgstr "American Samoa"
+msgstr ""
 
 #: lib/threat_shield/const/locations.ex:8
 #, elixir-autogen, elixir-format
 msgid "Andorra"
-msgstr "Andorra"
+msgstr ""
 
 #: lib/threat_shield/const/locations.ex:15
 #, elixir-autogen, elixir-format
 msgid "Angola"
-msgstr "Angola"
+msgstr ""
 
 #: lib/threat_shield/const/locations.ex:12
 #, elixir-autogen, elixir-format
 msgid "Anguilla"
-msgstr "Anguilla"
+msgstr ""
 
 #: lib/threat_shield/const/locations.ex:16
 #, elixir-autogen, elixir-format
 msgid "Antarctica"
-msgstr "Antarctica"
+msgstr ""
 
 #: lib/threat_shield/const/locations.ex:11
 #, elixir-autogen, elixir-format
-(msgid ".+?")
-(msgstr msgid "Antigua and Barbuda") 
+msgid "Antigua and Barbuda"
+msgstr ""
 
 #: lib/threat_shield/const/locations.ex:17
 #, elixir-autogen, elixir-format
 msgid "Argentina"
-msgstr "Argentina"
+msgstr ""
 
 #: lib/threat_shield/const/locations.ex:14
 #, elixir-autogen, elixir-format
@@ -1244,7 +1244,7 @@ msgstr ""
 #: lib/threat_shield/const/locations.ex:308
 #, elixir-autogen, elixir-format
 msgid "Yemen"
-msgstr "Yemen"
+msgstr ""
 
 #: lib/threat_shield/const/locations.ex:311
 #, elixir-autogen, elixir-format
@@ -1254,9 +1254,9 @@ msgstr ""
 #: lib/threat_shield/const/locations.ex:312
 #, elixir-autogen, elixir-format
 msgid "Zimbabwe"
-msgstr "Zimbabwe"
+msgstr ""
 
 #: lib/threat_shield/const/locations.ex:22
 #, elixir-autogen, elixir-format
 msgid "Åland Islands"
-msgstr "Åland Islands"
+msgstr ""

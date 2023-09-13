@@ -10,3 +10,13 @@ msgid ""
 msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/threat_shield_web/live/threat_live/show.html.heex:8
+#, elixir-autogen, elixir-format
+msgid "Delete"
+msgstr ""
+
+#: lib/threat_shield_web/live/threat_live/show.html.heex:14
+#, elixir-autogen, elixir-format
+msgid "Edit"
+msgstr ""

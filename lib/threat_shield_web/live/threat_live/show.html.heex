@@ -1,18 +1,17 @@
 <.header>
-  Threat <%= @threat.id %>
-  <:subtitle>This is a threat record from your database.</:subtitle>
+  <%= dgettext("threats", "Threat") %>
   <:actions>
     <.link
       phx-click={JS.push("delete", value: %{threat_id: @threat.id})}
       data-confirm="Are you sure?"
     >
-      Delete
+      <.button><%= dgettext("common", "Delete") %></.button>
     </.link>
     <.link
-      patch={~p"/organisations/#{@organisation.id}/threats/#{@threat}/show/edit"}
+      patch={~p"/organisations/#{@organisation.id}/threats/#{@threat}/edit"}
       phx-click={JS.push_focus()}
     >
-      <.button>Edit threat</.button>
+      <.button><%= dgettext("common", "Edit") %></.button>
     </.link>
   </:actions>
 </.header>
@@ -22,12 +21,54 @@
   <:item title="System"><%= system_name(@threat) %></:item>
 </.list>
 
+<h2><%= dgettext("risks", "Risks") %></h2>
+
+<.button
+  disabled={not is_nil(@asking_ai)}
+  phx-click="suggest_risks"
+  phx-value-threat_id={@threat.id}
+>
+  <%= dgettext("risks", "Suggest Risks") %>
+</.button>
+<.link patch={~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/new"}>
+  <.button>New Risk</.button>
+</.link>
+
+<.table :if={not Enum.empty?(@risk_suggestions)} id="risk_suggestions" rows={@risk_suggestions}>
+  <:col :let={suggestion} label="Name"><%= suggestion.name %></:col>
+  <:col :let={suggestion} label="Description"><%= suggestion.description %></:col>
+
+  <:action :let={suggestion}>
+    <.link phx-click={JS.push("ignore", value: %{description: suggestion.description})}>
+      Ignore
+    </.link>
+    <.link phx-click={
+      JS.push("add", value: %{name: suggestion.name, description: suggestion.description})
+    }>
+      Add
+    </.link>
+  </:action>
+</.table>
+
+<%= if !Enum.empty?(@threat.risks) do %>
+  <.live_component
+    module={ThreatShieldWeb.RiskLive.RiskComponent}
+    organisation={@organisation}
+    id={"risks_for_threat_#{@threat.id}"}
+    threat={@threat}
+  />
+<% else %>
+  <p>
+    There are no risks associated with this threat. You may add them manually or have them suggested using the buttons above.
+  </p>
+<% end %>
+
 <.back navigate={~p"/organisations/#{@organisation.id}/threats"}>
-  Back to threats
+  Back to threats (Changeme)
 </.back>
 
 <.modal
-  :if={@live_action == :edit}
+  :if={@live_action == :edit_threat}
   id="threat-modal"
   show
   on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/threats/#{@threat}")}
@@ -44,3 +85,35 @@
     patch={~p"/organisations/#{@organisation.id}/threats/#{@threat}"}
   />
 </.modal>
+
+<.modal
+  :if={@live_action in [:new_risk]}
+  id="risk-modal"
+  show
+  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/threats/#{@threat.id}")}
+>
+  <.live_component
+    module={ThreatShieldWeb.RiskLive.FormComponent}
+    id={@risk.id || :new}
+    title={@page_title}
+    action={@live_action}
+    organisation={@organisation}
+    threat={@threat}
+    risk={@risk}
+    current_user={@current_user}
+    patch={~p"/organisations/#{@organisation.id}/threats/#{@threat.id}"}
+  />
+</.modal>
+
+<%= if not is_nil(@asking_ai) do %>
+  <div id="suggest-spinner">
+    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 290 290">
+      <g transform="translate(0.000000,1280) scale(0.100000,-0.100000)" fill="darkgrey">
+        <path d="M0,12636.1c-13.8-1147,370.3-2328.7,1401.8-2740.7c1093.3,427.2,1446.6,1758.7,1400.6,2879.3
+        c-607.5-271.1-771.9-348.2-1400.6-55.3c-663.9-298.4-766.8-216.5-1401.8,55.6V12636.1z M1432.6,12430.6
+        c504-204.5,686-201.1,1114.6-38.2c-29-900.9-360.4-1842-1145-2227.3C611.3,10548.2,281.8,11515.9,256,12392.4
+        c453.8-177.2,647.2-148.4,1112,37.1C1407.8,12444.6,1393.6,12445.7,1432.6,12430.6z" />
+      </g>
+    </svg>
+  </div>
+<% end %>

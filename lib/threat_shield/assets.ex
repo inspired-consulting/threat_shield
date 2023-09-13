@@ -9,6 +9,7 @@ defmodule ThreatShield.Assets do
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Accounts.User
   alias ThreatShield.Systems.System
+  alias ThreatShield.Systems
   alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Organisation
 
@@ -74,6 +75,18 @@ defmodule ThreatShield.Assets do
 
   def change_asset(%Asset{} = asset, attrs \\ %{}) do
     Asset.changeset(asset, attrs)
+  end
+
+  def add_asset_with_description(%User{} = user, %System{id: sys_id}, description) do
+    Repo.transaction(fn ->
+      system = Systems.get_system!(user, sys_id)
+
+      changeset =
+        %Asset{organisation: system.organisation, system: system, description: description}
+        |> Ecto.Changeset.change()
+
+      Repo.insert!(changeset)
+    end)
   end
 
   def add_asset_with_description(%User{} = user, org_id, description) do

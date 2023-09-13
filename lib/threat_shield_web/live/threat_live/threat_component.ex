@@ -11,9 +11,12 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatComponent do
     <.table
       id="threats"
       rows={@threats}
+      row_click={
+        fn threat -> JS.navigate(~p"/organisations/#{@organisation.id}/threats/#{threat.id}") end
+        }
     >
-      <:col :let={{_id, threat}} label="Description"><%= threat.description %></:col>
-      <:col :let={{_id, threat}} label="System"><%= system_name(threat) %></:col>
+      <:col :let={threat} label="Description"><%= threat.description %></:col>
+      <:col :if={!assigns[:hide_system]} :let={threat} label="System"><%= system_name(threat) %></:col>
     </.table>
     </div>
     """
