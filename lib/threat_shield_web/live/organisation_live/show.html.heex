@@ -86,6 +86,7 @@
     module={ThreatShieldWeb.AssetLive.AssetComponent}
     organisation={@organisation}
     assets={@organisation.assets}
+    path_prefix={"/organisations/#{@organisation.id}"}
     id={"assets_for_org_#{@organisation.id}"}
   />
 <% else %>

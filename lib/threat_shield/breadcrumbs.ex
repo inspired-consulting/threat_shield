@@ -36,6 +36,7 @@ defmodule ThreatShield.Breadcrumbs do
       ":org_id" -> context[:organisation].id
       ":threat_id" -> context[:threat].id
       ":risk_id" -> context[:risk].id
+      ":sys_id" -> context[:system].id
       _ -> chunk
     end
   end

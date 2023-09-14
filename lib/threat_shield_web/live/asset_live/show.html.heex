@@ -8,10 +8,10 @@
       <.button><%= dgettext("common", "Delete") %></.button>
     </.link>
     <.link
-      patch={~p"/organisations/#{@organisation.id}/assets/#{@asset}/show/edit"}
+      patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}/show/edit"}
       phx-click={JS.push_focus()}
     >
-      <.button>Edit asset</.button>
+      <.button><%= dgettext("asset", "Edit asset") %></.button>
     </.link>
   </:actions>
 </.header>
@@ -25,7 +25,7 @@
   :if={@live_action == :edit}
   id="asset-modal"
   show
-  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/assets/#{@asset}")}
+  on_cancel={JS.patch(get_path_prefix(assigns) <> "/assets/#{@asset.id}")}
 >
   <.live_component
     module={ThreatShieldWeb.AssetLive.FormComponent}
@@ -35,7 +35,7 @@
     asset={@asset}
     current_user={@current_user}
     organisation={@organisation}
-    system_options={list_system_options(@organisation)}
-    patch={~p"/organisations/#{@organisation.id}/assets/#{@asset}"}
+    system_options={assigns[:system_options]}
+    patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}"}
   />
 </.modal>

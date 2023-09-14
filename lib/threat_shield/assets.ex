@@ -13,17 +13,22 @@ defmodule ThreatShield.Assets do
   alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Organisation
 
-  def get_organisation!(%User{} = user, org_id) do
-    Organisations.get_organisation!(user, org_id)
-    |> Repo.preload(assets: [:system])
-    |> Repo.preload(:systems)
+  def get_organisation!(%User{id: user_id}, org_id) do
+    Organisation.get(org_id)
+    |> Organisation.for_user(user_id)
+    |> Organisation.with_systems()
+    |> Organisation.with_threats()
+    |> Organisation.with_assets()
+    |> Repo.one!()
   end
 
   def get_asset!(%User{id: user_id}, asset_id) do
     Asset.get(asset_id)
     |> Asset.for_user(user_id)
+    |> Asset.preload_organisation()
+    |> Asset.with_org_systems()
+    |> Asset.with_system()
     |> Repo.one!()
-    |> Repo.preload([:organisation, :system])
   end
 
   def create_asset(%User{} = user, %Organisation{} = organisation, attrs \\ %{}) do
