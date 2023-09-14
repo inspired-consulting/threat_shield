@@ -8,7 +8,7 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
 
   import ThreatShield.Threats.Threat, only: [system_name: 1]
   import ThreatShield.Organisations.Organisation, only: [list_system_options: 1]
-  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, get_path_prefix: 1]
 
   @impl true
   def mount(%{"threat_id" => threat_id} = params, _session, socket) do
@@ -159,16 +159,5 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
       AI.suggest_risks_for_threat(threat)
 
     {:ai_results, risk_descriptions}
-  end
-
-  defp get_path_prefix(assigns) do
-    if assigns.called_via_system do
-      case assigns[:system] do
-        nil -> "/organisations/#{assigns.organisation.id}"
-        system -> "/organisations/#{assigns.organisation.id}/systems/#{system.id}"
-      end
-    else
-      "/organisations/#{assigns.organisation.id}"
-    end
   end
 end

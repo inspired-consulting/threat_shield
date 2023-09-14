@@ -3,7 +3,7 @@ defmodule ThreatShieldWeb.MitigationLive.Show do
 
   alias ThreatShield.Mitigations
 
-  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, get_path_prefix: 1]
 
   @impl true
   def mount(%{"mitigation_id" => mitigation_id} = params, _session, socket) do
@@ -57,15 +57,4 @@ defmodule ThreatShieldWeb.MitigationLive.Show do
 
   defp page_title(:show), do: "Show Mitigation"
   defp page_title(:edit_mitigation), do: "Edit Mitigation"
-
-  defp get_path_prefix(assigns) do
-    if assigns.called_via_system do
-      case assigns[:system] do
-        nil -> "/organisations/#{assigns.organisation.id}"
-        system -> "/organisations/#{assigns.organisation.id}/systems/#{system.id}"
-      end
-    else
-      "/organisations/#{assigns.organisation.id}"
-    end
-  end
 end

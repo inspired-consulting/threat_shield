@@ -9,7 +9,7 @@ defmodule ThreatShieldWeb.AssetLive.Show do
   import ThreatShield.Organisations.Organisation,
     only: [list_system_options: 1]
 
-  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, get_path_prefix: 1]
 
   @impl true
   def mount(%{"asset_id" => asset_id} = params, _session, socket) do
@@ -62,17 +62,6 @@ defmodule ThreatShieldWeb.AssetLive.Show do
      |> assign(organisation: asset.organisation)
      |> assign(:system, asset.system)
      |> assign(page_title: "Show Asset")}
-  end
-
-  defp get_path_prefix(assigns) do
-    if assigns.called_via_system do
-      case assigns[:system] do
-        nil -> "/organisations/#{assigns.organisation.id}"
-        system -> "/organisations/#{assigns.organisation.id}/systems/#{system.id}"
-      end
-    else
-      "/organisations/#{assigns.organisation.id}"
-    end
   end
 
   defp page_title(:show), do: "Show Asset"

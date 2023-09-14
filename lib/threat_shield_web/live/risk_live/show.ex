@@ -6,7 +6,7 @@ defmodule ThreatShieldWeb.RiskLive.Show do
   alias ThreatShield.Mitigations
   alias ThreatShield.AI
 
-  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, get_path_prefix: 1]
 
   @impl true
   def mount(%{"risk_id" => risk_id} = params, _session, socket) do
@@ -151,16 +151,5 @@ defmodule ThreatShieldWeb.RiskLive.Show do
       AI.suggest_mitigations_for_risk(risk)
 
     {:ai_results, mitigation_descriptions}
-  end
-
-  defp get_path_prefix(assigns) do
-    if assigns.called_via_system do
-      case assigns[:system] do
-        nil -> "/organisations/#{assigns.organisation.id}"
-        system -> "/organisations/#{assigns.organisation.id}/systems/#{system.id}"
-      end
-    else
-      "/organisations/#{assigns.organisation.id}"
-    end
   end
 end
