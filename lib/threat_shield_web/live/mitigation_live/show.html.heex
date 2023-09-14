@@ -9,7 +9,7 @@
     </.link>
     <.link
       patch={
-        ~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/#{@mitigation}/show/edit"
+        get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/#{@mitigation.id}/edit"
       }
       phx-click={JS.push_focus()}
     >
@@ -24,14 +24,14 @@
   <:item title="Is implemented"><%= @mitigation.is_implemented %></:item>
 </.list>
 
-
 <.modal
   :if={@live_action == :edit_mitigation}
   id="mitigation-modal"
   show
   on_cancel={
     JS.patch(
-      ~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/#{@mitigation}"
+      get_path_prefix(assigns) <>
+        "/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/#{@mitigation.id}"
     )
   }
 >
@@ -42,7 +42,7 @@
     action={@live_action}
     mitigation={@mitigation}
     patch={
-      ~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/#{@mitigation}"
+      get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/#{@mitigation.id}"
     }
   />
 </.modal>

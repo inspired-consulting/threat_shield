@@ -9,7 +9,7 @@ defmodule ThreatShieldWeb.RiskLive.RiskComponent do
       id={"risks_for_threat_#{@threat.id}"}
       rows={@threat.risks}
       row_click={
-        fn risk -> JS.navigate(~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{risk.id}") end
+        fn risk -> JS.navigate(@path_prefix <> "/threats/#{@threat.id}/risks/#{risk.id}") end
         }
     >
     <:col :let={risk} label="Name"><%= risk.name %></:col>

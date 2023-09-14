@@ -11,24 +11,39 @@ defmodule ThreatShield.Breadcrumbs do
     }
   end
 
-  def breadcrumb_lookup() do
+  defp breadcrumb_lookup() do
     %{
-      :home => %{name: "Home", path: "/dashboard"},
-      :organisations => %{name: "Organisation", path: "/organisations/:org_id"},
-      :assets => %{name: "Asset", path: "/organisations/:org_id/assets/:asset_id"},
-      :systems => %{name: "System", path: "/organisations/:org_id/systems/:sys_id"},
-      :threats => %{name: "Threat", path: "/organisations/:org_id/threats/:threat_id"},
-      :risks => %{name: "Risk", path: "/organisations/:org_id/threats/:threat_id/risks/:risk_id"},
+      :home => %{name: "Home", path: ""},
+      :organisations => %{name: "Organisation", path: "organisations/:org_id"},
+      :assets => %{name: "Asset", path: "assets/:asset_id"},
+      :systems => %{name: "System", path: "systems/:sys_id"},
+      :threats => %{name: "Threat", path: "threats/:threat_id"},
+      :risks => %{name: "Risk", path: "risks/:risk_id"},
       :mitigations => %{
         name: "Mitigation",
-        path:
-          "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id"
+        path: "mitigations/:mitigation_id"
       },
       :members => %{
         name: "Members",
-        path: "organisations/:org_id/members"
+        path: "members"
       }
     }
+  end
+
+  def generate_path(breadcrumb, all_breadcrumbs, context) do
+    all_breadcrumbs
+    |> Enum.reverse()
+    |> Enum.drop_while(fn b -> b != breadcrumb end)
+    |> Enum.reverse()
+    |> Enum.map(fn b -> Map.get(breadcrumb_lookup(), b) end)
+    |> Enum.map(fn b -> Map.get(b, :path) end)
+    |> Enum.join("/")
+    |> fill_in_ids(context)
+  end
+
+  def get_name(breadcrumb) do
+    %{name: name} = Map.get(breadcrumb_lookup(), breadcrumb)
+    name
   end
 
   defp replace_chunk(chunk, context) do
@@ -41,7 +56,7 @@ defmodule ThreatShield.Breadcrumbs do
     end
   end
 
-  def fill_in_ids(path, context) do
+  defp fill_in_ids(path, context) do
     path
     |> String.split("/")
     |> Enum.map(fn chunk -> replace_chunk(chunk, context) end)

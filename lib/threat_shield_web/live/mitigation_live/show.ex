@@ -6,32 +6,31 @@ defmodule ThreatShieldWeb.MitigationLive.Show do
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
 
   @impl true
-  def mount(%{"risk_id" => risk_id}, _session, socket) do
+  def mount(%{"mitigation_id" => mitigation_id} = params, _session, socket) do
     user = socket.assigns.current_user
-    risk = Mitigations.get_risk!(user, risk_id)
+    mitigation = Mitigations.get_mitigation!(user, mitigation_id)
 
     {:ok,
      socket
-     |> assign(risk: risk)
-     |> assign(threat: risk.threat)
-     |> assign(organisation: risk.threat.organisation)}
+     |> assign(mitigation: mitigation)
+     |> assign(risk: mitigation.risk)
+     |> assign(threat: mitigation.risk.threat)
+     |> assign(organisation: mitigation.risk.threat.organisation)
+     |> assign(system: mitigation.risk.threat.system)
+     |> assign(:called_via_system, Map.has_key?(params, "sys_id"))}
   end
 
   @impl true
-  def handle_params(%{"mitigation_id" => id}, url, socket) do
-    user = socket.assigns.current_user
-
+  def handle_params(_, url, socket) do
     {:noreply,
      socket
      |> add_breadcrumbs(url)
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:mitigation, Mitigations.get_mitigation!(user, id))}
+     |> assign(:page_title, page_title(socket.assigns.live_action))}
   end
 
   @impl true
   def handle_event("delete", %{"mitigation_id" => id}, socket) do
     current_user = socket.assigns.current_user
-    organisation = socket.assigns.organisation
     risk = socket.assigns.risk
     threat = socket.assigns.threat
 
@@ -39,10 +38,34 @@ defmodule ThreatShieldWeb.MitigationLive.Show do
 
     {:noreply,
      push_navigate(socket,
-       to: "/organisations/#{organisation.id}/threats/#{threat.id}/risks/#{risk.id}"
+       to: get_path_prefix(socket.assigns) <> "/threats/#{threat.id}/risks/#{risk.id}"
      )}
+  end
+
+  @impl true
+  def handle_info(
+        {ThreatShieldWeb.MitigationLive.FormComponent, {:saved, mitigation}},
+        socket
+      ) do
+    mitigation = Mitigations.get_mitigation!(socket.assigns.current_user, mitigation.id)
+
+    {:noreply,
+     socket
+     |> assign(mitigation: mitigation)
+     |> assign(page_title: "Show Mitigation")}
   end
 
   defp page_title(:show), do: "Show Mitigation"
   defp page_title(:edit_mitigation), do: "Edit Mitigation"
+
+  defp get_path_prefix(assigns) do
+    if assigns.called_via_system do
+      case assigns[:system] do
+        nil -> "/organisations/#{assigns.organisation.id}"
+        system -> "/organisations/#{assigns.organisation.id}/systems/#{system.id}"
+      end
+    else
+      "/organisations/#{assigns.organisation.id}"
+    end
+  end
 end

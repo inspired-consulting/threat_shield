@@ -125,17 +125,37 @@ defmodule ThreatShieldWeb.Router do
            RiskLive.Show,
            :edit_risk
 
+      live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id",
+           RiskLive.Show,
+           :show
+
+      live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id/edit",
+           RiskLive.Show,
+           :edit_risk
+
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.Show, :show
+
+      live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id/mitigations/new",
+           RiskLive.Show,
+           :new_mitigation
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/new",
            RiskLive.Show,
            :new_mitigation
 
+      live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id",
+           MitigationLive.Show,
+           :show
+
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id",
            MitigationLive.Show,
            :show
 
-      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id/show/edit",
+      live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id/edit",
+           MitigationLive.Show,
+           :edit_mitigation
+
+      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id/edit",
            MitigationLive.Show,
            :edit_mitigation
 

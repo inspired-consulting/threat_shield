@@ -1,12 +1,8 @@
-<.link patch={~p"/organisations/#{@organisation.id}/systems"}>
-  <.button>Systems</.button>
+<.link patch={~p"/organisations/#{@organisation.id}"}>
+  <.button>Organisation Management</.button>
 </.link>
 
-<.link patch={~p"/organisations/#{@organisation.id}/assets"}>
-  <.button>Assets</.button>
-</.link>
-
-<.link patch={~p"/organisations/#{@organisation.id}/threats?suggest=true"}>
+<.link patch={~p"/organisations/#{@organisation.id}/?suggest_threats=true"}>
   <.button>Suggest Threats</.button>
 </.link>
 
@@ -16,6 +12,7 @@
   id="threats"
   threats={@threats}
   organisation={@organisation}
+  path_prefix={@path_prefix}
 />
 
 <h2>Risks</h2>
@@ -26,6 +23,7 @@
     id={"risks_for_threat_#{threat.id}"}
     organisation={@organisation}
     threat={threat}
+    path_prefix={@path_prefix}
   />
 <% end %>
 
@@ -39,6 +37,7 @@
       organisation={@organisation}
       threat={threat}
       risk={risk}
+      path_prefix={@path_prefix}
     />
   <% end %>
 <% end %>

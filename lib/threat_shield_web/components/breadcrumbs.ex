@@ -15,7 +15,7 @@ defmodule ThreatShieldWeb.Breadcrumbs do
         <.breadcrumb_item
           :for={{breadcrumb, index} <- Enum.with_index(@breadcrumbs)}
           type={index_to_item_type(index, @size)}
-          navigate={get_link(breadcrumb, @context)}
+          navigate={generate_path(breadcrumb, assigns.breadcrumbs, @context)}
           text={get_text(breadcrumb)}
         />
       </ol>
@@ -23,20 +23,12 @@ defmodule ThreatShieldWeb.Breadcrumbs do
     """
   end
 
-  defp get_link(breadcrumb, context) do
-    %{path: path} =
-      Breadcrumbs.breadcrumb_lookup()
-      |> Map.get(breadcrumb)
-
-    path |> Breadcrumbs.fill_in_ids(context)
+  defp generate_path(breadcrumb, all_breadcrumbs, context) do
+    Breadcrumbs.generate_path(breadcrumb, all_breadcrumbs, context)
   end
 
   defp get_text(breadcrumb) do
-    %{name: name} =
-      Breadcrumbs.breadcrumb_lookup()
-      |> Map.get(breadcrumb)
-
-    name
+    Breadcrumbs.get_name(breadcrumb)
   end
 
   defp index_to_item_type(0, _size), do: "first"
@@ -50,7 +42,7 @@ defmodule ThreatShieldWeb.Breadcrumbs do
   defp breadcrumb_item(assigns) when assigns.type == "first" do
     ~H"""
     <li class="inline-flex items-center">
-      <.link navigate={@navigate} class="inline-flex items-center text-sm font-medium">
+      <.link navigate={"/dashboard"} class="inline-flex items-center text-sm font-medium">
         <.icon name="hero-home" class="h-4 w-4" />
       </.link>
     </li>
