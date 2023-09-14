@@ -11,7 +11,7 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
 
   @impl true
-  def mount(%{"threat_id" => threat_id}, _session, socket) do
+  def mount(%{"threat_id" => threat_id} = params, _session, socket) do
     current_user = socket.assigns.current_user
     threat = Threats.get_threat!(current_user, threat_id)
 
@@ -19,11 +19,20 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
       socket
       |> assign(:threat, threat)
       |> assign(:organisation, threat.organisation)
+      |> assign(:system, threat.system)
       |> assign(:page_title, page_title(socket.assigns.live_action))
       |> assign(:asking_ai, nil)
       |> assign(:risk_suggestions, [])
+      |> assign(:called_via_system, Map.has_key?(params, "sys_id"))
 
-    {:ok, socket}
+    socket_with_options =
+      if socket.assigns.called_via_system do
+        socket
+      else
+        assign(socket, :system_options, list_system_options(threat.organisation))
+      end
+
+    {:ok, socket_with_options}
   end
 
   defp apply_action(socket, :new_risk, _params) do
@@ -56,9 +65,7 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
 
     {:ok, _} = Threats.delete_threat_by_id(user, id)
 
-    organisation = socket.assigns.organisation
-
-    {:noreply, push_navigate(socket, to: "/organisations/#{organisation.id}/threats")}
+    {:noreply, push_navigate(socket, to: get_path_prefix(socket.assigns))}
   end
 
   @impl true
@@ -152,5 +159,16 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
       AI.suggest_risks_for_threat(threat)
 
     {:ai_results, risk_descriptions}
+  end
+
+  defp get_path_prefix(assigns) do
+    if assigns.called_via_system do
+      case assigns[:system] do
+        nil -> "/organisations/#{assigns.organisation.id}"
+        system -> "/organisations/#{assigns.organisation.id}/systems/#{system.id}"
+      end
+    else
+      "/organisations/#{assigns.organisation.id}"
+    end
   end
 end

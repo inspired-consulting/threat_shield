@@ -200,6 +200,7 @@
     module={ThreatShieldWeb.ThreatLive.ThreatComponent}
     organisation={@organisation}
     threats={@organisation.threats}
+    path_prefix={"/organisations/#{@organisation.id}"}
     id={"threats_for_org_#{@organisation.id}"}
   />
 <% else %>
