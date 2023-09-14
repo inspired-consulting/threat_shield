@@ -17,20 +17,31 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
 
   @impl true
-  def mount(%{"org_id" => org_id}, _session, socket) do
+  def mount(%{"org_id" => org_id} = params, _session, socket) do
     user = socket.assigns.current_user
 
     organisation = Organisations.get_organisation!(user, org_id)
 
-    {:ok,
-     socket
-     |> assign(:attribute_keys, attribute_keys())
-     |> assign(:organisation, organisation)
-     |> assign(locations_options: Locations.list_locations())
-     |> assign(:asking_ai_for_assets, nil)
-     |> assign(:asking_ai_for_threats, nil)
-     |> assign(:asset_suggestions, [])
-     |> assign(:threat_suggestions, [])}
+    suggest_threats = Map.has_key?(params, "suggest_threats")
+
+    socket =
+      socket
+      |> assign(:attribute_keys, attribute_keys())
+      |> assign(:organisation, organisation)
+      |> assign(locations_options: Locations.list_locations())
+      |> assign(:asking_ai_for_assets, nil)
+      |> assign(:asking_ai_for_threats, nil)
+      |> assign(:asset_suggestions, [])
+      |> assign(:threat_suggestions, [])
+
+    socket_with_suggestions =
+      if suggest_threats do
+        start_threat_suggestions(socket.assigns.organisation.id, socket)
+      else
+        socket
+      end
+
+    {:ok, socket_with_suggestions}
   end
 
   @impl true
@@ -167,6 +178,10 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
 
   @impl true
   def handle_event("suggest_threats", %{"org_id" => org_id}, socket) do
+    {:noreply, start_threat_suggestions(org_id, socket)}
+  end
+
+  defp start_threat_suggestions(org_id, socket) do
     user = socket.assigns.current_user
 
     task =
@@ -178,7 +193,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
       socket
       |> assign(asking_ai_for_threats: task.ref)
 
-    {:noreply, socket}
+    socket
   end
 
   @impl true

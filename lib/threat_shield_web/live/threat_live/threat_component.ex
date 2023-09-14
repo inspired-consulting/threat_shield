@@ -12,7 +12,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatComponent do
       id="threats"
       rows={@threats}
       row_click={
-        fn threat -> JS.navigate(~p"/organisations/#{@organisation.id}/threats/#{threat.id}") end
+        fn threat -> JS.navigate(@path_prefix <> "/threats/#{threat.id}") end
         }
     >
       <:col :let={threat} label="Description"><%= threat.description %></:col>

@@ -48,6 +48,8 @@ defmodule ThreatShield.Mitigations do
   def get_mitigation!(%User{id: user_id}, id) do
     Mitigation.get(id)
     |> Mitigation.for_user(user_id)
+    |> Mitigation.preload_risk()
+    |> Mitigation.preload_full_threat()
     |> Repo.one!()
   end
 

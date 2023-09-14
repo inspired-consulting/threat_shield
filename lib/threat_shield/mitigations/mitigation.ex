@@ -32,6 +32,21 @@ defmodule ThreatShield.Mitigations.Mitigation do
     |> Risk.for_user(user_id)
   end
 
+  def preload_risk(query) do
+    query
+    |> preload([risk: r], risk: r)
+  end
+
+  def preload_full_threat(query) do
+    query
+    |> join(:left, [threat: t], assoc(t, :system), as: :threat_system)
+    |> join(:left, [threat: t], assoc(t, :organisation), as: :threat_organisation)
+    |> preload([risk: r, threat: t, threat_system: s], risk: {r, threat: {t, system: s}})
+    |> preload([risk: r, threat: t, threat_organisation: o],
+      risk: {r, threat: {t, organisation: o}}
+    )
+  end
+
   def select(query) do
     select(query, [mitigation: m], m)
   end

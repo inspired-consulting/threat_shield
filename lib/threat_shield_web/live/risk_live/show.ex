@@ -6,10 +6,10 @@ defmodule ThreatShieldWeb.RiskLive.Show do
   alias ThreatShield.Mitigations
   alias ThreatShield.AI
 
-  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, get_path_prefix: 1]
 
   @impl true
-  def mount(%{"risk_id" => risk_id}, _session, socket) do
+  def mount(%{"risk_id" => risk_id} = params, _session, socket) do
     user = socket.assigns.current_user
     risk = Risks.get_risk!(user, risk_id)
 
@@ -18,9 +18,11 @@ defmodule ThreatShieldWeb.RiskLive.Show do
      |> assign(risk: risk)
      |> assign(threat: risk.threat)
      |> assign(organisation: risk.threat.organisation)
+     |> assign(system: risk.threat.system)
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:asking_ai, nil)
-     |> assign(:mitigation_suggestions, [])}
+     |> assign(:mitigation_suggestions, [])
+     |> assign(:called_via_system, Map.has_key?(params, "sys_id"))}
   end
 
   @impl true
@@ -82,14 +84,13 @@ defmodule ThreatShieldWeb.RiskLive.Show do
   @impl true
   def handle_event("delete", %{"risk_id" => id}, socket) do
     current_user = socket.assigns.current_user
-    organisation = socket.assigns.organisation
     threat = socket.assigns.threat
 
     {1, [_risk | _]} = Risks.delete_risk_by_id!(current_user, id)
 
     {:noreply,
      push_navigate(socket,
-       to: "/organisations/#{organisation.id}/threats/#{threat.id}"
+       to: get_path_prefix(socket.assigns) <> "/threats/#{threat.id}"
      )}
   end
 

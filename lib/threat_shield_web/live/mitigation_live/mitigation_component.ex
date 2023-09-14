@@ -9,7 +9,7 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationComponent do
       id={"mitigations_for_risk_#{@risk.id}"}
       rows={@risk.mitigations}
       row_click={
-        fn mitigation -> JS.navigate(~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/#{mitigation.id}") end
+        fn mitigation -> JS.navigate(@path_prefix <> "/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/#{mitigation.id}") end
         }
     >
       <:col :let={mitigation} label="Name"><%= mitigation.name %></:col>

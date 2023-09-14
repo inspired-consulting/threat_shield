@@ -5,7 +5,7 @@
       <.button><%= dgettext("common", "Delete") %></.button>
     </.link>
     <.link
-      patch={~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk}/edit"}
+      patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/edit"}
       phx-click={JS.push_focus()}
     >
       <.button><%= dgettext("common", "Edit") %></.button>
@@ -30,7 +30,7 @@
   <%= dgettext("mitigations", "Suggest Mitigations") %>
 </.button>
 <.link patch={
-  ~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/new"
+  get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/new"
 }>
   <.button>New Mitigation</.button>
 </.link>
@@ -62,6 +62,7 @@
     id={"mitigations_for_risk_#{@risk.id}"}
     threat={@threat}
     risk={@risk}
+    path_prefix={get_path_prefix(assigns)}
   />
 <% else %>
   <p>
@@ -73,9 +74,7 @@
   :if={@live_action == :edit_risk}
   id="risk-modal"
   show
-  on_cancel={
-    JS.patch(~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk}")
-  }
+  on_cancel={JS.patch(get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}")}
 >
   <.live_component
     module={ThreatShieldWeb.RiskLive.FormComponent}
@@ -86,7 +85,7 @@
     organisation={@organisation}
     threat={@threat}
     current_user={@current_user}
-    patch={~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk}"}
+    patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}"}
   />
 </.modal>
 
@@ -94,9 +93,7 @@
   :if={@live_action == :new_mitigation}
   id="mitigation-modal"
   show
-  on_cancel={
-    JS.patch(~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk}")
-  }
+  on_cancel={JS.patch(get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}")}
 >
   <.live_component
     module={ThreatShieldWeb.MitigationLive.FormComponent}
@@ -106,7 +103,7 @@
     mitigation={@mitigation}
     risk={@risk}
     user={@current_user}
-    patch={~p"/organisations/#{@organisation.id}/threats/#{@threat.id}/risks/#{@risk.id}"}
+    patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}"}
   />
 </.modal>
 

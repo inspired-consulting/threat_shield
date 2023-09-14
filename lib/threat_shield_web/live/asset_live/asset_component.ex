@@ -12,7 +12,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetComponent do
       id={"assets_for_org_#{@organisation.id}"}
       rows={@assets}
       row_click={
-        fn asset -> JS.navigate(~p"/organisations/#{@organisation.id}/assets/#{asset.id}") end
+        fn asset -> JS.navigate(@path_prefix <> "/assets/#{asset.id}") end
         }
     >
       <:col :let={asset} label="Description"><%= asset.description %></:col>

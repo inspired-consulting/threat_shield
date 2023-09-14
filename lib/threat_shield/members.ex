@@ -19,7 +19,6 @@ defmodule ThreatShield.Members do
     |> Organisation.for_user(user_id)
     |> Organisation.with_memberships()
     |> Organisation.with_invites()
-    |> IO.inspect()
     |> Repo.one()
   end
 

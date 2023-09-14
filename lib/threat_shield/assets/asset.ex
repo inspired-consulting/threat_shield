@@ -38,4 +38,21 @@ defmodule ThreatShield.Assets.Asset do
     join(query, :inner, [asset: t], assoc(t, :organisation), as: :organisation)
     |> Organisation.for_user(user_id)
   end
+
+  def preload_organisation(query) do
+    query
+    |> preload([organisation: o], organisation: o)
+  end
+
+  def with_org_systems(query) do
+    query
+    |> join(:left, [organisation: o], assoc(o, :systems), as: :org_systems)
+    |> preload([organisation: o, org_systems: s], organisation: {o, systems: s})
+  end
+
+  def with_system(query) do
+    query
+    |> join(:left, [asset: a], assoc(a, :system), as: :system)
+    |> preload([system: s], system: s)
+  end
 end

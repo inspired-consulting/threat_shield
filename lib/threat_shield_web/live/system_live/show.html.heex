@@ -58,6 +58,7 @@
     organisation={@organisation}
     assets={@system.assets}
     hide_system={true}
+    path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
     id={"assets_for_sys_#{@system.id}"}
   />
 <% else %>
@@ -102,6 +103,7 @@
     organisation={@organisation}
     threats={@system.threats}
     hide_system={true}
+    path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
     id={"threats_for_org_#{@organisation.id}"}
   />
 <% else %>

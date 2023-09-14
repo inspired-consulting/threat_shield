@@ -34,4 +34,15 @@ defmodule ThreatShieldWeb.Helpers do
     :crypto.strong_rand_bytes(128)
     |> Base.url_encode64(padding: false)
   end
+
+  def get_path_prefix(assigns) do
+    if assigns.called_via_system do
+      case assigns[:system] do
+        nil -> "/organisations/#{assigns.organisation.id}"
+        system -> "/organisations/#{assigns.organisation.id}/systems/#{system.id}"
+      end
+    else
+      "/organisations/#{assigns.organisation.id}"
+    end
+  end
 end
