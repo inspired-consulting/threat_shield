@@ -90,6 +90,7 @@ defmodule ThreatShieldWeb.Router do
       live "/organisations/:org_id/systems/:sys_id", SystemLive.Show, :show
       live "/organisations/:org_id/systems/:sys_id/show/edit", SystemLive.Show, :edit
       live "/organisations/:org_id/systems/:sys_id/assets/new", SystemLive.Show, :new_asset
+      live "/organisations/:org_id/systems/:sys_id/assets/:asset_id", AssetLive.Show, :show
       live "/organisations/:org_id/systems/:sys_id/threats/new", SystemLive.Show, :new_threat
 
       live "/organisations/:org_id/threats", ThreatLive.Index, :index
@@ -125,9 +126,7 @@ defmodule ThreatShieldWeb.Router do
            MitigationLive.Show,
            :edit_mitigation
 
-      live "/organisations/:org_id/assets", AssetLive.Index, :index
       live "/organisations/:org_id/assets/new", OrganisationLive.Show, :new_asset
-      live "/organisations/:org_id/assets/:asset_id/edit", AssetLive.Index, :edit
 
       live "/organisations/:org_id/assets/:asset_id", AssetLive.Show, :show
       live "/organisations/:org_id/assets/:asset_id/show/edit", AssetLive.Show, :edit
