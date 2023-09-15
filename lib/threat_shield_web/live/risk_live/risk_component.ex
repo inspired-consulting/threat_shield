@@ -12,8 +12,7 @@ defmodule ThreatShieldWeb.RiskLive.RiskComponent do
         fn risk -> JS.navigate(@path_prefix <> "/threats/#{@threat.id}/risks/#{risk.id}") end
         }
     >
-    <:col :let={risk} label="Name"><%= risk.name %></:col>
-      <:col :let={risk} label="Description"><%= risk.description %></:col>
+      <:col :let={risk} label="Name"><%= risk.name %></:col>
       <:col :let={risk} label="Estimated cost"><%= risk.estimated_cost %></:col>
       <:col :let={risk} label="Probability"><%= risk.probability %></:col>
     </.table>

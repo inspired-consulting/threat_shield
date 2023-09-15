@@ -178,11 +178,11 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   end
 
   @impl true
-  def handle_event("add_asset", %{"description" => description}, socket) do
+  def handle_event("add_asset", %{"name" => name, "description" => description}, socket) do
     user = socket.assigns.current_user
     system = socket.assigns.system
 
-    {:ok, asset} = Assets.add_asset_with_description(user, system, description)
+    {:ok, asset} = Assets.add_asset_with_name_and_description(user, system, name, description)
 
     suggestions =
       Enum.filter(socket.assigns.asset_suggestions, fn s -> s.description != description end)
@@ -198,11 +198,11 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   end
 
   @impl true
-  def handle_event("add_threat", %{"description" => description}, socket) do
+  def handle_event("add_threat", %{"name" => name, "description" => description}, socket) do
     user = socket.assigns.current_user
     system = socket.assigns.system
 
-    {:ok, threat} = Threats.add_threat_with_description(user, system, description)
+    {:ok, threat} = Threats.add_threat_with_name_and_description(user, system, name, description)
 
     suggestions =
       Enum.filter(socket.assigns.threat_suggestions, fn s -> s.description != description end)

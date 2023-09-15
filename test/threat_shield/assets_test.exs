@@ -11,7 +11,12 @@ defmodule ThreatShield.AssetsTest do
     test "create_asset/3 with valid data creates an asset" do
       user = AccountsFixtures.user_fixture()
       organisation = OrganisationsFixtures.organisation_fixture(user)
-      valid_attrs = %{description: "some description", organisation: "some organisation"}
+
+      valid_attrs = %{
+        name: "some_name",
+        description: "some description",
+        organisation: "some organisation"
+      }
 
       assert {:ok, %Asset{}} = Assets.create_asset(user, organisation, valid_attrs)
     end

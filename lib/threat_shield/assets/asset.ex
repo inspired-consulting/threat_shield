@@ -7,7 +7,7 @@ defmodule ThreatShield.Assets.Asset do
 
   schema "assets" do
     field :description, :string
-
+    field :name, :string
     belongs_to :system, System
     belongs_to :organisation, Organisation
 
@@ -17,8 +17,9 @@ defmodule ThreatShield.Assets.Asset do
   @doc false
   def changeset(asset, attrs) do
     asset
-    |> cast(attrs, [:description, :system_id])
-    |> validate_required([:description, :organisation])
+    |> cast(attrs, [:description, :system_id, :name])
+    |> validate_required([:description, :organisation, :name])
+    |> validate_length(:name, max: 60)
   end
 
   def list_system_options(%Organisation{systems: systems}) do

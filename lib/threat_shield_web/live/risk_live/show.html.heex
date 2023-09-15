@@ -1,5 +1,5 @@
 <.header>
-  <%= dgettext("risks", "Risk") %>
+  <%= @risk.name %>
   <:actions>
     <.link phx-click={JS.push("delete", value: %{risk_id: @risk.id})} data-confirm="Are you sure?">
       <.button><%= dgettext("common", "Delete") %></.button>
@@ -14,7 +14,6 @@
 </.header>
 
 <.list>
-  <:item title="Name"><%= @risk.name %></:item>
   <:item title="Description"><%= @risk.description %></:item>
   <:item title="Estimated cost"><%= @risk.estimated_cost %></:item>
   <:item title="Probability"><%= @risk.probability %></:item>
@@ -35,25 +34,10 @@
   <.button>New Mitigation</.button>
 </.link>
 
-<.table
-  :if={not Enum.empty?(@mitigation_suggestions)}
-  id="mitigation_suggestions"
-  rows={@mitigation_suggestions}
->
-  <:col :let={suggestion} label="Name"><%= suggestion.name %></:col>
-  <:col :let={suggestion} label="Description"><%= suggestion.description %></:col>
-
-  <:action :let={suggestion}>
-    <.link phx-click={JS.push("ignore", value: %{description: suggestion.description})}>
-      Ignore
-    </.link>
-    <.link phx-click={
-      JS.push("add", value: %{name: suggestion.name, description: suggestion.description})
-    }>
-      Add
-    </.link>
-  </:action>
-</.table>
+<ThreatShieldWeb.Suggestions.suggestions
+  suggestions={@mitigation_suggestions}
+  entity_name="mitigation"
+/>
 
 <%= if !Enum.empty?(@risk.mitigations) do %>
   <.live_component

@@ -15,8 +15,8 @@ defmodule ThreatShieldWeb.AssetLive.AssetComponent do
         fn asset -> JS.navigate(@path_prefix <> "/assets/#{asset.id}") end
         }
     >
-      <:col :let={asset} label="Description"><%= asset.description %></:col>
-       <:col :let={asset} label="System" :if={!assigns[:hide_system]}><%= system_name(asset) %></:col>
+      <:col :let={asset} label="Name"><%= asset.name %></:col>
+      <:col :let={asset} label="System" :if={!assigns[:hide_system]}><%= system_name(asset) %></:col>
     </.table>
     </div>
     """

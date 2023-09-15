@@ -83,7 +83,6 @@ defmodule ThreatShieldWeb.Router do
 
       live "/organisations/:org_id/dashboard", DashboardLive.Index, :index
 
-      live "/organisations/:org_id/systems", SystemLive.Index, :index
       live "/organisations/:org_id/systems/new", OrganisationLive.Show, :new_system
       live "/organisations/:org_id/systems/:sys_id/edit", SystemLive.Show, :edit_system
 

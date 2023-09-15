@@ -1,5 +1,5 @@
 <.header>
-  <%= dgettext("systems", "System") %>
+  <%= @system.name %>
   <:actions>
     <.link
       phx-click={JS.push("delete", value: %{sys_id: @system.id})}
@@ -17,7 +17,6 @@
 </.header>
 
 <.list>
-  <:item title="Name"><%= @system.name %></:item>
   <:item title="Description"><%= @system.description %></:item>
   <:item title="Attributes">
     <%= for {key, value} <- @system.attributes do %>
@@ -39,18 +38,7 @@
   Suggest Assets
 </.button>
 
-<.table :if={not Enum.empty?(@asset_suggestions)} id="asset_suggestions" rows={@asset_suggestions}>
-  <:col :let={suggestion} label="Description"><%= suggestion.description %></:col>
-
-  <:action :let={suggestion}>
-    <.link phx-click={JS.push("ignore_asset", value: %{description: suggestion.description})}>
-      Ignore
-    </.link>
-    <.link phx-click={JS.push("add_asset", value: %{description: suggestion.description})}>
-      Add
-    </.link>
-  </:action>
-</.table>
+<ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
 
 <%= if !Enum.empty?(@system.assets) do %>
   <.live_component
@@ -80,22 +68,7 @@
   <%= dgettext("threats", "Suggest threats") %>
 </.button>
 
-<.table
-  :if={not Enum.empty?(@threat_suggestions)}
-  id="threat_suggestions"
-  rows={@threat_suggestions}
->
-  <:col :let={suggestion} label="Description"><%= suggestion.description %></:col>
-
-  <:action :let={suggestion}>
-    <.link phx-click={JS.push("ignore_threat", value: %{description: suggestion.description})}>
-      Ignore
-    </.link>
-    <.link phx-click={JS.push("add_threat", value: %{description: suggestion.description})}>
-      Add
-    </.link>
-  </:action>
-</.table>
+<ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 
 <%= if !Enum.empty?(@system.threats) do %>
   <.live_component

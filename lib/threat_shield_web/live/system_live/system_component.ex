@@ -13,7 +13,6 @@ defmodule ThreatShieldWeb.SystemLive.SystemComponent do
         }
     >
     <:col :let={system} label="Name"><%= system.name %></:col>
-      <:col :let={system} label="Description"><%= system.description %></:col>
       <:col :let={system} label="Attributes">
         <%= for {key, value} <- system.attributes do %>
           <div><%= "#{key} → #{value}" %></div>

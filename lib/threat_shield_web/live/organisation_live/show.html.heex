@@ -1,5 +1,5 @@
 <.header>
-  <%= dgettext("organisations", "Organisation") %>
+  <%= @organisation.name %>
   <:actions>
     <.link navigate={~p"/organisations/#{@organisation}/members"}>
       <.button><%= dgettext("organisation", "Members") %></.button>
@@ -20,10 +20,6 @@
 
 <div class="mt-14">
   <dl class="-my-4 divide-y divide-zinc-100">
-    <div class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
-      <dt class="w-1/4 flex-none text-zinc-500"><%= dgettext("organisations", "Name") %></dt>
-      <dd class="text-bg-primary_col-600"><%= @organisation.name %></dd>
-    </div>
     <div class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
       <dt class="w-1/4 flex-none text-zinc-500"><%= dgettext("organisations", "Location") %></dt>
       <dd class="text-bg-primary_col-600"><%= @organisation.location %></dd>
@@ -68,18 +64,7 @@
   Suggest Assets
 </.button>
 
-<.table :if={not Enum.empty?(@asset_suggestions)} id="asset_suggestions" rows={@asset_suggestions}>
-  <:col :let={suggestion} label="Description"><%= suggestion.description %></:col>
-
-  <:action :let={suggestion}>
-    <.link phx-click={JS.push("ignore_asset", value: %{description: suggestion.description})}>
-      Ignore
-    </.link>
-    <.link phx-click={JS.push("add_asset", value: %{description: suggestion.description})}>
-      Add
-    </.link>
-  </:action>
-</.table>
+<ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
 
 <%= if !Enum.empty?(@organisation.assets) do %>
   <.live_component
@@ -178,22 +163,7 @@
   <%= dgettext("threats", "Suggest threats") %>
 </.button>
 
-<.table
-  :if={not Enum.empty?(@threat_suggestions)}
-  id="threat_suggestions"
-  rows={@threat_suggestions}
->
-  <:col :let={suggestion} label="Description"><%= suggestion.description %></:col>
-
-  <:action :let={suggestion}>
-    <.link phx-click={JS.push("ignore_threat", value: %{description: suggestion.description})}>
-      Ignore
-    </.link>
-    <.link phx-click={JS.push("add_threat", value: %{description: suggestion.description})}>
-      Add
-    </.link>
-  </:action>
-</.table>
+<ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 
 <%= if !Enum.empty?(@organisation.threats) do %>
   <.live_component

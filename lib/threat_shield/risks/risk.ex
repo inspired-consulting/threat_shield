@@ -27,6 +27,7 @@ defmodule ThreatShield.Risks.Risk do
     risk
     |> cast(attrs, [:name, :description, :estimated_cost, :probability])
     |> validate_required([:name, :description])
+    |> validate_length(:name, max: 60)
   end
 
   import Ecto.Query

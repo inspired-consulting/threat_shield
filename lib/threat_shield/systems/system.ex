@@ -21,6 +21,7 @@ defmodule ThreatShield.Systems.System do
     system
     |> cast(attrs, [:name, :description, :attributes])
     |> validate_required([:name, :description])
+    |> validate_length(:name, max: 60)
   end
 
   def attribute_keys() do

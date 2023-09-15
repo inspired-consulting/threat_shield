@@ -181,21 +181,6 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
     {:noreply, start_threat_suggestions(org_id, socket)}
   end
 
-  defp start_threat_suggestions(org_id, socket) do
-    user = socket.assigns.current_user
-
-    task =
-      Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
-        ask_ai_for_threats(user, org_id)
-      end)
-
-    socket =
-      socket
-      |> assign(asking_ai_for_threats: task.ref)
-
-    socket
-  end
-
   @impl true
   def handle_event("ignore_asset", %{"description" => description}, socket) do
     suggestions =
@@ -214,11 +199,11 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   end
 
   @impl true
-  def handle_event("add_asset", %{"description" => description}, socket) do
+  def handle_event("add_asset", %{"name" => name, "description" => description}, socket) do
     user = socket.assigns.current_user
     org_id = socket.assigns.organisation.id
 
-    {:ok, asset} = Assets.add_asset_with_description(user, org_id, description)
+    {:ok, asset} = Assets.add_asset_with_name_and_description(user, org_id, name, description)
 
     suggestions =
       Enum.filter(socket.assigns.asset_suggestions, fn s -> s.description != description end)
@@ -234,11 +219,11 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   end
 
   @impl true
-  def handle_event("add_threat", %{"description" => description}, socket) do
+  def handle_event("add_threat", %{"name" => name, "description" => description}, socket) do
     user = socket.assigns.current_user
     org_id = socket.assigns.organisation.id
 
-    {:ok, threat} = Threats.add_threat_with_description(user, org_id, description)
+    {:ok, threat} = Threats.add_threat_with_name_and_description(user, org_id, name, description)
 
     suggestions =
       Enum.filter(socket.assigns.threat_suggestions, fn s -> s.description != description end)
@@ -269,5 +254,20 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
       AI.suggest_threats_for_organisation(organisation)
 
     {:ai_results_threats, new_threats}
+  end
+
+  defp start_threat_suggestions(org_id, socket) do
+    user = socket.assigns.current_user
+
+    task =
+      Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
+        ask_ai_for_threats(user, org_id)
+      end)
+
+    socket =
+      socket
+      |> assign(asking_ai_for_threats: task.ref)
+
+    socket
   end
 end

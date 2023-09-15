@@ -13,7 +13,6 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationComponent do
         }
     >
       <:col :let={mitigation} label="Name"><%= mitigation.name %></:col>
-      <:col :let={mitigation} label="Description"><%= mitigation.description %></:col>
       <:col :let={mitigation} label="Is implemented"><%= mitigation.is_implemented %></:col>
     </.table>
     </div>
