@@ -7,14 +7,15 @@ defmodule ThreatShield.MembersFixtures do
   @doc """
   Generate a invites.
   """
-  def invites_fixture(attrs \\ %{}) do
-    {:ok, invites} =
+  def invites_fixture(user, attrs \\ %{}) do
+    attrs =
       attrs
       |> Enum.into(%{
         token: "some token",
         email: "some email"
       })
-      |> ThreatShield.Members.create_invites()
+
+    {:ok, invites} = ThreatShield.Members.create_invite(user, attrs)
 
     invites
   end

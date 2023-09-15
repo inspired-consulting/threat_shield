@@ -181,21 +181,6 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
     {:noreply, start_threat_suggestions(org_id, socket)}
   end
 
-  defp start_threat_suggestions(org_id, socket) do
-    user = socket.assigns.current_user
-
-    task =
-      Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
-        ask_ai_for_threats(user, org_id)
-      end)
-
-    socket =
-      socket
-      |> assign(asking_ai_for_threats: task.ref)
-
-    socket
-  end
-
   @impl true
   def handle_event("ignore_asset", %{"description" => description}, socket) do
     suggestions =
@@ -269,5 +254,20 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
       AI.suggest_threats_for_organisation(organisation)
 
     {:ai_results_threats, new_threats}
+  end
+
+  defp start_threat_suggestions(org_id, socket) do
+    user = socket.assigns.current_user
+
+    task =
+      Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
+        ask_ai_for_threats(user, org_id)
+      end)
+
+    socket =
+      socket
+      |> assign(asking_ai_for_threats: task.ref)
+
+    socket
   end
 end
