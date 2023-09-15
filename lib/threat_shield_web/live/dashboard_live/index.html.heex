@@ -1,9 +1,9 @@
 <.link patch={~p"/organisations/#{@organisation.id}"}>
-  <.button>Organisation Management</.button>
+  <.button><%= dgettext("organisation", "Organisation Management") %></.button>
 </.link>
 
 <.link patch={~p"/organisations/#{@organisation.id}/?suggest_threats=true"}>
-  <.button>Suggest Threats</.button>
+  <.button><%= dgettext("threats", "Suggest Threats") %></.button>
 </.link>
 
 <h2>Threats</h2>
@@ -17,7 +17,7 @@
 
 <h2>Risks</h2>
 <%= for threat <- @threats, !Enum.empty?(threat.risks) do %>
-  <h3><%= threat.description %></h3>
+  <h3><%= threat.name %></h3>
   <.live_component
     module={ThreatShieldWeb.RiskLive.RiskComponent}
     id={"risks_for_threat_#{threat.id}"}
