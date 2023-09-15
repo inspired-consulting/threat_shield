@@ -34,7 +34,7 @@ defmodule ThreatShield.AI do
     system_prompt = """
     You are a threat modelling assistant. Your response should comprise five potential assets, each item having between 200–254 characters in length. Each item is simply a string. Your response should be in JSON format, like so:
 
-    {"assets": _}
+    {"assets": [{"name": _, "description": _}, _ ]}
     """
 
     user_prompt = "I work at this organisation: #{Organisation.describe(organisation)}"
@@ -46,7 +46,7 @@ defmodule ThreatShield.AI do
     system_prompt = """
     You are a threat modelling assistant. Your response should comprise five potential assets, each item having between 200–254 characters in length. Each item is simply a string. Your response should be in JSON format, like so:
 
-    {"assets": _}
+    {"assets": [{"name": _, "description": _}, _ ]}
     """
 
     user_prompt =
@@ -61,7 +61,7 @@ defmodule ThreatShield.AI do
     system_prompt = """
     You are a threat modelling assistant. Your response should comprise five potential threats, each item having between 200–254 characters in length. Your response should be in JSON format, like so:
 
-    {"threats": _}
+    {"threats": [{"name": _, "description": _}, _ ]}
     """
 
     user_prompt =
@@ -76,7 +76,7 @@ defmodule ThreatShield.AI do
     system_prompt = """
     You are a threat modelling assistant. Your response should comprise five potential threats, each item having between 200–254 characters in length. Your response should be in JSON format, like so:
 
-    {"threats": _}
+    {"threats": [{"name": _, "description": _}, _ ]}
     """
 
     user_prompt =
@@ -130,12 +130,12 @@ defmodule ThreatShield.AI do
 
   defp get_assets_from_response(response) do
     get_content_from_reponse(response, "assets")
-    |> Enum.map(fn d -> %Asset{description: d} end)
+    |> Enum.map(fn %{"name" => n, "description" => d} -> %Asset{name: n, description: d} end)
   end
 
   defp get_threats_from_response(response) do
     get_content_from_reponse(response, "threats")
-    |> Enum.map(fn d -> %Threat{description: d} end)
+    |> Enum.map(fn %{"name" => n, "description" => d} -> %Threat{name: n, description: d} end)
   end
 
   defp get_risks_from_response(response) do

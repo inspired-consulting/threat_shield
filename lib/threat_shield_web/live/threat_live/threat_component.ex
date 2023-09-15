@@ -15,7 +15,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatComponent do
         fn threat -> JS.navigate(@path_prefix <> "/threats/#{threat.id}") end
         }
     >
-      <:col :let={threat} label="Description"><%= threat.description %></:col>
+      <:col :let={threat} label="Name"><%= threat.name %></:col>
       <:col :if={!assigns[:hide_system]} :let={threat} label="System"><%= system_name(threat) %></:col>
     </.table>
     </div>

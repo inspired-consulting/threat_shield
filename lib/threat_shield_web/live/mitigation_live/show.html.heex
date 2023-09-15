@@ -1,5 +1,5 @@
 <.header>
-  <%= dgettext("mitigations", "Mitigation") %>
+  <%= @mitigation.name %>
   <:actions>
     <.link
       phx-click={JS.push("delete", value: %{mitigation_id: @mitigation.id})}
@@ -19,7 +19,6 @@
 </.header>
 
 <.list>
-  <:item title="Name"><%= @mitigation.name %></:item>
   <:item title="Description"><%= @mitigation.description %></:item>
   <:item title="Is implemented"><%= @mitigation.is_implemented %></:item>
 </.list>

@@ -69,7 +69,7 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   end
 
   @impl true
-  def handle_event("add", %{"name" => name, "description" => description}, socket) do
+  def handle_event("add_risk", %{"name" => name, "description" => description}, socket) do
     user = socket.assigns.current_user
     threat_id = socket.assigns.threat.id
 
@@ -89,7 +89,7 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   end
 
   @impl true
-  def handle_event("ignore", %{"description" => description}, socket) do
+  def handle_event("ignore_risk", %{"description" => description}, socket) do
     suggestions =
       Enum.filter(socket.assigns.risk_suggestions, fn s -> s.description != description end)
       |> Enum.to_list()

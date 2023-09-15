@@ -18,6 +18,7 @@ defmodule ThreatShield.Mitigations.Mitigation do
     mitigation
     |> cast(attrs, [:name, :description, :is_implemented])
     |> validate_required([:name, :description, :is_implemented])
+    |> validate_length(:name, max: 60)
   end
 
   import Ecto.Query

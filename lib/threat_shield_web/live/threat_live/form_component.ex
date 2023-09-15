@@ -19,6 +19,7 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
+        <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:description]} type="text" label="Description" />
         <.input field={@form[:system_id]} :if={assigns[:system_options]} type="select" label="System" options={@system_options} />
         <:actions>

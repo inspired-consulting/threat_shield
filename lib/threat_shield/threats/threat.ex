@@ -7,7 +7,7 @@ defmodule ThreatShield.Threats.Threat do
 
   schema "threats" do
     field :description, :string
-
+    field :name, :string
     belongs_to :system, System
     belongs_to :organisation, Organisation
 
@@ -29,8 +29,9 @@ defmodule ThreatShield.Threats.Threat do
   @doc false
   def changeset(threat, attrs) do
     threat
-    |> cast(attrs, [:description, :system_id])
-    |> validate_required([:description, :organisation])
+    |> cast(attrs, [:description, :system_id, :name])
+    |> validate_required([:description, :organisation, :name])
+    |> validate_length(:name, max: 60)
   end
 
   def system_name(%__MODULE__{system: %{name: name}}), do: name

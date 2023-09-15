@@ -82,24 +82,29 @@ defmodule ThreatShield.Assets do
     Asset.changeset(asset, attrs)
   end
 
-  def add_asset_with_description(%User{} = user, %System{id: sys_id}, description) do
+  def add_asset_with_name_and_description(%User{} = user, %System{id: sys_id}, name, description) do
     Repo.transaction(fn ->
       system = Systems.get_system!(user, sys_id)
 
       changeset =
-        %Asset{organisation: system.organisation, system: system, description: description}
+        %Asset{
+          organisation: system.organisation,
+          system: system,
+          name: name,
+          description: description
+        }
         |> Ecto.Changeset.change()
 
       Repo.insert!(changeset)
     end)
   end
 
-  def add_asset_with_description(%User{} = user, org_id, description) do
+  def add_asset_with_name_and_description(%User{} = user, org_id, name, description) do
     Repo.transaction(fn ->
       organisation = Organisations.get_organisation!(user, org_id)
 
       changeset =
-        %Asset{organisation: organisation, description: description}
+        %Asset{organisation: organisation, description: description, name: name}
         |> Ecto.Changeset.change()
 
       Repo.insert!(changeset)

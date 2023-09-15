@@ -45,24 +45,29 @@ defmodule ThreatShield.Threats do
     end)
   end
 
-  def add_threat_with_description(%User{} = user, %System{id: sys_id}, description) do
+  def add_threat_with_name_and_description(%User{} = user, %System{id: sys_id}, name, description) do
     Repo.transaction(fn ->
       system = Systems.get_system!(user, sys_id)
 
       changeset =
-        %Threat{system: system, organisation: system.organisation, description: description}
+        %Threat{
+          system: system,
+          organisation: system.organisation,
+          name: name,
+          description: description
+        }
         |> Ecto.Changeset.change()
 
       Repo.insert!(changeset)
     end)
   end
 
-  def add_threat_with_description(%User{} = user, org_id, description) do
+  def add_threat_with_name_and_description(%User{} = user, org_id, name, description) do
     Repo.transaction(fn ->
       organisation = Organisations.get_organisation!(user, org_id)
 
       changeset =
-        %Threat{organisation: organisation, description: description}
+        %Threat{organisation: organisation, description: description, name: name}
         |> Ecto.Changeset.change()
 
       Repo.insert!(changeset)

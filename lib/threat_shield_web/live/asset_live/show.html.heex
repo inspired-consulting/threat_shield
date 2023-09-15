@@ -1,5 +1,5 @@
 <.header>
-  <%= dgettext("assets", "Asset") %>
+  <%= @asset.name %>
   <:actions>
     <.link
       phx-click={JS.push("delete", value: %{asset_id: @asset.id})}
