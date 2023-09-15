@@ -7,7 +7,7 @@ defmodule ThreatShield.Repo.Migrations.RemoveDefaultForNames do
         size: 60,
         null: false,
         default: nil,
-        from: {:string, size: 60, null: false, default: fragment("gen_random_uuid()")}
+        from: {:string, size: 60, null: false, default: "CHANGEME"}
     end
 
     alter table(:risks) do
@@ -15,7 +15,7 @@ defmodule ThreatShield.Repo.Migrations.RemoveDefaultForNames do
         size: 60,
         null: false,
         default: nil,
-        from: {:string, size: 60, null: false, default: fragment("gen_random_uuid()")}
+        from: {:string, size: 60, null: false, default: "CHANGEME"}
     end
 
     alter table(:mitigations) do
@@ -23,7 +23,7 @@ defmodule ThreatShield.Repo.Migrations.RemoveDefaultForNames do
         size: 60,
         null: false,
         default: nil,
-        from: {:string, size: 60, null: false, default: fragment("gen_random_uuid()")}
+        from: {:string, size: 60, null: false, default: "CHANGEME"}
     end
 
     alter table(:threats) do
@@ -31,7 +31,7 @@ defmodule ThreatShield.Repo.Migrations.RemoveDefaultForNames do
         size: 60,
         null: false,
         default: nil,
-        from: {:string, size: 60, null: false, default: fragment("gen_random_uuid()")}
+        from: {:string, size: 60, null: false, default: "CHANGEME"}
     end
 
     alter table(:assets) do
@@ -39,7 +39,7 @@ defmodule ThreatShield.Repo.Migrations.RemoveDefaultForNames do
         size: 60,
         null: false,
         default: nil,
-        from: {:string, size: 60, null: false, default: fragment("gen_random_uuid()")}
+        from: {:string, size: 60, null: false, default: "CHANGEME"}
     end
   end
 end

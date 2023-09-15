@@ -6,7 +6,7 @@ defmodule ThreatShield.Repo.Migrations.AddNamesForAllEntities do
       modify :name, :string,
         size: 60,
         null: false,
-        default: fragment("gen_random_uuid()"),
+        default: "CHANGEME",
         from: {:string, size: 255, null: true}
     end
 
@@ -14,7 +14,7 @@ defmodule ThreatShield.Repo.Migrations.AddNamesForAllEntities do
       modify :name, :string,
         size: 60,
         null: false,
-        default: fragment("gen_random_uuid()"),
+        default: "CHANGEME",
         from: {:string, size: 255, null: true}
     end
 
@@ -22,16 +22,16 @@ defmodule ThreatShield.Repo.Migrations.AddNamesForAllEntities do
       modify :name, :string,
         size: 60,
         null: false,
-        default: fragment("gen_random_uuid()"),
+        default: "CHANGEME",
         from: {:string, size: 255, null: true}
     end
 
     alter table(:threats) do
-      add :name, :string, size: 60, null: false, default: fragment("gen_random_uuid()")
+      add :name, :string, size: 60, null: false, default: "CHANGEME"
     end
 
     alter table(:assets) do
-      add :name, :string, size: 60, null: false, default: fragment("gen_random_uuid()")
+      add :name, :string, size: 60, null: false, default: "CHANGEME"
     end
   end
 end
