@@ -9,7 +9,9 @@
       phx-click={JS.push("delete", value: %{organisation_id: @organisation.id})}
       data-confirm="Are you sure?"
     >
-      <.button><%= dgettext("common", "Delete") %></.button>
+      <.button :if={ThreatShield.Members.Rights.may(:delete_organisation, @membership)}>
+        <%= dgettext("common", "Delete") %>
+      </.button>
     </.link>
 
     <.link patch={~p"/organisations/#{@organisation}/edit"} phx-click={JS.push_focus()}>

@@ -3,6 +3,7 @@ defmodule ThreatShield.Members.Invite do
   import Ecto.Changeset
 
   import ThreatShield.Const.RetentionTimes, only: [invite_lifetime_in_seconds: 0]
+  import ThreatShield.Members.Rights, only: [get_authorised_roles: 1]
 
   schema "invites" do
     field :token, :string
@@ -71,6 +72,15 @@ defmodule ThreatShield.Members.Invite do
     |> join(:inner, [invite: i], assoc(i, :organisation), as: :organisation)
     |> join(:inner, [organisation: o], assoc(o, :users), as: :users)
     |> where([users: u], u.id == ^user_id)
+  end
+
+  def for_user(query, user_id, right) do
+    query
+    |> join(:inner, [invite: i], assoc(i, :organisation), as: :organisation)
+    |> join(:inner, [organisation: o], assoc(o, :memberships), as: :memberships)
+    |> join(:inner, [memberships: m], assoc(m, :user), as: :user)
+    |> where([user: u], u.id == ^user_id)
+    |> where([memberships: m], m.role in ^get_authorised_roles(right))
   end
 
   def select(query) do

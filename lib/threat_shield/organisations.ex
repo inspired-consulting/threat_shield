@@ -31,6 +31,7 @@ defmodule ThreatShield.Organisations do
   def get_organisation!(%User{id: user_id}, org_id) do
     Organisation.get(org_id)
     |> Organisation.for_user(user_id)
+    |> Organisation.preload_membership()
     |> Organisation.with_systems()
     |> Organisation.with_threats()
     |> Organisation.with_assets()
@@ -100,7 +101,7 @@ defmodule ThreatShield.Organisations do
 
   def delete_org_by_id!(%User{id: user_id}, id) do
     Organisation.get(id)
-    |> Organisation.for_user(user_id)
+    |> Organisation.for_user(user_id, :delete_organisation)
     |> Organisation.select()
     |> Repo.delete_all()
   end

@@ -1,4 +1,5 @@
 defmodule ThreatShieldWeb.OrganisationLive.Show do
+  alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Threats.Threat
   use ThreatShieldWeb, :live_view
 
@@ -21,6 +22,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
     user = socket.assigns.current_user
 
     organisation = Organisations.get_organisation!(user, org_id)
+    membership = Organisation.get_membership(organisation, user)
 
     suggest_threats = Map.has_key?(params, "suggest_threats")
 
@@ -28,6 +30,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
       socket
       |> assign(:attribute_keys, attribute_keys())
       |> assign(:organisation, organisation)
+      |> assign(:membership, membership)
       |> assign(locations_options: Locations.list_locations())
       |> assign(:asking_ai_for_assets, nil)
       |> assign(:asking_ai_for_threats, nil)

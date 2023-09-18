@@ -2,6 +2,8 @@ defmodule ThreatShield.Organisations.Membership do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias ThreatShield.Members.Rights
+
   schema "memberships" do
     field :role, Ecto.Enum, values: [:owner, :editor, :viewer]
 
@@ -27,6 +29,14 @@ defmodule ThreatShield.Organisations.Membership do
     |> join(:inner, [membership: m], assoc(m, :organisation), as: :organisation)
     |> join(:inner, [organisation: o], assoc(o, :memberships), as: :ac_org_memberships)
     |> where([ac_org_memberships: o], o.user_id == ^user_id)
+  end
+
+  def for_user(query, user_id, right) do
+    query
+    |> join(:inner, [membership: m], assoc(m, :organisation), as: :organisation)
+    |> join(:inner, [organisation: o], assoc(o, :memberships), as: :ac_org_memberships)
+    |> where([ac_org_memberships: m], m.user_id == ^user_id)
+    |> where([ac_org_memberships: m], m.role in ^Rights.get_authorised_roles(right))
   end
 
   def preload_org_memberships(query) do

@@ -3,6 +3,9 @@ defmodule ThreatShield.Organisations.Organisation do
   import Ecto.Changeset
 
   alias ThreatShield.Systems.System
+  alias ThreatShield.Accounts.User
+
+  import ThreatShield.Members.Rights, only: [get_authorised_roles: 1]
 
   schema "organisations" do
     field :name, :string
@@ -41,6 +44,10 @@ defmodule ThreatShield.Organisations.Organisation do
     ]
   end
 
+  def get_membership(%__MODULE__{memberships: memberships}, %User{id: user_id}) do
+    Enum.find(memberships, fn m -> m.user_id == user_id end)
+  end
+
   def list_system_options(%__MODULE__{systems: systems}) do
     [{"None", nil} | Enum.map(systems, fn s -> {s.name, s.id} end)]
   end
@@ -69,8 +76,22 @@ defmodule ThreatShield.Organisations.Organisation do
 
   def for_user(query, user_id) do
     query
-    |> join(:inner, [organisation: o], assoc(o, :users), as: :user)
+    |> join(:inner, [organisation: o], assoc(o, :memberships), as: :memberships)
+    |> join(:inner, [memberships: m], assoc(m, :user), as: :user)
     |> where([user: u], u.id == ^user_id)
+  end
+
+  def preload_membership(query) do
+    query
+    |> preload([memberships: m], memberships: m)
+  end
+
+  def for_user(query, user_id, right) do
+    query
+    |> join(:inner, [organisation: o], assoc(o, :memberships), as: :memberships)
+    |> join(:inner, [memberships: m], assoc(m, :user), as: :user)
+    |> where([user: u], u.id == ^user_id)
+    |> where([memberships: m], m.role in ^get_authorised_roles(right))
   end
 
   def with_threats(query) do

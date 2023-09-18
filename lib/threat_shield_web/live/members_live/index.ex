@@ -15,7 +15,11 @@ defmodule ThreatShieldWeb.MembersLive.Index do
 
     {:ok,
      socket
-     |> assign(:organisation, organisation)}
+     |> assign(:organisation, organisation)
+     |> assign(
+       :current_org_membership,
+       organisation.memberships |> Enum.find(fn m -> m.user.id == user.id end)
+     )}
   end
 
   @impl true
@@ -59,7 +63,11 @@ defmodule ThreatShieldWeb.MembersLive.Index do
 
     {:noreply,
      socket
-     |> assign(:organisation, organisation)}
+     |> assign(:organisation, organisation)
+     |> assign(
+       :current_org_membership,
+       organisation.memberships |> Enum.find(fn m -> m.user.id == user.id end)
+     )}
   end
 
   @impl true

@@ -57,7 +57,7 @@ defmodule ThreatShield.Members do
     case Repo.transaction(fn ->
            organisation =
              Organisation.get(org_id)
-             |> Organisation.for_user(user_id)
+             |> Organisation.for_user(user_id, :invite_new_members)
              |> Repo.one!()
 
            %Invite{token: token}
@@ -75,7 +75,7 @@ defmodule ThreatShield.Members do
     case Repo.transaction(fn ->
            organisation =
              Organisation.get(org_id)
-             |> Organisation.for_user(user_id)
+             |> Organisation.for_user(user_id, :delete_member)
              |> Organisation.with_memberships()
              |> Repo.one!()
 
@@ -96,7 +96,7 @@ defmodule ThreatShield.Members do
 
   def delete_invite_by_id(%User{id: user_id}, invite_id) do
     case Invite.get(invite_id)
-         |> Invite.for_user(user_id)
+         |> Invite.for_user(user_id, :invite_new_members)
          |> Invite.select()
          |> Repo.delete_all() do
       {1, [invite]} -> {:ok, invite}
@@ -129,7 +129,7 @@ defmodule ThreatShield.Members do
     case Repo.transaction(fn ->
            old_membership =
              Membership.get(membership_id)
-             |> Membership.for_user(user_id)
+             |> Membership.for_user(user_id, :edit_membership)
              |> Membership.preload_org_memberships()
              |> Repo.one()
 
