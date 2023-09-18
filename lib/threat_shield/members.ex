@@ -79,7 +79,7 @@ defmodule ThreatShield.Members do
              |> Organisation.with_memberships()
              |> Repo.one!()
 
-           if length(organisation.memberships) >= 2 do
+           if length(organisation.memberships |> Enum.filter(fn m -> m.role == :owner end)) >= 2 do
              Membership.get(membership_id)
              |> Membership.for_user(user_id)
              |> Membership.select()
@@ -126,10 +126,29 @@ defmodule ThreatShield.Members do
   end
 
   def update_role(%User{id: user_id}, %Membership{id: membership_id}, role) do
-    Membership.get(membership_id)
-    |> Membership.for_user(user_id)
-    |> Repo.one!()
-    |> Membership.changeset(%{"role" => role})
-    |> Repo.update()
+    case Repo.transaction(fn ->
+           old_membership =
+             Membership.get(membership_id)
+             |> Membership.for_user(user_id)
+             |> Membership.preload_org_memberships()
+             |> Repo.one()
+
+           num_owners =
+             length(
+               Enum.filter(old_membership.organisation.memberships, fn m -> m.role == :owner end)
+             )
+
+           if old_membership.role == :owner and num_owners <= 1 do
+             {:error, :last_owner}
+           else
+             old_membership
+             |> Membership.changeset(%{"role" => role})
+             |> Repo.update()
+           end
+         end) do
+      {:ok, {:ok, membership}} -> {:ok, membership}
+      {:ok, {:error, e}} -> {:error, e}
+      {:error, e} -> {:error, e}
+    end
   end
 end

@@ -25,8 +25,14 @@ defmodule ThreatShield.Organisations.Membership do
   def for_user(query, user_id) do
     query
     |> join(:inner, [membership: m], assoc(m, :organisation), as: :organisation)
+    |> join(:inner, [organisation: o], assoc(o, :memberships), as: :ac_org_memberships)
+    |> where([ac_org_memberships: o], o.user_id == ^user_id)
+  end
+
+  def preload_org_memberships(query) do
+    query
     |> join(:inner, [organisation: o], assoc(o, :memberships), as: :org_memberships)
-    |> where([org_memberships: o], o.user_id == ^user_id)
+    |> preload([organisation: o, org_memberships: m], organisation: {o, memberships: m})
   end
 
   def select(query) do

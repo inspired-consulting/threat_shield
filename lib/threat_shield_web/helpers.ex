@@ -7,7 +7,7 @@ defmodule ThreatShieldWeb.Helpers do
   """
 
   def get_git_release_tag() do
-    Application.get_env(:threat_shield, ThreatShieldWeb.Endpoint)[:git_version] |> IO.inspect()
+    Application.get_env(:threat_shield, ThreatShieldWeb.Endpoint)[:git_version]
   end
 
   def add_breadcrumbs(socket, url) do

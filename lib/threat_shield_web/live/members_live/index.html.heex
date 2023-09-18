@@ -13,8 +13,8 @@
     <%= Gettext.dgettext(ThreatShieldWeb.Gettext, "organisation", Atom.to_string(membership.role)) %>
   </:col>
   <:col :let={membership}>
-    <%= if length(@organisation.memberships) > 1 do %>
-      <div class="text-right">
+    <div class="text-right">
+      <%= if length(@organisation.memberships |> Enum.filter(fn m -> m.role == :owner end )) > 1 do %>
         <.button
           phx-click="delete_membership"
           phx-value-membership_id={membership.id}
@@ -26,13 +26,11 @@
             <%= dgettext("common", "Delete") %>
           <% end %>
         </.button>
-      </div>
-    <% end %>
-  </:col>
-  <:col :let={membership}>
-    <.button phx-click="edit_membership" phx-value-membership_id={membership.id}>
-      <%= dgettext("common", "Edit") %>
-    </.button>
+      <% end %>
+      <.button phx-click="edit_membership" phx-value-membership_id={membership.id}>
+        <%= dgettext("common", "Edit") %>
+      </.button>
+    </div>
   </:col>
 </.table>
 
