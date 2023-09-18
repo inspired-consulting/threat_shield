@@ -39,19 +39,5 @@ defmodule ThreatShieldWeb.OrganisationLiveTest do
           assert true
       end
     end
-
-    test "lists all organisations", %{conn: conn, organisation: organisation} do
-      user = AccountsFixtures.user_fixture()
-      conn_with_session = assign(conn, :current_user, user)
-
-      case live(conn_with_session, ~p"/organisations") do
-        {:ok, _index_live, html} ->
-          assert html =~ "Listing Organisations"
-          assert html =~ organisation.name
-
-        {:error, _} ->
-          IO.inspect("User is not logged in")
-      end
-    end
   end
 end

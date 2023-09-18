@@ -31,7 +31,8 @@ config :threat_shield, ThreatShieldWeb.Endpoint,
     layout: false
   ],
   pubsub_server: ThreatShield.PubSub,
-  live_view: [signing_salt: "TOOUQx8Y"]
+  live_view: [signing_salt: "TOOUQx8Y"],
+  git_version: System.get_env("GIT_VERSION_TAG", "version_not_found")
 
 # Configures the mailer
 #

@@ -30,6 +30,6 @@ defmodule ThreatShieldWeb.DashboardLive.Index do
     socket
     |> assign(:organisation, organisation)
     |> assign(:threats, organisation.threats)
-    |> assign(:path_prefix, "organisations/#{organisation.id}")
+    |> assign(:path_prefix, "/organisations/#{organisation.id}")
   end
 end

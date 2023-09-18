@@ -7,16 +7,7 @@ defmodule ThreatShieldWeb.Helpers do
   """
 
   def get_git_release_tag() do
-    {output, status} = System.cmd("git", ["describe", "--tags"])
-
-    case status do
-      0 ->
-        [first, _, _] = String.split(output, "-")
-        first
-
-      _ ->
-        ""
-    end
+    Application.get_env(:threat_shield, ThreatShieldWeb.Endpoint)[:git_version] |> IO.inspect()
   end
 
   def add_breadcrumbs(socket, url) do
