@@ -1260,3 +1260,52 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "Åland Islands"
 msgstr ""
+
+msgid "editor"
+msgstr "editor"
+
+#: lib/threat_shield_web/live/members_live/index.html.heex:5
+#, elixir-autogen, elixir-format
+msgid "Invite"
+msgstr ""
+
+#: lib/threat_shield_web/live/members_live/join.html.heex:9
+#, elixir-autogen, elixir-format
+msgid "Join"
+msgstr ""
+
+#: lib/threat_shield_web/live/members_live/index.html.heex:2
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:5
+#, elixir-autogen, elixir-format
+msgid "Members"
+msgstr ""
+
+#: lib/threat_shield_web/live/dashboard_live/index.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "Organisation Management"
+msgstr ""
+
+#: lib/threat_shield_web/live/members_live/index.html.heex:38
+#, elixir-autogen, elixir-format
+msgid "Pending invites"
+msgstr ""
+
+#: lib/threat_shield_web/live/members_live/role_form_component.ex:24
+#, elixir-autogen, elixir-format
+msgid "Save Membership"
+msgstr ""
+
+#: lib/threat_shield_web/live/members_live/form_component.ex:23
+#, elixir-autogen, elixir-format
+msgid "Send invite"
+msgstr ""
+
+#: lib/threat_shield_web/live/members_live/join.html.heex:2
+#, elixir-autogen, elixir-format
+msgid "The token you used seems to be invalid"
+msgstr ""
+
+#: lib/threat_shield_web/live/members_live/join.html.heex:5
+#, elixir-autogen, elixir-format
+msgid "You've been invited to join"
+msgstr ""

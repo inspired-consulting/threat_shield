@@ -1,9 +1,19 @@
 defmodule ThreatShield.Organisations.Membership do
   use Ecto.Schema
+  import Ecto.Changeset
 
   schema "memberships" do
+    field :role, Ecto.Enum, values: [:owner, :editor, :viewer]
+
     belongs_to :user, ThreatShield.Accounts.User
     belongs_to :organisation, ThreatShield.Organisations.Organisation
+  end
+
+  @doc false
+  def changeset(membership, attrs) do
+    membership
+    |> cast(attrs, [:role])
+    |> validate_required([:role])
   end
 
   import Ecto.Query

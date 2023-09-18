@@ -9,6 +9,9 @@
 
 <.table id="memberships" rows={@organisation.memberships}>
   <:col :let={membership} label="User"><%= membership.user.email %></:col>
+  <:col :let={membership} label="Role">
+    <%= Gettext.dgettext(ThreatShieldWeb.Gettext, "organisation", Atom.to_string(membership.role)) %>
+  </:col>
   <:col :let={membership}>
     <%= if length(@organisation.memberships) > 1 do %>
       <div class="text-right">
@@ -25,6 +28,11 @@
         </.button>
       </div>
     <% end %>
+  </:col>
+  <:col :let={membership}>
+    <.button phx-click="edit_membership" phx-value-membership_id={membership.id}>
+      <%= dgettext("common", "Edit") %>
+    </.button>
   </:col>
 </.table>
 
@@ -62,6 +70,23 @@
     action={@live_action}
     invite={@invite}
     organisation={@organisation}
+    current_user={@current_user}
+    patch={~p"/organisations/#{@organisation.id}/members"}
+  />
+</.modal>
+
+<.modal
+  :if={@live_action == :edit_membership}
+  id="role-modal"
+  show
+  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/members")}
+>
+  <.live_component
+    module={ThreatShieldWeb.MembersLive.RoleFormComponent}
+    id={@membership_to_edit.id}
+    title={@page_title}
+    action={@live_action}
+    membership={@membership_to_edit}
     current_user={@current_user}
     patch={~p"/organisations/#{@organisation.id}/members"}
   />

@@ -36,7 +36,7 @@ defmodule ThreatShield.Members do
 
            if not is_nil(invite) do
              membership =
-               %Membership{user: user, organisation: invite.organisation}
+               %Membership{user: user, organisation: invite.organisation, role: :viewer}
                |> Repo.insert!()
 
              Repo.delete(invite)
@@ -119,5 +119,17 @@ defmodule ThreatShield.Members do
 
   def change_invite(%Invite{} = invite, attrs \\ %{}) do
     Invite.changeset(invite, attrs)
+  end
+
+  def change_membership(%Membership{} = membership, attrs \\ %{}) do
+    Membership.changeset(membership, attrs)
+  end
+
+  def update_role(%User{id: user_id}, %Membership{id: membership_id}, role) do
+    Membership.get(membership_id)
+    |> Membership.for_user(user_id)
+    |> Repo.one!()
+    |> Membership.changeset(%{"role" => role})
+    |> Repo.update()
   end
 end

@@ -11,12 +11,14 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: lib/threat_shield_web/live/threat_live/show.html.heex:24
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:54
+#: lib/threat_shield_web/live/system_live/show.html.heex:28
 #, elixir-autogen, elixir-format
-msgid "Risks"
+msgid "Assets"
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/show.html.heex:31
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:56
+#: lib/threat_shield_web/live/system_live/show.html.heex:30
 #, elixir-autogen, elixir-format
-msgid "Suggest Risks"
+msgid "New Asset"
 msgstr ""
