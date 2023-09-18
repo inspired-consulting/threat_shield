@@ -15,6 +15,8 @@ RUN mix local.hex --force && mix local.rebar --force
 # Copy the application source code into the container
 COPY . /app/
 
+RUN git describe --tags | awk -F"-" '{print "GIT_VERSION_TAG="$1}' >> .env
+
 # Copy the entrypoint script into the container and make it executable
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
