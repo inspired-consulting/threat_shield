@@ -2,6 +2,7 @@ defmodule ThreatShieldWeb.MitigationLive.Show do
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Mitigations
+  alias ThreatShield.Organisations.Organisation
 
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, get_path_prefix: 1]
 
@@ -16,6 +17,10 @@ defmodule ThreatShieldWeb.MitigationLive.Show do
      |> assign(risk: mitigation.risk)
      |> assign(threat: mitigation.risk.threat)
      |> assign(organisation: mitigation.risk.threat.organisation)
+     |> assign(
+       :membership,
+       Organisation.get_membership(mitigation.risk.threat.organisation, user)
+     )
      |> assign(system: mitigation.risk.threat.system)
      |> assign(:called_via_system, Map.has_key?(params, "sys_id"))}
   end

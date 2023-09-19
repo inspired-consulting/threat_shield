@@ -48,6 +48,11 @@ defmodule ThreatShield.Threats.Threat do
     |> Organisation.for_user(user_id)
   end
 
+  def for_user(query, user_id, right) do
+    join(query, :inner, [threat: t], assoc(t, :organisation), as: :organisation)
+    |> Organisation.for_user(user_id, right)
+  end
+
   def where_organisation(query, org_id) do
     where(query, [organisation: o], o.id == ^org_id)
   end
@@ -55,6 +60,11 @@ defmodule ThreatShield.Threats.Threat do
   def with_organisation(query) do
     query
     |> preload([organisation: o], organisation: o)
+  end
+
+  def preload_membership(query) do
+    query
+    |> preload([organisation: o, memberships: m], organisation: {o, :memberships})
   end
 
   def with_organisation_and_risks(query) do
@@ -73,5 +83,9 @@ defmodule ThreatShield.Threats.Threat do
     query
     |> join(:left, [organisation: o], assoc(o, :systems), as: :systems)
     |> preload([organisation: o, systems: s], organisation: {o, systems: s})
+  end
+
+  def select(query) do
+    select(query, [threat: t], t)
   end
 end

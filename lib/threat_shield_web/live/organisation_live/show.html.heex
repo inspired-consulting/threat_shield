@@ -6,13 +6,20 @@
     </.link>
 
     <.link
+      :if={ThreatShield.Members.Rights.may(:delete_organisation, @membership)}
       phx-click={JS.push("delete", value: %{organisation_id: @organisation.id})}
       data-confirm="Are you sure?"
     >
-      <.button><%= dgettext("common", "Delete") %></.button>
+      <.button>
+        <%= dgettext("common", "Delete") %>
+      </.button>
     </.link>
 
-    <.link patch={~p"/organisations/#{@organisation}/edit"} phx-click={JS.push_focus()}>
+    <.link
+      :if={ThreatShield.Members.Rights.may(:edit_organisation, @membership)}
+      patch={~p"/organisations/#{@organisation}/edit"}
+      phx-click={JS.push_focus()}
+    >
       <.button><%= dgettext("common", "Edit") %></.button>
     </.link>
   </:actions>
@@ -35,7 +42,10 @@
 </div>
 
 <h2><%= dgettext("systems", "Systems") %></h2>
-<.link patch={~p"/organisations/#{@organisation.id}/systems/new"}>
+<.link
+  :if={ThreatShield.Members.Rights.may(:create_system, @membership)}
+  patch={~p"/organisations/#{@organisation.id}/systems/new"}
+>
   <.button><%= dgettext("systems", "New System") %></.button>
 </.link>
 
@@ -52,11 +62,15 @@
 <% end %>
 
 <h2><%= dgettext("assets", "Assets") %></h2>
-<.link patch={~p"/organisations/#{@organisation.id}/assets/new"}>
+<.link
+  :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
+  patch={~p"/organisations/#{@organisation.id}/assets/new"}
+>
   <.button><%= dgettext("assets", "New Asset") %></.button>
 </.link>
 
 <.button
+  :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
   disabled={not is_nil(@asking_ai_for_assets)}
   phx-click="suggest_assets"
   phx-value-org_id={@organisation.id}
@@ -138,11 +152,15 @@
 </.modal>
 
 <h2><%= dgettext("threats", "Threats") %></h2>
-<.link patch={~p"/organisations/#{@organisation.id}/threats/new"}>
+<.link
+  :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
+  patch={~p"/organisations/#{@organisation.id}/threats/new"}
+>
   <.button><%= dgettext("threats", "New Threat") %></.button>
 </.link>
 
 <.button
+  :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
   disabled={not is_nil(@asking_ai_for_threats)}
   phx-click="suggest_threats"
   phx-value-org_id={@organisation.id}

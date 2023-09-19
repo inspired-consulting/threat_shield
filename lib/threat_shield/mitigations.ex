@@ -50,6 +50,7 @@ defmodule ThreatShield.Mitigations do
     |> Mitigation.for_user(user_id)
     |> Mitigation.preload_risk()
     |> Mitigation.preload_full_threat()
+    |> Mitigation.preload_membership()
     |> Repo.one!()
   end
 
@@ -69,7 +70,7 @@ defmodule ThreatShield.Mitigations do
     case Repo.transaction(fn ->
            risk =
              Risk.get(risk_id)
-             |> Risk.for_user(user_id)
+             |> Risk.for_user(user_id, :create_mitigation)
              |> Repo.one!()
 
            %Mitigation{}
@@ -95,26 +96,12 @@ defmodule ThreatShield.Mitigations do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_mitigation(%Mitigation{} = mitigation, attrs) do
-    mitigation
+  def update_mitigation(%User{id: user_id}, %Mitigation{id: mitigation_id}, attrs) do
+    Mitigation.get(mitigation_id)
+    |> Mitigation.for_user(user_id, :edit_mitigation)
+    |> Repo.one!()
     |> Mitigation.changeset(attrs)
     |> Repo.update()
-  end
-
-  @doc """
-  Deletes a mitigation.
-
-  ## Examples
-
-      iex> delete_mitigation(mitigation)
-      {:ok, %Mitigation{}}
-
-      iex> delete_mitigation(mitigation)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_mitigation(%Mitigation{} = mitigation) do
-    Repo.delete(mitigation)
   end
 
   @doc """
@@ -132,7 +119,7 @@ defmodule ThreatShield.Mitigations do
 
   def delete_mitigation_by_id!(%User{id: user_id}, id) do
     Mitigation.get(id)
-    |> Mitigation.for_user(user_id)
+    |> Mitigation.for_user(user_id, :delete_mitigation)
     |> Mitigation.select()
     |> Repo.delete_all()
   end
@@ -141,7 +128,7 @@ defmodule ThreatShield.Mitigations do
     Repo.transaction(fn ->
       risk =
         Risk.get(risk_id)
-        |> Risk.for_user(user_id)
+        |> Risk.for_user(user_id, :create_mitigation)
         |> Repo.one!()
 
       %Mitigation{name: name, description: description}

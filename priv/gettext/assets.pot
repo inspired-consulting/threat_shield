@@ -11,13 +11,14 @@
 msgid ""
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:474
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:54
+#: lib/threat_shield_web/live/system_live/show.html.heex:28
 #, elixir-autogen, elixir-format
-msgid "Actions"
+msgid "Assets"
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:76
-#: lib/threat_shield_web/components/core_components.ex:128
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:56
+#: lib/threat_shield_web/live/system_live/show.html.heex:30
 #, elixir-autogen, elixir-format
-msgid "close"
+msgid "New Asset"
 msgstr ""

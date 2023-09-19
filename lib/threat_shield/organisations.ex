@@ -31,6 +31,7 @@ defmodule ThreatShield.Organisations do
   def get_organisation!(%User{id: user_id}, org_id) do
     Organisation.get(org_id)
     |> Organisation.for_user(user_id)
+    |> Organisation.preload_membership()
     |> Organisation.with_systems()
     |> Organisation.with_threats()
     |> Organisation.with_assets()
@@ -43,6 +44,7 @@ defmodule ThreatShield.Organisations do
     |> Organisation.with_threats()
     |> Organisation.with_risks()
     |> Organisation.with_mitigations()
+    |> Organisation.preload_membership()
     |> Repo.one!()
   end
 
@@ -60,20 +62,38 @@ defmodule ThreatShield.Organisations do
   end
 
   def create_organisation(attrs \\ %{}, %User{} = current_user) do
-    %Organisation{}
-    |> Organisation.changeset(attrs)
-    |> Ecto.Changeset.put_assoc(:users, [current_user])
-    |> Repo.insert()
+    case Repo.transaction(fn ->
+           case %Organisation{}
+                |> Organisation.changeset(attrs)
+                |> Repo.insert() do
+             {:ok, org} ->
+               %Membership{organisation: org, user: current_user, role: :owner}
+               |> Membership.changeset(%{})
+               |> Repo.insert()
+
+               {:ok, org}
+
+             x ->
+               x
+           end
+         end) do
+      {:ok, {:ok, org}} -> {:ok, org}
+      {:ok, {:error, e}} -> {:error, e}
+      {:error, e} -> e
+    end
   end
 
-  def update_organisation(%Organisation{} = organisation, %User{} = user, attrs) do
-    changeset =
-      organisation
-      |> Organisation.changeset(attrs)
-
+  def update_organisation(
+        %Organisation{id: org_id},
+        %User{id: user_id},
+        attrs
+      ) do
     Repo.transaction(fn ->
-      Repo.one!(is_member_query(user, organisation))
-      Repo.update!(changeset)
+      Organisation.get(org_id)
+      |> Organisation.for_user(user_id, :edit_organisation)
+      |> Repo.one!()
+      |> Organisation.changeset(attrs)
+      |> Repo.update!()
     end)
   end
 
@@ -85,14 +105,9 @@ defmodule ThreatShield.Organisations do
     Organisation.changeset(organisation, attrs)
   end
 
-  def is_member_query(user, organisation) do
-    from m in Membership,
-      where: m.organisation_id == ^organisation.id and m.user_id == ^user.id
-  end
-
   def delete_org_by_id!(%User{id: user_id}, id) do
     Organisation.get(id)
-    |> Organisation.for_user(user_id)
+    |> Organisation.for_user(user_id, :delete_organisation)
     |> Organisation.select()
     |> Repo.delete_all()
   end

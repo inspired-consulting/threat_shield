@@ -36,7 +36,7 @@ defmodule ThreatShield.Members do
 
            if not is_nil(invite) do
              membership =
-               %Membership{user: user, organisation: invite.organisation}
+               %Membership{user: user, organisation: invite.organisation, role: :viewer}
                |> Repo.insert!()
 
              Repo.delete(invite)
@@ -57,7 +57,7 @@ defmodule ThreatShield.Members do
     case Repo.transaction(fn ->
            organisation =
              Organisation.get(org_id)
-             |> Organisation.for_user(user_id)
+             |> Organisation.for_user(user_id, :invite_new_members)
              |> Repo.one!()
 
            %Invite{token: token}
@@ -75,11 +75,11 @@ defmodule ThreatShield.Members do
     case Repo.transaction(fn ->
            organisation =
              Organisation.get(org_id)
-             |> Organisation.for_user(user_id)
+             |> Organisation.for_user(user_id, :delete_member)
              |> Organisation.with_memberships()
              |> Repo.one!()
 
-           if length(organisation.memberships) >= 2 do
+           if length(organisation.memberships |> Enum.filter(fn m -> m.role == :owner end)) >= 2 do
              Membership.get(membership_id)
              |> Membership.for_user(user_id)
              |> Membership.select()
@@ -96,7 +96,7 @@ defmodule ThreatShield.Members do
 
   def delete_invite_by_id(%User{id: user_id}, invite_id) do
     case Invite.get(invite_id)
-         |> Invite.for_user(user_id)
+         |> Invite.for_user(user_id, :invite_new_members)
          |> Invite.select()
          |> Repo.delete_all() do
       {1, [invite]} -> {:ok, invite}
@@ -119,5 +119,36 @@ defmodule ThreatShield.Members do
 
   def change_invite(%Invite{} = invite, attrs \\ %{}) do
     Invite.changeset(invite, attrs)
+  end
+
+  def change_membership(%Membership{} = membership, attrs \\ %{}) do
+    Membership.changeset(membership, attrs)
+  end
+
+  def update_role(%User{id: user_id}, %Membership{id: membership_id}, role) do
+    case Repo.transaction(fn ->
+           old_membership =
+             Membership.get(membership_id)
+             |> Membership.for_user(user_id, :edit_membership)
+             |> Membership.preload_org_memberships()
+             |> Repo.one()
+
+           num_owners =
+             length(
+               Enum.filter(old_membership.organisation.memberships, fn m -> m.role == :owner end)
+             )
+
+           if old_membership.role == :owner and num_owners <= 1 do
+             {:error, :last_owner}
+           else
+             old_membership
+             |> Membership.changeset(%{"role" => role})
+             |> Repo.update()
+           end
+         end) do
+      {:ok, {:ok, membership}} -> {:ok, membership}
+      {:ok, {:error, e}} -> {:error, e}
+      {:error, e} -> {:error, e}
+    end
   end
 end

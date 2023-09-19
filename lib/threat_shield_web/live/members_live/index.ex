@@ -15,7 +15,11 @@ defmodule ThreatShieldWeb.MembersLive.Index do
 
     {:ok,
      socket
-     |> assign(:organisation, organisation)}
+     |> assign(:organisation, organisation)
+     |> assign(
+       :current_org_membership,
+       organisation.memberships |> Enum.find(fn m -> m.user.id == user.id end)
+     )}
   end
 
   @impl true
@@ -53,6 +57,20 @@ defmodule ThreatShieldWeb.MembersLive.Index do
   end
 
   @impl true
+  def handle_info({ThreatShieldWeb.MembersLive.RoleFormComponent, {:saved, _membership}}, socket) do
+    user = socket.assigns.current_user
+    organisation = Members.get_organisation!(user, socket.assigns.organisation.id)
+
+    {:noreply,
+     socket
+     |> assign(:organisation, organisation)
+     |> assign(
+       :current_org_membership,
+       organisation.memberships |> Enum.find(fn m -> m.user.id == user.id end)
+     )}
+  end
+
+  @impl true
   def handle_event("delete_membership", %{"membership_id" => id}, socket) do
     user = socket.assigns.current_user
     organisation = socket.assigns.organisation
@@ -75,6 +93,19 @@ defmodule ThreatShieldWeb.MembersLive.Index do
            }
          )}
     end
+  end
+
+  @impl true
+  def handle_event("edit_membership", %{"membership_id" => id}, socket) do
+    organisation = socket.assigns.organisation
+
+    {:noreply,
+     socket
+     |> assign(:live_action, :edit_membership)
+     |> assign(
+       :membership_to_edit,
+       Enum.find(organisation.memberships, fn m -> m.id == String.to_integer(id) end)
+     )}
   end
 
   @impl true

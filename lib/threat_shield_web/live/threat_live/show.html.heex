@@ -2,12 +2,14 @@
   <%= @threat.name %>
   <:actions>
     <.link
+      :if={ThreatShield.Members.Rights.may(:delete_threat, @membership)}
       phx-click={JS.push("delete", value: %{threat_id: @threat.id})}
       data-confirm="Are you sure?"
     >
       <.button><%= dgettext("common", "Delete") %></.button>
     </.link>
     <.link
+      :if={ThreatShield.Members.Rights.may(:edit_threat, @membership)}
       patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/edit"}
       phx-click={JS.push_focus()}
     >
@@ -24,13 +26,17 @@
 <h2><%= dgettext("risks", "Risks") %></h2>
 
 <.button
+  :if={ThreatShield.Members.Rights.may(:create_risk, @membership)}
   disabled={not is_nil(@asking_ai)}
   phx-click="suggest_risks"
   phx-value-threat_id={@threat.id}
 >
   <%= dgettext("risks", "Suggest Risks") %>
 </.button>
-<.link patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/new"}>
+<.link
+  :if={ThreatShield.Members.Rights.may(:create_risk, @membership)}
+  patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/new"}
+>
   <.button>New Risk</.button>
 </.link>
 

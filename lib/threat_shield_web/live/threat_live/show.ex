@@ -5,6 +5,7 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   alias ThreatShield.Risks.Risk
   alias ThreatShield.Risks
   alias ThreatShield.AI
+  alias ThreatShield.Organisations.Organisation
 
   import ThreatShield.Threats.Threat, only: [system_name: 1]
   import ThreatShield.Organisations.Organisation, only: [list_system_options: 1]
@@ -19,6 +20,7 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
       socket
       |> assign(:threat, threat)
       |> assign(:organisation, threat.organisation)
+      |> assign(:membership, Organisation.get_membership(threat.organisation, current_user))
       |> assign(:system, threat.system)
       |> assign(:page_title, page_title(socket.assigns.live_action))
       |> assign(:asking_ai, nil)

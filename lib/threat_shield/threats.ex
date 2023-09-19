@@ -12,7 +12,6 @@ defmodule ThreatShield.Threats do
   alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Systems.System
-  alias ThreatShield.Systems
 
   def get_organisation!(%User{} = user, org_id) do
     Organisations.get_organisation!(user, org_id)
@@ -26,12 +25,13 @@ defmodule ThreatShield.Threats do
     |> Threat.with_system()
     |> Threat.with_organisation_and_risks()
     |> Threat.with_org_systems()
+    |> Threat.preload_membership()
     |> Repo.one!()
   end
 
   def create_threat(
-        %User{} = user,
-        %Organisation{} = organisation,
+        %User{id: user_id} = user,
+        %Organisation{id: org_id} = organisation,
         attrs \\ %{}
       ) do
     changeset =
@@ -40,14 +40,27 @@ defmodule ThreatShield.Threats do
 
     Repo.transaction(fn ->
       check_related_system_in_threat_changeset(changeset, user)
-      Repo.one!(Organisations.is_member_query(user, organisation))
+
+      Organisation.get(org_id)
+      |> Organisation.for_user(user_id, :create_threat)
+      |> Repo.one!()
+
       Repo.insert!(changeset)
     end)
   end
 
-  def add_threat_with_name_and_description(%User{} = user, %System{id: sys_id}, name, description) do
+  def add_threat_with_name_and_description(
+        %User{id: user_id},
+        %System{id: sys_id},
+        name,
+        description
+      ) do
     Repo.transaction(fn ->
-      system = Systems.get_system!(user, sys_id)
+      system =
+        System.get(sys_id)
+        |> System.for_user(user_id, :create_threat)
+        |> System.preload_organisation()
+        |> Repo.one!()
 
       changeset =
         %Threat{
@@ -62,9 +75,12 @@ defmodule ThreatShield.Threats do
     end)
   end
 
-  def add_threat_with_name_and_description(%User{} = user, org_id, name, description) do
+  def add_threat_with_name_and_description(%User{id: user_id}, org_id, name, description) do
     Repo.transaction(fn ->
-      organisation = Organisations.get_organisation!(user, org_id)
+      organisation =
+        Organisation.get(org_id)
+        |> Organisation.for_user(user_id, :create_threat)
+        |> Repo.one!()
 
       changeset =
         %Threat{organisation: organisation, description: description, name: name}
@@ -74,20 +90,27 @@ defmodule ThreatShield.Threats do
     end)
   end
 
-  def update_threat(%User{} = user, %Threat{} = threat, attrs) do
+  def update_threat(%User{id: user_id} = user, %Threat{id: threat_id} = threat, attrs) do
     changeset =
       threat
       |> Threat.changeset(attrs)
 
     Repo.transaction(fn ->
       check_related_system_in_threat_changeset(changeset, user)
-      Repo.one!(get_single_threat_query(user, threat.id))
+
+      Threat.get(threat_id)
+      |> Threat.for_user(user_id, :edit_threat)
+      |> Repo.one!()
+
       Repo.update!(changeset)
     end)
   end
 
-  def delete_threat_by_id(%User{} = user, threat_id) do
-    case Repo.delete_all(get_single_threat_query(user, threat_id)) do
+  def delete_threat_by_id(%User{id: user_id}, threat_id) do
+    case Threat.get(threat_id)
+         |> Threat.for_user(user_id, :delete_threat)
+         |> Threat.select()
+         |> Repo.delete_all() do
       {1, _} -> {:ok, 1}
       _ -> {:error, :unauthorized}
     end
@@ -114,10 +137,5 @@ defmodule ThreatShield.Threats do
   end
 
   defp check_related_system_in_threat_changeset(_, _user) do
-  end
-
-  def get_single_threat_query(user, threat_id) do
-    Threat.get(threat_id)
-    |> Threat.for_user(user.id)
   end
 end

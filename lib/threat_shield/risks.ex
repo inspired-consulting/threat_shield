@@ -14,6 +14,7 @@ defmodule ThreatShield.Risks do
     Risk.get(risk_id)
     |> Risk.for_user(user_id)
     |> Risk.preload_threat()
+    |> Risk.preload_membership()
     |> Risk.with_organisation()
     |> Risk.with_org_systems()
     |> Risk.with_mitigations()
@@ -32,7 +33,7 @@ defmodule ThreatShield.Risks do
     Repo.transaction(fn ->
       threat =
         Threat.get(threat_id)
-        |> Threat.for_user(user_id)
+        |> Threat.for_user(user_id, :create_risk)
         |> Repo.one!()
 
       %Risk{}
@@ -45,7 +46,7 @@ defmodule ThreatShield.Risks do
   def update_risk(%User{id: user_id}, %Risk{id: risk_id} = risk, attrs) do
     Repo.transaction(fn ->
       Risk.get(risk_id)
-      |> Risk.for_user(user_id)
+      |> Risk.for_user(user_id, :edit_risk)
       |> Repo.one!()
 
       risk
@@ -56,7 +57,7 @@ defmodule ThreatShield.Risks do
 
   def delete_risk_by_id!(%User{id: user_id}, id) do
     Risk.get(id)
-    |> Risk.for_user(user_id)
+    |> Risk.for_user(user_id, :delete_risk)
     |> Risk.select()
     |> Repo.delete_all()
   end
@@ -78,7 +79,7 @@ defmodule ThreatShield.Risks do
     Repo.transaction(fn ->
       threat =
         Threat.get(threat_id)
-        |> Threat.for_user(user_id)
+        |> Threat.for_user(user_id, :create_risk)
         |> Repo.one!()
 
       %Risk{name: name, description: description}

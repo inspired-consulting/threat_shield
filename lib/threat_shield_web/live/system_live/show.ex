@@ -1,4 +1,5 @@
 defmodule ThreatShieldWeb.SystemLive.Show do
+  alias ThreatShield.Organisations.Organisation
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Systems
@@ -21,6 +22,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
      socket
      |> assign(:system, system)
      |> assign(:organisation, system.organisation)
+     |> assign(:membership, Organisation.get_membership(system.organisation, user))
      |> assign(:attribute_keys, attribute_keys())
      |> assign(:asking_ai_for_assets, nil)
      |> assign(:asking_ai_for_threats, nil)

@@ -11,13 +11,12 @@
 msgid ""
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:474
+#: lib/threat_shield_web/live/risk_live/show.html.heex:22
 #, elixir-autogen, elixir-format
-msgid "Actions"
+msgid "Mitigations"
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:76
-#: lib/threat_shield_web/components/core_components.ex:128
+#: lib/threat_shield_web/live/risk_live/show.html.heex:29
 #, elixir-autogen, elixir-format
-msgid "close"
+msgid "Suggest Mitigations"
 msgstr ""

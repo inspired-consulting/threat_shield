@@ -15,3 +15,8 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "Risks"
 msgstr ""
+
+#: lib/threat_shield_web/live/threat_live/show.html.heex:31
+#, elixir-autogen, elixir-format
+msgid "Suggest Risks"
+msgstr ""

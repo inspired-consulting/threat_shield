@@ -1,4 +1,5 @@
 defmodule ThreatShieldWeb.RiskLive.Show do
+  alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Mitigations.Mitigation
   use ThreatShieldWeb, :live_view
 
@@ -18,6 +19,7 @@ defmodule ThreatShieldWeb.RiskLive.Show do
      |> assign(risk: risk)
      |> assign(threat: risk.threat)
      |> assign(organisation: risk.threat.organisation)
+     |> assign(:membership, Organisation.get_membership(risk.threat.organisation, user))
      |> assign(system: risk.threat.system)
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:asking_ai, nil)

@@ -2,12 +2,14 @@
   <%= @asset.name %>
   <:actions>
     <.link
+      :if={ThreatShield.Members.Rights.may(:delete_asset, @membership)}
       phx-click={JS.push("delete", value: %{asset_id: @asset.id})}
       data-confirm="Are you sure?"
     >
       <.button><%= dgettext("common", "Delete") %></.button>
     </.link>
     <.link
+      :if={ThreatShield.Members.Rights.may(:edit_asset, @membership)}
       patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}/show/edit"}
       phx-click={JS.push_focus()}
     >

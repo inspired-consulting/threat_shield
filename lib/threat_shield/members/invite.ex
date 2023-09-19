@@ -1,4 +1,5 @@
 defmodule ThreatShield.Members.Invite do
+  alias ThreatShield.Organisations.Organisation
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -69,8 +70,13 @@ defmodule ThreatShield.Members.Invite do
   def for_user(query, user_id) do
     query
     |> join(:inner, [invite: i], assoc(i, :organisation), as: :organisation)
-    |> join(:inner, [organisation: o], assoc(o, :users), as: :users)
-    |> where([users: u], u.id == ^user_id)
+    |> Organisation.for_user(user_id)
+  end
+
+  def for_user(query, user_id, right) do
+    query
+    |> join(:inner, [invite: i], assoc(i, :organisation), as: :organisation)
+    |> Organisation.for_user(user_id, right)
   end
 
   def select(query) do

@@ -2,6 +2,7 @@ defmodule ThreatShieldWeb.DashboardLive.Index do
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Organisations
+  alias ThreatShield.Organisations.Organisation
 
   @impl true
   def mount(params, _session, socket) do
@@ -31,5 +32,9 @@ defmodule ThreatShieldWeb.DashboardLive.Index do
     |> assign(:organisation, organisation)
     |> assign(:threats, organisation.threats)
     |> assign(:path_prefix, "/organisations/#{organisation.id}")
+    |> assign(
+      :membership,
+      Organisation.get_membership(organisation, socket.assigns.current_user)
+    )
   end
 end

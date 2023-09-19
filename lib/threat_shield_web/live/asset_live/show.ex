@@ -2,6 +2,7 @@ defmodule ThreatShieldWeb.AssetLive.Show do
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Assets
+  alias ThreatShield.Organisations.Organisation
 
   import ThreatShield.Assets.Asset,
     only: [system_name: 1]
@@ -20,6 +21,10 @@ defmodule ThreatShieldWeb.AssetLive.Show do
       socket
       |> assign(:asset, asset)
       |> assign(:organisation, asset.organisation)
+      |> assign(
+        :membership,
+        Organisation.get_membership(asset.organisation, current_user)
+      )
       |> assign(:system, asset.system)
       |> assign(:called_via_system, Map.has_key?(params, "sys_id"))
 
@@ -43,8 +48,8 @@ defmodule ThreatShieldWeb.AssetLive.Show do
 
   @impl true
   def handle_event("delete", %{"asset_id" => asset_id}, socket) do
-    asset = Assets.get_asset!(socket.assigns.current_user, asset_id)
-    {:ok, _} = Assets.delete_asset(socket.assigns.current_user, asset)
+    user = socket.assigns.current_user
+    {1, [_asset]} = Assets.delete_asset_by_id(user, asset_id)
 
     {:noreply, push_navigate(socket, to: get_path_prefix(socket.assigns))}
   end
