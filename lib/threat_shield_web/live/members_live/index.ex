@@ -97,7 +97,6 @@ defmodule ThreatShieldWeb.MembersLive.Index do
 
   @impl true
   def handle_event("edit_membership", %{"membership_id" => id}, socket) do
-    user = socket.assigns.current_user
     organisation = socket.assigns.organisation
 
     {:noreply,
