@@ -2,12 +2,14 @@
   <%= @system.name %>
   <:actions>
     <.link
+      :if={ThreatShield.Members.Rights.may(:delete_system, @membership)}
       phx-click={JS.push("delete", value: %{sys_id: @system.id})}
       data-confirm="Are you sure?"
     >
       <.button><%= dgettext("common", "Delete") %></.button>
     </.link>
     <.link
+      :if={ThreatShield.Members.Rights.may(:edit_system, @membership)}
       patch={~p"/organisations/#{@organisation.id}/systems/#{@system}/edit"}
       phx-click={JS.push_focus()}
     >
@@ -26,11 +28,15 @@
 </.list>
 
 <h2><%= dgettext("assets", "Assets") %></h2>
-<.link patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/assets/new"}>
+<.link
+  :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
+  patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/assets/new"}
+>
   <.button><%= dgettext("assets", "New Asset") %></.button>
 </.link>
 
 <.button
+  :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
   disabled={not is_nil(@asking_ai_for_assets)}
   phx-click="suggest_assets"
   phx-value-sys_id={@system.id}
@@ -56,11 +62,15 @@
 <% end %>
 
 <h2><%= dgettext("threats", "Threats") %></h2>
-<.link patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/new"}>
+<.link
+  :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
+  patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/new"}
+>
   <.button><%= dgettext("threats", "New Threat") %></.button>
 </.link>
 
 <.button
+  :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
   disabled={not is_nil(@asking_ai_for_threats)}
   phx-click="suggest_threats"
   phx-value-sys_id={@system.id}

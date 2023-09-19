@@ -2,12 +2,14 @@
   <%= @mitigation.name %>
   <:actions>
     <.link
+      :if={ThreatShield.Members.Rights.may(:delete_mitigation, @membership)}
       phx-click={JS.push("delete", value: %{mitigation_id: @mitigation.id})}
       data-confirm="Are you sure?"
     >
       <.button><%= dgettext("common", "Delete") %></.button>
     </.link>
     <.link
+      :if={ThreatShield.Members.Rights.may(:edit_mitigation, @membership)}
       patch={
         get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/#{@mitigation.id}/edit"
       }

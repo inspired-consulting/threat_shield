@@ -50,9 +50,20 @@ defmodule ThreatShield.Systems.System do
     |> Organisation.for_user(user_id)
   end
 
+  def for_user(query, user_id, right) do
+    query
+    |> join(:inner, [system: s], assoc(s, :organisation), as: :organisation)
+    |> Organisation.for_user(user_id, right)
+  end
+
   def preload_organisation(query) do
     query
     |> preload([organisation: o], organisation: o)
+  end
+
+  def preload_membership(query) do
+    query
+    |> preload([organisation: o, memberships: m], organisation: {o, :memberships})
   end
 
   def with_assets(query) do

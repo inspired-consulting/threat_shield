@@ -4,6 +4,7 @@ defmodule ThreatShield.Systems do
   """
 
   import Ecto.Query, warn: false
+  alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Repo
 
   alias ThreatShield.Accounts.User
@@ -21,6 +22,7 @@ defmodule ThreatShield.Systems do
     |> System.with_assets()
     |> System.with_threats()
     |> System.preload_organisation()
+    |> System.preload_membership()
     |> Repo.one!()
   end
 
@@ -36,15 +38,17 @@ defmodule ThreatShield.Systems do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_system(user, organisation, attrs \\ %{}) do
-    changeset =
+  def create_system(%User{id: user_id}, %Organisation{id: org_id}, attrs \\ %{}) do
+    Repo.transaction(fn ->
+      organisation =
+        Organisation.get(org_id)
+        |> Organisation.for_user(user_id, :create_system)
+        |> Repo.one!()
+
       %System{}
       |> System.changeset(attrs)
       |> Ecto.Changeset.put_assoc(:organisation, organisation)
-
-    Repo.transaction(fn ->
-      Repo.one!(Organisations.is_member_query(user, organisation))
-      Repo.insert!(changeset)
+      |> Repo.insert!()
     end)
   end
 
@@ -60,39 +64,17 @@ defmodule ThreatShield.Systems do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_system(user, organisation, %System{} = system, attrs) do
-    changeset =
-      system
-      |> System.changeset(attrs)
-
-    Repo.transaction(fn ->
-      Repo.one!(Organisations.is_member_query(user, organisation))
-      Repo.update!(changeset)
-    end)
-  end
-
-  @doc """
-  Deletes a system.
-
-  ## Examples
-
-      iex> delete_system(system)
-      {:ok, %System{}}
-
-      iex> delete_system(system)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_system(user, organisation, %System{} = system) do
-    Repo.transaction(fn ->
-      Repo.one!(Organisations.is_member_query(user, organisation))
-      Repo.delete(system)
-    end)
+  def update_system(%User{id: user_id}, %System{id: sys_id}, attrs) do
+    System.get(sys_id)
+    |> System.for_user(user_id, :edit_system)
+    |> Repo.one!()
+    |> System.changeset(attrs)
+    |> Repo.update()
   end
 
   def delete_sys_by_id!(%User{id: user_id}, id) do
     System.get(id)
-    |> System.for_user(user_id)
+    |> System.for_user(user_id, :delete_system)
     |> System.select()
     |> Repo.delete_all()
   end

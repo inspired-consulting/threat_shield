@@ -9,8 +9,6 @@ defmodule ThreatShield.Assets do
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Accounts.User
   alias ThreatShield.Systems.System
-  alias ThreatShield.Systems
-  alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Organisation
 
   def get_organisation!(%User{id: user_id}, org_id) do
@@ -28,17 +26,25 @@ defmodule ThreatShield.Assets do
     |> Asset.preload_organisation()
     |> Asset.with_org_systems()
     |> Asset.with_system()
+    |> Asset.preload_membership()
     |> Repo.one!()
   end
 
-  def create_asset(%User{} = user, %Organisation{} = organisation, attrs \\ %{}) do
+  def create_asset(
+        %User{id: user_id} = user,
+        %Organisation{id: org_id} = organisation,
+        attrs \\ %{}
+      ) do
     changeset =
       %Asset{organisation: organisation}
       |> Asset.changeset(attrs)
 
     Repo.transaction(fn ->
       check_related_system_in_asset_changeset(changeset, user)
-      Repo.one!(Organisations.is_member_query(user, organisation))
+
+      Organisation.get(org_id)
+      |> Organisation.for_user(user_id, :create_asset)
+      |> Repo.one!()
 
       Repo.insert!(changeset)
       |> Repo.reload!()
@@ -46,14 +52,17 @@ defmodule ThreatShield.Assets do
     end)
   end
 
-  def update_asset(%User{} = user, %Asset{} = asset, attrs) do
+  def update_asset(%User{id: user_id} = user, %Asset{id: asset_id} = asset, attrs) do
     changeset =
       asset
       |> Asset.changeset(attrs)
 
     Repo.transaction(fn ->
       check_related_system_in_asset_changeset(changeset, user)
-      Repo.one!(get_single_asset_query(user, asset.id))
+
+      Asset.get(asset_id)
+      |> Asset.for_user(user_id, :edit_asset)
+      |> Repo.one!()
 
       Repo.update!(changeset)
       |> Repo.reload!()
@@ -71,20 +80,29 @@ defmodule ThreatShield.Assets do
   defp check_related_system_in_asset_changeset(_, _user) do
   end
 
-  def delete_asset(%User{} = user, %Asset{} = asset) do
-    Repo.transaction(fn ->
-      Repo.one!(get_single_asset_query(user, asset.id))
-      Repo.delete!(asset)
-    end)
+  def delete_asset_by_id(%User{id: user_id}, asset_id) do
+    Asset.get(asset_id)
+    |> Asset.for_user(user_id, :delete_asset)
+    |> Asset.select()
+    |> Repo.delete_all()
   end
 
   def change_asset(%Asset{} = asset, attrs \\ %{}) do
     Asset.changeset(asset, attrs)
   end
 
-  def add_asset_with_name_and_description(%User{} = user, %System{id: sys_id}, name, description) do
+  def add_asset_with_name_and_description(
+        %User{id: user_id},
+        %System{id: sys_id},
+        name,
+        description
+      ) do
     Repo.transaction(fn ->
-      system = Systems.get_system!(user, sys_id)
+      system =
+        System.get(sys_id)
+        |> System.for_user(user_id, :create_asset)
+        |> System.preload_organisation()
+        |> Repo.one!()
 
       changeset =
         %Asset{
@@ -99,9 +117,12 @@ defmodule ThreatShield.Assets do
     end)
   end
 
-  def add_asset_with_name_and_description(%User{} = user, org_id, name, description) do
+  def add_asset_with_name_and_description(%User{id: user_id}, org_id, name, description) do
     Repo.transaction(fn ->
-      organisation = Organisations.get_organisation!(user, org_id)
+      organisation =
+        Organisation.get(org_id)
+        |> Organisation.for_user(user_id, :create_asset)
+        |> Repo.one!()
 
       changeset =
         %Asset{organisation: organisation, description: description, name: name}
@@ -109,10 +130,5 @@ defmodule ThreatShield.Assets do
 
       Repo.insert!(changeset)
     end)
-  end
-
-  defp get_single_asset_query(user, asset_id) do
-    Asset.get(asset_id)
-    |> Asset.for_user(user.id)
   end
 end
