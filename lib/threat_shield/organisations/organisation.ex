@@ -128,9 +128,9 @@ defmodule ThreatShield.Organisations.Organisation do
 
   def with_memberships(query) do
     query
-    |> join(:left, [organisation: o], assoc(o, :memberships), as: :memberships)
-    |> join(:left, [memberships: m], assoc(m, :user), as: :membership_users)
-    |> preload([memberships: m, membership_users: u], memberships: {m, user: u})
+    |> join(:left, [organisation: o], assoc(o, :memberships), as: :all_memberships)
+    |> join(:left, [all_memberships: m], assoc(m, :user), as: :all_membership_users)
+    |> preload([all_memberships: m, all_membership_users: u], memberships: {m, user: u})
   end
 
   def with_invites(query) do
