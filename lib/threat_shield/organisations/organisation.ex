@@ -54,7 +54,7 @@ defmodule ThreatShield.Organisations.Organisation do
 
   def describe(%__MODULE__{name: name, attributes: attributes, systems: systems}) do
     attribute_description =
-      "It has the following attributes:\n" <>
+      "It has the following properties:\n" <>
         (attributes
          |> Enum.filter(fn {_, val} -> val != "" end)
          |> Enum.map_join("\n", fn {key, val} -> ~s{"#{key}: ", "#{val}"} end))
@@ -65,7 +65,9 @@ defmodule ThreatShield.Organisations.Organisation do
          |> Enum.map(fn sys -> System.describe(sys) end)
          |> Enum.join("\n"))
 
-    "The name of my organisation is #{name}." <> attribute_description <> system_description
+    """
+    The name of the organisation is "#{name}".
+    """ <> attribute_description <> system_description
   end
 
   import Ecto.Query
