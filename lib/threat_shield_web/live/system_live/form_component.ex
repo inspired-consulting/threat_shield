@@ -3,7 +3,7 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
 
   alias ThreatShield.Systems
 
-  import ThreatShield.Systems.System, only: [attribute_keys: 0]
+  import ThreatShield.Systems.System, only: [attributes: 0]
 
   @impl true
   def render(assigns) do
@@ -23,13 +23,14 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
       >
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:description]} type="text" label="Description" />
-        <%= for attribute_key <- attribute_keys() do %>
+        <%= for attribute <- @attributes do %>
           <.input
-            name={attribute_key}
-            value={Map.get(@attribute_map, attribute_key, "")}
+            name={attribute.name}
+            value={Map.get(@attribute_map, attribute.name, "")}
             type="text"
-            label={attribute_key}
+            label={attribute.name}
           />
+          <em><%= attribute.description %></em>
         <% end %>
         <:actions>
           <.button phx-disable-with="Saving...">Save System</.button>
@@ -74,8 +75,8 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
   end
 
   defp extract_attributes_from_params(params) do
-    attribute_keys()
-    |> Enum.map(fn key -> {key, Map.get(params, key, "")} end)
+    attributes()
+    |> Enum.map(fn d -> {d.name, Map.get(params, d.name, "")} end)
     |> Map.new()
   end
 

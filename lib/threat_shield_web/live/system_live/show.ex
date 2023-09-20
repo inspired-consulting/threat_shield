@@ -9,7 +9,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Threats
   alias ThreatShield.AI
-  import ThreatShield.Systems.System, only: [attribute_keys: 0]
+  alias ThreatShield.Systems.System
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
 
   @impl true
@@ -23,7 +23,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
      |> assign(:system, system)
      |> assign(:organisation, system.organisation)
      |> assign(:membership, Organisation.get_membership(system.organisation, user))
-     |> assign(:attribute_keys, attribute_keys())
+     |> assign(:attributes, System.attributes())
      |> assign(:asking_ai_for_assets, nil)
      |> assign(:asking_ai_for_threats, nil)
      |> assign(:asset_suggestions, [])

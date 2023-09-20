@@ -223,7 +223,7 @@ defmodule ThreatShield.AI do
         ""
       else
         """
-        The only relvant system in this context is "#{risk.threat.system}".
+        The only relvant system in this context is "#{risk.threat.system.name}".
         """
       end
 

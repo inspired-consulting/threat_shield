@@ -4,8 +4,21 @@ defmodule ThreatShield.Organisations.Organisation do
 
   alias ThreatShield.Systems.System
   alias ThreatShield.Accounts.User
+  alias ThreatShield.DynamicAttribute
 
   import ThreatShield.Members.Rights, only: [get_authorised_roles: 1]
+
+  @attributes [
+    %DynamicAttribute{
+      name: "Industry",
+      description: "Examples of industry are financial services, health, IT."
+    },
+    %DynamicAttribute{
+      name: "Legal Form",
+      description: "Examples of legal form are LLC, Nonprofit, B Corps."
+    },
+    %DynamicAttribute{name: "Size", description: "Examples of sizes are small, medium, large."}
+  ]
 
   schema "organisations" do
     field :name, :string
@@ -34,14 +47,8 @@ defmodule ThreatShield.Organisations.Organisation do
     |> validate_required([:name])
   end
 
-  def attribute_keys() do
-    [
-      "Industry",
-      "Legal Form",
-      "Type of Business",
-      "Size",
-      "Financial Information"
-    ]
+  def attributes() do
+    @attributes
   end
 
   def get_membership(%__MODULE__{memberships: memberships}, %User{id: user_id}) do
@@ -53,11 +60,20 @@ defmodule ThreatShield.Organisations.Organisation do
   end
 
   def describe(%__MODULE__{name: name, attributes: attributes, systems: systems}) do
-    attribute_description =
-      "It has the following properties:\n" <>
+    name_string = """
+    The name of the organisation is "#{name}".
+    """
+
+    attribute_values =
+      "The organisation has the following properties:\n" <>
         (attributes
          |> Enum.filter(fn {_, val} -> val != "" end)
          |> Enum.map_join("\n", fn {key, val} -> ~s{"#{key}: ", "#{val}"} end))
+
+    attribute_description =
+      "The organisation properties have the following user-facing descriptions:\n" <>
+        (@attributes
+         |> Enum.map_join("\n", fn d -> ~s{"#{d.name}: ", "#{d.description}"} end))
 
     system_description =
       "It has the following systems:\n" <>
@@ -65,9 +81,8 @@ defmodule ThreatShield.Organisations.Organisation do
          |> Enum.map(fn sys -> System.describe(sys) end)
          |> Enum.join("\n"))
 
-    """
-    The name of the organisation is "#{name}".
-    """ <> attribute_description <> system_description
+    [name_string, attribute_values, attribute_description, system_description]
+    |> Enum.join(" ")
   end
 
   import Ecto.Query
