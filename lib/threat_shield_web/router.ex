@@ -40,7 +40,10 @@ defmodule ThreatShieldWeb.Router do
     scope "/dev" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: ThreatShieldWeb.Telemetry
+      live_dashboard "/dashboard",
+        metrics: ThreatShieldWeb.Telemetry,
+        ecto_repos: [ThreatShield.Repo]
+
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
