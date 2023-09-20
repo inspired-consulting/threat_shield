@@ -19,7 +19,7 @@ defmodule ThreatShield.MixProject do
   def application do
     [
       mod: {ThreatShield.Application, []},
-      extra_applications: [:dotenv, :logger, :runtime_tools, :bcrypt_elixir]
+      extra_applications: [:dotenv, :logger, :runtime_tools, :os_mon, :bcrypt_elixir]
     ]
   end
 
