@@ -19,7 +19,7 @@ defmodule ThreatShield.MixProject do
   def application do
     [
       mod: {ThreatShield.Application, []},
-      extra_applications: [:dotenv, :logger, :runtime_tools, :bcrypt_elixir]
+      extra_applications: [:dotenv, :logger, :runtime_tools, :os_mon, :bcrypt_elixir]
     ]
   end
 
@@ -52,7 +52,8 @@ defmodule ThreatShield.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:openai, "~> 0.5.2"}
+      {:openai, "~> 0.5.2"},
+      {:ecto_psql_extras, "~> 0.7.13"}
     ]
   end
 

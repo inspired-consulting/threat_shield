@@ -2,6 +2,7 @@ import Config
 
 # Configure your database
 config :threat_shield, ThreatShield.Repo,
+  adapter: Ecto.Adapters.Postgres,
   username: System.get_env("POSTGRES_USER", "threat_shield"),
   password: System.get_env("POSTGRES_PASSWORD", "secret"),
   hostname: System.get_env("POSTGRES_HOST", "localhost"),
