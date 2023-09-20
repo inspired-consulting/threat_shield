@@ -3,6 +3,22 @@ defmodule ThreatShield.Systems.System do
   import Ecto.Changeset
 
   alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.DynamicAttribute
+
+  @attributes [
+    %DynamicAttribute{
+      name: "Database",
+      description: "Examples of databases are Postgres, MySQL, Neo4j."
+    },
+    %DynamicAttribute{
+      name: "Application Framework",
+      description: "Examples of application frameworks are Django, Ruby on Rails, Flutter."
+    },
+    %DynamicAttribute{
+      name: "Authentication Framework",
+      description: "Examples of authentication frameworks are Passport.js, Okta, Keycloak."
+    }
+  ]
 
   schema "systems" do
     field :attributes, :map
@@ -24,20 +40,28 @@ defmodule ThreatShield.Systems.System do
     |> validate_length(:name, max: 60)
   end
 
-  def attribute_keys() do
-    ["Database", "Application Framework", "Authentication Framework"]
+  def attributes() do
+    @attributes
   end
 
   def describe(%__MODULE__{name: name, description: description, attributes: attributes}) do
-    attribute_description =
-      "It has the following properties:\n" <>
+    name_string = """
+    The name of the system is "#{name}". It can be described as follows: "#{description}".
+    """
+
+    attribute_values =
+      "The system has the following properties:\n" <>
         (attributes
          |> Enum.filter(fn {_, val} -> val != "" end)
          |> Enum.map_join("\n", fn {key, val} -> ~s{"#{key}: ", "#{val}"} end))
 
-    """
-    The system "#{name}" can be described as follows:\n
-    """ <> description <> attribute_description
+    attribute_description =
+      "The system properties have the following user-facing descriptions:\n" <>
+        (@attributes
+         |> Enum.map_join("\n", fn d -> ~s{"#{d.name}: ", "#{d.description}"} end))
+
+    [name_string, attribute_values, attribute_description]
+    |> Enum.join(" ")
   end
 
   import Ecto.Query

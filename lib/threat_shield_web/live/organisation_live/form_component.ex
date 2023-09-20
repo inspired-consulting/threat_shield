@@ -4,7 +4,7 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
 
   alias ThreatShield.Organisations
 
-  import ThreatShield.Organisations.Organisation, only: [attribute_keys: 0]
+  import ThreatShield.Organisations.Organisation, only: [attributes: 0]
 
   @impl true
   def render(assigns) do
@@ -28,13 +28,14 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
           label="Choose your location"
           options={@locations_options}
         />
-        <%= for attribute_key <- @attribute_keys do %>
+        <%= for attribute <- @attributes do %>
           <.input
-            name={attribute_key}
-            value={Map.get(@attribute_map, attribute_key, "")}
+            name={attribute.name}
+            value={Map.get(@attribute_map, attribute.name, "")}
             type="text"
-            label={attribute_key}
+            label={attribute.name}
           />
+          <em><%= attribute.description %></em>
         <% end %>
         <:actions>
           <.button phx-disable-with="Saving...">Save Organisation</.button>
@@ -82,8 +83,8 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   end
 
   defp extract_attributes_from_params(params) do
-    attribute_keys()
-    |> Enum.map(fn key -> {key, Map.get(params, key, "")} end)
+    attributes()
+    |> Enum.map(fn d -> {d.name, Map.get(params, d.name, "")} end)
     |> Map.new()
   end
 

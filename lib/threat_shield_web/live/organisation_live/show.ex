@@ -13,7 +13,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   alias ThreatShield.AI
 
   import ThreatShield.Organisations.Organisation,
-    only: [attribute_keys: 0, list_system_options: 1]
+    only: [attributes: 0, list_system_options: 1]
 
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
 
@@ -28,10 +28,11 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
 
     socket =
       socket
-      |> assign(:attribute_keys, attribute_keys())
+      |> assign(:attributes, attributes())
       |> assign(:organisation, organisation)
       |> assign(:membership, membership)
       |> assign(locations_options: Locations.list_locations())
+      |> assign(:attributes, Organisation.attributes())
       |> assign(:asking_ai_for_assets, nil)
       |> assign(:asking_ai_for_threats, nil)
       |> assign(:asset_suggestions, [])

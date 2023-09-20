@@ -106,7 +106,7 @@
     title={@page_title}
     action={@live_action}
     organisation={@organisation}
-    attribute_keys={@attribute_keys}
+    attributes={@attributes}
     locations_options={@locations_options}
     current_user={@current_user}
     patch={~p"/organisations/#{@organisation}"}
@@ -127,7 +127,7 @@
     system={@system}
     organisation={@organisation}
     current_user={@current_user}
-    attribute_keys={@attribute_keys}
+    attributes={System.attributes()}
     patch={~p"/organisations/#{@organisation.id}"}
   />
 </.modal>
