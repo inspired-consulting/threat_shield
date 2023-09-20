@@ -22,6 +22,7 @@ defmodule ThreatShield.Systems do
     |> System.with_assets()
     |> System.with_threats()
     |> System.preload_organisation()
+    |> System.with_org_systems()
     |> System.preload_membership()
     |> Repo.one!()
   end

@@ -30,12 +30,14 @@ defmodule ThreatShield.Systems.System do
 
   def describe(%__MODULE__{name: name, description: description, attributes: attributes}) do
     attribute_description =
-      "It has the following attributes:\n" <>
+      "It has the following properties:\n" <>
         (attributes
          |> Enum.filter(fn {_, val} -> val != "" end)
          |> Enum.map_join("\n", fn {key, val} -> ~s{"#{key}: ", "#{val}"} end))
 
-    "The system #{name} can be described as follows:\n" <> description <> attribute_description
+    """
+    The system "#{name}" can be described as follows:\n
+    """ <> description <> attribute_description
   end
 
   import Ecto.Query
@@ -59,6 +61,12 @@ defmodule ThreatShield.Systems.System do
   def preload_organisation(query) do
     query
     |> preload([organisation: o], organisation: o)
+  end
+
+  def with_org_systems(query) do
+    query
+    |> join(:left, [organisation: o], assoc(o, :systems), as: :org_systems)
+    |> preload([organisation: o, org_systems: s], organisation: {o, :systems})
   end
 
   def preload_membership(query) do

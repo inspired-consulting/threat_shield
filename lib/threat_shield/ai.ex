@@ -7,16 +7,18 @@ defmodule ThreatShield.AI do
   alias ThreatShield.Systems.System
 
   defp make_chatgpt_request(system_prompt, user_prompt, response_extractor) do
-    messages = [
-      %{
-        role: "system",
-        content: system_prompt
-      },
-      %{
-        role: "user",
-        content: user_prompt
-      }
-    ]
+    messages =
+      [
+        %{
+          role: "system",
+          content: system_prompt
+        },
+        %{
+          role: "user",
+          content: user_prompt
+        }
+      ]
+      |> IO.inspect()
 
     case OpenAI.chat_completion(
            model: "gpt-3.5-turbo",
@@ -30,89 +32,212 @@ defmodule ThreatShield.AI do
     end
   end
 
-  def suggest_assets_for_organisation(%Organisation{} = organisation) do
-    system_prompt = """
-    You are a threat modelling assistant. Your response should comprise five potential assets, each item having between 200–254 characters in length. Each item is simply a string. Your response should be in JSON format, like so:
+  defp get_general_job_description(%Organisation{} = organisation) do
+    """
+    You are a threat modelling assistant at "#{organisation.name}".
+    #{Organisation.describe(organisation)}
+    """
+  end
 
-    {"assets": [{"name": _, "description": _}, _ ]}
+  defp get_response_format_description(resource_name_plural) do
+    """
+    Your response should comprise five response items, each item has a name and a description. The name should be up to 40 characters, the descriptions should be between 400 and 2000 characters long. The result is valid JSON like so:
+
+    {"#{resource_name_plural}": [{"name": _, "description": _}, _ ]}
+    """
+  end
+
+  def suggest_assets_for_organisation(%Organisation{} = organisation) do
+    asset_info = """
+      Assets are valuable resources or data, that need to be protected.
     """
 
-    user_prompt = "I work at this organisation: #{Organisation.describe(organisation)}"
+    existing_assets =
+      if Enum.empty?(organisation.assets) do
+        ""
+      else
+        """
+        I already know about the following assets:\n
+        """ <>
+          (organisation.assets
+           |> Enum.map(fn a -> a.name end)
+           |> Enum.join("\n"))
+      end
+
+    system_prompt = get_general_job_description(organisation)
+
+    assignment = """
+    Please suggest five additional assets that are different from the existing ones.
+    """
+
+    user_prompt =
+      [get_response_format_description("assets"), asset_info, existing_assets, assignment]
+      |> Enum.join(" ")
 
     make_chatgpt_request(system_prompt, user_prompt, &get_assets_from_response/1)
   end
 
   def suggest_assets_for_system(%System{} = system) do
-    system_prompt = """
-    You are a threat modelling assistant. Your response should comprise five potential assets, each item having between 200–254 characters in length. Each item is simply a string. Your response should be in JSON format, like so:
+    asset_info = """
+      Assets are valuable resources or data for a particular system, that need to be protected.
+    """
 
-    {"assets": [{"name": _, "description": _}, _ ]}
+    existing_assets =
+      if Enum.empty?(system.assets) do
+        ""
+      else
+        """
+        I already know about the following assets:\n
+        """ <>
+          (system.assets
+           |> Enum.map(fn a -> a.name end)
+           |> Enum.join("\n"))
+      end
+
+    system_prompt = get_general_job_description(system.organisation)
+
+    assignment = """
+    Please suggest five additional assets that are different from the existing ones. The assets should be specific to the system "#{system.name}".
     """
 
     user_prompt =
-      """
-      I use this system: #{System.describe(system)}.
-      """
+      [get_response_format_description("assets"), asset_info, existing_assets, assignment]
+      |> Enum.join(" ")
 
     make_chatgpt_request(system_prompt, user_prompt, &get_assets_from_response/1)
   end
 
   def suggest_threats_for_organisation(%Organisation{} = organisation) do
-    system_prompt = """
-    You are a threat modelling assistant. Your response should comprise five potential threats, each item having between 200–254 characters in length. Your response should be in JSON format, like so:
+    threat_info = """
+    Threats are any potential event or action that can compromise the security of a system, organisation, or individual. Threats are not the negative outcome, i.e. not the loss, damage, or harm resulting from the exploitation of vulnerabilities by threats.
+    """
 
-    {"threats": [{"name": _, "description": _}, _ ]}
+    existing_threats =
+      if Enum.empty?(organisation.threats) do
+        ""
+      else
+        """
+        I already know about the following threats:\n
+        """ <>
+          (organisation.threats
+           |> Enum.map(fn a -> a.name end)
+           |> Enum.join("\n"))
+      end
+
+    assignment = """
+    Please suggest five additional threats that are different from the existing ones.
     """
 
     user_prompt =
-      """
-      I work at this organisation: #{Organisation.describe(organisation)}
-      """
+      [get_response_format_description("threats"), threat_info, existing_threats, assignment]
+      |> Enum.join(" ")
+
+    system_prompt = get_general_job_description(organisation)
 
     make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
   end
 
   def suggest_threats_for_system(%System{} = system) do
-    system_prompt = """
-    You are a threat modelling assistant. Your response should comprise five potential threats, each item having between 200–254 characters in length. Your response should be in JSON format, like so:
+    threat_info = """
+    Threats are any potential event or action that can compromise the security of a system, organisation, or individual. Threats are not the negative outcome, i.e. not the loss, damage, or harm resulting from the exploitation of vulnerabilities by threats.
+    """
 
-    {"threats": [{"name": _, "description": _}, _ ]}
+    existing_threats =
+      if Enum.empty?(system.threats) do
+        ""
+      else
+        """
+        I already know about the following threats:\n
+        """ <>
+          (system.threats
+           |> Enum.map(fn a -> a.name end)
+           |> Enum.join("\n"))
+      end
+
+    assignment = """
+    Please suggest five additional threats that are different from the existing ones. The threats should be specific to the system "#{system.name}
     """
 
     user_prompt =
-      """
-      I use this system: #{System.describe(system)}.
-      """
+      [get_response_format_description("threats"), threat_info, existing_threats, assignment]
+      |> Enum.join(" ")
+
+    system_prompt = get_general_job_description(system.organisation)
 
     make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
   end
 
   def suggest_risks_for_threat(%Threat{} = threat) do
-    system_prompt = """
-    You are a threat modelling assistant. Your response should comprise five potential risks for a given threat, each item having a name between 5-20 characters in length and a description between 200–254 characters in length. Your response should be in JSON format, like so:
+    risk_info = """
+    Risks are the potential negative outcome — loss, damage, or harm resulting from the exploitation of vulnerabilities by threats.
+    """
 
-    {"risks": [{"name": _, "description": _}, _ ]}
+    existing_risks =
+      if Enum.empty?(threat.risks) do
+        ""
+      else
+        """
+        I already know about the following risks:\n
+        """ <>
+          (threat.risks
+           |> Enum.map(fn a -> a.name end)
+           |> Enum.join("\n"))
+      end
+
+    assignment = """
+    Please suggest five additional risks that are different from the existing ones. The risks should relate exclusively to the threat "#{threat.name}".
     """
 
     user_prompt =
-      """
-      I work at this organisation: #{Organisation.describe(threat.organisation)}. The threat that I want risks identified for is: #{Threat.describe(threat)}.
-      """
+      [get_response_format_description("risks"), risk_info, existing_risks, assignment]
+      |> Enum.join(" ")
+
+    system_prompt = get_general_job_description(threat.organisation)
 
     make_chatgpt_request(system_prompt, user_prompt, &get_risks_from_response/1)
   end
 
   def suggest_mitigations_for_risk(%Risk{} = risk) do
-    system_prompt = """
-    You are a threat modelling assistant. Your response should comprise five potential mitigations for a given risk, each item having a name between 5-20 characters in length and a description between 200–254 characters in length. Your response should be in JSON format, like so:
-
-    {"mitigations": [{"name": _, "description": _}, _ ]}
+    mitigation_info = """
+    Mitigations are strategies and measures put in place to mitigate the risks of a particular threat.
     """
 
+    existing_mitigations =
+      if Enum.empty?(risk.mitigations) do
+        ""
+      else
+        """
+        I already know about the following risks:\n
+        """ <>
+          (risk.mitigations
+           |> Enum.map(fn a -> a.name end)
+           |> Enum.join("\n"))
+      end
+
+    assignment = """
+    Please suggest five additional mitigations that are different from the existing ones. The mitigations should relate exclusively to the risk "#{risk.name}" and the threat "#{risk.threat.name}".
+    """
+
+    system_exclusivity =
+      if is_nil(risk.threat.system) do
+        ""
+      else
+        """
+        The only relvant system in this context is "#{risk.threat.system}".
+        """
+      end
+
     user_prompt =
-      """
-      I work at this organisation: #{Organisation.describe(risk.threat.organisation)}. The risk that I want mitigations for is: #{Risk.describe(risk)}.
-      """
+      [
+        get_response_format_description("mitigations"),
+        mitigation_info,
+        existing_mitigations,
+        assignment,
+        system_exclusivity
+      ]
+      |> Enum.join(" ")
+
+    system_prompt = get_general_job_description(risk.threat.organisation)
 
     make_chatgpt_request(system_prompt, user_prompt, &get_mitigations_from_response/1)
   end

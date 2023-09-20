@@ -11,7 +11,7 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Please fill out this form as detailed as possible:</:subtitle>
+
       </.header>
 
       <.simple_form
