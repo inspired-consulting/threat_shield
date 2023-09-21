@@ -4,6 +4,8 @@ defmodule ThreatShieldWeb.MembersLive.Join do
 
   @impl true
   def mount(%{"token" => token}, _session, socket) do
+    {:ok, _} = ExRated.check_rate(socket.assigns.current_user.email <> "_join_org", 10_000, 5)
+
     {:ok,
      socket
      |> assign(invite: Members.get_invite_by_token(token))}
