@@ -4,7 +4,7 @@ defmodule ThreatShieldWeb.MembersLive.Join do
 
   @impl true
   def mount(%{"token" => token}, _session, socket) do
-    {:ok, _} = ExRated.check_rate(socket.assigns.current_user.email <> "_join_org", 10_000, 5)
+    {:ok, _} = ExRated.check_rate(socket.assigns.current_user.email <> "_join_org", 10_000, 10)
 
     {:ok,
      socket
@@ -25,6 +25,7 @@ defmodule ThreatShieldWeb.MembersLive.Join do
   def handle_event("join", %{"token" => token}, socket) do
     user = socket.assigns.current_user
 
+    {:ok, _} = ExRated.check_rate(socket.assigns.current_user.email <> "_join_org", 10_000, 10)
     {:ok, membership} = Members.join_with_token(user, token)
 
     {:noreply,
