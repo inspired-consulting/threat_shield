@@ -18,6 +18,11 @@ defmodule ThreatShield.Organisations.Organisation do
       description: "Examples of legal form are LLC, Nonprofit, B Corps."
     },
     %DynamicAttribute{
+      name: "Size",
+      description: "Examples are small, medium and large.",
+      sample_values: ["small", "medium", "large", "global"]
+    },
+    %DynamicAttribute{
       name: "Work from home regime",
       description: "Examples are fully remote, in-office and hybrid."
     }
