@@ -2,6 +2,7 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.Systems
+  alias ThreatShield.DynamicAttribute
 
   import ThreatShield.Systems.System, only: [attributes: 0]
 
@@ -30,7 +31,7 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
             type="text"
             label={attribute.name}
           />
-          <em><%= attribute.description %></em>
+          <em>e.g. <%= DynamicAttribute.get_suggestions(attribute) |> Enum.join(", ") %> </em>
         <% end %>
         <:actions>
           <.button phx-disable-with="Saving...">Save System</.button>

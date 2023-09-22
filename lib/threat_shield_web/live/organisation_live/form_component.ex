@@ -1,9 +1,9 @@
 defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
+  alias ThreatShield.DynamicAttribute
   use ThreatShieldWeb, :live_component
   import Phoenix.LiveView
 
   alias ThreatShield.Organisations
-
   import ThreatShield.Organisations.Organisation, only: [attributes: 0]
 
   @impl true
@@ -35,7 +35,7 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
             type="text"
             label={attribute.name}
           />
-          <em><%= attribute.description %></em>
+          <em>e.g. <%= DynamicAttribute.get_suggestions(attribute) |> Enum.join(", ") %> </em>
         <% end %>
         <:actions>
           <.button phx-disable-with="Saving...">Save Organisation</.button>
