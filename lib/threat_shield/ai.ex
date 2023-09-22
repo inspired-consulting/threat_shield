@@ -1,4 +1,5 @@
 defmodule ThreatShield.AI do
+  alias ThreatShield.DynamicAttribute
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Assets.Asset
@@ -18,7 +19,6 @@ defmodule ThreatShield.AI do
           content: user_prompt
         }
       ]
-      |> IO.inspect()
 
     case OpenAI.chat_completion(
            model: "gpt-3.5-turbo",
@@ -30,6 +30,24 @@ defmodule ThreatShield.AI do
       {:error, %{"error" => error}} ->
         {:error, error}
     end
+  end
+
+  def suggest_values(%DynamicAttribute{name: name, description: description}) do
+    # {resource_name_plural}": [{"name": _, "description": _}, _ ]}."
+    system_prompt = """
+    You are a software engineer. Your answer is in valid JSON format like so {"suggestions": [{"value": _}, _ ]}.
+    """
+
+    user_prompt = """
+    Suggest 10 examples of typical values for an attribute with the name "#{name}". The user-facing description of the attribute is "#{description}".
+    """
+
+    make_chatgpt_request(system_prompt, user_prompt, &get_attribute_suggestions_from_response/1)
+  end
+
+  defp get_attribute_suggestions_from_response(response) do
+    get_content_from_reponse(response, "suggestions")
+    |> Enum.map(fn %{"value" => n} -> n end)
   end
 
   defp get_general_job_description(%Organisation{} = organisation) do
