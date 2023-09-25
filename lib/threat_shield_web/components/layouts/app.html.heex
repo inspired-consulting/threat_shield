@@ -1,12 +1,8 @@
-<header class="px-4 sm:px-6 lg:px-8  bg-secondary_col-100">
+<header>
+  <.navbar organisation={assigns[:organisation]} current_user={assigns[:current_user]}/>
   <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
     <div class="flex items-center gap-4">
-      <a href="/">
-        <img src={~p"/images/logo.svg"} width="50" />
-      </a>
-      <p class="text-primary_col-500 rounded-full px-2 font-medium leading-6">
-        <%= ThreatShieldWeb.Helpers.get_git_release_tag() %>
-      </p>
+
 
       <%= if assigns[:breadcrumbs] do %>
         <ThreatShieldWeb.Breadcrumbs.breadcrumb breadcrumbs={@breadcrumbs} context={assigns} />

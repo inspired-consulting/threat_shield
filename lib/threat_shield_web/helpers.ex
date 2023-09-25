@@ -6,10 +6,6 @@ defmodule ThreatShieldWeb.Helpers do
   Helpers are functions that can be used in your contexts.
   """
 
-  def get_git_release_tag() do
-    Application.get_env(:threat_shield, ThreatShieldWeb.Endpoint)[:git_version]
-  end
-
   def add_breadcrumbs(socket, url) do
     breadcrumbs =
       url
