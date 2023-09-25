@@ -468,7 +468,7 @@ defmodule ThreatShieldWeb.CoreComponents do
       end
 
     ~H"""
-    <table class="w-[90vw] mt-10 mx-auto justify-self-center">
+    <table class="w-[1016px] mt-10 mx-auto justify-self-center">
       <thead class="text-sm text-left leading-6 text-primary_col-900">
         <tr class="">
           <th :for={col <- @col} class="p-0 pr-6 pb-4 font-normal"><%= col[:label] %></th>
@@ -663,6 +663,12 @@ defmodule ThreatShieldWeb.CoreComponents do
         </div>
       </dl>
     </div>
+    """
+  end
+
+  def card_detail(assigns) do
+    ~H"""
+    <h2 class="text-2xl font-semibold text-primary_col-500">Name</h2>
     """
   end
 
