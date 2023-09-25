@@ -510,38 +510,62 @@ defmodule ThreatShieldWeb.CoreComponents do
     """
   end
 
+  defp entity_link(assigns) do
+    ~H"""
+    <%= if assigns[:current_page] == @linked_page do %>
+      <span class="text-secondary_col-100 bg-primary_col-600 px-3 py-2 rounded-md">
+        <%= @name %>
+      </span>
+    <% else %>
+      <a href={@link} class="text-secondary_col-400 px-3 py-2">
+        <%= @name %>
+      </a>
+    <% end %>
+    """
+  end
+
+  defp entity_links(assigns) do
+    ~H"""
+    <nav class="flex gap-5">
+      <.entity_link
+        link={~p"/organisations/#{@organisation.id}"}
+        name={dgettext("organisation", "Organisation")}
+        current_page={assigns[:entity_page]}
+        linked_page={:organisation}
+      />
+      <.entity_link
+        link={~p"/organisations/#{@organisation.id}/systems"}
+        name={dgettext("systems", "Systems")}
+        current_page={assigns[:entity_page]}
+        linked_page={:systems}
+      />
+      <.entity_link
+        link={~p"/organisations/#{@organisation.id}/assets"}
+        name={dgettext("assets", "Assets")}
+        current_page={assigns[:entity_page]}
+        linked_page={:assets}
+      />
+    </nav>
+    """
+  end
+
   attr :organisation, :any, required: false
   attr :current_user, :any, required: false
+  attr :entity_page, :any, required: false
 
   def navbar(assigns) do
     ~H"""
     <div class="bg-primary_col-500 flex justify-between h-16">
-      <div class="flex items-center gap-9 px-10">
+      <div class="justify-start flex items-center gap-9 px-10">
         <a href="/" class="">
           <img src={~p"/images/logo.svg"} class="w-9 h-9" />
         </a>
         <%= if assigns[:organisation] do %>
-          <nav>
-            <a href={~p"/organisations/#{@organisation.id}"} class="text-secondary_col-400 pr-3 py-2">
-              <%= dgettext("organisation", "Organisation") %>
-            </a>
-            <a
-              href={~p"/organisations/#{@organisation.id}/systems"}
-              class="text-secondary_col-400 px-3 py-2"
-            >
-              <%= dgettext("systems", "Systems") %>
-            </a>
-            <a
-              href={~p"/organisations/#{@organisation.id}/assets"}
-              class="text-secondary_col-400 px-3 py-2"
-            >
-              <%= dgettext("assets", "Assets") %>
-            </a>
-          </nav>
+          <.entity_links organisation={@organisation} entity_page={assigns[:entity_page]} />
         <% end %>
       </div>
       <nav class="text-secondary_col-100 flex items-center">
-        <ul class="relative z-10 flex gap-4 px-4 sm:px-6 lg:px-8 justify-end">
+        <ul class="relative z-10 flex gap-4 px-4 justify-end">
           <%= if assigns[:organisation] do %>
             <li
               id="org-dropdown"
@@ -569,7 +593,7 @@ defmodule ThreatShieldWeb.CoreComponents do
               class="relative nav-dropdown text-[0.8125rem] leading-loose text-secondary_col-100 font-semibold hover:cursor-pointer border border-2 rounded-3xl px-4 py-1"
               onclick="toggleDropdown(id)"
             >
-              <%= @current_user.email %>
+              <.icon name="hero-user" class="h-5 w-5" />
               <.icon name="hero-chevron-down" class="h-5 w-5" />
               <ul class="absolute user-dropdown-menu hidden mt-4 py-2 w-48 bg-white rounded-sm shadow-xl text-primary_col-500">
                 <li class="px-4 py-2">

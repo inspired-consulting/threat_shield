@@ -20,7 +20,7 @@
       function toggleDropdown(id) {
 
         const navDropdown = document.getElementById(id);
-        const icon = navDropdown.firstElementChild;
+        const icon = navDropdown.getElementsByClassName("hero-chevron-down")[0];
         const navMenu = navDropdown.lastElementChild;
    
         if (navMenu) {
