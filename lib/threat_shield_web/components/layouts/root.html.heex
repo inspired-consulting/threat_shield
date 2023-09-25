@@ -13,83 +13,27 @@
     </script>
   </head>
   <body class="antialiased">
-    <nav>
-      <ul class="relative z-10 flex gap-4 px-4 sm:px-6 lg:px-8 justify-end">
-        <%= if assigns[:organisation] do %>
-        <li id="org-dropdown" class="relative nav-dropdown text-[0.8125rem] leading-loose text-primary_col-600 font-semibold hover:cursor-pointer" onclick="toggleDropdown(id)">
-          <%= @organisation.name %>
-        
-        <ul class="absolute org-dropdown-menu hidden mt-4 py-2 w-48 bg-white rounded-sm shadow-xl">
-          <li class="px-4 py-2">
-            <.link
-              href={~p"/organisations"}
-              class="text-[0.8125rem] leading-6 text-primary_col-600 hover:underline"
-            >
-              List organisation
-            </.link>
-          </li>
-        </ul>
-        </li>
-          <%end %>
-        <%= if @current_user do %>
-          <li id="user-dropdown" class="relative nav-dropdown text-[0.8125rem] leading-loose text-primary_col-600 font-semibold hover:cursor-pointer" onclick="toggleDropdown(id)">
-            <%= @current_user.email %>
-          <ul class="absolute user-dropdown-menu hidden mt-4 py-2 w-48 bg-white rounded-sm shadow-xl">
-            <li class="px-4 py-2">
-              <.link
-                href={~p"/users/settings"}
-                class="text-[0.8125rem] leading-6 text-primary_col-600 hover:underline"
-              >
-                Settings
-              </.link>
-            </li>
-            <li class="px-4 py-2">
-              <.link
-                href={~p"/users/log_out"}
-                method="delete"
-                class="text-[0.8125rem] leading-6 text-primary_col-600 hover:underline"
-              >
-                Log out
-              </.link>
-            </li>
-          </ul>
-          </li>
-        <% else %>
-          <li>
-            <.link
-              href={~p"/users/register"}
-              class="text-[0.8125rem] leading-6 text-primary_col-600 font-semibold hover:underline"
-            >
-              Register
-            </.link>
-          </li>
-          <li>
-            <.link
-              href={~p"/users/log_in"}
-              class="text-[0.8125rem] leading-6 text-primary_col-600 font-semibold hover:underline"
-            >
-              Log in
-            </.link>
-          </li>
-        <% end %>
-      </ul>
-    </nav>
+    
     <%= @inner_content %>
 
     <script>
       function toggleDropdown(id) {
 
         const navDropdown = document.getElementById(id);
-        const navMenu = navDropdown.firstElementChild;
-
+        const icon = navDropdown.getElementsByClassName("hero-chevron-down")[0];
+        const navMenu = navDropdown.lastElementChild;
+   
         if (navMenu) {
           navMenu.classList.toggle("hidden");
+
         }
         
         document.addEventListener("click", (e) => {
           if (e.target.closest(".nav-dropdown") !== navDropdown) {
             navMenu.classList.add("hidden");
           }
+          const isHidden = navMenu.classList.contains("hidden");
+          icon.style.transform = isHidden ? "rotate(0deg)" : "rotate(180deg)";
         });
       }
     </script>

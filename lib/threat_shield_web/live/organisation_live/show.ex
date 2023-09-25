@@ -30,6 +30,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
       socket
       |> assign(:attributes, attributes())
       |> assign(:organisation, organisation)
+      |> assign(:entity_page, :organisation)
       |> assign(:membership, membership)
       |> assign(locations_options: Locations.list_locations())
       |> assign(:attributes, Organisation.attributes())

@@ -16,7 +16,8 @@ defmodule ThreatShieldWeb.CoreComponents do
   """
   use Phoenix.Component
 
-  alias Phoenix.LiveView.JS
+  use ThreatShieldWeb, :verified_routes
+  alias(Phoenix.LiveView.JS)
   import ThreatShieldWeb.Gettext
 
   @doc """
@@ -225,8 +226,8 @@ defmodule ThreatShieldWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-primary_col-600 hover:bg-secondary_col-500 py-2 px-3",
-        "text-sm font-semibold leading-6 text-secondary_col-100 hover:text-primary_col-600 active:text-secondary_col-100",
+        "phx-submit-loading:opacity-75 rounded-lg bg-accent_col-500 hover:bg-accent_col-500 py-2 px-3",
+        "text-sm font-semibold leading-6 text-white hover:text-white active:text-secondary_col-100",
         "disabled:bg-secondary_col-900 disabled:pointer-events-none",
         @class
       ]}
@@ -506,6 +507,135 @@ defmodule ThreatShieldWeb.CoreComponents do
         </tr>
       </tbody>
     </table>
+    """
+  end
+
+  defp entity_link(assigns) do
+    ~H"""
+    <%= if assigns[:current_page] == @linked_page do %>
+      <span class="text-secondary_col-100 bg-primary_col-600 px-3 py-2 rounded-md">
+        <%= @name %>
+      </span>
+    <% else %>
+      <a href={@link} class="text-secondary_col-400 px-3 py-2">
+        <%= @name %>
+      </a>
+    <% end %>
+    """
+  end
+
+  defp entity_links(assigns) do
+    ~H"""
+    <nav class="flex gap-5">
+      <.entity_link
+        link={~p"/organisations/#{@organisation.id}"}
+        name={dgettext("organisation", "Organisation")}
+        current_page={assigns[:entity_page]}
+        linked_page={:organisation}
+      />
+      <.entity_link
+        link={~p"/organisations/#{@organisation.id}/systems"}
+        name={dgettext("systems", "Systems")}
+        current_page={assigns[:entity_page]}
+        linked_page={:systems}
+      />
+      <.entity_link
+        link={~p"/organisations/#{@organisation.id}/assets"}
+        name={dgettext("assets", "Assets")}
+        current_page={assigns[:entity_page]}
+        linked_page={:assets}
+      />
+    </nav>
+    """
+  end
+
+  attr :organisation, :any, required: false
+  attr :current_user, :any, required: false
+  attr :entity_page, :any, required: false
+
+  def navbar(assigns) do
+    ~H"""
+    <div class="bg-primary_col-500 flex justify-between h-16">
+      <div class="justify-start flex items-center gap-9 px-10">
+        <a href="/" class="">
+          <img src={~p"/images/logo.svg"} class="w-9 h-9" />
+        </a>
+        <%= if assigns[:organisation] do %>
+          <.entity_links organisation={@organisation} entity_page={assigns[:entity_page]} />
+        <% end %>
+      </div>
+      <nav class="text-secondary_col-100 flex items-center">
+        <ul class="relative z-10 flex gap-4 px-4 justify-end">
+          <%= if assigns[:organisation] do %>
+            <li
+              id="org-dropdown"
+              class="relative nav-dropdown text-[0.8125rem] leading-loose font-semibold hover:cursor-pointer border border-2 rounded-3xl px-4 py-1"
+              onclick="toggleDropdown(id)"
+            >
+              <%= @organisation.name %>
+              <.icon name="hero-chevron-down" class="h-5 w-5" />
+
+              <ul class="absolute org-dropdown-menu hidden mt-4 py-2 w-48 bg-white text-primary_col-500 rounded-sm shadow-xl">
+                <li class="px-4 py-2">
+                  <.link
+                    href={~p"/organisations"}
+                    class="text-[0.8125rem] leading-6  text-primary_col-500 hover:underline"
+                  >
+                    List organisation
+                  </.link>
+                </li>
+              </ul>
+            </li>
+          <% end %>
+          <%= if assigns[:current_user] do %>
+            <li
+              id="user-dropdown"
+              class="relative nav-dropdown text-[0.8125rem] leading-loose text-secondary_col-100 font-semibold hover:cursor-pointer border border-2 rounded-3xl px-4 py-1"
+              onclick="toggleDropdown(id)"
+            >
+              <.icon name="hero-user" class="h-5 w-5" />
+              <.icon name="hero-chevron-down" class="h-5 w-5" />
+              <ul class="absolute user-dropdown-menu hidden mt-4 py-2 w-48 bg-white rounded-sm shadow-xl text-primary_col-500">
+                <li class="px-4 py-2">
+                  <.link
+                    href={~p"/users/settings"}
+                    class="text-[0.8125rem] leading-6 text-primary_col-500 hover:underline"
+                  >
+                    Settings
+                  </.link>
+                </li>
+                <li class="px-4 py-2">
+                  <.link
+                    href={~p"/users/log_out"}
+                    method="delete"
+                    class="text-[0.8125rem] leading-6 text-primary_col-500 hover:underline"
+                  >
+                    Log out
+                  </.link>
+                </li>
+              </ul>
+            </li>
+          <% else %>
+            <li>
+              <.link
+                href={~p"/users/register"}
+                class="text-[0.8125rem] leading-6 text-primary_col-600 font-semibold hover:underline"
+              >
+                Register
+              </.link>
+            </li>
+            <li>
+              <.link
+                href={~p"/users/log_in"}
+                class="text-[0.8125rem] leading-6 text-primary_col-600 font-semibold hover:underline"
+              >
+                Log in
+              </.link>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+    </div>
     """
   end
 
