@@ -20,6 +20,30 @@ defmodule ThreatShieldWeb.CoreComponents do
   alias(Phoenix.LiveView.JS)
   import ThreatShieldWeb.Gettext
 
+  def h1(assigns) do
+    ~H"""
+    <h1 class="text-3xl font-bold leading-9 text-gray-900">
+      <%= render_slot(@inner_block) %>
+    </h1>
+    """
+  end
+
+  def h2(assigns) do
+    ~H"""
+    <h2 class="text-gray-900 text-3xl font-bold leading-9">
+      <%= render_slot(@inner_block) %>
+    </h2>
+    """
+  end
+
+  def h3(assigns) do
+    ~H"""
+    <h3 class="text-gray-900 text-2xl font-semibold leading-normal">
+      <%= render_slot(@inner_block) %>
+    </h3>
+    """
+  end
+
   @doc """
   Renders a modal.
 
@@ -226,7 +250,7 @@ defmodule ThreatShieldWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-accent_col-500 hover:bg-accent_col-500 py-2 px-3",
+        "phx-submit-loading:opacity-75 rounded-lg bg-indigo-600 hover:bg-indigo-600 py-2 px-3",
         "text-sm font-semibold leading-6 text-white hover:text-white active:text-white",
         "disabled:bg-secondary_col-900 disabled:pointer-events-none",
         @class
@@ -249,7 +273,7 @@ defmodule ThreatShieldWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-white  shadow shadow-inner  hover:bg-accent_col-500 py-2 px-3",
+        "phx-submit-loading:opacity-75 rounded-lg bg-white  shadow shadow-inner  hover:bg-indigo-600 py-2 px-3",
         "text-gray-900 text-sm font-semibold hover:text-white active:text-white",
         "disabled:bg-secondary_col-900 disabled:pointer-events-none",
         @class
@@ -689,6 +713,95 @@ defmodule ThreatShieldWeb.CoreComponents do
     """
   end
 
+  attr :id, :string, required: true
+  attr :rows, :list, required: true
+  attr :row_id, :any, default: nil, doc: "the function for generating the row id"
+  attr :row_click, :any, default: nil, doc: "the function for handling phx-click on each row"
+
+  attr :row_item, :any,
+    default: &Function.identity/1,
+    doc: "the function for mapping each row before calling the :col and :action slots"
+
+  slot :col, required: true do
+    attr :label, :string
+  end
+
+  slot :action, doc: "the slot for showing user actions in the last table column"
+  slot :name, required: false
+
+  def stacked_list(assigns) do
+    assigns =
+      with %{rows: %Phoenix.LiveView.LiveStream{}} <- assigns do
+        assign(assigns, row_id: assigns.row_id || fn {id, _item} -> id end)
+      end
+
+    ~H"""
+    <table class="w-[1016px] mt-10 mx-auto justify-self-center">
+      <tbody
+        id={@id}
+        phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
+        class="relative divide-y-2 divide-zinc-100 border-t border-zinc-200 text-sm leading-6 text-zinc-700"
+      >
+        <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-zinc-50">
+          <td
+            :for={{col, i} <- Enum.with_index(@col)}
+            phx-click={@row_click && @row_click.(row)}
+            class={["relative p-0", @row_click && "hover:cursor-pointer"]}
+          >
+            <div class="block py-4 pr-0">
+              <span class="absolute -inset-y-px -right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
+              <span class={["relative", i == 0 && "font-semibold text-gray-900"]}>
+                <%= render_slot(col, @row_item.(row)) %>
+              </span>
+            </div>
+          </td>
+          <td :if={@action != []} class="relative w-14 p-0">
+            <div class="relative whitespace-nowrap py-4 text-right text-sm font-medium">
+              <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-zinc-50 sm:rounded-r-xl" />
+              <span
+                :for={action <- @action}
+                class="relative ml-4 font-semibold leading-6 text-gray-900 hover:text-bg-gray-900"
+              >
+                <%= render_slot(action, @row_item.(row)) %>
+              </span>
+            </div>
+          </td>
+
+          <td>
+            <.link
+              phx-click={@row_click && @row_click.(row)}
+              class={["relative p-0", @row_click && "hover:cursor-pointer"]}
+            >
+              <.button_secondary>
+                View
+              </.button_secondary>
+            </.link>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    """
+  end
+
+  slot :name, required: false
+
+  slot :buttons, required: false
+
+  def stacked_list_header(assigns) do
+    ~H"""
+    <div class="flex justify-between">
+      <div>
+        <.h2>
+          <%= render_slot(@name) %>
+        </.h2>
+      </div>
+      <div class="flex items-center gap-2">
+        <%= render_slot(@buttons) %>
+      </div>
+    </div>
+    """
+  end
+
   slot :name, required: false
   slot :description, required: false
   slot :attribute, required: false
@@ -699,9 +812,9 @@ defmodule ThreatShieldWeb.CoreComponents do
     <section class="w-full px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
       <div class="flex justify-between w-full">
         <div class="h-20 pb-5">
-          <h2 class="text-2xl font-semibold text-gray-900">
+          <.h3>
             <%= render_slot(@name) %>
-          </h2>
+          </.h3>
           <p class="mt-2 text-sm leading-6 text-gray-500 font-normal">
             <%= render_slot(@description) %>
           </p>

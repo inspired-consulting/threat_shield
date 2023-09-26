@@ -28,8 +28,8 @@ module.exports = {
         neutral: {
           100: "#F5F5F5",
         },
-        accent_col: {
-          500: "#4F46E5",
+        indigo: {
+          600: "#4F46E5",
         },
       },
     },

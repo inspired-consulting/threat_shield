@@ -5,20 +5,29 @@ defmodule ThreatShieldWeb.SystemLive.SystemComponent do
   def render(assigns) do
     ~H"""
     <div class="systems">
-    <.table
-      id={"systems_for_org_#{@organisation.id}"}
-      rows={@organisation.systems}
-      row_click={
-        fn system -> JS.navigate(~p"/organisations/#{@organisation.id}/systems/#{system.id}") end
+      <.stacked_list_header>
+        <:name><%= dgettext("systems", "Systems") %></:name>
+        <:buttons>
+          <.link
+            :if={ThreatShield.Members.Rights.may(:create_system, @membership)}
+            patch={~p"/organisations/#{@organisation.id}/systems/new"}
+          >
+            <.button_primary>
+              <.icon name="hero-pencil" /><%= dgettext("systems", "New System") %>
+            </.button_primary>
+          </.link>
+        </:buttons>
+      </.stacked_list_header>
+      <.stacked_list
+        id={"systems_for_org_#{@organisation.id}"}
+        rows={@organisation.systems}
+        row_click={
+          fn system -> JS.navigate(~p"/organisations/#{@organisation.id}/systems/#{system.id}") end
         }
-    >
-    <:col :let={system} label="Name"><%= system.name %></:col>
-      <:col :let={system} label="Attributes">
-        <%= for {key, value} <- system.attributes do %>
-          <div><%= "#{key} → #{value}" %></div>
-        <% end %>
-      </:col>
-    </.table>
+      >
+        <:col :let={system}><%= system.name %></:col>
+        <:col :let={system}><%= system.description %></:col>
+      </.stacked_list>
     </div>
     """
   end
