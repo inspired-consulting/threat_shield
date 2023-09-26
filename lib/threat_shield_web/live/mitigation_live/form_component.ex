@@ -23,7 +23,7 @@ defmodule ThreatShieldWeb.MitigationLive.FormComponent do
         <.input field={@form[:description]} type="text" label="Description" />
         <.input field={@form[:is_implemented]} type="checkbox" label="Is implemented" />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Mitigation</.button>
+          <.button_primary phx-disable-with="Saving...">Save Mitigation</.button_primary>
         </:actions>
       </.simple_form>
     </div>

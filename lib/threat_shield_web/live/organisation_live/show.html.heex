@@ -6,7 +6,7 @@
   <%= @organisation.name %>
   <:actions>
     <.link navigate={~p"/organisations/#{@organisation}/members"}>
-      <.button><%= dgettext("organisation", "Members") %></.button>
+      <.button_primary><%= dgettext("organisation", "Members") %></.button_primary>
     </.link>
 
     <.link
@@ -14,9 +14,9 @@
       phx-click={JS.push("delete", value: %{organisation_id: @organisation.id})}
       data-confirm="Are you sure?"
     >
-      <.button>
+      <.button_primary>
         <%= dgettext("common", "Delete") %>
-      </.button>
+      </.button_primary>
     </.link>
 
     <.link
@@ -24,7 +24,7 @@
       patch={~p"/organisations/#{@organisation}/edit"}
       phx-click={JS.push_focus()}
     >
-      <.button><%= dgettext("common", "Edit") %></.button>
+      <.button_primary><%= dgettext("common", "Edit") %></.button_primary>
     </.link>
   </:actions>
 </.header>
@@ -33,14 +33,14 @@
   <dl class="-my-4 divide-y divide-zinc-100">
     <div class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
       <dt class="w-1/4 flex-none text-zinc-500"><%= dgettext("organisations", "Location") %></dt>
-      <dd class="text-bg-primary_col-600"><%= @organisation.location %></dd>
+      <dd class="text-bg-gray-900"><%= @organisation.location %></dd>
     </div>
     <div
       :for={{key, value} <- @organisation.attributes}
       class="flex gap-4 py-4 text-sm leading-6 sm:gap-8"
     >
       <dt class="w-1/4 flex-none text-zinc-500"><%= key %></dt>
-      <dd class="text-bg-primary_col-600"><%= value %></dd>
+      <dd class="text-bg-gray-900"><%= value %></dd>
     </div>
   </dl>
 </div>
@@ -50,7 +50,7 @@
   :if={ThreatShield.Members.Rights.may(:create_system, @membership)}
   patch={~p"/organisations/#{@organisation.id}/systems/new"}
 >
-  <.button><%= dgettext("systems", "New System") %></.button>
+  <.button_primary><%= dgettext("systems", "New System") %></.button_primary>
 </.link>
 
 <%= if !Enum.empty?(@organisation.systems) do %>
@@ -70,17 +70,17 @@
   :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
   patch={~p"/organisations/#{@organisation.id}/assets/new"}
 >
-  <.button><%= dgettext("assets", "New Asset") %></.button>
+  <.button_primary><%= dgettext("assets", "New Asset") %></.button_primary>
 </.link>
 
-<.button
+<.button_primary
   :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
   disabled={not is_nil(@asking_ai_for_assets)}
   phx-click="suggest_assets"
   phx-value-org_id={@organisation.id}
 >
   Suggest Assets
-</.button>
+</.button_primary>
 
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
 
@@ -160,17 +160,17 @@
   :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
   patch={~p"/organisations/#{@organisation.id}/threats/new"}
 >
-  <.button><%= dgettext("threats", "New Threat") %></.button>
+  <.button_primary><%= dgettext("threats", "New Threat") %></.button_primary>
 </.link>
 
-<.button
+<.button_primary
   :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
   disabled={not is_nil(@asking_ai_for_threats)}
   phx-click="suggest_threats"
   phx-value-org_id={@organisation.id}
 >
   <%= dgettext("threats", "Suggest threats") %>
-</.button>
+</.button_primary>
 
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 

@@ -20,9 +20,15 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
       >
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:description]} type="text" label="Description" />
-        <.input field={@form[:system_id]} :if={assigns[:system_options]} type="select" label="System" options={@system_options} />
+        <.input
+          :if={assigns[:system_options]}
+          field={@form[:system_id]}
+          type="select"
+          label="System"
+          options={@system_options}
+        />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Threat</.button>
+          <.button_primary phx-disable-with="Saving...">Save Threat</.button_primary>
         </:actions>
       </.simple_form>
     </div>

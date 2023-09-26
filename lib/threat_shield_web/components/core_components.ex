@@ -67,7 +67,7 @@ defmodule ThreatShieldWeb.CoreComponents do
               phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
               phx-key="escape"
               phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
-              class="shadow-bg-primary_col-600/10 ring-bg-primary_col-600/10 relative hidden rounded-2xl bg-secondary_col-100 p-14 shadow-xl transition"
+              class="shadow-bg-gray-900/10 ring-bg-gray-900/10 relative hidden rounded-2xl bg-white p-14 shadow-xl transition"
             >
               <div class="absolute top-6 right-5">
                 <button
@@ -180,7 +180,7 @@ defmodule ThreatShieldWeb.CoreComponents do
         <.input field={@form[:email]} label="Email"/>
         <.input field={@form[:username]} label="Username" />
         <:actions>
-          <.button>Save</.button>
+          <.button_primary>Save</.button_primary>
         </:actions>
       </.simple_form>
   """
@@ -212,8 +212,8 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   ## Examples
 
-      <.button>Send!</.button>
-      <.button phx-click="go" class="ml-2">Send!</.button>
+      <.button_primary>Send!</.button_primary>
+      <.button_primary phx-click="go" class="ml-2">Send!</.button_primary>
   """
   attr :type, :string, default: nil
   attr :class, :string, default: nil
@@ -221,13 +221,36 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   slot :inner_block, required: true
 
-  def button(assigns) do
+  def button_primary(assigns) do
     ~H"""
     <button
       type={@type}
       class={[
         "phx-submit-loading:opacity-75 rounded-lg bg-accent_col-500 hover:bg-accent_col-500 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white hover:text-white active:text-secondary_col-100",
+        "text-sm font-semibold leading-6 text-white hover:text-white active:text-white",
+        "disabled:bg-secondary_col-900 disabled:pointer-events-none",
+        @class
+      ]}
+      {@rest}
+    >
+      <%= render_slot(@inner_block) %>
+    </button>
+    """
+  end
+
+  attr :type, :string, default: nil
+  attr :class, :string, default: nil
+  attr :rest, :global, include: ~w(disabled form name value)
+
+  slot :inner_block, required: true
+
+  def button_secondary(assigns) do
+    ~H"""
+    <button
+      type={@type}
+      class={[
+        "phx-submit-loading:opacity-75 rounded-lg bg-white  shadow shadow-inner  hover:bg-accent_col-500 py-2 px-3",
+        "text-gray-900 text-sm font-semibold hover:text-white active:text-white",
         "disabled:bg-secondary_col-900 disabled:pointer-events-none",
         @class
       ]}
@@ -311,7 +334,7 @@ defmodule ThreatShieldWeb.CoreComponents do
           name={@name}
           value="true"
           checked={@checked}
-          class="rounded border-zinc-300 text-primary_col-600 focus:ring-0"
+          class="rounded border-zinc-300 text-gray-900 focus:ring-0"
           {@rest}
         />
         <%= @label %>
@@ -348,7 +371,7 @@ defmodule ThreatShieldWeb.CoreComponents do
         id={@id}
         name={@name}
         class={[
-          "mt-2 block w-full rounded-lg text-primary_col-600 focus:ring-0 sm:text-sm sm:leading-6",
+          "mt-2 block w-full rounded-lg text-gray-900 focus:ring-0 sm:text-sm sm:leading-6",
           "min-h-[6rem] phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
           @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
@@ -371,7 +394,7 @@ defmodule ThreatShieldWeb.CoreComponents do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "mt-2 block w-full rounded-lg text-primary_col-600 focus:ring-0 sm:text-sm sm:leading-6",
+          "mt-2 block w-full rounded-lg text-gray-900 focus:ring-0 sm:text-sm sm:leading-6",
           "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
           @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
@@ -391,7 +414,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-primary_col-600">
+    <label for={@for} class="block text-sm font-semibold leading-6 text-gray-900">
       <%= render_slot(@inner_block) %>
     </label>
     """
@@ -424,7 +447,7 @@ defmodule ThreatShieldWeb.CoreComponents do
     ~H"""
     <header class={[@actions != [] && "flex items-center justify-between gap-6", @class]}>
       <div>
-        <h1 class="text-lg font-semibold leading-8 text-primary_col-600">
+        <h1 class="text-lg font-semibold leading-8 text-gray-900">
           <%= render_slot(@inner_block) %>
         </h1>
         <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-primary_col-400">
@@ -488,7 +511,7 @@ defmodule ThreatShieldWeb.CoreComponents do
           >
             <div class="block py-4 pr-0">
               <span class="absolute -inset-y-px -right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
-              <span class={["relative", i == 0 && "font-semibold text-primary_col-600"]}>
+              <span class={["relative", i == 0 && "font-semibold text-gray-900"]}>
                 <%= render_slot(col, @row_item.(row)) %>
               </span>
             </div>
@@ -498,7 +521,7 @@ defmodule ThreatShieldWeb.CoreComponents do
               <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-zinc-50 sm:rounded-r-xl" />
               <span
                 :for={action <- @action}
-                class="relative ml-4 font-semibold leading-6 text-primary_col-600 hover:text-bg-primary_col-600"
+                class="relative ml-4 font-semibold leading-6 text-gray-900 hover:text-bg-gray-900"
               >
                 <%= render_slot(action, @row_item.(row)) %>
               </span>
@@ -513,7 +536,7 @@ defmodule ThreatShieldWeb.CoreComponents do
   defp entity_link(assigns) do
     ~H"""
     <%= if assigns[:current_page] == @linked_page do %>
-      <span class="text-secondary_col-100 bg-primary_col-600 px-3 py-2 rounded-md">
+      <span class="text-white bg-gray-900 px-3 py-2 rounded-md">
         <%= @name %>
       </span>
     <% else %>
@@ -564,7 +587,7 @@ defmodule ThreatShieldWeb.CoreComponents do
           <.entity_links organisation={@organisation} entity_page={assigns[:entity_page]} />
         <% end %>
       </div>
-      <nav class="text-secondary_col-100 flex items-center">
+      <nav class="text-white flex items-center">
         <ul class="relative z-10 flex gap-4 px-4 justify-end">
           <%= if assigns[:organisation] do %>
             <li
@@ -590,7 +613,7 @@ defmodule ThreatShieldWeb.CoreComponents do
           <%= if assigns[:current_user] do %>
             <li
               id="user-dropdown"
-              class="relative nav-dropdown text-[0.8125rem] leading-loose text-secondary_col-100 font-semibold hover:cursor-pointer border border-2 rounded-3xl px-4 py-1"
+              class="relative nav-dropdown text-[0.8125rem] leading-loose text-white font-semibold hover:cursor-pointer border border-2 rounded-3xl px-4 py-1"
               onclick="toggleDropdown(id)"
             >
               <.icon name="hero-user" class="h-5 w-5" />
@@ -616,18 +639,18 @@ defmodule ThreatShieldWeb.CoreComponents do
               </ul>
             </li>
           <% else %>
-            <li>
+            <li class="text-white">
               <.link
                 href={~p"/users/register"}
-                class="text-[0.8125rem] leading-6 text-primary_col-600 font-semibold hover:underline"
+                class="text-[0.8125rem] leading-6 font-semibold hover:underline"
               >
                 Register
               </.link>
             </li>
-            <li>
+            <li class="text-white">
               <.link
                 href={~p"/users/log_in"}
-                class="text-[0.8125rem] leading-6 text-primary_col-600 font-semibold hover:underline"
+                class="text-[0.8125rem] leading-6 font-semibold hover:underline"
               >
                 Log in
               </.link>
@@ -659,16 +682,43 @@ defmodule ThreatShieldWeb.CoreComponents do
       <dl class="-my-4 divide-y divide-zinc-100">
         <div :for={item <- @item} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
           <dt class="w-1/4 flex-none text-zinc-500"><%= item.title %></dt>
-          <dd class="text-bg-primary_col-600"><%= render_slot(item) %></dd>
+          <dd class="text-bg-gray-900"><%= render_slot(item) %></dd>
         </div>
       </dl>
     </div>
     """
   end
 
+  slot :name, required: true
+  slot :description, required: true
+  slot :attribute, required: true
+
   def card_detail(assigns) do
     ~H"""
-    <h2 class="text-2xl font-semibold text-primary_col-500">Name</h2>
+    <section class="w-full px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
+      <div class="h-20 pb-5">
+        <h2 class="text-2xl font-semibold text-gray-900">
+          <%= render_slot(@name) %>
+        </h2>
+        <p class="mt-2 text-sm leading-6 text-gray-500 font-normal">
+          <%= render_slot(@description) %>
+        </p>
+      </div>
+      <div class="w-full grid grid-cols-3 gap-4 mt-6 p-6 bg-neutral-100">
+        <%= render_slot(@attribute) %>
+      </div>
+    </section>
+    """
+  end
+
+  def input_attribute(assigns) do
+    ~H"""
+    <%= for {key, value} <- @attributes do %>
+      <div class="bg-white p-4 w-72">
+        <div class="text-gray-400 text-xs font-medium"><%= key %></div>
+        <div class="text-gray-900 text-sm font-normal"><%= value %></div>
+      </div>
+    <% end %>
     """
   end
 
@@ -687,7 +737,7 @@ defmodule ThreatShieldWeb.CoreComponents do
     <div class="mt-16">
       <.link
         navigate={@navigate}
-        class="text-sm font-semibold leading-6 text-primary_col-600 hover:text-secondary_col-600"
+        class="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary_col-600"
       >
         <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
         <%= render_slot(@inner_block) %>

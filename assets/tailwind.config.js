@@ -16,12 +16,17 @@ module.exports = {
       colors: {
         primary_col: {
           500: "#1F2937",
-          600: "#111827",
         },
         secondary_col: {
-          100: "#FFFFFF",
-          400: "#D1D5DB",
-          500: "#F5F5F5",
+          400: "#D1D5DB"
+        },
+        gray: {
+          400: "#9CA3AF",
+          900: "#111827"
+        },
+
+        neutral: {
+          100: "#F5F5F5",
         },
         accent_col: {
           500: "#4F46E5",

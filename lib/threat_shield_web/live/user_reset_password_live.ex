@@ -26,7 +26,9 @@ defmodule ThreatShieldWeb.UserResetPasswordLive do
           required
         />
         <:actions>
-          <.button phx-disable-with="Resetting..." class="w-full">Reset Password</.button>
+          <.button_primary phx-disable-with="Resetting..." class="w-full">
+            Reset Password
+          </.button_primary>
         </:actions>
       </.simple_form>
 

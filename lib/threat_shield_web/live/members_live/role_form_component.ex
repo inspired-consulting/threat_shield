@@ -19,9 +19,21 @@ defmodule ThreatShieldWeb.MembersLive.RoleFormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:role]} type="select" label="Role" options={Ecto.Enum.mappings(Membership, :role) |> Enum.map(fn {_, v} -> {Gettext.dgettext(ThreatShieldWeb.Gettext, "organisation", v), v} end)}/>
+        <.input
+          field={@form[:role]}
+          type="select"
+          label="Role"
+          options={
+            Ecto.Enum.mappings(Membership, :role)
+            |> Enum.map(fn {_, v} ->
+              {Gettext.dgettext(ThreatShieldWeb.Gettext, "organisation", v), v}
+            end)
+          }
+        />
         <:actions>
-          <.button phx-disable-with="Saving..."><%= dgettext("organisation", "Save Membership") %></.button>
+          <.button_primary phx-disable-with="Saving...">
+            <%= dgettext("organisation", "Save Membership") %>
+          </.button_primary>
         </:actions>
       </.simple_form>
     </div>

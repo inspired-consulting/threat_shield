@@ -5,7 +5,7 @@
     <%= dgettext("organisation", "You've been invited to join") <>
       " " <> @invite.organisation.name %>
   </h2>
-  <.button phx-click="join" phx-value-token={@invite.token}>
+  <.button_primary phx-click="join" phx-value-token={@invite.token}>
     <%= dgettext("organisation", "Join") %>
-  </.button>
+  </.button_primary>
 <% end %>

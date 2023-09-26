@@ -1,16 +1,3 @@
-
-<.card_detail>
-  <:name>
-  <%= @system.name %>
-  </:name>
-  <:description>
-  <%= @system.description %>
-  </:description>
-  <:attribute>
-    <.input_attribute attributes={@system.attributes}></.input_attribute>
-  </:attribute>
-</.card_detail>
-
 <.header>
   <%= @system.name %>
   <:actions>
@@ -39,7 +26,6 @@
     <% end %>
   </:item>
 </.list>
-
 
 <h2><%= dgettext("assets", "Assets") %></h2>
 <.link
@@ -80,7 +66,7 @@
   :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
   patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/new"}
 >
-  <.button_primary><.icon name="hero-hand-raised" class="mb-1 mr-1"/><%= dgettext("threats", "New Threat") %></.button_primary>
+  <.button_primary><%= dgettext("threats", "New Threat") %></.button_primary>
 </.link>
 
 <.button_primary
@@ -88,7 +74,7 @@
   disabled={not is_nil(@asking_ai_for_threats)}
   phx-click="suggest_threats"
   phx-value-sys_id={@system.id}
-><.icon name="hero-shield-check" class="mb-1"/>
+>
   <%= dgettext("threats", "Suggest threats") %>
 </.button_primary>
 

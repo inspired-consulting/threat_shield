@@ -6,14 +6,14 @@
       phx-click={JS.push("delete", value: %{threat_id: @threat.id})}
       data-confirm="Are you sure?"
     >
-      <.button><%= dgettext("common", "Delete") %></.button>
+      <.button_primary><%= dgettext("common", "Delete") %></.button_primary>
     </.link>
     <.link
       :if={ThreatShield.Members.Rights.may(:edit_threat, @membership)}
       patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/edit"}
       phx-click={JS.push_focus()}
     >
-      <.button><%= dgettext("common", "Edit") %></.button>
+      <.button_primary><%= dgettext("common", "Edit") %></.button_primary>
     </.link>
   </:actions>
 </.header>
@@ -25,19 +25,19 @@
 
 <h2><%= dgettext("risks", "Risks") %></h2>
 
-<.button
+<.button_primary
   :if={ThreatShield.Members.Rights.may(:create_risk, @membership)}
   disabled={not is_nil(@asking_ai)}
   phx-click="suggest_risks"
   phx-value-threat_id={@threat.id}
 >
   <%= dgettext("risks", "Suggest Risks") %>
-</.button>
+</.button_primary>
 <.link
   :if={ThreatShield.Members.Rights.may(:create_risk, @membership)}
   patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/new"}
 >
-  <.button>New Risk</.button>
+  <.button_primary>New Risk</.button_primary>
 </.link>
 
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@risk_suggestions} entity_name="risk" />
