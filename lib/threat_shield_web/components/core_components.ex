@@ -598,7 +598,7 @@ defmodule ThreatShieldWeb.CoreComponents do
               <%= @organisation.name %>
               <.icon name="hero-chevron-down" class="h-5 w-5" />
 
-              <ul class="absolute org-dropdown-menu hidden mt-4 py-2 w-48 bg-white text-primary_col-500 rounded-sm shadow-xl">
+              <ul class="absolute org-dropdown-menu hidden right-2 mt-4 py-2 w-48 bg-white text-primary_col-500 rounded-sm shadow-xl">
                 <li class="px-4 py-2">
                   <.link
                     href={~p"/organisations"}
@@ -618,7 +618,7 @@ defmodule ThreatShieldWeb.CoreComponents do
             >
               <.icon name="hero-user" class="h-5 w-5" />
               <.icon name="hero-chevron-down" class="h-5 w-5" />
-              <ul class="absolute user-dropdown-menu hidden mt-4 py-2 w-48 bg-white rounded-sm shadow-xl text-primary_col-500">
+              <ul class="absolute user-dropdown-menu hidden right-2 mt-4 py-2 w-48 bg-white rounded-sm shadow-xl text-primary_col-500">
                 <li class="px-4 py-2">
                   <.link
                     href={~p"/users/settings"}
@@ -689,20 +689,38 @@ defmodule ThreatShieldWeb.CoreComponents do
     """
   end
 
-  slot :name, required: true
-  slot :description, required: true
-  slot :attribute, required: true
+  slot :name, required: false
+  slot :description, required: false
+  slot :attribute, required: false
+  slot :links, required: false
 
   def card_detail(assigns) do
     ~H"""
     <section class="w-full px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
-      <div class="h-20 pb-5">
-        <h2 class="text-2xl font-semibold text-gray-900">
-          <%= render_slot(@name) %>
-        </h2>
-        <p class="mt-2 text-sm leading-6 text-gray-500 font-normal">
-          <%= render_slot(@description) %>
-        </p>
+      <div class="flex justify-between w-full">
+        <div class="h-20 pb-5">
+          <h2 class="text-2xl font-semibold text-gray-900">
+            <%= render_slot(@name) %>
+          </h2>
+          <p class="mt-2 text-sm leading-6 text-gray-500 font-normal">
+            <%= render_slot(@description) %>
+          </p>
+        </div>
+        <div>
+          <div
+            id="link-dropdown"
+            class="relative nav-dropdown text-[0.8125rem] leading-loose font-semibold hover:cursor-pointer border border-2 rounded-3xl px-4 py-1"
+            onclick="toggleDropdown(id)"
+          >
+            <.icon name="hero-ellipsis-vertical" class="h-5 w-5" />
+
+            <div class="absolute link-dropdown-menu hidden left-0 mt-4 bg-white text-primary_col-500 rounded-sm shadow-xl">
+              <div class="flex space-between">
+                <%= render_slot(@links) %>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="w-full grid grid-cols-3 gap-4 mt-6 p-6 bg-neutral-100">
         <%= render_slot(@attribute) %>

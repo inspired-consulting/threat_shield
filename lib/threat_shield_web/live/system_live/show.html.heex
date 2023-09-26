@@ -1,4 +1,4 @@
-
+    
 <.card_detail>
   <:name>
   <%= @system.name %>
@@ -6,11 +6,28 @@
   <:description>
   <%= @system.description %>
   </:description>
+  <:links> 
+      <.link
+        :if={ThreatShield.Members.Rights.may(:delete_system, @membership)}
+        phx-click={JS.push("delete", value: %{sys_id: @system.id})}
+        data-confirm="Are you sure?"
+      >
+        <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
+      </.link>
+      <.link
+        :if={ThreatShield.Members.Rights.may(:edit_system, @membership)}
+        patch={~p"/organisations/#{@organisation.id}/systems/#{@system}/edit"}
+        phx-click={JS.push_focus()}
+      >
+        <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
+      </.link>
+    </:links>
   <:attribute>
     <.input_attribute attributes={@system.attributes}></.input_attribute>
   </:attribute>
 </.card_detail>
 
+<%!-- 
 <.header>
   <%= @system.name %>
   <:actions>
@@ -38,7 +55,7 @@
       <div><%= "#{key} → #{value}" %></div>
     <% end %>
   </:item>
-</.list>
+</.list> --%>
 
 
 <h2><%= dgettext("assets", "Assets") %></h2>

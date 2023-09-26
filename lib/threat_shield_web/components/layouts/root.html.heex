@@ -33,7 +33,9 @@
             navMenu.classList.add("hidden");
           }
           const isHidden = navMenu.classList.contains("hidden");
+          if (icon) {
           icon.style.transform = isHidden ? "rotate(0deg)" : "rotate(180deg)";
+          }
         });
       }
     </script>
