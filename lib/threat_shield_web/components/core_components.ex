@@ -622,14 +622,30 @@ defmodule ThreatShieldWeb.CoreComponents do
               <%= @organisation.name %>
               <.icon name="hero-chevron-down" class="h-5 w-5" />
 
-              <ul class="absolute org-dropdown-menu hidden right-2 mt-4 py-2 w-48 bg-white text-primary_col-500 rounded-sm shadow-xl">
-                <li class="px-4 py-2">
+              <ul class="absolute org-dropdown-menu hidden right-2 mt-4 w-48 bg-white text-primary_col-500 rounded-lg shadow-xl">
+                <li class="px-4 py-2 text-gray-900 text-sm font-medium flex justify-between">
+                  <%= @organisation.name %><.icon name="hero-check" class="h-5 w-5 text-indigo-600" />
+                </li>
+                <%= for org <- @current_user.organisations do %>
+                  <%= if org.id != @organisation.id do %>
+                    <li class="px-4 py-2 text-gray-900 text-sm font-normal">
+                      <.link
+                        href={~p"/organisations/#{org.id}"}
+                        class="text-[0.8125rem] leading-6 text-primary_col-500 hover:underline"
+                      >
+                        <%= org.name %>
+                      </.link>
+                    </li>
+                  <% end %>
+                <% end %>
+                <li class="px-4 py-2 flex justify-between border-t-2 items-center">
                   <.link
-                    href={~p"/organisations"}
-                    class="text-[0.8125rem] leading-6  text-primary_col-500 hover:underline"
+                    href={~p"/organisations/new"}
+                    class="text-[0.8125rem] leading-6  text-primary_col-500 hover:underline text-indigo-600"
                   >
-                    List organisation
+                    <%= dgettext("organisations", "Create organisation") %>
                   </.link>
+                  <.icon name="hero-plus" class="h-5 w-5 text-gray-400" />
                 </li>
               </ul>
             </li>
@@ -811,13 +827,59 @@ defmodule ThreatShieldWeb.CoreComponents do
   def card_detail(assigns) do
     ~H"""
     <section class="w-full px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
-      <div class="flex justify-between w-full">
+      <div class="flex justify-between w-full pb-10 border-b border-gray-200">
         <div class="h-20 pb-5">
           <.h3>
             <%= render_slot(@name) %>
           </.h3>
-          <p class="mt-2 text-sm leading-6 text-gray-500 font-normal">
+          <p class="text-sm leading-6 text-gray-500 font-normal">
             <%= render_slot(@description) %>
+          </p>
+        </div>
+        <div>
+          <.dropdown links={@links} />
+        </div>
+      </div>
+      <div class="w-full grid grid-cols-3 gap-4 mt-6 p-6 bg-neutral-100">
+        <%= render_slot(@attribute) %>
+      </div>
+    </section>
+    """
+  end
+
+  slot :links, required: true
+
+  def dropdown(assigns) do
+    ~H"""
+    <div
+      id="link-dropdown"
+      class="relative nav-dropdown text-[0.8125rem] leading-loose font-semibold hover:cursor-pointer px-4 py-1"
+      onclick="toggleDropdown(id)"
+    >
+      <.icon name="hero-ellipsis-vertical" class="h-5 w-5" />
+
+      <ul class="absolute link-dropdown-menu hidden right-0 mt-4 bg-white text-primary_col-500 rounded-sm shadow-xl">
+        <%= render_slot(@links) %>
+      </ul>
+    </div>
+    """
+  end
+
+  slot :name, required: false
+  slot :created, required: false
+  slot :attribute, required: false
+  slot :links, required: false
+
+  def card_detail_org(assigns) do
+    ~H"""
+    <section class="w-[1068px] px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
+      <div class="flex justify-between w-full pb-6 border-b border-gray-200">
+        <div class="h-20 pb-5">
+          <.h3>
+            <%= render_slot(@name) %>
+          </.h3>
+          <p class="leading-6 text-gray-500 text-sm font-normal">
+            <%= render_slot(@created) %>
           </p>
         </div>
         <div>
@@ -829,14 +891,14 @@ defmodule ThreatShieldWeb.CoreComponents do
             <.icon name="hero-ellipsis-vertical" class="h-5 w-5" />
 
             <div class="absolute link-dropdown-menu hidden left-0 mt-4 bg-white text-primary_col-500 rounded-sm shadow-xl">
-              <div class="flex space-between">
+              <ul class="">
                 <%= render_slot(@links) %>
-              </div>
+              </ul>
             </div>
           </div>
         </div>
       </div>
-      <div class="w-full grid grid-cols-3 gap-4 mt-6 p-6 bg-neutral-100">
+      <div class="w-full grid grid-cols-3 gap-4  p-6">
         <%= render_slot(@attribute) %>
       </div>
     </section>

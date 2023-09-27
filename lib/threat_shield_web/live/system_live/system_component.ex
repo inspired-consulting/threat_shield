@@ -19,7 +19,7 @@ defmodule ThreatShieldWeb.SystemLive.SystemComponent do
               patch={~p"/organisations/#{@organisation.id}/systems/new"}
             >
               <.button_primary>
-                <.icon name="hero-pencil" /><%= dgettext("systems", "New System") %>
+                <.icon name="hero-pencil" class="mr-1 mb-1" /><%= dgettext("systems", "New System") %>
               </.button_primary>
             </.link>
           </:buttons>

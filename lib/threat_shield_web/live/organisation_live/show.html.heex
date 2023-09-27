@@ -1,49 +1,37 @@
-<.header>
-  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
-
-
-  </div>
-  <%= @organisation.name %>
-  <:actions>
+<.card_detail_org>
+<:name>
+<%= @organisation.name%>
+</:name>
+<:created><.icon name="hero-identification" class="w-5 h-5"/><span> <%= dgettext("common", "Created on") %> </span><%= convert_date(@organisation.inserted_at) %></:created>
+  <:links> 
+  <li class="px-4 py-2 text-gray-900 text-sm font-medium">
     <.link navigate={~p"/organisations/#{@organisation}/members"}>
-      <.button_primary><%= dgettext("organisation", "Members") %></.button_primary>
+      <%= dgettext("organisation", "Members") %>
     </.link>
-
+  </li>
+    <li class="px-4 py-2 text-gray-900 text-sm font-medium"
+ :if={ThreatShield.Members.Rights.may(:delete_organisation, @membership)}>
     <.link
-      :if={ThreatShield.Members.Rights.may(:delete_organisation, @membership)}
+      
       phx-click={JS.push("delete", value: %{organisation_id: @organisation.id})}
       data-confirm="Are you sure?"
-    >
-      <.button_primary>
-        <%= dgettext("common", "Delete") %>
-      </.button_primary>
+    ><%= dgettext("common", "Delete") %> 
     </.link>
-
+  </li>
+  <li class="px-4 py-2 text-gray-900 text-sm font-medium" :if={ThreatShield.Members.Rights.may(:edit_organisation, @membership)}>
     <.link
-      :if={ThreatShield.Members.Rights.may(:edit_organisation, @membership)}
+      
       patch={~p"/organisations/#{@organisation}/edit"}
       phx-click={JS.push_focus()}
     >
-      <.button_primary><%= dgettext("common", "Edit") %></.button_primary>
+      <%= dgettext("common", "Edit") %>
     </.link>
-  </:actions>
-</.header>
-
-<div class="mt-14">
-  <dl class="-my-4 divide-y divide-zinc-100">
-    <div class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
-      <dt class="w-1/4 flex-none text-zinc-500"><%= dgettext("organisations", "Location") %></dt>
-      <dd class="text-bg-gray-900"><%= @organisation.location %></dd>
-    </div>
-    <div
-      :for={{key, value} <- @organisation.attributes}
-      class="flex gap-4 py-4 text-sm leading-6 sm:gap-8"
-    >
-      <dt class="w-1/4 flex-none text-zinc-500"><%= key %></dt>
-      <dd class="text-bg-gray-900"><%= value %></dd>
-    </div>
-  </dl>
-</div>
+  </li>
+  </:links>
+  <:attribute>
+    <.input_attribute attributes={@organisation.attributes}></.input_attribute>
+  </:attribute>
+</.card_detail_org>
 
 <%= if !Enum.empty?(@organisation.systems) do %>
   <.live_component

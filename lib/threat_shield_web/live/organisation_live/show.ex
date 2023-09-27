@@ -15,7 +15,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   import ThreatShield.Organisations.Organisation,
     only: [attributes: 0, list_system_options: 1]
 
-  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, convert_date: 1]
 
   @impl true
   def mount(%{"org_id" => org_id} = params, _session, socket) do

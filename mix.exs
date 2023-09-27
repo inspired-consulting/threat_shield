@@ -54,7 +54,8 @@ defmodule ThreatShield.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:openai, "~> 0.5.2"},
       {:ecto_psql_extras, "~> 0.7.13"},
-      {:ex_rated, "~> 2.1"}
+      {:ex_rated, "~> 2.1"},
+      {:timex, "~> 3.0"}
     ]
   end
 
