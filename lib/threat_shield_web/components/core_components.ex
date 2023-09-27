@@ -822,6 +822,7 @@ defmodule ThreatShieldWeb.CoreComponents do
   slot :name, required: false
   slot :description, required: false
   slot :attribute, required: false
+  slot :links, required: true
 
   def card_detail(assigns) do
     ~H"""
@@ -846,7 +847,7 @@ defmodule ThreatShieldWeb.CoreComponents do
     """
   end
 
-  slot :links, required: true
+  attr :links, :any, required: true
 
   def dropdown(assigns) do
     ~H"""
