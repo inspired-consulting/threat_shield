@@ -10,7 +10,7 @@ defmodule ThreatShieldWeb.Breadcrumbs do
     assigns = assign(assigns, :size, length(assigns.breadcrumbs))
 
     ~H"""
-    <nav class="flex" aria-label="breadcrumb">
+    <nav class="flex text-gray-500 text-sm font-medium mb-2" aria-label="breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-3">
         <.breadcrumb_item
           :for={{breadcrumb, index} <- Enum.with_index(@breadcrumbs)}
@@ -42,7 +42,7 @@ defmodule ThreatShieldWeb.Breadcrumbs do
   defp breadcrumb_item(assigns) when assigns.type == "first" do
     ~H"""
     <li class="inline-flex items-center">
-      <.link navigate={"/dashboard"} class="inline-flex items-center text-sm font-medium">
+      <.link navigate="/dashboard" class="inline-flex items-center text-sm font-medium">
         <.icon name="hero-home" class="h-4 w-4" />
       </.link>
     </li>

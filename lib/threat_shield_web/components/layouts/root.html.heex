@@ -12,7 +12,7 @@
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>
-  <body class="antialiased">
+  <body class="antialiased bg-neutral-100">
     
     <%= @inner_content %>
 
@@ -33,7 +33,9 @@
             navMenu.classList.add("hidden");
           }
           const isHidden = navMenu.classList.contains("hidden");
+          if (icon) {
           icon.style.transform = isHidden ? "rotate(0deg)" : "rotate(180deg)";
+          }
         });
       }
     </script>

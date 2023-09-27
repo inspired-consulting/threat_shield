@@ -20,6 +20,30 @@ defmodule ThreatShieldWeb.CoreComponents do
   alias(Phoenix.LiveView.JS)
   import ThreatShieldWeb.Gettext
 
+  def h1(assigns) do
+    ~H"""
+    <h1 class="text-3xl font-bold leading-9 text-gray-900">
+      <%= render_slot(@inner_block) %>
+    </h1>
+    """
+  end
+
+  def h2(assigns) do
+    ~H"""
+    <h2 class="text-gray-900 text-3xl font-bold">
+      <%= render_slot(@inner_block) %>
+    </h2>
+    """
+  end
+
+  def h3(assigns) do
+    ~H"""
+    <h3 class="text-gray-900 text-2xl font-semibold leading-normal">
+      <%= render_slot(@inner_block) %>
+    </h3>
+    """
+  end
+
   @doc """
   Renders a modal.
 
@@ -67,7 +91,7 @@ defmodule ThreatShieldWeb.CoreComponents do
               phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
               phx-key="escape"
               phx-click-away={JS.exec("data-cancel", to: "##{@id}")}
-              class="shadow-bg-primary_col-600/10 ring-bg-primary_col-600/10 relative hidden rounded-2xl bg-secondary_col-100 p-14 shadow-xl transition"
+              class="shadow-bg-gray-900/10 ring-bg-gray-900/10 relative hidden rounded-2xl bg-white p-14 shadow-xl transition"
             >
               <div class="absolute top-6 right-5">
                 <button
@@ -212,8 +236,8 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   ## Examples
 
-      <.button>Send!</.button>
-      <.button phx-click="go" class="ml-2">Send!</.button>
+      <.button_primary>Send!</.button_primary>
+      <.button_primary phx-click="go" class="ml-2">Send!</.button_primary>
   """
   attr :type, :string, default: nil
   attr :class, :string, default: nil
@@ -221,13 +245,36 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   slot :inner_block, required: true
 
-  def button(assigns) do
+  def button_primary(assigns) do
     ~H"""
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-accent_col-500 hover:bg-accent_col-500 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white hover:text-white active:text-secondary_col-100",
+        "phx-submit-loading:opacity-75 rounded-lg bg-indigo-600 hover:bg-indigo-600 py-2 px-3",
+        "text-sm font-semibold leading-6 text-white hover:text-white active:text-white whitespace-nowrap",
+        "disabled:bg-secondary_col-900 disabled:pointer-events-none",
+        @class
+      ]}
+      {@rest}
+    >
+      <%= render_slot(@inner_block) %>
+    </button>
+    """
+  end
+
+  attr :type, :string, default: nil
+  attr :class, :string, default: nil
+  attr :rest, :global, include: ~w(disabled form name value)
+
+  slot :inner_block, required: true
+
+  def button_secondary(assigns) do
+    ~H"""
+    <button
+      type={@type}
+      class={[
+        "phx-submit-loading:opacity-75 rounded-lg bg-white  shadow shadow-inner  hover:bg-indigo-600 py-2 px-3",
+        "text-gray-900 text-sm font-semibold hover:text-white active:text-white",
         "disabled:bg-secondary_col-900 disabled:pointer-events-none",
         @class
       ]}
@@ -311,7 +358,7 @@ defmodule ThreatShieldWeb.CoreComponents do
           name={@name}
           value="true"
           checked={@checked}
-          class="rounded border-zinc-300 text-primary_col-600 focus:ring-0"
+          class="rounded border-zinc-300 text-gray-900 focus:ring-0"
           {@rest}
         />
         <%= @label %>
@@ -348,7 +395,7 @@ defmodule ThreatShieldWeb.CoreComponents do
         id={@id}
         name={@name}
         class={[
-          "mt-2 block w-full rounded-lg text-primary_col-600 focus:ring-0 sm:text-sm sm:leading-6",
+          "mt-2 block w-full rounded-lg text-gray-900 focus:ring-0 sm:text-sm sm:leading-6",
           "min-h-[6rem] phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
           @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
@@ -371,7 +418,7 @@ defmodule ThreatShieldWeb.CoreComponents do
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "mt-2 block w-full rounded-lg text-primary_col-600 focus:ring-0 sm:text-sm sm:leading-6",
+          "mt-2 block w-full rounded-lg text-gray-900 focus:ring-0 sm:text-sm sm:leading-6",
           "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
           @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
@@ -391,7 +438,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-primary_col-600">
+    <label for={@for} class="block text-sm font-semibold leading-6 text-gray-900">
       <%= render_slot(@inner_block) %>
     </label>
     """
@@ -424,10 +471,10 @@ defmodule ThreatShieldWeb.CoreComponents do
     ~H"""
     <header class={[@actions != [] && "flex items-center justify-between gap-6", @class]}>
       <div>
-        <h1 class="text-lg font-semibold leading-8 text-primary_col-600">
+        <h1 class="text-lg font-semibold leading-8 text-gray-900">
           <%= render_slot(@inner_block) %>
         </h1>
-        <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-primary_col-400">
+        <p :if={@subtitle != []} class="mt-2 text-gray-500 text-sm font-normal">
           <%= render_slot(@subtitle) %>
         </p>
       </div>
@@ -468,7 +515,7 @@ defmodule ThreatShieldWeb.CoreComponents do
       end
 
     ~H"""
-    <table class="w-[90vw] mt-10 mx-auto justify-self-center">
+    <table class="w-[1016px] mt-10 mx-auto justify-self-center">
       <thead class="text-sm text-left leading-6 text-primary_col-900">
         <tr class="">
           <th :for={col <- @col} class="p-0 pr-6 pb-4 font-normal"><%= col[:label] %></th>
@@ -488,7 +535,7 @@ defmodule ThreatShieldWeb.CoreComponents do
           >
             <div class="block py-4 pr-0">
               <span class="absolute -inset-y-px -right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
-              <span class={["relative", i == 0 && "font-semibold text-primary_col-600"]}>
+              <span class={["relative", i == 0 && "font-semibold text-gray-900"]}>
                 <%= render_slot(col, @row_item.(row)) %>
               </span>
             </div>
@@ -498,7 +545,7 @@ defmodule ThreatShieldWeb.CoreComponents do
               <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-zinc-50 sm:rounded-r-xl" />
               <span
                 :for={action <- @action}
-                class="relative ml-4 font-semibold leading-6 text-primary_col-600 hover:text-bg-primary_col-600"
+                class="relative ml-4 font-semibold leading-6 text-gray-900 hover:text-bg-gray-900"
               >
                 <%= render_slot(action, @row_item.(row)) %>
               </span>
@@ -513,7 +560,7 @@ defmodule ThreatShieldWeb.CoreComponents do
   defp entity_link(assigns) do
     ~H"""
     <%= if assigns[:current_page] == @linked_page do %>
-      <span class="text-secondary_col-100 bg-primary_col-600 px-3 py-2 rounded-md">
+      <span class="text-white bg-gray-900 px-3 py-2 rounded-md">
         <%= @name %>
       </span>
     <% else %>
@@ -534,13 +581,13 @@ defmodule ThreatShieldWeb.CoreComponents do
         linked_page={:organisation}
       />
       <.entity_link
-        link={~p"/organisations/#{@organisation.id}/systems"}
+        link={~p"/organisations/#{@organisation.id}/#systems"}
         name={dgettext("systems", "Systems")}
         current_page={assigns[:entity_page]}
         linked_page={:systems}
       />
       <.entity_link
-        link={~p"/organisations/#{@organisation.id}/assets"}
+        link={~p"/organisations/#{@organisation.id}/#assets"}
         name={dgettext("assets", "Assets")}
         current_page={assigns[:entity_page]}
         linked_page={:assets}
@@ -564,7 +611,7 @@ defmodule ThreatShieldWeb.CoreComponents do
           <.entity_links organisation={@organisation} entity_page={assigns[:entity_page]} />
         <% end %>
       </div>
-      <nav class="text-secondary_col-100 flex items-center">
+      <nav class="text-white flex items-center">
         <ul class="relative z-10 flex gap-4 px-4 justify-end">
           <%= if assigns[:organisation] do %>
             <li
@@ -575,14 +622,30 @@ defmodule ThreatShieldWeb.CoreComponents do
               <%= @organisation.name %>
               <.icon name="hero-chevron-down" class="h-5 w-5" />
 
-              <ul class="absolute org-dropdown-menu hidden mt-4 py-2 w-48 bg-white text-primary_col-500 rounded-sm shadow-xl">
-                <li class="px-4 py-2">
+              <ul class="absolute org-dropdown-menu hidden right-2 mt-4 w-48 bg-white text-primary_col-500 rounded-lg shadow-xl">
+                <li class="px-4 py-2 text-gray-900 text-sm font-medium flex justify-between">
+                  <%= @organisation.name %><.icon name="hero-check" class="h-5 w-5 text-indigo-600" />
+                </li>
+                <%= for org <- @current_user.organisations do %>
+                  <%= if org.id != @organisation.id do %>
+                    <li class="px-4 py-2 text-gray-900 text-sm font-normal">
+                      <.link
+                        href={~p"/organisations/#{org.id}"}
+                        class="text-[0.8125rem] leading-6 text-primary_col-500 hover:underline"
+                      >
+                        <%= org.name %>
+                      </.link>
+                    </li>
+                  <% end %>
+                <% end %>
+                <li class="px-4 py-2 flex justify-between border-t-2 items-center">
                   <.link
-                    href={~p"/organisations"}
-                    class="text-[0.8125rem] leading-6  text-primary_col-500 hover:underline"
+                    href={~p"/organisations/new"}
+                    class="text-[0.8125rem] leading-6  text-primary_col-500 hover:underline text-indigo-600"
                   >
-                    List organisation
+                    <%= dgettext("organisations", "Create organisation") %>
                   </.link>
+                  <.icon name="hero-plus" class="h-5 w-5 text-gray-400" />
                 </li>
               </ul>
             </li>
@@ -590,12 +653,12 @@ defmodule ThreatShieldWeb.CoreComponents do
           <%= if assigns[:current_user] do %>
             <li
               id="user-dropdown"
-              class="relative nav-dropdown text-[0.8125rem] leading-loose text-secondary_col-100 font-semibold hover:cursor-pointer border border-2 rounded-3xl px-4 py-1"
+              class="relative nav-dropdown text-[0.8125rem] leading-loose text-white font-semibold hover:cursor-pointer border border-2 rounded-3xl px-4 py-1"
               onclick="toggleDropdown(id)"
             >
               <.icon name="hero-user" class="h-5 w-5" />
               <.icon name="hero-chevron-down" class="h-5 w-5" />
-              <ul class="absolute user-dropdown-menu hidden mt-4 py-2 w-48 bg-white rounded-sm shadow-xl text-primary_col-500">
+              <ul class="absolute user-dropdown-menu hidden right-2 mt-4 py-2 w-48 bg-white rounded-sm shadow-xl text-primary_col-500">
                 <li class="px-4 py-2">
                   <.link
                     href={~p"/users/settings"}
@@ -616,18 +679,18 @@ defmodule ThreatShieldWeb.CoreComponents do
               </ul>
             </li>
           <% else %>
-            <li>
+            <li class="text-white">
               <.link
                 href={~p"/users/register"}
-                class="text-[0.8125rem] leading-6 text-primary_col-600 font-semibold hover:underline"
+                class="text-[0.8125rem] leading-6 font-semibold hover:underline"
               >
                 Register
               </.link>
             </li>
-            <li>
+            <li class="text-white">
               <.link
                 href={~p"/users/log_in"}
-                class="text-[0.8125rem] leading-6 text-primary_col-600 font-semibold hover:underline"
+                class="text-[0.8125rem] leading-6 font-semibold hover:underline"
               >
                 Log in
               </.link>
@@ -659,10 +722,197 @@ defmodule ThreatShieldWeb.CoreComponents do
       <dl class="-my-4 divide-y divide-zinc-100">
         <div :for={item <- @item} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
           <dt class="w-1/4 flex-none text-zinc-500"><%= item.title %></dt>
-          <dd class="text-bg-primary_col-600"><%= render_slot(item) %></dd>
+          <dd class="text-bg-gray-900"><%= render_slot(item) %></dd>
         </div>
       </dl>
     </div>
+    """
+  end
+
+  attr :id, :string, required: true
+  attr :rows, :list, required: true
+  attr :row_id, :any, default: nil, doc: "the function for generating the row id"
+  attr :row_click, :any, default: nil, doc: "the function for handling phx-click on each row"
+
+  attr :row_item, :any,
+    default: &Function.identity/1,
+    doc: "the function for mapping each row before calling the :col and :action slots"
+
+  slot :col, required: true do
+    attr :label, :string
+  end
+
+  slot :action, doc: "the slot for showing user actions in the last table column"
+  slot :name, required: false
+
+  def stacked_list(assigns) do
+    assigns =
+      with %{rows: %Phoenix.LiveView.LiveStream{}} <- assigns do
+        assign(assigns, row_id: assigns.row_id || fn {id, _item} -> id end)
+      end
+
+    ~H"""
+    <table class="w-full justify-self-center">
+      <tbody
+        id={@id}
+        phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
+        class="relative divide-y-2 divide-zinc-100 text-sm leading-6 text-gray-500"
+      >
+        <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-zinc-50">
+          <td
+            :for={{col, i} <- Enum.with_index(@col)}
+            phx-click={@row_click && @row_click.(row)}
+            class={["relative p-0", @row_click && "hover:cursor-pointer"]}
+          >
+            <div class="block py-4 pr-4">
+              <span class="absolute -inset-y-px -right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
+              <span class={["relative", i == 0 && "font-semibold text-gray-900"]}>
+                <%= render_slot(col, @row_item.(row)) %>
+              </span>
+            </div>
+          </td>
+          <td :if={@action != []} class="relative w-14 p-0">
+            <div class="relative whitespace-nowrap py-4 text-right text-sm font-medium">
+              <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-zinc-50 sm:rounded-r-xl" />
+              <span
+                :for={action <- @action}
+                class="relative ml-4 font-semibold leading-6 text-gray-900 hover:text-bg-gray-900"
+              >
+                <%= render_slot(action, @row_item.(row)) %>
+              </span>
+            </div>
+          </td>
+
+          <td class="grid justify-items-end mt-3">
+            <.link
+              phx-click={@row_click && @row_click.(row)}
+              class={["relative p-0", @row_click && "hover:cursor-pointer"]}
+            >
+              <.button_secondary><%= dgettext("common", "View") %></.button_secondary>
+            </.link>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    """
+  end
+
+  slot :name, required: false
+  slot :buttons, required: false
+  slot :subtitle, required: false
+
+  def stacked_list_header(assigns) do
+    ~H"""
+    <section class="flex justify-between">
+      <div class="w-[70%]">
+        <.h2>
+          <%= render_slot(@name) %>
+        </.h2>
+        <p :if={@subtitle != []} class="mt-2 text-gray-500 text-sm font-normal">
+          <%= render_slot(@subtitle) %>
+        </p>
+      </div>
+      <div class="flex flex-row flex-1 gap-2 justify-end">
+        <%= render_slot(@buttons) %>
+      </div>
+    </section>
+    """
+  end
+
+  slot :name, required: false
+  slot :description, required: false
+  slot :attribute, required: false
+  slot :links, required: true
+
+  def card_detail(assigns) do
+    ~H"""
+    <section class="w-full px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
+      <div class="flex justify-between w-full pb-10 border-b border-gray-200">
+        <div class="h-20 pb-5">
+          <.h3>
+            <%= render_slot(@name) %>
+          </.h3>
+          <p class="text-sm leading-6 text-gray-500 font-normal">
+            <%= render_slot(@description) %>
+          </p>
+        </div>
+        <div>
+          <.dropdown links={@links} />
+        </div>
+      </div>
+      <div class="w-full grid grid-cols-3 gap-4 mt-6 p-6 bg-neutral-100">
+        <%= render_slot(@attribute) %>
+      </div>
+    </section>
+    """
+  end
+
+  attr :links, :any, required: true
+
+  def dropdown(assigns) do
+    ~H"""
+    <div
+      id="link-dropdown"
+      class="relative nav-dropdown text-[0.8125rem] leading-loose font-semibold hover:cursor-pointer px-4 py-1"
+      onclick="toggleDropdown(id)"
+    >
+      <.icon name="hero-ellipsis-vertical" class="h-5 w-5" />
+
+      <ul class="absolute link-dropdown-menu hidden right-0 mt-4 bg-white text-primary_col-500 rounded-sm shadow-xl">
+        <%= render_slot(@links) %>
+      </ul>
+    </div>
+    """
+  end
+
+  slot :name, required: false
+  slot :created, required: false
+  slot :attribute, required: false
+  slot :links, required: false
+
+  def card_detail_org(assigns) do
+    ~H"""
+    <section class="w-[1068px] px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
+      <div class="flex justify-between w-full pb-6 border-b border-gray-200">
+        <div class="h-20 pb-5">
+          <.h3>
+            <%= render_slot(@name) %>
+          </.h3>
+          <p class="leading-6 text-gray-500 text-sm font-normal">
+            <%= render_slot(@created) %>
+          </p>
+        </div>
+        <div>
+          <div
+            id="link-dropdown"
+            class="relative nav-dropdown text-[0.8125rem] leading-loose font-semibold hover:cursor-pointer border border-2 rounded-3xl px-4 py-1"
+            onclick="toggleDropdown(id)"
+          >
+            <.icon name="hero-ellipsis-vertical" class="h-5 w-5" />
+
+            <div class="absolute link-dropdown-menu hidden left-0 mt-4 bg-white text-primary_col-500 rounded-sm shadow-xl">
+              <ul class="">
+                <%= render_slot(@links) %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="w-full grid grid-cols-3 gap-4  p-6">
+        <%= render_slot(@attribute) %>
+      </div>
+    </section>
+    """
+  end
+
+  def input_attribute(assigns) do
+    ~H"""
+    <%= for {key, value} <- @attributes do %>
+      <div class="bg-white p-4 w-72">
+        <div class="text-gray-400 text-xs font-medium"><%= key %></div>
+        <div class="text-gray-900 text-sm font-normal"><%= value %></div>
+      </div>
+    <% end %>
     """
   end
 
@@ -681,7 +931,7 @@ defmodule ThreatShieldWeb.CoreComponents do
     <div class="mt-16">
       <.link
         navigate={@navigate}
-        class="text-sm font-semibold leading-6 text-primary_col-600 hover:text-secondary_col-600"
+        class="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary_col-600"
       >
         <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
         <%= render_slot(@inner_block) %>

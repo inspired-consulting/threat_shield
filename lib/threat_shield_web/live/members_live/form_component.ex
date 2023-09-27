@@ -18,10 +18,11 @@ defmodule ThreatShieldWeb.MembersLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-
         <.input field={@form[:email]} type="text" label="Email" />
         <:actions>
-          <.button phx-disable-with="Saving..."><%= dgettext("organisation", "Send invite") %></.button>
+          <.button_primary phx-disable-with="Saving...">
+            <%= dgettext("organisation", "Send invite") %>
+          </.button_primary>
         </:actions>
       </.simple_form>
     </div>

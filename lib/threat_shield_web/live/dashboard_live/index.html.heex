@@ -1,12 +1,12 @@
 <.link patch={~p"/organisations/#{@organisation.id}"}>
-  <.button><%= dgettext("organisation", "Organisation Detail") %></.button>
+  <.button_primary><%= dgettext("organisation", "Organisation Detail") %></.button_primary>
 </.link>
 
 <.link
   :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
   patch={~p"/organisations/#{@organisation.id}/?suggest_threats=true"}
 >
-  <.button><%= dgettext("threats", "Suggest Threats") %></.button>
+  <.button_primary><%= dgettext("threats", "Suggest Threats") %></.button_primary>
 </.link>
 
 <h2>Threats</h2>

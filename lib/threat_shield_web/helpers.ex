@@ -32,4 +32,11 @@ defmodule ThreatShieldWeb.Helpers do
       "/organisations/#{assigns.organisation.id}"
     end
   end
+
+  # Time
+
+  def convert_date(date_str) do
+    {:ok, result} = Timex.format(date_str, "{0D}.{0M}.{YYYY}")
+    result
+  end
 end

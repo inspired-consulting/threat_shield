@@ -19,6 +19,11 @@ defmodule ThreatShield.Threats do
     |> Repo.preload(:systems)
   end
 
+  def count_all_threats() do
+    Threat
+    |> Repo.aggregate(:count, :id)
+  end
+
   def get_threat!(%User{id: user_id}, threat_id) do
     Threat.get(threat_id)
     |> Threat.for_user(user_id)
@@ -27,6 +32,12 @@ defmodule ThreatShield.Threats do
     |> Threat.with_org_systems()
     |> Threat.preload_membership()
     |> Repo.one!()
+  end
+
+  def count_threats_for_system(system_id) do
+    Threat
+    |> where([t], t.system_id == ^system_id)
+    |> Repo.aggregate(:count, :id)
   end
 
   def create_threat(

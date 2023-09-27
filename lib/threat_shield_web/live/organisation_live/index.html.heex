@@ -2,7 +2,7 @@
   Listing Organisations
   <:actions>
     <.link patch={~p"/organisations/new"}>
-      <.button>New Organisation</.button>
+      <.button_primary>New Organisation</.button_primary>
     </.link>
   </:actions>
 </.header>
@@ -28,10 +28,10 @@
 >
   <.live_component
     module={ThreatShieldWeb.OrganisationLive.FormComponent}
-    id={@organisation.id || :new}
+    id={@edit_organisation.id || :new}
     title={@page_title}
     action={@live_action}
-    organisation={@organisation}
+    organisation={@edit_organisation}
     current_user={@current_user}
     locations_options={@locations_options}
     attributes={@attributes}

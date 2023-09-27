@@ -38,7 +38,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
 
     socket
     |> assign(:page_title, "Edit Organisation")
-    |> assign(:organisation, Organisations.get_organisation!(user, id))
+    |> assign(:edit_organisation, Organisations.get_organisation!(user, id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -46,14 +46,14 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
 
     socket
     |> assign(:page_title, "New Organisation")
-    |> assign(:organisation, %Organisation{users: [current_user]})
+    |> assign(:edit_organisation, %Organisation{users: [current_user]})
     |> assign(:attributes, attributes())
   end
 
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Organisations")
-    |> assign(:organisation, nil)
+    |> assign(:edit_organisation, nil)
     |> assign(:attributes, attributes())
   end
 

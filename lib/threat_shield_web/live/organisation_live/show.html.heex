@@ -1,98 +1,60 @@
-<.header>
-  <%= @organisation.name %>
-  <:actions>
+<.card_detail_org>
+<:name>
+<%= @organisation.name%>
+</:name>
+<:created><.icon name="hero-identification" class="w-5 h-5"/><span> <%= dgettext("common", "Created on") %> </span><%= convert_date(@organisation.inserted_at) %></:created>
+  <:links> 
+  <li class="px-4 py-2 text-gray-900 text-sm font-medium">
     <.link navigate={~p"/organisations/#{@organisation}/members"}>
-      <.button><%= dgettext("organisation", "Members") %></.button>
+      <%= dgettext("organisation", "Members") %>
     </.link>
-
+  </li>
+    <li class="px-4 py-2 text-gray-900 text-sm font-medium"
+ :if={ThreatShield.Members.Rights.may(:delete_organisation, @membership)}>
     <.link
-      :if={ThreatShield.Members.Rights.may(:delete_organisation, @membership)}
+      
       phx-click={JS.push("delete", value: %{organisation_id: @organisation.id})}
       data-confirm="Are you sure?"
-    >
-      <.button>
-        <%= dgettext("common", "Delete") %>
-      </.button>
+    ><%= dgettext("common", "Delete") %> 
     </.link>
-
+  </li>
+  <li class="px-4 py-2 text-gray-900 text-sm font-medium" :if={ThreatShield.Members.Rights.may(:edit_organisation, @membership)}>
     <.link
-      :if={ThreatShield.Members.Rights.may(:edit_organisation, @membership)}
+      
       patch={~p"/organisations/#{@organisation}/edit"}
       phx-click={JS.push_focus()}
     >
-      <.button><%= dgettext("common", "Edit") %></.button>
+      <%= dgettext("common", "Edit") %>
     </.link>
-  </:actions>
-</.header>
+  </li>
+  </:links>
+  <:attribute>
+    <.input_attribute attributes={@organisation.attributes}></.input_attribute>
+  </:attribute>
+</.card_detail_org>
 
-<div class="mt-14">
-  <dl class="-my-4 divide-y divide-zinc-100">
-    <div class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
-      <dt class="w-1/4 flex-none text-zinc-500"><%= dgettext("organisations", "Location") %></dt>
-      <dd class="text-bg-primary_col-600"><%= @organisation.location %></dd>
-    </div>
-    <div
-      :for={{key, value} <- @organisation.attributes}
-      class="flex gap-4 py-4 text-sm leading-6 sm:gap-8"
-    >
-      <dt class="w-1/4 flex-none text-zinc-500"><%= key %></dt>
-      <dd class="text-bg-primary_col-600"><%= value %></dd>
-    </div>
-  </dl>
-</div>
-
-<h2><%= dgettext("systems", "Systems") %></h2>
-<.link
-  :if={ThreatShield.Members.Rights.may(:create_system, @membership)}
-  patch={~p"/organisations/#{@organisation.id}/systems/new"}
->
-  <.button><%= dgettext("systems", "New System") %></.button>
-</.link>
-
-<%= if !Enum.empty?(@organisation.systems) do %>
   <.live_component
     module={ThreatShieldWeb.SystemLive.SystemComponent}
     organisation={@organisation}
+    membership={@membership}
+    threat_count={@threat_count}
+    asset_count={@asset_count}
     id={"systems_for_org_#{@organisation.id}"}
   />
-<% else %>
-  <p>
-    There are no systems associated with this organisation. Please add them manually.
-  </p>
-<% end %>
 
-<h2><%= dgettext("assets", "Assets") %></h2>
-<.link
-  :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
-  patch={~p"/organisations/#{@organisation.id}/assets/new"}
->
-  <.button><%= dgettext("assets", "New Asset") %></.button>
-</.link>
-
-<.button
-  :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
-  disabled={not is_nil(@asking_ai_for_assets)}
-  phx-click="suggest_assets"
-  phx-value-org_id={@organisation.id}
->
-  Suggest Assets
-</.button>
 
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
 
-<%= if !Enum.empty?(@organisation.assets) do %>
   <.live_component
     module={ThreatShieldWeb.AssetLive.AssetComponent}
     organisation={@organisation}
     assets={@organisation.assets}
+    membership={@membership}
+    asking_ai_for_assets={@asking_ai_for_assets}
+    asking_ai_for_threats={@asking_ai_for_threats}
     path_prefix={"/organisations/#{@organisation.id}"}
     id={"assets_for_org_#{@organisation.id}"}
   />
-<% else %>
-  <p>
-    There are no assets associated with this organisation. Please add them manually or click the suggest assets button.
-  </p>
-<% end %>
 
 <.modal
   :if={@live_action == :edit_organisation}
@@ -151,38 +113,17 @@
   />
 </.modal>
 
-<h2><%= dgettext("threats", "Threats") %></h2>
-<.link
-  :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
-  patch={~p"/organisations/#{@organisation.id}/threats/new"}
->
-  <.button><%= dgettext("threats", "New Threat") %></.button>
-</.link>
-
-<.button
-  :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
-  disabled={not is_nil(@asking_ai_for_threats)}
-  phx-click="suggest_threats"
-  phx-value-org_id={@organisation.id}
->
-  <%= dgettext("threats", "Suggest threats") %>
-</.button>
-
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 
-<%= if !Enum.empty?(@organisation.threats) do %>
   <.live_component
     module={ThreatShieldWeb.ThreatLive.ThreatComponent}
     organisation={@organisation}
+    membership={@membership}
     threats={@organisation.threats}
+    asking_ai_for_threats={@asking_ai_for_threats}
     path_prefix={"/organisations/#{@organisation.id}"}
     id={"threats_for_org_#{@organisation.id}"}
   />
-<% else %>
-  <p>
-    There are no threats associated with this organisation. Please add them manually or click the suggest threat button.
-  </p>
-<% end %>
 
 <.modal
   :if={@live_action == :new_threat}

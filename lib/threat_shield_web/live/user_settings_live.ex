@@ -29,7 +29,7 @@ defmodule ThreatShieldWeb.UserSettingsLive do
             required
           />
           <:actions>
-            <.button phx-disable-with="Changing...">Change Email</.button>
+            <.button_primary phx-disable-with="Changing...">Change Email</.button_primary>
           </:actions>
         </.simple_form>
       </div>
@@ -65,7 +65,7 @@ defmodule ThreatShieldWeb.UserSettingsLive do
             required
           />
           <:actions>
-            <.button phx-disable-with="Changing...">Change Password</.button>
+            <.button_primary phx-disable-with="Changing...">Change Password</.button_primary>
           </:actions>
         </.simple_form>
       </div>

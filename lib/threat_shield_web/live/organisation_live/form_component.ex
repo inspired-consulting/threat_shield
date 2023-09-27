@@ -35,10 +35,10 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
             type="text"
             label={attribute.name}
           />
-          <em>e.g. <%= DynamicAttribute.get_suggestions(attribute) |> Enum.join(", ") %> </em>
+          <em>e.g. <%= DynamicAttribute.get_suggestions(attribute) |> Enum.join(", ") %></em>
         <% end %>
         <:actions>
-          <.button phx-disable-with="Saving...">Save Organisation</.button>
+          <.button_primary phx-disable-with="Saving...">Save Organisation</.button_primary>
         </:actions>
       </.simple_form>
     </div>

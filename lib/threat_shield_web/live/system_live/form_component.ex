@@ -12,7 +12,6 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-
       </.header>
 
       <.simple_form
@@ -31,10 +30,10 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
             type="text"
             label={attribute.name}
           />
-          <em>e.g. <%= DynamicAttribute.get_suggestions(attribute) |> Enum.join(", ") %> </em>
+          <em>e.g. <%= DynamicAttribute.get_suggestions(attribute) |> Enum.join(", ") %></em>
         <% end %>
         <:actions>
-          <.button phx-disable-with="Saving...">Save System</.button>
+          <.button_primary phx-disable-with="Saving...">Save System</.button_primary>
         </:actions>
       </.simple_form>
     </div>

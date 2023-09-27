@@ -20,6 +20,11 @@ defmodule ThreatShield.Assets do
     |> Repo.one!()
   end
 
+  def count_all_assets() do
+    Asset
+    |> Repo.aggregate(:count, :id)
+  end
+
   def get_asset!(%User{id: user_id}, asset_id) do
     Asset.get(asset_id)
     |> Asset.for_user(user_id)

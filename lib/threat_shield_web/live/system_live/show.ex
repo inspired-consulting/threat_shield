@@ -11,6 +11,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   alias ThreatShield.AI
   alias ThreatShield.Systems.System
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+  import ThreatShield.Assets.Asset, only: [list_system_options: 1]
 
   @impl true
   def mount(%{"sys_id" => id}, _session, socket) do

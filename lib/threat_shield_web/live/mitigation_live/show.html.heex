@@ -6,7 +6,7 @@
       phx-click={JS.push("delete", value: %{mitigation_id: @mitigation.id})}
       data-confirm="Are you sure?"
     >
-      <.button><%= dgettext("common", "Delete") %></.button>
+      <.button_primary><%= dgettext("common", "Delete") %></.button_primary>
     </.link>
     <.link
       :if={ThreatShield.Members.Rights.may(:edit_mitigation, @membership)}
@@ -15,7 +15,7 @@
       }
       phx-click={JS.push_focus()}
     >
-      <.button><%= dgettext("common", "Edit") %></.button>
+      <.button_primary><%= dgettext("common", "Edit") %></.button_primary>
     </.link>
   </:actions>
 </.header>

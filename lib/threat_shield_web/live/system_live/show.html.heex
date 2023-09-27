@@ -1,116 +1,82 @@
-<.header>
+    
+<.card_detail>
+  <:name>
   <%= @system.name %>
-  <:actions>
-    <.link
-      :if={ThreatShield.Members.Rights.may(:delete_system, @membership)}
-      phx-click={JS.push("delete", value: %{sys_id: @system.id})}
-      data-confirm="Are you sure?"
-    >
-      <.button><%= dgettext("common", "Delete") %></.button>
-    </.link>
-    <.link
-      :if={ThreatShield.Members.Rights.may(:edit_system, @membership)}
-      patch={~p"/organisations/#{@organisation.id}/systems/#{@system}/edit"}
-      phx-click={JS.push_focus()}
-    >
-      <.button><%= dgettext("common", "Edit") %></.button>
-    </.link>
-  </:actions>
-</.header>
+  </:name>
+  <:description>
+  <%= @system.description %>
+  </:description>
+  <:links> 
+      <.link
+        :if={ThreatShield.Members.Rights.may(:delete_system, @membership)}
+        phx-click={JS.push("delete", value: %{sys_id: @system.id})}
+        data-confirm="Are you sure?"
+      >
+        <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
+      </.link>
+      <.link
+        :if={ThreatShield.Members.Rights.may(:edit_system, @membership)}
+        patch={~p"/organisations/#{@organisation.id}/systems/#{@system}/edit"}
+        phx-click={JS.push_focus()}
+      >
+        <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
+      </.link>
+    </:links>
+  <:attribute>
+    <.input_attribute attributes={@system.attributes}></.input_attribute>
+  </:attribute>
+</.card_detail>
 
-<.list>
-  <:item title="Description"><%= @system.description %></:item>
-  <:item title="Attributes">
-    <%= for {key, value} <- @system.attributes do %>
-      <div><%= "#{key} → #{value}" %></div>
-    <% end %>
-  </:item>
-</.list>
-
-<h2><%= dgettext("assets", "Assets") %></h2>
-<.link
-  :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
-  patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/assets/new"}
->
-  <.button><%= dgettext("assets", "New Asset") %></.button>
-</.link>
-
-<.button
-  :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
-  disabled={not is_nil(@asking_ai_for_assets)}
-  phx-click="suggest_assets"
-  phx-value-sys_id={@system.id}
->
-  Suggest Assets
-</.button>
 
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
 
-<%= if !Enum.empty?(@system.assets) do %>
   <.live_component
     module={ThreatShieldWeb.AssetLive.AssetComponent}
     organisation={@organisation}
     assets={@system.assets}
-    hide_system={true}
+    system={@system}
+    membership={@membership}
+    asking_ai_for_assets={@asking_ai_for_assets}
+    asking_ai_for_threats={@asking_ai_for_threats}
     path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
-    id={"assets_for_sys_#{@system.id}"}
+    id={"assets_for_system_#{@system.id}"}
   />
-<% else %>
-  <p>
-    There are no assets associated with this organisation. Please add them manually or click the suggest assets button.
-  </p>
-<% end %>
-
-<h2><%= dgettext("threats", "Threats") %></h2>
-<.link
-  :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
-  patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/new"}
->
-  <.button><%= dgettext("threats", "New Threat") %></.button>
-</.link>
-
-<.button
-  :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
-  disabled={not is_nil(@asking_ai_for_threats)}
-  phx-click="suggest_threats"
-  phx-value-sys_id={@system.id}
->
-  <%= dgettext("threats", "Suggest threats") %>
-</.button>
-
-<ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
-
-<%= if !Enum.empty?(@system.threats) do %>
-  <.live_component
-    module={ThreatShieldWeb.ThreatLive.ThreatComponent}
-    organisation={@organisation}
-    threats={@system.threats}
-    hide_system={true}
-    path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
-    id={"threats_for_org_#{@organisation.id}"}
-  />
-<% else %>
-  <p>
-    There are no threats associated with this organisation. Please add them manually or click the suggest threat button.
-  </p>
-<% end %>
 
 <.modal
-  :if={@live_action == :edit_system}
+  :if={@live_action == :edit_organisation}
+  id="organisation-modal"
+  show
+  on_cancel={JS.patch(~p"/organisations/#{@organisation}")}
+>
+  <.live_component
+    module={ThreatShieldWeb.OrganisationLive.FormComponent}
+    id={@organisation.id}
+    title={@page_title}
+    action={@live_action}
+    organisation={@organisation}
+    attributes={@attributes}
+    locations_options={@locations_options}
+    current_user={@current_user}
+    patch={~p"/organisations/#{@organisation}"}
+  />
+</.modal>
+
+<.modal
+  :if={@live_action == :new_system}
   id="system-modal"
   show
-  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/systems/#{@system}")}
+  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
 >
   <.live_component
     module={ThreatShieldWeb.SystemLive.FormComponent}
-    id={@system.id}
+    id={@system.id || :new}
     title={@page_title}
     action={@live_action}
     system={@system}
     organisation={@organisation}
     current_user={@current_user}
-    attributes={@attributes}
-    patch={~p"/organisations/#{@organisation.id}/systems/#{@system}"}
+    attributes={System.attributes()}
+    patch={~p"/organisations/#{@organisation.id}"}
   />
 </.modal>
 
@@ -118,7 +84,7 @@
   :if={@live_action == :new_asset}
   id="asset-modal"
   show
-  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/systems/#{@system}")}
+  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
 >
   <.live_component
     module={ThreatShieldWeb.AssetLive.FormComponent}
@@ -127,17 +93,30 @@
     action={@live_action}
     current_user={@current_user}
     organisation={@organisation}
-    fixed_system={@system}
+    system_options={list_system_options(@organisation)}
     asset={@asset}
-    patch={~p"/organisations/#{@organisation.id}/systems/#{@system}"}
+    patch={~p"/organisations/#{@organisation.id}"}
   />
 </.modal>
+
+<ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
+
+  <.live_component
+    module={ThreatShieldWeb.ThreatLive.ThreatComponent}
+    organisation={@organisation}
+    membership={@membership}
+    threats={@system.threats}
+    system={@system}
+    asking_ai_for_threats={@asking_ai_for_threats}
+    path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
+    id={"threats_for_system_#{@system.id}"}
+  />
 
 <.modal
   :if={@live_action == :new_threat}
   id="threat-modal"
   show
-  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/systems/#{@system.id}")}
+  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
 >
   <.live_component
     module={ThreatShieldWeb.ThreatLive.FormComponent}
@@ -146,9 +125,9 @@
     action={@live_action}
     current_user={@current_user}
     organisation={@organisation}
-    fixed_system={@system}
+    system_options={list_system_options(@organisation)}
     threat={@threat}
-    patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}"}
+    patch={~p"/organisations/#{@organisation.id}"}
   />
 </.modal>
 
