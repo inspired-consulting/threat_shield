@@ -764,7 +764,7 @@ defmodule ThreatShieldWeb.CoreComponents do
             phx-click={@row_click && @row_click.(row)}
             class={["relative p-0", @row_click && "hover:cursor-pointer"]}
           >
-            <div class="block py-4 pr-0">
+            <div class="block py-4 pr-4">
               <span class="absolute -inset-y-px -right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
               <span class={["relative", i == 0 && "font-semibold text-gray-900"]}>
                 <%= render_slot(col, @row_item.(row)) %>
@@ -812,7 +812,7 @@ defmodule ThreatShieldWeb.CoreComponents do
           <%= render_slot(@subtitle) %>
         </p>
       </div>
-      <div class="flex flex-row flex-1 justify-end">
+      <div class="flex flex-row flex-1 gap-2 justify-end">
         <%= render_slot(@buttons) %>
       </div>
     </section>
@@ -822,7 +822,6 @@ defmodule ThreatShieldWeb.CoreComponents do
   slot :name, required: false
   slot :description, required: false
   slot :attribute, required: false
-  slot :links, required: false
 
   def card_detail(assigns) do
     ~H"""

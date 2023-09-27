@@ -25,6 +25,7 @@ defmodule ThreatShieldWeb.SystemLive.SystemComponent do
           </:buttons>
         </.stacked_list_header>
         <.stacked_list
+          :if={not Enum.empty?(@organisation.systems)}
           id={"systems_for_org_#{@organisation.id}"}
           rows={@organisation.systems}
           row_click={
@@ -41,6 +42,10 @@ defmodule ThreatShieldWeb.SystemLive.SystemComponent do
           </:col>
           <:col :let={system}><%= system.description %></:col>
         </.stacked_list>
+
+        <p :if={Enum.empty?(@organisation.systems)} class="mt-4">
+          There are no systems associated with this organisation. Please add them manually.
+        </p>
       </div>
     </div>
     """

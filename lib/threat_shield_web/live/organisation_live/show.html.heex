@@ -33,7 +33,6 @@
   </:attribute>
 </.card_detail_org>
 
-<%= if !Enum.empty?(@organisation.systems) do %>
   <.live_component
     module={ThreatShieldWeb.SystemLive.SystemComponent}
     organisation={@organisation}
@@ -42,44 +41,20 @@
     asset_count={@asset_count}
     id={"systems_for_org_#{@organisation.id}"}
   />
-<% else %>
-  <p>
-    There are no systems associated with this organisation. Please add them manually.
-  </p>
-<% end %>
 
-<h2><%= dgettext("assets", "Assets") %></h2>
-<.link
-  :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
-  patch={~p"/organisations/#{@organisation.id}/assets/new"}
->
-  <.button_primary><%= dgettext("assets", "New Asset") %></.button_primary>
-</.link>
-
-<.button_primary
-  :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
-  disabled={not is_nil(@asking_ai_for_assets)}
-  phx-click="suggest_assets"
-  phx-value-org_id={@organisation.id}
->
-  Suggest Assets
-</.button_primary>
 
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
 
-<%= if !Enum.empty?(@organisation.assets) do %>
   <.live_component
     module={ThreatShieldWeb.AssetLive.AssetComponent}
     organisation={@organisation}
     assets={@organisation.assets}
+    membership={@membership}
+    asking_ai_for_assets={@asking_ai_for_assets}
+    asking_ai_for_threats={@asking_ai_for_threats}
     path_prefix={"/organisations/#{@organisation.id}"}
     id={"assets_for_org_#{@organisation.id}"}
   />
-<% else %>
-  <p>
-    There are no assets associated with this organisation. Please add them manually or click the suggest assets button.
-  </p>
-<% end %>
 
 <.modal
   :if={@live_action == :edit_organisation}
@@ -138,38 +113,17 @@
   />
 </.modal>
 
-<h2><%= dgettext("threats", "Threats") %></h2>
-<.link
-  :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
-  patch={~p"/organisations/#{@organisation.id}/threats/new"}
->
-  <.button_primary><%= dgettext("threats", "New Threat") %></.button_primary>
-</.link>
-
-<.button_primary
-  :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
-  disabled={not is_nil(@asking_ai_for_threats)}
-  phx-click="suggest_threats"
-  phx-value-org_id={@organisation.id}
->
-  <%= dgettext("threats", "Suggest threats") %>
-</.button_primary>
-
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 
-<%= if !Enum.empty?(@organisation.threats) do %>
   <.live_component
     module={ThreatShieldWeb.ThreatLive.ThreatComponent}
     organisation={@organisation}
+    membership={@membership}
     threats={@organisation.threats}
+    asking_ai_for_threats={@asking_ai_for_threats}
     path_prefix={"/organisations/#{@organisation.id}"}
     id={"threats_for_org_#{@organisation.id}"}
   />
-<% else %>
-  <p>
-    There are no threats associated with this organisation. Please add them manually or click the suggest threat button.
-  </p>
-<% end %>
 
 <.modal
   :if={@live_action == :new_threat}
