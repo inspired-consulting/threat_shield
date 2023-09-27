@@ -7,17 +7,17 @@ defmodule ThreatShieldWeb.AssetLive.AssetComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="assets">
-    <.table
-      id={"assets_for_org_#{@organisation.id}"}
-      rows={@assets}
-      row_click={
-        fn asset -> JS.navigate(@path_prefix <> "/assets/#{asset.id}") end
-        }
-    >
-      <:col :let={asset} label="Name"><%= asset.name %></:col>
-      <:col :let={asset} label="System" :if={!assigns[:hide_system]}><%= system_name(asset) %></:col>
-    </.table>
+    <div class="assets" id="assets">
+      <.table
+        id={"assets_for_org_#{@organisation.id}"}
+        rows={@assets}
+        row_click={fn asset -> JS.navigate(@path_prefix <> "/assets/#{asset.id}") end}
+      >
+        <:col :let={asset} label="Name"><%= asset.name %></:col>
+        <:col :let={asset} :if={!assigns[:hide_system]} label="System">
+          <%= system_name(asset) %>
+        </:col>
+      </.table>
     </div>
     """
   end

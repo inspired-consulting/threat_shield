@@ -30,7 +30,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   def h2(assigns) do
     ~H"""
-    <h2 class="text-gray-900 text-3xl font-bold leading-9">
+    <h2 class="text-gray-900 text-3xl font-bold">
       <%= render_slot(@inner_block) %>
     </h2>
     """
@@ -204,7 +204,7 @@ defmodule ThreatShieldWeb.CoreComponents do
         <.input field={@form[:email]} label="Email"/>
         <.input field={@form[:username]} label="Username" />
         <:actions>
-          <.button_primary>Save</.button_primary>
+          <.button>Save</.button>
         </:actions>
       </.simple_form>
   """
@@ -251,7 +251,7 @@ defmodule ThreatShieldWeb.CoreComponents do
       type={@type}
       class={[
         "phx-submit-loading:opacity-75 rounded-lg bg-indigo-600 hover:bg-indigo-600 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white hover:text-white active:text-white",
+        "text-sm font-semibold leading-6 text-white hover:text-white active:text-white whitespace-nowrap",
         "disabled:bg-secondary_col-900 disabled:pointer-events-none",
         @class
       ]}
@@ -474,7 +474,7 @@ defmodule ThreatShieldWeb.CoreComponents do
         <h1 class="text-lg font-semibold leading-8 text-gray-900">
           <%= render_slot(@inner_block) %>
         </h1>
-        <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-primary_col-400">
+        <p :if={@subtitle != []} class="mt-2 text-gray-500 text-sm font-normal">
           <%= render_slot(@subtitle) %>
         </p>
       </div>
@@ -581,13 +581,13 @@ defmodule ThreatShieldWeb.CoreComponents do
         linked_page={:organisation}
       />
       <.entity_link
-        link={~p"/organisations/#{@organisation.id}/systems"}
+        link={~p"/organisations/#{@organisation.id}/#systems"}
         name={dgettext("systems", "Systems")}
         current_page={assigns[:entity_page]}
         linked_page={:systems}
       />
       <.entity_link
-        link={~p"/organisations/#{@organisation.id}/assets"}
+        link={~p"/organisations/#{@organisation.id}/#assets"}
         name={dgettext("assets", "Assets")}
         current_page={assigns[:entity_page]}
         linked_page={:assets}
@@ -736,11 +736,11 @@ defmodule ThreatShieldWeb.CoreComponents do
       end
 
     ~H"""
-    <table class="w-[1016px] mt-10 mx-auto justify-self-center">
+    <table class="w-full justify-self-center">
       <tbody
         id={@id}
         phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
-        class="relative divide-y-2 divide-zinc-100 border-t border-zinc-200 text-sm leading-6 text-zinc-700"
+        class="relative divide-y-2 divide-zinc-100 text-sm leading-6 text-gray-500"
       >
         <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-zinc-50">
           <td
@@ -767,14 +767,12 @@ defmodule ThreatShieldWeb.CoreComponents do
             </div>
           </td>
 
-          <td>
+          <td class="grid justify-items-end mt-3">
             <.link
               phx-click={@row_click && @row_click.(row)}
               class={["relative p-0", @row_click && "hover:cursor-pointer"]}
             >
-              <.button_secondary>
-                View
-              </.button_secondary>
+              <.button_secondary><%= dgettext("common", "View") %></.button_secondary>
             </.link>
           </td>
         </tr>
@@ -784,21 +782,24 @@ defmodule ThreatShieldWeb.CoreComponents do
   end
 
   slot :name, required: false
-
   slot :buttons, required: false
+  slot :subtitle, required: false
 
   def stacked_list_header(assigns) do
     ~H"""
-    <div class="flex justify-between">
-      <div>
+    <section class="flex justify-between">
+      <div class="w-[70%]">
         <.h2>
           <%= render_slot(@name) %>
         </.h2>
+        <p :if={@subtitle != []} class="mt-2 text-gray-500 text-sm font-normal">
+          <%= render_slot(@subtitle) %>
+        </p>
       </div>
-      <div class="flex items-center gap-2">
+      <div class="flex flex-row flex-1 justify-end">
         <%= render_slot(@buttons) %>
       </div>
-    </div>
+    </section>
     """
   end
 

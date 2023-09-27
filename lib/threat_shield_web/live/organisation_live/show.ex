@@ -26,6 +26,9 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
 
     suggest_threats = Map.has_key?(params, "suggest_threats")
 
+    threat_count = Threats.count_all_threats()
+    asset_count = Assets.count_all_assets()
+
     socket =
       socket
       |> assign(:attributes, attributes())
@@ -38,6 +41,8 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
       |> assign(:asking_ai_for_threats, nil)
       |> assign(:asset_suggestions, [])
       |> assign(:threat_suggestions, [])
+      |> assign(:threat_count, threat_count)
+      |> assign(:asset_count, asset_count)
 
     socket_with_suggestions =
       if suggest_threats do
