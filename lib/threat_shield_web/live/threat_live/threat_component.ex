@@ -44,7 +44,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatComponent do
         <.stacked_list
           :if={not Enum.empty?(@threats)}
           id={"threats_for_org_#{@organisation.id}"}
-          rows={@organisation.threats}
+          rows={@threats}
           row_click={fn threat -> JS.navigate(@path_prefix <> "/threats/#{threat.id}") end}
         >
           <:col :let={threat}>
