@@ -1,67 +1,38 @@
-<.header>
+<.card_detail>
+  <:name>
   <%= @risk.name %>
-  <:actions>
-    <.link
+  </:name>
+  <:description>
+  <%= @risk.description %>
+  </:description>
+  <:links> 
+      <.link
       :if={ThreatShield.Members.Rights.may(:delete_risk, @membership)}
       phx-click={JS.push("delete", value: %{risk_id: @risk.id})}
       data-confirm="Are you sure?"
     >
-      <.button_primary><%= dgettext("common", "Delete") %></.button_primary>
+      <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
     </.link>
     <.link
       :if={ThreatShield.Members.Rights.may(:edit_risk, @membership)}
       patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/edit"}
       phx-click={JS.push_focus()}
     >
-      <.button_primary><%= dgettext("common", "Edit") %></.button_primary>
+      <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
     </.link>
-  </:actions>
-</.header>
+    </:links>
 
-<.list>
-  <:item title="Description"><%= @risk.description %></:item>
-  <:item title="Estimated cost"><%= @risk.estimated_cost %></:item>
-  <:item title="Probability"><%= @risk.probability %></:item>
-</.list>
-
-<h2><%= dgettext("mitigations", "Mitigations") %></h2>
-
-<.button_primary
-  :if={ThreatShield.Members.Rights.may(:create_mitigation, @membership)}
-  disabled={not is_nil(@asking_ai)}
-  phx-click="suggest_mitigations"
-  phx-value-risk_id={@risk.id}
->
-  <%= dgettext("mitigations", "Suggest Mitigations") %>
-</.button_primary>
-<.link
-  :if={ThreatShield.Members.Rights.may(:create_mitigation, @membership)}
-  patch={
-  get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/new"
-}
->
-  <.button_primary>New Mitigation</.button_primary>
-</.link>
-
-<ThreatShieldWeb.Suggestions.suggestions
-  suggestions={@mitigation_suggestions}
-  entity_name="mitigation"
-/>
-
-<%= if !Enum.empty?(@risk.mitigations) do %>
-  <.live_component
-    module={ThreatShieldWeb.MitigationLive.MitigationComponent}
-    organisation={@organisation}
-    id={"mitigations_for_risk_#{@risk.id}"}
-    threat={@threat}
-    risk={@risk}
-    path_prefix={get_path_prefix(assigns)}
-  />
-<% else %>
-  <p>
-    There are no risks associated with this threat. You may add them manually or have them suggested using the buttons above.
-  </p>
-<% end %>
+  <:attribute>
+    <div>
+      <.label><%= dgettext("risks", "Estimated Cost") %></.label>
+      <p><%= @risk.estimated_cost %></p>
+    </div>
+    <div>
+      <.label><%= dgettext("risks", "Probability") %></.label>
+      <p><%= @risk.probability %></p>
+    </div>
+  </:attribute>
+</.card_detail>
 
 <.modal
   :if={@live_action == :edit_risk}
@@ -100,6 +71,25 @@
   />
 </.modal>
 
-<%= if not is_nil(@asking_ai) do %>
+<ThreatShieldWeb.Suggestions.suggestions
+  suggestions={@mitigation_suggestions}
+  entity_name="mitigation"
+/>
+
+
+<.live_component
+  module={ThreatShieldWeb.MitigationLive.MitigationComponent}
+  organisation={@organisation}
+  id={"mitigations_for_risk_#{@risk.id}"}
+  mitigations={@risk.mitigations}
+  membership={@membership}
+  asking_ai_for_mitigations={@asking_ai_for_mitigations}
+  threat={@threat}
+  risk={@risk}
+  path_prefix={get_path_prefix(assigns)}
+/>
+
+
+<%= if not is_nil(@asking_ai_for_mitigations) do %>
   <ThreatShieldWeb.Spinner.spinner />
 <% end %>

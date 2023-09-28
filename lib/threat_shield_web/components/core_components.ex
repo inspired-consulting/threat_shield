@@ -840,9 +840,11 @@ defmodule ThreatShieldWeb.CoreComponents do
           <.dropdown links={@links} />
         </div>
       </div>
-      <div class="w-full grid grid-cols-3 gap-4 mt-6 p-6 bg-neutral-100">
-        <%= render_slot(@attribute) %>
-      </div>
+      <%= if @attribute != [] do %>
+        <div class="w-full grid grid-cols-3 gap-4 mt-6 p-6 bg-neutral-100">
+          <%= render_slot(@attribute) %>
+        </div>
+      <% end %>
     </section>
     """
   end
@@ -885,7 +887,7 @@ defmodule ThreatShieldWeb.CoreComponents do
         <div>
           <div
             id="link-dropdown"
-            class="relative nav-dropdown text-[0.8125rem] leading-loose font-semibold hover:cursor-pointer border border-2 rounded-3xl px-4 py-1"
+            class="relative nav-dropdown text-[0.8125rem] leading-loose font-semibold hover:cursor-pointer rounded-3xl px-4 py-1"
             onclick="toggleDropdown(id)"
           >
             <.icon name="hero-ellipsis-vertical" class="h-5 w-5" />

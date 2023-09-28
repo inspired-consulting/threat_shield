@@ -1,60 +1,31 @@
-<.header>
+<.card_detail>
+  <:name>
   <%= @threat.name %>
-  <:actions>
-    <.link
+  </:name>
+  <:description>
+  <%= @threat.description %>
+  </:description>
+  <:links> 
+      <.link
       :if={ThreatShield.Members.Rights.may(:delete_threat, @membership)}
       phx-click={JS.push("delete", value: %{threat_id: @threat.id})}
       data-confirm="Are you sure?"
     >
-      <.button_primary><%= dgettext("common", "Delete") %></.button_primary>
+      <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
     </.link>
     <.link
       :if={ThreatShield.Members.Rights.may(:edit_threat, @membership)}
       patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/edit"}
       phx-click={JS.push_focus()}
     >
-      <.button_primary><%= dgettext("common", "Edit") %></.button_primary>
+      <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
     </.link>
-  </:actions>
-</.header>
-
-<.list>
-  <:item title="Description"><%= @threat.description %></:item>
-  <:item title="System"><%= system_name(@threat) %></:item>
-</.list>
-
-<h2><%= dgettext("risks", "Risks") %></h2>
-
-<.button_primary
-  :if={ThreatShield.Members.Rights.may(:create_risk, @membership)}
-  disabled={not is_nil(@asking_ai)}
-  phx-click="suggest_risks"
-  phx-value-threat_id={@threat.id}
->
-  <%= dgettext("risks", "Suggest Risks") %>
-</.button_primary>
-<.link
-  :if={ThreatShield.Members.Rights.may(:create_risk, @membership)}
-  patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/new"}
->
-  <.button_primary>New Risk</.button_primary>
-</.link>
-
-<ThreatShieldWeb.Suggestions.suggestions suggestions={@risk_suggestions} entity_name="risk" />
-
-<%= if !Enum.empty?(@threat.risks) do %>
-  <.live_component
-    module={ThreatShieldWeb.RiskLive.RiskComponent}
-    organisation={@organisation}
-    path_prefix={get_path_prefix(assigns)}
-    id={"risks_for_threat_#{@threat.id}"}
-    threat={@threat}
-  />
-<% else %>
-  <p>
-    There are no risks associated with this threat. You may add them manually or have them suggested using the buttons above.
-  </p>
-<% end %>
+    </:links>
+  <:attribute>
+  <.label><%= dgettext("threats", "System") %></.label>
+  <p><%= system_name(@threat) %></p>
+  </:attribute>
+</.card_detail>
 
 <.modal
   :if={@live_action == :edit_threat}
@@ -94,6 +65,20 @@
   />
 </.modal>
 
-<%= if not is_nil(@asking_ai) do %>
+<ThreatShieldWeb.Suggestions.suggestions suggestions={@risk_suggestions} entity_name="risk" />
+
+  <.live_component
+    module={ThreatShieldWeb.RiskLive.RiskComponent}
+    organisation={@organisation}
+    risks={@threat.risks}
+    membership={@membership}
+    asking_ai_for_risks={@asking_ai_for_risks}
+    path_prefix={get_path_prefix(assigns)}
+    id={"risks_for_threat_#{@threat.id}"}
+    threat={@threat}
+  />
+
+
+<%= if not is_nil(@asking_ai_for_risks) do %>
   <ThreatShieldWeb.Spinner.spinner />
 <% end %>
