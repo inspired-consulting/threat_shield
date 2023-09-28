@@ -1,11 +1,15 @@
 <header>
-  <.navbar organisation={assigns[:organisation]} current_user={assigns[:current_user]} entity_page={assigns[:entity_page]}/>
+  <.navbar
+    organisation={assigns[:organisation]}
+    current_user={assigns[:current_user]}
+    entity_page={assigns[:entity_page]}
+  />
 </header>
-<main class="absolute left-[222px] mt-10 w-[1068px]">
-    <%= if assigns[:breadcrumbs] do %>
-      <ThreatShieldWeb.Breadcrumbs.breadcrumb breadcrumbs={@breadcrumbs} context={assigns} />
-    <% end %>
- 
+<main class="xl:container mx-4 xl:mx-auto mb-10">
+  <%= if assigns[:breadcrumbs] do %>
+    <ThreatShieldWeb.Breadcrumbs.breadcrumb breadcrumbs={@breadcrumbs} context={assigns} />
+  <% end %>
+
   <div class="mx-auto">
     <.flash_group flash={@flash} />
     <%= @inner_content %>
