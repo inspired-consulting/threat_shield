@@ -32,6 +32,9 @@ module.exports = {
         indigo: {
           600: "#4F46E5",
         },
+        stone: {
+          300: "#C7C8C9",
+        }
       },
     },
   },
