@@ -1,27 +1,32 @@
-<.header>
+<.card_detail>
+  <:name>
   <%= @asset.name %>
-  <:actions>
-    <.link
-      :if={ThreatShield.Members.Rights.may(:delete_asset, @membership)}
-      phx-click={JS.push("delete", value: %{asset_id: @asset.id})}
-      data-confirm="Are you sure?"
-    >
-      <.button_primary><%= dgettext("common", "Delete") %></.button_primary>
-    </.link>
-    <.link
-      :if={ThreatShield.Members.Rights.may(:edit_asset, @membership)}
-      patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}/show/edit"}
-      phx-click={JS.push_focus()}
-    >
-      <.button_primary><%= dgettext("common", "Edit") %></.button_primary>
-    </.link>
-  </:actions>
-</.header>
+  </:name>
+  <:description>
+  <%= @asset.description %>
+  </:description>
+  <:links> 
+      <.link
+        :if={ThreatShield.Members.Rights.may(:delete_asset, @membership)}
+        phx-click={JS.push("delete", value: %{asset_id: @asset.id})}
+        data-confirm="Are you sure?"
+      >
+        <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
+      </.link>
+      <.link
+        :if={ThreatShield.Members.Rights.may(:edit_asset, @membership)}
+        patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}/show/edit"}
+        phx-click={JS.push_focus()}
+      >
+        <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
+      </.link>
+    </:links>
 
-<.list>
-  <:item title="Description"><%= @asset.description %></:item>
-  <:item title="System"><%= system_name(@asset) %></:item>
-</.list>
+    <:attribute>
+     <.label><%= dgettext("threats", "System") %></.label>
+     <p> <%= system_name(@asset) %></p>
+    </:attribute>
+</.card_detail>
 
 <.modal
   :if={@live_action == :edit}

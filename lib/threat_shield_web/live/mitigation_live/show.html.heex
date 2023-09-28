@@ -1,12 +1,17 @@
-<.header>
+<.card_detail>
+  <:name>
   <%= @mitigation.name %>
-  <:actions>
-    <.link
+  </:name>
+  <:description>
+  <%= @mitigation.description %>
+  </:description>
+  <:links> 
+      <.link
       :if={ThreatShield.Members.Rights.may(:delete_mitigation, @membership)}
       phx-click={JS.push("delete", value: %{mitigation_id: @mitigation.id})}
       data-confirm="Are you sure?"
     >
-      <.button_primary><%= dgettext("common", "Delete") %></.button_primary>
+      <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
     </.link>
     <.link
       :if={ThreatShield.Members.Rights.may(:edit_mitigation, @membership)}
@@ -15,15 +20,17 @@
       }
       phx-click={JS.push_focus()}
     >
-      <.button_primary><%= dgettext("common", "Edit") %></.button_primary>
+      <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
     </.link>
-  </:actions>
-</.header>
+    </:links>
 
-<.list>
-  <:item title="Description"><%= @mitigation.description %></:item>
-  <:item title="Is implemented"><%= @mitigation.is_implemented %></:item>
-</.list>
+  <:attribute>
+    <div>
+      <.label><%= dgettext("risks", "Is implemented") %></.label>
+      <p><%= @mitigation.is_implemented %></p>
+    </div>
+  </:attribute>
+</.card_detail>
 
 <.modal
   :if={@live_action == :edit_mitigation}

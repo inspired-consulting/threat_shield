@@ -23,7 +23,7 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
       |> assign(:membership, Organisation.get_membership(threat.organisation, current_user))
       |> assign(:system, threat.system)
       |> assign(:page_title, page_title(socket.assigns.live_action))
-      |> assign(:asking_ai, nil)
+      |> assign(:asking_ai_for_risks, nil)
       |> assign(:risk_suggestions, [])
       |> assign(:called_via_system, Map.has_key?(params, "sys_id"))
 
@@ -126,14 +126,14 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   end
 
   def handle_info({_from, {:ai_results, new_risks}}, socket) do
-    %{asking_ai: ref} = socket.assigns
+    %{asking_ai_for_risks: ref} = socket.assigns
 
     Process.demonitor(ref, [:flush])
 
     {:noreply,
      socket
      |> assign(
-       asking_ai: nil,
+       asking_ai_for_risks: nil,
        risk_suggestions: socket.assigns.risk_suggestions ++ new_risks
      )}
   end
@@ -151,7 +151,7 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
       end)
 
     socket
-    |> assign(asking_ai: task.ref)
+    |> assign(asking_ai_for_risks: task.ref)
   end
 
   defp ask_ai(user, threat_id) do
