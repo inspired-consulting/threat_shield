@@ -1,4 +1,4 @@
-
+<.background_white>
 <.card_detail_org>
 <:name>
 <%= @organisation.name%>
@@ -33,6 +33,12 @@
     <.input_attribute attributes={@organisation.attributes}></.input_attribute>
   </:attribute>
 </.card_detail_org>
+<.tab is_active={true} count={12}>
+<%= dgettext("threats", "Threats") %>
+</.tab>
+</.background_white>
+
+<.background_gray>
 
   <.live_component
     module={ThreatShieldWeb.SystemLive.SystemComponent}
@@ -126,6 +132,8 @@
     id={"threats_for_org_#{@organisation.id}"}
   />
 
+
+
 <.modal
   :if={@live_action == :new_threat}
   id="threat-modal"
@@ -144,6 +152,8 @@
     patch={~p"/organisations/#{@organisation.id}"}
   />
 </.modal>
+
+</.background_gray>
 
 <%= if not is_nil(@asking_ai_for_threats) or not is_nil(@asking_ai_for_assets) do %>
   <ThreatShieldWeb.Spinner.spinner />

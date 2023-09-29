@@ -19,7 +19,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatComponent do
               patch={@path_prefix <> "/threats/new"}
             >
               <.button_primary>
-                <.icon name="hero-hand-raised" class="mr-1 mb-1" /><%= dgettext(
+                <.icon name="hero-sparkles" class="mr-1 mb-1" /><%= dgettext(
                   "threats",
                   "New Threat"
                 ) %>
@@ -33,7 +33,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatComponent do
                 phx-value-org_id={@organisation.id}
                 phx-value-sys_id={if is_nil(assigns[:system]), do: nil, else: @system.id}
               >
-                <.icon name="hero-shield-check" class="mr-1 mb-1" /><%= dgettext(
+                <.icon name="hero-chat-bubble-oval-left-ellipsis" class="mr-1 mb-1" /><%= dgettext(
                   "assets",
                   "Suggest Threats"
                 ) %>

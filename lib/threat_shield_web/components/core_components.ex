@@ -44,6 +44,49 @@ defmodule ThreatShieldWeb.CoreComponents do
     """
   end
 
+  def background_white(assigns) do
+    ~H"""
+    <div class="bg-white">
+      <div class="xl:container mx-auto mb-10">
+        <%= render_slot(@inner_block) %>
+      </div>
+    </div>
+    """
+  end
+
+  def background_gray(assigns) do
+    ~H"""
+    <div class="bg-neutral-100">
+      <div class="xl:container mx-auto mb-10">
+        <%= render_slot(@inner_block) %>
+      </div>
+    </div>
+    """
+  end
+
+  attr :is_active, :boolean, required: true
+  attr :count, :integer, required: true
+  slot :inner_block, required: true
+
+  def tab(assigns) do
+    ~H"""
+    <div class="w-96 h-10 justify-start items-start inline-flex">
+      <div class="self-stretch px-1 pt-1 pb-0.5 border-b-2 border-indigo-500 justify-start items-center flex">
+        <div class="justify-start items-center gap-1 flex">
+          <div class="text-gray-900 text-sm font-medium leading-tight">
+            <%= render_slot(@inner_block) %>
+          </div>
+          <div class="px-2 py-1 bg-indigo-50 rounded-md justify-start items-center flex">
+            <div class="text-indigo-500 text-xs font-medium leading-none">
+              <%= @count %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    """
+  end
+
   @doc """
   Renders a modal.
 
@@ -838,7 +881,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   def card_detail(assigns) do
     ~H"""
-    <section class="w-full px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
+    <section class="w-full px-8 py-6 mb-6 bg-white rounded-lg flex-col justify-start items-start inline-flex">
       <div class="flex justify-between w-full pb-10 border-b border-gray-200">
         <div class="h-20 pb-5">
           <.h3>
@@ -886,7 +929,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   def card_detail_org(assigns) do
     ~H"""
-    <section class="w-full px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
+    <section class="w-full px-8 py-6 mt-6 bg-white rounded-lg flex-col justify-start items-start inline-flex">
       <div class="flex justify-between w-full pb-6 border-b border-gray-200">
         <div class="h-20 pb-5">
           <.h3>

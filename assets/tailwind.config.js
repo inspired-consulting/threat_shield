@@ -30,6 +30,8 @@ module.exports = {
           100: "#F5F5F5",
         },
         indigo: {
+          50: "#EEEEFF",
+          500: "#6366F1",
           600: "#4F46E5",
         },
         stone: {
@@ -38,15 +40,15 @@ module.exports = {
       },
     },
     container: {
-        padding: {
-          DEFAULT: '1rem',
-          sm: '2rem',
-          md: '2rem',
-          lg: '4rem',
-          xl: '5rem',
-          '2xl': '6rem',
-        },
+      padding: {
+        DEFAULT: '1rem',
+        sm: '2rem',
+        md: '2rem',
+        lg: '4rem',
+        xl: '5rem',
+        '2xl': '6rem',
       },
+    },
   },
   plugins: [
     require("@tailwindcss/forms"),

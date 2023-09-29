@@ -18,7 +18,7 @@ defmodule ThreatShieldWeb.RiskLive.RiskComponent do
             patch={@path_prefix <> "/threats/#{@threat.id}/risks/new"}
           >
             <.button_primary>
-              <.icon name="hero-hand-raised" class="mr-1 mb-1" /><%= dgettext(
+              <.icon name="hero-sparkles" class="mr-1 mb-1" /><%= dgettext(
                 "risks",
                 "New Risk"
               ) %>
@@ -31,7 +31,7 @@ defmodule ThreatShieldWeb.RiskLive.RiskComponent do
               phx-click="suggest_risks"
               phx-value-threat_id={@threat.id}
             >
-              <.icon name="hero-shield-check" class="mr-1 mb-1" /><%= dgettext(
+              <.icon name="hero-chat-bubble-oval-left-ellipsis" class="mr-1 mb-1" /><%= dgettext(
                 "risks",
                 "Suggest Risks"
               ) %>

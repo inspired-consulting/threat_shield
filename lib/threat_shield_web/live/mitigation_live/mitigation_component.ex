@@ -19,7 +19,7 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationComponent do
               patch={@path_prefix <> "/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/new"}
             >
               <.button_primary>
-                <.icon name="hero-hand-raised" class="mr-1 mb-1" /><%= dgettext(
+                <.icon name="hero-sparkles" class="mr-1 mb-1" /><%= dgettext(
                   "mitigations",
                   "New Mitigation"
                 ) %>
@@ -32,7 +32,7 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationComponent do
                 phx-click="suggest_mitigations"
                 phx-value-risk_id={@risk.id}
               >
-                <.icon name="hero-shield-check" class="mr-1 mb-1" /><%= dgettext(
+                <.icon name="hero-chat-bubble-oval-left-ellipsis" class="mr-1 mb-1" /><%= dgettext(
                   "mitigations",
                   "Suggest Mitigations"
                 ) %>
