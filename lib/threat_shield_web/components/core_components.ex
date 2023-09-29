@@ -887,7 +887,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   def card_detail_org(assigns) do
     ~H"""
-    <section class="w-[1068px] px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
+    <section class="w-full px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
       <div class="flex justify-between w-full pb-6 border-b border-gray-200">
         <div class="h-20 pb-5">
           <.h3>
