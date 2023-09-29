@@ -74,7 +74,7 @@ defmodule ThreatShieldWeb.CoreComponents do
       class="h-10 mr-5 justify-start items-start inline-flex tablinks"
       onclick={"tabbedView(event, '#{@target_id}');"}
     >
-      <div class="self-stretch px-1 pt-1 pb-0.5 border-b-2 border-indigo-500 justify-start items-center flex">
+      <div class="tab_underline self-stretch px-1 pt-1 pb-0.5  justify-start items-center flex">
         <div class="justify-start items-center gap-1 flex">
           <div class="text-gray-900 text-sm font-medium leading-tight mr-2">
             <%= render_slot(@inner_block) %>

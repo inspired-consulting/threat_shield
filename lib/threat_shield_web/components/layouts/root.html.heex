@@ -38,6 +38,9 @@
         });
       }
 
+      firstButton = document.querySelector(".tablinks");
+      firstButton.click();
+
       function tabbedView(event, id) {
         const tabContents = document.querySelectorAll(".tabcontent");
         
@@ -46,6 +49,7 @@
         );
 
         const tabLinks = document.querySelectorAll(".tablinks");
+        
         tabLinks.forEach(tabLink => {
           tabLink.className = tabLink.className.replace(" active", "");
         });
@@ -54,6 +58,8 @@
         section.style.display = "block";
 
         event.currentTarget.classList.add("active");
+
+        
 }
     </script>
   </body>

@@ -11,6 +11,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  --primary-color: #6366F1;
 }
 
 
@@ -69,6 +71,11 @@
 
 .chat-input div {
   width: 90%;
+}
+
+/* Tab Styling */
+button.tablinks.active > div.tab_underline {
+  border-bottom: 0.4rem solid var(--primary-color);
 }
 
 @keyframes typeText {
