@@ -41,7 +41,7 @@
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
-  animation: typeText 3s steps(25) 1s forwards;
+  animation: typeText 3s steps(25) 1s;
 }
 
 

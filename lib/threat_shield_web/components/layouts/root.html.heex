@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
     <meta http-equiv="Content-Security-Policy" content={"default-src 'self' https://api.openai.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"} />
-    <.live_title suffix=" · Phoenix Framework">
+    <.live_title>
       <%= assigns[:page_title] || "ThreatShield" %>
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
@@ -25,7 +25,6 @@
    
         if (navMenu) {
           navMenu.classList.toggle("hidden");
-
         }
         
         document.addEventListener("click", (e) => {
