@@ -611,12 +611,12 @@ defmodule ThreatShieldWeb.CoreComponents do
           <.entity_links organisation={@organisation} entity_page={assigns[:entity_page]} />
         <% end %>
       </div>
-      <nav class="text-white flex items-center">
-        <ul class="relative z-10 flex gap-4 px-4 justify-end">
+      <nav class="text-white flex items-center px-10">
+        <ul class="relative z-10 flex gap-4 justify-end">
           <%= if assigns[:organisation] do %>
             <li
               id="org-dropdown"
-              class="relative nav-dropdown text-[0.8125rem] leading-loose font-semibold hover:cursor-pointer border border-2 rounded-3xl px-4 py-1"
+              class="relative nav-dropdown text-[0.8125rem] leading-loose font-semibold hover:cursor-pointer border border-2 rounded-md h-9 px-4 py-1"
               onclick="toggleDropdown(id)"
             >
               <%= @organisation.name %>
@@ -653,12 +653,11 @@ defmodule ThreatShieldWeb.CoreComponents do
           <%= if assigns[:current_user] do %>
             <li
               id="user-dropdown"
-              class="relative nav-dropdown text-[0.8125rem] leading-loose text-white font-semibold hover:cursor-pointer border border-2 rounded-3xl px-4 py-1"
+              class="relative nav-dropdown text-white font-semibold hover:cursor-pointer border border-2 rounded-3xl px-1.5 py-1"
               onclick="toggleDropdown(id)"
             >
               <.icon name="hero-user" class="h-5 w-5" />
-              <.icon name="hero-chevron-down" class="h-5 w-5" />
-              <ul class="absolute user-dropdown-menu hidden right-2 mt-4 py-1  bg-white rounded-lg shadow-xl text-gray-900 text-sm font-normal">
+              <ul class="absolute user-dropdown-menu hidden right-2 mt-4 py-1 bg-white rounded-lg shadow-xl text-gray-900 text-sm font-normal">
                 <li class="px-4 py-2 border-b border-stone-300">
                   <p>
                     <%= dgettext("users", "Signed in as") %>
