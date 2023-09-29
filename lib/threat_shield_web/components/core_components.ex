@@ -64,6 +64,22 @@ defmodule ThreatShieldWeb.CoreComponents do
     """
   end
 
+  defp show_active_content(js \\ %JS{}, to) do
+    js
+    |> JS.hide(to: "div.tabcontent")
+    |> JS.show(
+      to: to,
+      transition: {"ease-out duration-300", "opacity-0", "opacity-100"},
+      time: 300
+    )
+  end
+
+  defp set_active_tab(js \\ %JS{}, tab) do
+    js
+    |> JS.remove_class("active", to: "button.active")
+    |> JS.add_class("active", to: tab)
+  end
+
   attr :target_id, :string, required: true
   attr :count, :integer, required: true
   slot :inner_block, required: true
@@ -72,9 +88,9 @@ defmodule ThreatShieldWeb.CoreComponents do
     ~H"""
     <button
       class="h-10 mr-5 justify-start items-start inline-flex tablinks"
-      onclick={"tabbedView(event, '#{@target_id}');"}
+      phx-click={show_active_content("##{@target_id}") |> set_active_tab()}
     >
-      <div class="tab_underline self-stretch px-1 pt-1 pb-0.5  justify-start items-center flex">
+      <div class="tab_underline self-stretch px-1 pt-1 pb-0.5 justify-start items-center flex">
         <div class="justify-start items-center gap-1 flex">
           <div class="text-gray-900 text-sm font-medium leading-tight mr-2">
             <%= render_slot(@inner_block) %>
@@ -91,7 +107,15 @@ defmodule ThreatShieldWeb.CoreComponents do
   end
 
   attr :id, :string, required: true
+  attr :is_default, :boolean, required: false
   slot :inner_block, required: true
+
+  defp compute_tabcontent_style(is_default) do
+    case is_default do
+      true -> "display: block"
+      _ -> "display: none"
+    end
+  end
 
   def tabcontent(assigns) do
     ~H"""

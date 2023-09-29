@@ -78,6 +78,14 @@ button.tablinks.active > div.tab_underline {
   border-bottom: 0.4rem solid var(--primary-color);
 }
 
+.tabcontent {
+  display: none;
+}
+
+.tabcontent:first-child {
+  display: block;
+}
+
 @keyframes typeText {
   from {
     width: 0;
