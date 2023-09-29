@@ -64,16 +64,19 @@ defmodule ThreatShieldWeb.CoreComponents do
     """
   end
 
-  attr :is_active, :boolean, required: true
+  attr :target_id, :string, required: true
   attr :count, :integer, required: true
   slot :inner_block, required: true
 
   def tab(assigns) do
     ~H"""
-    <div class="w-96 h-10 justify-start items-start inline-flex">
+    <button
+      class="h-10 mr-5 justify-start items-start inline-flex tablinks"
+      onclick={"tabbedView(event, '#{@target_id}');"}
+    >
       <div class="self-stretch px-1 pt-1 pb-0.5 border-b-2 border-indigo-500 justify-start items-center flex">
         <div class="justify-start items-center gap-1 flex">
-          <div class="text-gray-900 text-sm font-medium leading-tight">
+          <div class="text-gray-900 text-sm font-medium leading-tight mr-2">
             <%= render_slot(@inner_block) %>
           </div>
           <div class="px-2 py-1 bg-indigo-50 rounded-md justify-start items-center flex">
@@ -83,6 +86,17 @@ defmodule ThreatShieldWeb.CoreComponents do
           </div>
         </div>
       </div>
+    </button>
+    """
+  end
+
+  attr :id, :string, required: true
+  slot :inner_block, required: true
+
+  def tabcontent(assigns) do
+    ~H"""
+    <div id={@id} class="tabcontent">
+      <%= render_slot(@inner_block) %>
     </div>
     """
   end

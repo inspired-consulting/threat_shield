@@ -33,13 +33,23 @@
     <.input_attribute attributes={@organisation.attributes}></.input_attribute>
   </:attribute>
 </.card_detail_org>
-<.tab is_active={true} count={12}>
-<%= dgettext("threats", "Threats") %>
+
+<.tab target_id={"system_tab"} count={length(@organisation.systems)}>
+  <%= dgettext("systems", "Systems") %>
 </.tab>
+
+<.tab target_id={"threat_tab"} count={length(@organisation.threats)}>
+  <%= dgettext("threats", "Threats") %>
+</.tab>
+
+<.tab target_id={"asset_tab"} count={length(@organisation.assets)}>
+  <%= dgettext("assets", "Assets") %>
+</.tab>
+
 </.background_white>
 
 <.background_gray>
-
+<.tabcontent id={"system_tab"}>
   <.live_component
     module={ThreatShieldWeb.SystemLive.SystemComponent}
     organisation={@organisation}
@@ -49,9 +59,10 @@
     id={"systems_for_org_#{@organisation.id}"}
   />
 
+</.tabcontent>
 
+<.tabcontent id={"asset_tab"}>
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
-
   <.live_component
     module={ThreatShieldWeb.AssetLive.AssetComponent}
     organisation={@organisation}
@@ -62,6 +73,7 @@
     path_prefix={"/organisations/#{@organisation.id}"}
     id={"assets_for_org_#{@organisation.id}"}
   />
+</.tabcontent>
 
 <.modal
   :if={@live_action == :edit_organisation}
@@ -120,6 +132,7 @@
   />
 </.modal>
 
+<.tabcontent id={"threat_tab"}>
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 
   <.live_component
@@ -132,7 +145,7 @@
     id={"threats_for_org_#{@organisation.id}"}
   />
 
-
+</.tabcontent>
 
 <.modal
   :if={@live_action == :new_threat}

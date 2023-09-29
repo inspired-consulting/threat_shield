@@ -37,6 +37,24 @@
           }
         });
       }
+
+      function tabbedView(event, id) {
+        const tabContents = document.querySelectorAll(".tabcontent");
+        
+        tabContents.forEach(tabContent => {
+          tabContent.style.display = "none"}
+        );
+
+        const tabLinks = document.querySelectorAll(".tablinks");
+        tabLinks.forEach(tabLink => {
+          tabLink.className = tabLink.className.replace(" active", "");
+        });
+
+        const section = document.getElementById(id)
+        section.style.display = "block";
+
+        event.currentTarget.classList.add("active");
+}
     </script>
   </body>
 </html>
