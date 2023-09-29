@@ -48,7 +48,7 @@ defmodule ThreatShieldWeb.UserRegistrationLiveTest do
       # Now do a logged in request and assert on the menu
       conn = get(conn, "/")
       response = html_response(conn, 200)
-      assert response =~ "Settings"
+      assert response =~ "Account settings"
       assert response =~ "Log out"
     end
 
