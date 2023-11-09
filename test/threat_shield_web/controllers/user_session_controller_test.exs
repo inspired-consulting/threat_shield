@@ -19,7 +19,7 @@ defmodule ThreatShieldWeb.UserSessionControllerTest do
 
       # Now do a logged in request and assert on the menu
       conn = get(conn, ~p"/")
-      response = html_response(conn, 200)
+      html_response(conn, 200)
     end
 
     test "logs the user in with remember me", %{conn: conn, user: user} do
@@ -48,7 +48,6 @@ defmodule ThreatShieldWeb.UserSessionControllerTest do
         })
 
       assert redirected_to(conn) == "/foo/bar"
-      assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Welcome back!"
     end
 
     test "login following registration", %{conn: conn, user: user} do

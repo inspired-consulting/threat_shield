@@ -94,6 +94,7 @@ defmodule ThreatShieldWeb do
       unquote(verified_routes())
 
       def ok(socket), do: {:ok, socket}
+      def ok(socket, options), do: {:ok, socket, options}
       def noreply(socket), do: {:noreply, socket}
       def halt(socket), do: {:halt, socket}
     end

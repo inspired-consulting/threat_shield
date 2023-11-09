@@ -4,50 +4,26 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
   alias ThreatShield.Accounts
   alias ThreatShield.Accounts.User
 
-  @steps [
-    :email,
-    :password,
-    :organisation
-  ]
-
-  defp is_hidden?(field, progress) do
-    visible_steps =
-      @steps
-      |> Enum.reverse()
-      |> Enum.drop_while(fn step -> step != progress end)
-
-    field not in visible_steps
-  end
-
-  defp is_in_last_step?(progress) do
-    progress == List.last(@steps)
-  end
-
-  defp form_section_classes(name, progress) do
-    "chat-input grid justify-items-stretch" <>
-      if is_hidden?(name, progress) do
-        " hidden"
-      else
-        ""
-      end
-  end
-
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
+    <div class="w-1/2 me-auto pt-20 px-20 bg-white h-full">
       <.header class="text-center">
-        Register for an account
+        <span class="threadshield-jumbo-header">
+          <%= dgettext("accounts", "Join us") %>
+        </span>
         <:subtitle>
           Already registered?
           <.link
             navigate={~p"/users/log_in"}
             class="font-semibold text-primary_col-500 hover:underline"
           >
-            Sign in
+            <%= dgettext("accounts", "Sign in") %>
           </.link>
           to your account now.
         </:subtitle>
       </.header>
+
+      <.flash_group flash={@flash} />
 
       <.simple_form
         for={@form}
@@ -62,75 +38,52 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
           Oops, something went wrong! Please check the errors below.
         </.error>
 
-        <section class="chat-input grid justify-items-stretch">
-          <div class="fake-input-box justify-self-start">
-            <label for id="email">Please provide your mail address</label>
-          </div>
-          <div class="justify-self-end">
-            <.input field={@form[:email]} type="email" required />
-          </div>
-        </section>
+        <div class="grid grid-cols-2 gap-4">
+          <.input field={@form[:first_name]} label="First name" required />
+          <.input field={@form[:last_name]} label="Last name" required />
+        </div>
 
-        <section class={form_section_classes(:password, @progress)}>
-          <div class="fake-input-box justify-self-start">
-            <label for id="password">Please provide a password</label>
-          </div>
-          <div class="justify-self-end">
-            <.input field={@form[:password]} type="password" required />
-          </div>
-        </section>
+        <.input field={@form[:email]} type="email" label="Email" required autocomplete="off" />
+        <.input
+          field={@form[:password]}
+          type="password"
+          label="Password"
+          required
+          autocomplete="new-password"
+        />
 
-        <section class={form_section_classes(:organisation, @progress)}>
-          <div class="fake-input-box justify-self-start">
-            <label for id="organisation">Please name your organisation</label>
-          </div>
-          <div class="justify-self-end">
-            <.input field={@form[:organisation]} type="text" />
-          </div>
-        </section>
+        <.input
+          field={@form[:accept_toc]}
+          type="checkbox"
+          label={dgettext("accounts", "By checking this box, you agree to our terms of service")}
+        />
 
         <:actions>
-          <%= if is_in_last_step?(@progress) do %>
-            <.button_primary phx-disable-with="Creating account..." class="min-w-fit">
-              Create an account
-            </.button_primary>
-          <% else %>
-            <.button_primary
-              type="button"
-              phx-click={JS.push("continue")}
-              disabled={!@can_continue}
-              class="min-w-fit"
-            >
-              Continue
-            </.button_primary>
-          <% end %>
+          <.button_magic phx-disable-with="Creating account..." class="text-lg w-full">
+            <%= dgettext("accounts", "Sign up") %>
+          </.button_magic>
         </:actions>
       </.simple_form>
     </div>
     """
   end
 
+  @spec mount(any(), any(), any()) :: {:ok, any(), any()}
   def mount(_params, _session, socket) do
     changeset = Accounts.change_user_registration(%User{})
 
-    first_step = List.first(@steps)
-
-    socket =
-      socket
-      |> assign(
-        trigger_submit: false,
-        check_errors: false,
-        can_continue: false,
-        progress: first_step
-      )
-      |> assign_form(changeset)
-
-    {:ok, socket, temporary_assigns: [form: nil]}
+    socket
+    |> assign(
+      trigger_submit: false,
+      check_errors: false
+    )
+    |> assign_form(changeset)
+    |> ok(temporary_assigns: [form: nil], layout: {ThreatShieldWeb.Layouts, :unauthenticated})
   end
 
   def handle_event("save", %{"user" => user_params}, socket) do
-    case Accounts.register_user_with_organisation(user_params) do
-      {:ok, {:ok, user}} ->
+    case Accounts.register_user(user_params) do
+      {:ok, user} ->
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
             user,
@@ -140,7 +93,7 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
         changeset = Accounts.change_user_registration(user)
         {:noreply, socket |> assign(trigger_submit: true) |> assign_form(changeset)}
 
-      {_, {:error, %Ecto.Changeset{} = changeset}} ->
+      {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, socket |> assign(check_errors: true) |> assign_form(changeset)}
     end
   end
@@ -148,14 +101,9 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
   def handle_event("validate", %{"user" => user_params}, socket) do
     changeset = Accounts.change_user_registration(%User{}, user_params)
 
-    {:noreply,
-     socket
-     |> assign_form(Map.put(changeset, :action, :validate))
-     |> update_can_continue(changeset)}
-  end
-
-  def handle_event("continue", _params, socket) do
-    {:noreply, advance_progress(socket)}
+    socket
+    |> assign_form(Map.put(changeset, :action, :validate))
+    |> noreply()
   end
 
   defp assign_form(socket, %Ecto.Changeset{} = changeset) do
@@ -168,27 +116,5 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
       socket
       |> assign(form: form)
     end
-  end
-
-  defp update_can_continue(socket, changeset) do
-    progress = socket.assigns.progress
-
-    if !Keyword.has_key?(changeset.errors, progress) do
-      socket |> assign(can_continue: true)
-    else
-      socket
-    end
-  end
-
-  defp advance_progress(socket) do
-    current = socket.assigns.progress
-
-    new =
-      @steps
-      |> Enum.reverse()
-      |> Enum.take_while(fn s -> s != current end)
-      |> List.last(List.last(@steps))
-
-    assign(socket, progress: new, can_continue: false)
   end
 end
