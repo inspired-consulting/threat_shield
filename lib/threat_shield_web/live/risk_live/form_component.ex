@@ -20,8 +20,12 @@ defmodule ThreatShieldWeb.RiskLive.FormComponent do
       >
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:description]} type="text" label="Description" />
-        <.input field={@form[:estimated_cost]} type="number" label="Estimated cost" />
-        <.input field={@form[:probability]} type="number" label="Probability" step="any" />
+        <.input
+          field={@form[:estimated_cost]}
+          type="number"
+          label={dgettext("risks", "Estimated cost in EUR")}
+        />
+        <.input field={@form[:probability]} type="number" label="Probability in %" step="any" />
         <:actions>
           <.button_primary phx-disable-with="Saving...">Save Risk</.button_primary>
         </:actions>

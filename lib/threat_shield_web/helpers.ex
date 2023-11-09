@@ -39,4 +39,28 @@ defmodule ThreatShieldWeb.Helpers do
     {:ok, result} = Timex.format(date_str, "{0D}.{0M}.{YYYY}")
     result
   end
+
+  # Numbers
+
+  def format_number(nil) do
+    "-"
+  end
+
+  def format_number(number) do
+    number
+  end
+
+  def format_monetary_amount(number, currency \\ "EUR")
+  def format_monetary_amount(nil, _currency), do: "-"
+
+  def format_monetary_amount(number, currency) do
+    "#{format_number(number)} #{currency}"
+  end
+
+  def format_percentage(number) when is_number(number) do
+    "#{format_number(number)} %"
+  end
+
+  def format_percentage(nil), do: "-"
+  def format_percentage(number), do: number
 end

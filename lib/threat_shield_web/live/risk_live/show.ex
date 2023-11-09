@@ -6,8 +6,9 @@ defmodule ThreatShieldWeb.RiskLive.Show do
   alias ThreatShield.Risks
   alias ThreatShield.Mitigations
   alias ThreatShield.AI
+  alias ThreatShield.Risks.Risk
 
-  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, get_path_prefix: 1]
+  import ThreatShieldWeb.Helpers
 
   @impl true
   def mount(%{"risk_id" => risk_id} = params, _session, socket) do

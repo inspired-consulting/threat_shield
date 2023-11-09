@@ -30,6 +30,16 @@ defmodule ThreatShield.Risks.Risk do
     |> validate_length(:name, max: 60)
   end
 
+  def estimated_risk_cost(%{estimated_cost: estimated_cost, probability: probability}),
+    do: estimated_risk_cost(estimated_cost, probability)
+
+  def estimated_risk_cost(estimated_cost, probability)
+      when is_number(estimated_cost) and is_number(probability) do
+    estimated_cost * probability / 100
+  end
+
+  def estimated_risk_cost(_estimated_cost, _probability), do: nil
+
   import Ecto.Query
 
   def get(id) do
