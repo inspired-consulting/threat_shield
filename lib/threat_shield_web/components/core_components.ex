@@ -625,7 +625,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   def navbar(assigns) do
     ~H"""
-    <div class="bg-primary_col-500 flex justify-between h-16">
+    <div class="bg-purples-900 flex justify-between h-16">
       <div class="justify-start flex items-center gap-9 px-10">
         <a href="/" class="">
           <img src={~p"/images/logo.svg"} class="w-9 h-9" />

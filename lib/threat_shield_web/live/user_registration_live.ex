@@ -55,6 +55,7 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
         <.input
           field={@form[:accept_toc]}
           type="checkbox"
+          required
           label={dgettext("accounts", "By checking this box, you agree to our terms of service")}
         />
 
