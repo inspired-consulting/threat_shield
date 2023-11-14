@@ -1,12 +1,12 @@
 <.card_detail>
   <:name>
-  <%= @risk.name %>
+    <%= @risk.name %>
   </:name>
   <:description>
-  <%= @risk.description %>
+    <%= @risk.description %>
   </:description>
-  <:links> 
-      <.link
+  <:links>
+    <.link
       :if={ThreatShield.Members.Rights.may(:delete_risk, @membership)}
       phx-click={JS.push("delete", value: %{risk_id: @risk.id})}
       data-confirm="Are you sure?"
@@ -20,16 +20,20 @@
     >
       <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
     </.link>
-    </:links>
+  </:links>
 
   <:attribute>
     <div>
-      <.label><%= dgettext("risks", "Estimated Cost") %></.label>
-      <p><%= @risk.estimated_cost %></p>
+      <.label><%= dgettext("risks", "Estimated cost") %></.label>
+      <p><%= format_monetary_amount(@risk.estimated_cost) %></p>
     </div>
     <div>
       <.label><%= dgettext("risks", "Probability") %></.label>
-      <p><%= @risk.probability %></p>
+      <p><%= format_percentage(@risk.probability) %></p>
+    </div>
+    <div>
+      <.label><%= dgettext("risks", "Risk costs") %></.label>
+      <p><%= format_monetary_amount(Risk.estimated_risk_cost(@risk)) %></p>
     </div>
   </:attribute>
 </.card_detail>
@@ -76,7 +80,6 @@
   entity_name="mitigation"
 />
 
-
 <.live_component
   module={ThreatShieldWeb.MitigationLive.MitigationComponent}
   organisation={@organisation}
@@ -88,7 +91,6 @@
   risk={@risk}
   path_prefix={get_path_prefix(assigns)}
 />
-
 
 <%= if not is_nil(@asking_ai_for_mitigations) do %>
   <ThreatShieldWeb.Spinner.spinner />

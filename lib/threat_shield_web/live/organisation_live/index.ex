@@ -11,20 +11,26 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
   def mount(_params, _session, socket) do
     locations_options = Locations.list_locations()
 
-    socket =
-      socket
-      |> assign(locations_options: locations_options)
-      |> stream_organisations()
-      |> assign(:attributes, attributes())
+    case Organisations.list_organisations(socket.assigns.current_user) do
+      [single_org] ->
+        socket
+        |> redirect(to: ~p"/organisations/#{single_org.id}")
+        |> ok()
 
-    {:ok, socket}
+      organisations ->
+        socket
+        |> assign(locations_options: locations_options)
+        |> stream_organisations(organisations)
+        |> assign(:attributes, attributes())
+        |> ok()
+    end
   end
 
-  defp stream_organisations(socket) do
+  defp stream_organisations(socket, organisations) do
     stream(
       socket,
       :organisations,
-      Organisations.list_organisations(socket.assigns.current_user)
+      organisations
     )
   end
 

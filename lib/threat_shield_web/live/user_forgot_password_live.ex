@@ -5,11 +5,13 @@ defmodule ThreatShieldWeb.UserForgotPasswordLive do
 
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
+    <div class="mx-auto max-w-sm mt-6">
       <.header class="text-center">
-        Forgot your password?
+        <span class="text-xl"><%= dgettext("accounts", "Forgot your password?") %></span>
         <:subtitle>We'll send a password reset link to your inbox</:subtitle>
       </.header>
+
+      <.flash_group flash={@flash} />
 
       <.simple_form for={@form} id="reset_password_form" phx-submit="send_email">
         <.input field={@form[:email]} type="email" placeholder="Email" required />
@@ -20,15 +22,17 @@ defmodule ThreatShieldWeb.UserForgotPasswordLive do
         </:actions>
       </.simple_form>
       <p class="text-center text-sm mt-4">
-        <.link href={~p"/users/register"}>Register</.link>
-        | <.link href={~p"/users/log_in"}>Log in</.link>
+        <.link href={~p"/users/register"}><%= dgettext("accounts", "Sign up") %></.link>
+        | <.link href={~p"/users/log_in"}><%= dgettext("accounts", "Sign in") %></.link>
       </p>
     </div>
     """
   end
 
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, form: to_form(%{}, as: "user"))}
+    socket
+    |> assign(form: to_form(%{}, as: "user"))
+    |> ok(layout: {ThreatShieldWeb.Layouts, :unauthenticated})
   end
 
   def handle_event("send_email", %{"user" => %{"email" => email}}, socket) do
