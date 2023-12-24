@@ -7,7 +7,17 @@ defmodule ThreatShield.Mitigations.Mitigation do
     field :name, :string
     field :description, :string
     field :is_implemented, :boolean, default: false
+    field :implementation_notes, :string
 
+    field :status, Ecto.Enum,
+      values: [:open, :in_progress, :implemented, :verified, :failed, :deferred, :obsolete],
+      default: :open
+
+    field :implementation_date, :date
+    field :verification_date, :date
+    field :verification_method, :string
+    field :verification_result, :string
+    field :issue_link, :string
     belongs_to :risk, Risk
 
     timestamps()

@@ -6,11 +6,14 @@ defmodule ThreatShield.Assets.Asset do
   alias ThreatShield.Organisations.Organisation
 
   schema "assets" do
-    field :description, :string
     field :name, :string
+    field :description, :string
+    field :criticality_loss, :float
+    field :criticality_theft, :float
+    field :criticality_publication, :float
+    field :criticality_overall, :float
     belongs_to :system, System
     belongs_to :organisation, Organisation
-
     timestamps()
   end
 
