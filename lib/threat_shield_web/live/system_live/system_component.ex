@@ -10,7 +10,7 @@ defmodule ThreatShieldWeb.SystemLive.SystemComponent do
           <:name><%= dgettext("systems", "Systems") %></:name>
 
           <:subtitle>
-            An IT system can consist of  hardware, software or data or a combination of them. It helps organisations manage and process information efficiently. Examples are ERPs, CRMS, online shops, customer portals or enterprise applications.
+            An IT system can consist of hardware, software or data or a combination of them. It helps organisations manage and process information efficiently. Examples are ERPs, CRMS, online shops, customer portals or enterprise applications.>
           </:subtitle>
 
           <:buttons>

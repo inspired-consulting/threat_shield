@@ -19,7 +19,7 @@
     </li>
     <li :if={ThreatShield.Members.Rights.may(:edit_system, @membership)} class="context-menu-item">
       <.link
-        patch={~p"/organisations/#{@organisation.id}/systems/#{@system}/edit"}
+        patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}/edit"}
         phx-click={JS.push_focus()}
       >
         <%= dgettext("common", "Edit") %>
@@ -46,21 +46,21 @@
 />
 
 <.modal
-  :if={@live_action == :edit_organisation}
-  id="organisation-modal"
+  :if={@live_action == :edit_system}
+  id="system-modal"
   show
-  on_cancel={JS.patch(~p"/organisations/#{@organisation}")}
+  on_cancel={JS.patch(~p"/organisations/#{@organisation}/systems/#{@system.id}")}
 >
   <.live_component
-    module={ThreatShieldWeb.OrganisationLive.FormComponent}
-    id={@organisation.id}
+    module={ThreatShieldWeb.SystemLive.FormComponent}
+    id={@system.id}
     title={@page_title}
     action={@live_action}
     organisation={@organisation}
-    attributes={@attributes}
-    locations_options={@locations_options}
+    system={@system}
     current_user={@current_user}
-    patch={~p"/organisations/#{@organisation}"}
+    attributes={System.attributes()}
+    patch={~p"/organisations/#{@organisation}/systems/#{@system.id}"}
   />
 </.modal>
 
