@@ -67,7 +67,9 @@ defmodule ThreatShieldWeb.UserConfirmationLiveTest do
         |> follow_redirect(conn, "/organisations")
 
       assert {:ok, conn} = result
-      refute Phoenix.Flash.get(conn.assigns.flash, :error)
+
+      assert Phoenix.Flash.get(conn.assigns.flash, :error) =~
+               "You must log in to access this page."
     end
 
     test "does not confirm email with invalid token", %{conn: conn, user: user} do
