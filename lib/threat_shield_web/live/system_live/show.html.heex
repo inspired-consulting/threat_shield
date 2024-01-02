@@ -1,45 +1,44 @@
 <.card_detail>
   <:name>
-  <%= @system.name %>
+    <%= @system.name %>
   </:name>
   <:description>
-  <%= @system.description %>
+    <%= @system.description %>
   </:description>
-  <:links> 
-      <.link
-        :if={ThreatShield.Members.Rights.may(:delete_system, @membership)}
-        phx-click={JS.push("delete", value: %{sys_id: @system.id})}
-        data-confirm="Are you sure?"
-      >
-        <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
-      </.link>
-      <.link
-        :if={ThreatShield.Members.Rights.may(:edit_system, @membership)}
-        patch={~p"/organisations/#{@organisation.id}/systems/#{@system}/edit"}
-        phx-click={JS.push_focus()}
-      >
-        <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
-      </.link>
-    </:links>
+  <:links>
+    <.link
+      :if={ThreatShield.Members.Rights.may(:delete_system, @membership)}
+      phx-click={JS.push("delete", value: %{sys_id: @system.id})}
+      data-confirm="Are you sure?"
+    >
+      <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
+    </.link>
+    <.link
+      :if={ThreatShield.Members.Rights.may(:edit_system, @membership)}
+      patch={~p"/organisations/#{@organisation.id}/systems/#{@system}/edit"}
+      phx-click={JS.push_focus()}
+    >
+      <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
+    </.link>
+  </:links>
   <:attribute>
     <.input_attribute attributes={@system.attributes}></.input_attribute>
   </:attribute>
 </.card_detail>
 
-
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
 
-  <.live_component
-    module={ThreatShieldWeb.AssetLive.AssetComponent}
-    organisation={@organisation}
-    assets={@system.assets}
-    system={@system}
-    membership={@membership}
-    asking_ai_for_assets={@asking_ai_for_assets}
-    asking_ai_for_threats={@asking_ai_for_threats}
-    path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
-    id={"assets_for_system_#{@system.id}"}
-  />
+<.live_component
+  module={ThreatShieldWeb.AssetLive.AssetsList}
+  organisation={@organisation}
+  assets={@system.assets}
+  system={@system}
+  membership={@membership}
+  asking_ai_for_assets={@asking_ai_for_assets}
+  asking_ai_for_threats={@asking_ai_for_threats}
+  path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
+  id={"assets_for_system_#{@system.id}"}
+/>
 
 <.modal
   :if={@live_action == :edit_organisation}
@@ -83,10 +82,10 @@
   :if={@live_action == :new_asset}
   id="asset-modal"
   show
-  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
+  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/systems/#{@system.id}")}
 >
   <.live_component
-    module={ThreatShieldWeb.AssetLive.FormComponent}
+    module={ThreatShieldWeb.AssetLive.AssetForm}
     id={@asset.id || :new}
     title={@page_title}
     action={@live_action}
@@ -94,22 +93,22 @@
     organisation={@organisation}
     system_options={list_system_options(@organisation)}
     asset={@asset}
-    patch={~p"/organisations/#{@organisation.id}"}
+    patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}"}
   />
 </.modal>
 
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 
-  <.live_component
-    module={ThreatShieldWeb.ThreatLive.ThreatComponent}
-    organisation={@organisation}
-    membership={@membership}
-    threats={@system.threats}
-    system={@system}
-    asking_ai_for_threats={@asking_ai_for_threats}
-    path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
-    id={"threats_for_system_#{@system.id}"}
-  />
+<.live_component
+  module={ThreatShieldWeb.ThreatLive.ThreatComponent}
+  organisation={@organisation}
+  membership={@membership}
+  threats={@system.threats}
+  system={@system}
+  asking_ai_for_threats={@asking_ai_for_threats}
+  path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
+  id={"threats_for_system_#{@system.id}"}
+/>
 
 <.modal
   :if={@live_action == :new_threat}

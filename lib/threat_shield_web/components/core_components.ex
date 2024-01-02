@@ -857,6 +857,7 @@ defmodule ThreatShieldWeb.CoreComponents do
   slot :name, required: false
   slot :description, required: false
   slot :attribute, required: false
+  slot :custom, required: false
   slot :links, required: true
 
   def card_detail(assigns) do
@@ -879,6 +880,9 @@ defmodule ThreatShieldWeb.CoreComponents do
         <div class="w-full grid grid-cols-3 gap-4 mt-6 p-6 bg-neutral-100">
           <%= render_slot(@attribute) %>
         </div>
+      <% end %>
+      <%= if @custom != [] do %>
+        <%= render_slot(@custom) %>
       <% end %>
     </section>
     """

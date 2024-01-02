@@ -1,7 +1,8 @@
-defmodule ThreatShieldWeb.AssetLive.FormComponent do
+defmodule ThreatShieldWeb.AssetLive.AssetForm do
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.Assets
+  import ThreatShieldWeb.TsComponents
 
   @impl true
   def render(assigns) do
@@ -10,6 +11,12 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
       <.header>
         <%= @title %>
       </.header>
+      <p>
+        <%= dgettext(
+          "assets",
+          "Asset: short description"
+        ) %>
+      </p>
 
       <.simple_form
         for={@form}
@@ -27,7 +34,26 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
           label="System"
           options={@system_options}
         />
-
+        <hr />
+        <div class="lg:grid grid-flow-col justify-stretch space-x-4">
+          <.criticality_picker
+            field={@form[:criticality_loss]}
+            label={dgettext("assets", "Criticality of loss")}
+          />
+          <.criticality_picker
+            field={@form[:criticality_theft]}
+            label={dgettext("assets", "Criticality of theft")}
+          />
+          <.criticality_picker
+            field={@form[:criticality_publication]}
+            label={dgettext("assets", "Criticality of publication")}
+          />
+        </div>
+        <.criticality_picker
+          field={@form[:criticality_overall]}
+          label={dgettext("assets", "Criticality overall")}
+          readonly
+        />
         <:actions>
           <.button_primary phx-disable-with="Saving...">Save Asset</.button_primary>
         </:actions>

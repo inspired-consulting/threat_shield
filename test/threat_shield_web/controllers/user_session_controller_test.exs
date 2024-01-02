@@ -17,9 +17,9 @@ defmodule ThreatShieldWeb.UserSessionControllerTest do
       assert get_session(conn, :user_token)
       assert redirected_to(conn) == ~p"/dashboard"
 
-      # Now do a logged in request and assert on the menu
+      # Now do a logged in request and assert on organisations page
       conn = get(conn, ~p"/")
-      html_response(conn, 200)
+      assert redirected_to(conn) == ~p"/organisations"
     end
 
     test "logs the user in with remember me", %{conn: conn, user: user} do

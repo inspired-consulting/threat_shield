@@ -47,7 +47,7 @@ defmodule ThreatShieldWeb.UserConfirmationLive do
         # a warning message.
         case socket.assigns do
           %{current_user: %{confirmed_at: confirmed_at}} when not is_nil(confirmed_at) ->
-            {:noreply, redirect(socket, to: ~p"/")}
+            {:noreply, redirect(socket, to: ~p"/organisations")}
 
           %{} ->
             {:noreply,

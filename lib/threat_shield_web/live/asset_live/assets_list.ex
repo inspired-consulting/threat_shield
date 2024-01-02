@@ -1,4 +1,4 @@
-defmodule ThreatShieldWeb.AssetLive.AssetComponent do
+defmodule ThreatShieldWeb.AssetLive.AssetsList do
   use ThreatShieldWeb, :live_component
 
   @impl true
@@ -10,7 +10,10 @@ defmodule ThreatShieldWeb.AssetLive.AssetComponent do
           <:name><%= dgettext("assets", "Assets") %></:name>
 
           <:subtitle>
-            Assets are valuable resources or data, that need to be protected.
+            <%= dgettext(
+              "assets",
+              "Asset: short description"
+            ) %>
           </:subtitle>
 
           <:buttons>

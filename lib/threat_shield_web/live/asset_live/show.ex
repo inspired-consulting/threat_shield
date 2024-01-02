@@ -56,7 +56,7 @@ defmodule ThreatShieldWeb.AssetLive.Show do
 
   @impl true
   def handle_info(
-        {ThreatShieldWeb.AssetLive.FormComponent, {:saved, asset}},
+        {ThreatShieldWeb.AssetLive.AssetForm, {:saved, asset}},
         socket
       ) do
     asset = Assets.get_asset!(socket.assigns.current_user, asset.id)

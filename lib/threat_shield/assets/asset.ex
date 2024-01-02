@@ -17,10 +17,12 @@ defmodule ThreatShield.Assets.Asset do
     timestamps()
   end
 
+  @fields ~w(name description system_id criticality_loss criticality_theft criticality_publication criticality_overall)a
+
   @doc false
   def changeset(asset, attrs) do
     asset
-    |> cast(attrs, [:description, :system_id, :name])
+    |> cast(attrs, @fields)
     |> validate_required([:description, :organisation, :name])
     |> validate_length(:name, max: 60)
   end

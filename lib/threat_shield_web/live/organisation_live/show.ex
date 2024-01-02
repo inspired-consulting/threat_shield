@@ -91,7 +91,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
 
   @impl true
   def handle_info(
-        {ThreatShieldWeb.OrganisationLive.FormComponent, {:saved, organisation}},
+        {ThreatShieldWeb.OrganisationLive.AssetForm, {:saved, organisation}},
         socket
       ) do
     user = socket.assigns.current_user
@@ -103,7 +103,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.SystemLive.FormComponent, {:saved, system}}, socket) do
+  def handle_info({ThreatShieldWeb.SystemLive.AssetForm, {:saved, system}}, socket) do
     stale_org = socket.assigns.organisation
     updated_org = %{stale_org | systems: stale_org.systems ++ [system]}
 
@@ -112,7 +112,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.AssetLive.FormComponent, {:saved, asset}}, socket) do
+  def handle_info({ThreatShieldWeb.AssetLive.AssetForm, {:saved, asset}}, socket) do
     stale_org = socket.assigns.organisation
     updated_org = %{stale_org | assets: stale_org.assets ++ [asset]}
 
@@ -121,7 +121,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.ThreatLive.FormComponent, {:saved, threat}}, socket) do
+  def handle_info({ThreatShieldWeb.ThreatLive.AssetForm, {:saved, threat}}, socket) do
     stale_org = socket.assigns.organisation
     user = socket.assigns.current_user
 
