@@ -6,20 +6,25 @@
     <%= @asset.description %>
   </:description>
   <:links>
-    <.link
+    <li
       :if={ThreatShield.Members.Rights.may(:delete_asset, @membership)}
-      phx-click={JS.push("delete", value: %{asset_id: @asset.id})}
-      data-confirm="Are you sure?"
+      class="context-menu-item"
     >
-      <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
-    </.link>
-    <.link
-      :if={ThreatShield.Members.Rights.may(:edit_asset, @membership)}
-      patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}/show/edit"}
-      phx-click={JS.push_focus()}
-    >
-      <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
-    </.link>
+      <.link
+        phx-click={JS.push("delete", value: %{asset_id: @asset.id})}
+        data-confirm="Are you sure?"
+      >
+        <%= dgettext("common", "Delete") %>
+      </.link>
+    </li>
+    <li :if={ThreatShield.Members.Rights.may(:edit_asset, @membership)} class="context-menu-item">
+      <.link
+        patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}/show/edit"}
+        phx-click={JS.push_focus()}
+      >
+        <%= dgettext("common", "Edit") %>
+      </.link>
+    </li>
   </:links>
 
   <:attribute>

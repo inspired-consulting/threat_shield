@@ -250,9 +250,9 @@ defmodule ThreatShieldWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-indigo-600 hover:bg-indigo-600 py-2 px-3",
+        "phx-submit-loading:opacity-75 rounded-lg bg-primary-500 hover:bg-primary-600 py-2 px-3",
         "font-semibold leading-6 text-white hover:text-white active:text-white whitespace-nowrap",
-        "disabled:bg-secondary_col-900 disabled:pointer-events-none",
+        "disabled:bg-secondary-900 disabled:pointer-events-none",
         @class
       ]}
       {@rest}
@@ -273,9 +273,9 @@ defmodule ThreatShieldWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-white  shadow shadow-inner  hover:bg-indigo-600 py-2 px-3",
+        "phx-submit-loading:opacity-75 rounded-lg bg-white  shadow shadow-inner  hover:bg-primary-500 py-2 px-3",
         "text-gray-900 text-sm font-semibold hover:text-white active:text-white",
-        "disabled:bg-secondary_col-900 disabled:pointer-events-none",
+        "disabled:bg-secondary-900 disabled:pointer-events-none",
         @class
       ]}
       {@rest}
@@ -296,9 +296,9 @@ defmodule ThreatShieldWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "threatshield-gradient phx-submit-loading:opacity-75 rounded-lg bg-indigo-600 hover:bg-indigo-600 py-2 px-3",
+        "threatshield-gradient phx-submit-loading:opacity-75 rounded-lg bg-primary-600 hover:bg-primary-600 py-2 px-3",
         "font-semibold leading-6 text-white hover:text-white active:text-white whitespace-nowrap",
-        "disabled:bg-secondary_col-900 disabled:pointer-events-none",
+        "disabled:bg-secondary-900 disabled:pointer-events-none hover:shadow-lg",
         @class
       ]}
       {@rest}
@@ -539,7 +539,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
     ~H"""
     <table class="w-[1016px] mt-10 mx-auto justify-self-center">
-      <thead class="text-sm text-left leading-6 text-primary_col-900">
+      <thead class="text-sm text-left leading-6 text-primary-900">
         <tr class="">
           <th :for={col <- @col} class="p-0 pr-6 pb-4 font-normal"><%= col[:label] %></th>
           <th class="relative p-0 pb-4"><span class="sr-only"><%= gettext("Actions") %></span></th>
@@ -587,7 +587,7 @@ defmodule ThreatShieldWeb.CoreComponents do
         <%= @name %>
       </span>
     <% else %>
-      <a href={@link} class="text-secondary_col-400 px-3 py-2">
+      <a href={@link} class="text-secondary-400 px-3 py-2">
         <%= @name %>
       </a>
     <% end %>
@@ -625,10 +625,10 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   def navbar(assigns) do
     ~H"""
-    <div class="bg-purples-900 flex justify-between h-16">
+    <div class="bg-primary-900 flex justify-between h-16">
       <div class="justify-start flex items-center gap-9 px-10">
         <a href="/" class="">
-          <img src={~p"/images/logo.svg"} class="w-9 h-9" />
+          <.icon name="hero-shield-check" class="h-8 w-8 text-primary-200" />
         </a>
         <%= if assigns[:organisation] do %>
           <.entity_links organisation={@organisation} entity_page={assigns[:entity_page]} />
@@ -645,16 +645,16 @@ defmodule ThreatShieldWeb.CoreComponents do
               <%= @organisation.name %>
               <.icon name="hero-chevron-down" class="h-5 w-5" />
 
-              <ul class="absolute org-dropdown-menu hidden right-2 mt-4 w-48 bg-white text-primary_col-500 rounded-lg shadow-xl">
+              <ul class="absolute org-dropdown-menu hidden right-2 mt-4 w-48 bg-white text-primary-500 rounded-lg shadow-xl">
                 <li class="px-4 py-2 text-gray-900 text-sm font-medium flex justify-between">
-                  <%= @organisation.name %><.icon name="hero-check" class="h-5 w-5 text-indigo-600" />
+                  <%= @organisation.name %><.icon name="hero-check" class="h-5 w-5 text-primary-600" />
                 </li>
                 <%= for org <- @current_user.organisations do %>
                   <%= if org.id != @organisation.id do %>
                     <li class="px-4 py-2 text-gray-900 text-sm font-normal">
                       <.link
                         href={~p"/organisations/#{org.id}"}
-                        class="text-[0.8125rem] leading-6 text-primary_col-500 hover:underline"
+                        class="text-[0.8125rem] leading-6 text-primary-500 hover:underline"
                       >
                         <%= org.name %>
                       </.link>
@@ -664,7 +664,7 @@ defmodule ThreatShieldWeb.CoreComponents do
                 <li class="px-4 py-2 flex justify-between border-t-2 items-center">
                   <.link
                     href={~p"/organisations/new"}
-                    class="text-[0.8125rem] leading-6 text-primary_col-500 hover:underline text-indigo-600"
+                    class="text-[0.8125rem] leading-6 text-primary-500 hover:underline text-primary-600"
                   >
                     <%= dgettext("organisations", "Create organisation") %>
                   </.link>
@@ -681,7 +681,7 @@ defmodule ThreatShieldWeb.CoreComponents do
             >
               <.icon name="hero-user" class="h-5 w-5" />
               <ul class="absolute user-dropdown-menu hidden right-2 mt-4 py-1 bg-white rounded-lg shadow-xl text-gray-900 text-sm font-normal">
-                <li class="px-4 py-2 border-b border-stone-300">
+                <li class="px-4 py-2 border-b border-gray-300">
                   <p>
                     <%= dgettext("users", "Signed in as") %>
                   </p>
@@ -692,21 +692,21 @@ defmodule ThreatShieldWeb.CoreComponents do
                 <li class="px-4 py-2">
                   <.link
                     href={~p"/users/settings"}
-                    class="text-[0.8125rem] leading-6 text-primary_col-500 hover:underline"
+                    class="text-[0.8125rem] leading-6 text-primary-500 hover:underline"
                   >
                     <%= dgettext("users", "Account settings") %>
                   </.link>
                 </li>
                 <li class="px-4 py-2">
-                  <.link class="text-[0.8125rem] leading-6 text-primary_col-500 hover:underline text-gray-200">
+                  <.link class="text-[0.8125rem] leading-6 text-primary-500 hover:underline text-gray-200">
                     <%= dgettext("users", "Support") %>
                   </.link>
                 </li>
-                <li class="px-4 py-2 border-t border-stone-300">
+                <li class="px-4 py-2 border-t border-gray-300">
                   <.link
                     href={~p"/users/log_out"}
                     method="delete"
-                    class="text-[0.8125rem] leading-6 text-primary_col-500 hover:underline"
+                    class="text-[0.8125rem] leading-6 text-primary-500 hover:underline"
                   >
                     <%= dgettext("users", "Log out") %>
                   </.link>
@@ -899,7 +899,7 @@ defmodule ThreatShieldWeb.CoreComponents do
     >
       <.icon name="hero-ellipsis-vertical" class="h-5 w-5" />
 
-      <ul class="absolute link-dropdown-menu hidden right-0 mt-4 bg-white text-primary_col-500 rounded-sm shadow-xl">
+      <ul class="absolute link-dropdown-menu hidden right-0 mt-4 bg-white text-primary-500 rounded-sm shadow-xl">
         <%= render_slot(@links) %>
       </ul>
     </div>
@@ -931,7 +931,7 @@ defmodule ThreatShieldWeb.CoreComponents do
           >
             <.icon name="hero-ellipsis-vertical" class="h-5 w-5" />
 
-            <div class="absolute link-dropdown-menu hidden left-0 mt-4 bg-white text-primary_col-500 rounded-sm shadow-xl">
+            <div class="absolute link-dropdown-menu hidden left-0 mt-4 bg-white text-primary-500 rounded-sm shadow-xl">
               <ul class="">
                 <%= render_slot(@links) %>
               </ul>
@@ -972,7 +972,7 @@ defmodule ThreatShieldWeb.CoreComponents do
     <div class="mt-16">
       <.link
         navigate={@navigate}
-        class="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary_col-600"
+        class="text-sm font-semibold leading-6 text-gray-900 hover:text-secondary-600"
       >
         <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
         <%= render_slot(@inner_block) %>

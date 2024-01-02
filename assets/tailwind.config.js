@@ -9,31 +9,48 @@ module.exports = {
   content: ["./js/**/*.js", "../lib/*_web.ex", "../lib/*_web/**/*.*ex"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["SpaceGrotesk", "sans-serif"],
+      },
       colors: {
-        purples: {
+        primary: {
+          100: "#F8F6FB",
+          200: "#E1D6F6",
+          300: "#A583E5",
+          400: "#8759DD",
           500: "#6930D4",
+          600: "#5426AA",
+          700: "#3F1D7F",
+          800: "#2A1355",
           900: "#150A2A",
         },
-        primary_col: {
-          500: "#6930D4",
-        },
-        secondary_col: {
+        secondary: {
           400: "#D1D5DB",
         },
         gray: {
-          200: "#E5E7EB",
-          400: "#9CA3AF",
-          900: "#111827",
+          100: "#EDEDED",
+          200: "#D7D8DF",
+          300: "#C2C5D0",
+          400: "#AEB1C0",
+          500: "#9396A7",
+          600: "#7E8291",
+          700: "#7E8291",
+          800: "#7E8291",
+          900: "#1A1B1F",
         },
-
         neutral: {
-          100: "#F5F5F5",
+          100: "#F2F7FF",
+          300: "#8FB1EF",
+          500: "#1A1B1F",
         },
-        indigo: {
-          600: "#4F46E5",
+        green: {
+          500: "#F2F7FF",
         },
-        stone: {
-          300: "#C7C8C9",
+        orange: {
+          500: "#E89E2E",
+        },
+        red: {
+          500: "#F2F7FF",
         },
       },
     },

@@ -11,12 +11,42 @@
 msgid ""
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/show.html.heex:24
+#: lib/threat_shield_web/live/risk_live/risk_component.ex:9
 #, elixir-autogen, elixir-format
 msgid "Risks"
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/show.html.heex:31
+#: lib/threat_shield_web/live/risk_live/risk_component.ex:34
 #, elixir-autogen, elixir-format
 msgid "Suggest Risks"
+msgstr ""
+
+#: lib/threat_shield_web/live/risk_live/show.html.heex:27
+#, elixir-autogen, elixir-format
+msgid "Estimated cost"
+msgstr ""
+
+#: lib/threat_shield_web/live/risk_live/form_component.ex:26
+#, elixir-autogen, elixir-format
+msgid "Estimated cost in EUR"
+msgstr ""
+
+#: lib/threat_shield_web/live/mitigation_live/show.html.heex:29
+#, elixir-autogen, elixir-format
+msgid "Is implemented"
+msgstr ""
+
+#: lib/threat_shield_web/live/risk_live/risk_component.ex:21
+#, elixir-autogen, elixir-format
+msgid "New Risk"
+msgstr ""
+
+#: lib/threat_shield_web/live/risk_live/show.html.heex:31
+#, elixir-autogen, elixir-format
+msgid "Probability"
+msgstr ""
+
+#: lib/threat_shield_web/live/risk_live/show.html.heex:35
+#, elixir-autogen, elixir-format
+msgid "Risk costs"
 msgstr ""

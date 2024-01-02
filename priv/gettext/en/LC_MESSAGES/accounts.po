@@ -1,0 +1,67 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/threat_shield_web/live/user_registration_live.ex:56
+#, elixir-autogen, elixir-format
+msgid "By checking this box, you agree to our terms of service"
+msgstr ""
+
+#: lib/threat_shield_web/live/user_login_live.ex:15
+#, elixir-autogen, elixir-format
+msgid "Don't have an account yet?"
+msgstr ""
+
+#: lib/threat_shield_web/live/user_forgot_password_live.ex:10
+#: lib/threat_shield_web/live/user_login_live.ex:33
+#, elixir-autogen, elixir-format
+msgid "Forgot your password?"
+msgstr ""
+
+#: lib/threat_shield_web/live/user_registration_live.ex:12
+#, elixir-autogen, elixir-format
+msgid "Join us"
+msgstr ""
+
+#: lib/threat_shield_web/components/core_components.ex:730
+#: lib/threat_shield_web/live/user_confirmation_instructions_live.ex:25
+#: lib/threat_shield_web/live/user_confirmation_live.ex:22
+#: lib/threat_shield_web/live/user_forgot_password_live.ex:26
+#: lib/threat_shield_web/live/user_login_live.ex:38
+#: lib/threat_shield_web/live/user_registration_live.ex:17
+#, elixir-autogen, elixir-format
+msgid "Sign in"
+msgstr ""
+
+#: lib/threat_shield_web/components/core_components.ex:722
+#: lib/threat_shield_web/live/user_confirmation_instructions_live.ex:24
+#: lib/threat_shield_web/live/user_confirmation_live.ex:21
+#: lib/threat_shield_web/live/user_forgot_password_live.ex:25
+#: lib/threat_shield_web/live/user_registration_live.ex:61
+#, elixir-autogen, elixir-format
+msgid "Sign up"
+msgstr ""
+
+#: lib/threat_shield_web/live/user_login_live.ex:17
+#, elixir-autogen, elixir-format
+msgid "Sign up now!"
+msgstr ""
+
+#: lib/threat_shield_web/live/user_login_live.ex:12
+#, elixir-autogen, elixir-format
+msgid "Welcome back"
+msgstr ""
+
+#: lib/threat_shield_web/live/user_login_live.ex:30
+#, elixir-autogen, elixir-format
+msgid "remember me"
+msgstr ""

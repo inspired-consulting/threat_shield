@@ -11,12 +11,13 @@
 msgid ""
 msgstr ""
 
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:39
+#: lib/threat_shield_web/live/system_live/system_component.ex:22
 #, elixir-autogen, elixir-format
 msgid "New System"
 msgstr ""
 
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:37
+#: lib/threat_shield_web/components/core_components.ex:608
+#: lib/threat_shield_web/live/system_live/system_component.ex:10
 #, elixir-autogen, elixir-format
 msgid "Systems"
 msgstr ""

@@ -1,29 +1,34 @@
 <.card_detail>
   <:name>
-  <%= @threat.name %>
+    <%= @threat.name %>
   </:name>
   <:description>
-  <%= @threat.description %>
+    <%= @threat.description %>
   </:description>
-  <:links> 
-      <.link
+  <:links>
+    <li
       :if={ThreatShield.Members.Rights.may(:delete_threat, @membership)}
-      phx-click={JS.push("delete", value: %{threat_id: @threat.id})}
-      data-confirm="Are you sure?"
+      class="context-menu-item"
     >
-      <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
-    </.link>
-    <.link
-      :if={ThreatShield.Members.Rights.may(:edit_threat, @membership)}
-      patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/edit"}
-      phx-click={JS.push_focus()}
-    >
-      <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
-    </.link>
-    </:links>
+      <.link
+        phx-click={JS.push("delete", value: %{threat_id: @threat.id})}
+        data-confirm="Are you sure?"
+      >
+        <%= dgettext("common", "Delete") %>
+      </.link>
+    </li>
+    <li :if={ThreatShield.Members.Rights.may(:edit_threat, @membership)} class="context-menu-item">
+      <.link
+        patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/edit"}
+        phx-click={JS.push_focus()}
+      >
+        <%= dgettext("common", "Edit") %>
+      </.link>
+    </li>
+  </:links>
   <:attribute>
-  <.label><%= dgettext("threats", "System") %></.label>
-  <p><%= system_name(@threat) %></p>
+    <.label><%= dgettext("threats", "System") %></.label>
+    <p><%= system_name(@threat) %></p>
   </:attribute>
 </.card_detail>
 
@@ -67,17 +72,16 @@
 
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@risk_suggestions} entity_name="risk" />
 
-  <.live_component
-    module={ThreatShieldWeb.RiskLive.RiskComponent}
-    organisation={@organisation}
-    risks={@threat.risks}
-    membership={@membership}
-    asking_ai_for_risks={@asking_ai_for_risks}
-    path_prefix={get_path_prefix(assigns)}
-    id={"risks_for_threat_#{@threat.id}"}
-    threat={@threat}
-  />
-
+<.live_component
+  module={ThreatShieldWeb.RiskLive.RiskComponent}
+  organisation={@organisation}
+  risks={@threat.risks}
+  membership={@membership}
+  asking_ai_for_risks={@asking_ai_for_risks}
+  path_prefix={get_path_prefix(assigns)}
+  id={"risks_for_threat_#{@threat.id}"}
+  threat={@threat}
+/>
 
 <%= if not is_nil(@asking_ai_for_risks) do %>
   <ThreatShieldWeb.Spinner.spinner />

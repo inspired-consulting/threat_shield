@@ -4,7 +4,6 @@ defmodule ThreatShieldWeb.SystemLive.Show do
 
   alias ThreatShield.Systems
 
-  alias ThreatShield.Assets.Asset
   alias ThreatShield.Assets
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Threats

@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:24
+#: lib/threat_shield_web/components/core_components.ex:669
 #, elixir-autogen, elixir-format
-msgid "Location"
+msgid "Create organisation"
 msgstr ""

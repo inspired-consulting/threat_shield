@@ -11,13 +11,13 @@
 msgid ""
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:474
+#: lib/threat_shield_web/components/core_components.ex:545
 #, elixir-autogen, elixir-format
 msgid "Actions"
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:76
-#: lib/threat_shield_web/components/core_components.ex:128
+#: lib/threat_shield_web/components/core_components.ex:101
+#: lib/threat_shield_web/components/core_components.ex:153
 #, elixir-autogen, elixir-format
 msgid "close"
 msgstr ""

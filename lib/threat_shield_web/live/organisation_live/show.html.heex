@@ -10,14 +10,14 @@
     <%= convert_date(@organisation.inserted_at) %>
   </:created>
   <:links>
-    <li class="px-4 py-2 text-gray-900 text-sm font-medium">
+    <li class="context-menu-item">
       <.link navigate={~p"/organisations/#{@organisation}/members"}>
         <%= dgettext("organisation", "Members") %>
       </.link>
     </li>
     <li
       :if={ThreatShield.Members.Rights.may(:delete_organisation, @membership)}
-      class="px-4 py-2 text-gray-900 text-sm font-medium"
+      class="context-menu-item"
     >
       <.link
         phx-click={JS.push("delete", value: %{organisation_id: @organisation.id})}
@@ -28,7 +28,7 @@
     </li>
     <li
       :if={ThreatShield.Members.Rights.may(:edit_organisation, @membership)}
-      class="px-4 py-2 text-gray-900 text-sm font-medium"
+      class="context-menu-item"
     >
       <.link patch={~p"/organisations/#{@organisation}/edit"} phx-click={JS.push_focus()}>
         <%= dgettext("common", "Edit") %>

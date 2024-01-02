@@ -11,28 +11,22 @@
 msgid ""
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/threat_component.ex:22
+#: lib/threat_shield_web/components/core_components.ex:697
 #, elixir-autogen, elixir-format
-msgid "New Threat"
+msgid "Account settings"
 msgstr ""
 
-#: lib/threat_shield_web/live/dashboard_live/index.html.heex:9
+#: lib/threat_shield_web/components/core_components.ex:711
 #, elixir-autogen, elixir-format
-msgid "Suggest Threats"
+msgid "Log out"
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/threat_component.ex:10
+#: lib/threat_shield_web/components/core_components.ex:686
 #, elixir-autogen, elixir-format
-msgid "Threats"
+msgid "Signed in as"
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/show.html.heex:26
-#: lib/threat_shield_web/live/threat_live/show.html.heex:25
+#: lib/threat_shield_web/components/core_components.ex:702
 #, elixir-autogen, elixir-format
-msgid "System"
-msgstr ""
-
-#: lib/threat_shield_web/live/threat_live/threat_component.ex:13
-#, elixir-autogen, elixir-format
-msgid "Threat: short description"
+msgid "Support"
 msgstr ""

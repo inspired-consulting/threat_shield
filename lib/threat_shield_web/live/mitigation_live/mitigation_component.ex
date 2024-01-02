@@ -19,24 +19,24 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationComponent do
               patch={@path_prefix <> "/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/new"}
             >
               <.button_primary>
-                <.icon name="hero-hand-raised" class="mr-1 mb-1" /><%= dgettext(
+                <.icon name="hero-cursor-arrow-ripple" class="mr-1 mb-1" /><%= dgettext(
                   "mitigations",
                   "New Mitigation"
                 ) %>
               </.button_primary>
             </.link>
             <.link>
-              <.button_primary
+              <.button_magic
                 :if={ThreatShield.Members.Rights.may(:create_mitigation, @membership)}
                 disabled={not is_nil(@asking_ai_for_mitigations)}
                 phx-click="suggest_mitigations"
                 phx-value-risk_id={@risk.id}
               >
-                <.icon name="hero-shield-check" class="mr-1 mb-1" /><%= dgettext(
+                <.icon name="hero-sparkles" class="mr-1 mb-1" /><%= dgettext(
                   "mitigations",
                   "Suggest Mitigations"
                 ) %>
-              </.button_primary>
+              </.button_magic>
             </.link>
           </:buttons>
         </.stacked_list_header>

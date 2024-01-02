@@ -6,20 +6,25 @@
     <%= @system.description %>
   </:description>
   <:links>
-    <.link
+    <li
       :if={ThreatShield.Members.Rights.may(:delete_system, @membership)}
-      phx-click={JS.push("delete", value: %{sys_id: @system.id})}
-      data-confirm="Are you sure?"
+      class="context-menu-item"
     >
-      <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
-    </.link>
-    <.link
-      :if={ThreatShield.Members.Rights.may(:edit_system, @membership)}
-      patch={~p"/organisations/#{@organisation.id}/systems/#{@system}/edit"}
-      phx-click={JS.push_focus()}
-    >
-      <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
-    </.link>
+      <.link
+        phx-click={JS.push("delete", value: %{sys_id: @system.id})}
+        data-confirm="Are you sure?"
+      >
+        <%= dgettext("common", "Delete") %>
+      </.link>
+    </li>
+    <li :if={ThreatShield.Members.Rights.may(:edit_system, @membership)} class="context-menu-item">
+      <.link
+        patch={~p"/organisations/#{@organisation.id}/systems/#{@system}/edit"}
+        phx-click={JS.push_focus()}
+      >
+        <%= dgettext("common", "Edit") %>
+      </.link>
+    </li>
   </:links>
   <:attribute>
     <.input_attribute attributes={@system.attributes}></.input_attribute>

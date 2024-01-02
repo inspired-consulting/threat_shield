@@ -11,14 +11,57 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:54
-#: lib/threat_shield_web/live/system_live/show.html.heex:28
+#: lib/threat_shield_web/components/core_components.ex:614
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:10
 #, elixir-autogen, elixir-format
 msgid "Assets"
 msgstr ""
 
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:56
-#: lib/threat_shield_web/live/system_live/show.html.heex:30
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:25
 #, elixir-autogen, elixir-format
 msgid "New Asset"
+msgstr ""
+
+#: lib/threat_shield_web/live/asset_live/asset_form.ex:15
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:13
+#, elixir-autogen, elixir-format
+msgid "Asset: short description"
+msgstr "An asset is any valuable entity within the organization that, if compromised, could have negative consequences. It can be tangible, such as databases and servers, or intangible, such as intellectual properties, confidential information, and brand reputation."
+
+#: lib/threat_shield_web/live/asset_live/asset_form.ex:41
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:66
+#: lib/threat_shield_web/live/asset_live/show.html.heex:45
+#, elixir-autogen, elixir-format
+msgid "Criticality of loss"
+msgstr ""
+
+#: lib/threat_shield_web/live/asset_live/asset_form.ex:49
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:80
+#: lib/threat_shield_web/live/asset_live/show.html.heex:59
+#, elixir-autogen, elixir-format
+msgid "Criticality of publication"
+msgstr ""
+
+#: lib/threat_shield_web/live/asset_live/asset_form.ex:45
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:73
+#: lib/threat_shield_web/live/asset_live/show.html.heex:52
+#, elixir-autogen, elixir-format
+msgid "Criticality of theft"
+msgstr ""
+
+#: lib/threat_shield_web/live/asset_live/asset_form.ex:55
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:60
+#: lib/threat_shield_web/live/asset_live/show.html.heex:37
+#, elixir-autogen, elixir-format
+msgid "Criticality overall"
+msgstr ""
+
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:39
+#, elixir-autogen, elixir-format
+msgid "Suggest Assets"
+msgstr ""
+
+#: lib/threat_shield_web/live/threat_live/threat_component.ex:36
+#, elixir-autogen, elixir-format
+msgid "Suggest Threats"
 msgstr ""

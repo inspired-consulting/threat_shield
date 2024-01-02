@@ -22,22 +22,25 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
               patch={@path_prefix <> "/assets/new"}
             >
               <.button_primary>
-                <.icon name="hero-hand-raised" class="mr-1 mb-1" /><%= dgettext("assets", "New Asset") %>
+                <.icon name="hero-cursor-arrow-ripple" class="mr-1 mb-1" /><%= dgettext(
+                  "assets",
+                  "New Asset"
+                ) %>
               </.button_primary>
             </.link>
             <.link>
-              <.button_primary
+              <.button_magic
                 :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
                 disabled={not is_nil(@asking_ai_for_assets)}
                 phx-click="suggest_assets"
                 phx-value-org_id={@organisation.id}
                 phx-value-sys_id={if is_nil(assigns[:system]), do: nil, else: @system.id}
               >
-                <.icon name="hero-shield-check" class="mr-1 mb-1" /><%= dgettext(
+                <.icon name="hero-sparkles" class="mr-1 mb-1" /><%= dgettext(
                   "assets",
                   "Suggest Assets"
                 ) %>
-              </.button_primary>
+              </.button_magic>
             </.link>
           </:buttons>
         </.stacked_list_header>
