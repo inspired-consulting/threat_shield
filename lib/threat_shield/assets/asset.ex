@@ -34,6 +34,20 @@ defmodule ThreatShield.Assets.Asset do
   def system_name(%__MODULE__{system: %{name: name}}), do: name
   def system_name(_), do: "None"
 
+  def calc_overall_criticality(%__MODULE__{
+        criticality_loss: loss,
+        criticality_theft: theft,
+        criticality_publication: publication,
+        criticality_overall: overall
+      }) do
+    if not is_nil(loss) and not is_nil(theft) and not is_nil(publication) do
+      calc = (loss + theft + publication) / 3
+      max(calc, overall)
+    else
+      overall
+    end
+  end
+
   import Ecto.Query
 
   def get(id) do

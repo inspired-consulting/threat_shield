@@ -49,11 +49,12 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
             label={dgettext("assets", "Criticality of publication")}
           />
         </div>
-        <.criticality_picker
-          field={@form[:criticality_overall]}
-          label={dgettext("assets", "Criticality overall")}
-          readonly
-        />
+        <div class="py-5">
+          <.criticality_picker
+            field={@form[:criticality_overall]}
+            label={dgettext("assets", "Criticality overall")}
+          />
+        </div>
         <:actions>
           <.button_primary phx-disable-with="Saving...">Save Asset</.button_primary>
         </:actions>

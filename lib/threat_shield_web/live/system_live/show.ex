@@ -50,9 +50,11 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   end
 
   defp apply_action(socket, :new_asset, _params) do
+    current_system = socket.assigns.system
+
     socket
     |> assign(:page_title, "New Asset")
-    |> assign(:asset, %Asset{})
+    |> assign(:asset, Assets.prepare_asset(current_system.id))
   end
 
   defp apply_action(socket, :new_threat, _params) do
