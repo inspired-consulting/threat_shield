@@ -28,32 +28,37 @@
   </:attribute>
 
   <:custom>
-    <div class="mt-5 w-full space-y-2">
-      <hr />
-      <.criticality_display
-        name="criticality_loss"
-        value={@asset.criticality_loss}
-        label={dgettext("assets", "Criticality of loss")}
-      />
-      <.criticality_display
-        name="criticality_theft"
-        value={@asset.criticality_theft}
-        label={dgettext("assets", "Criticality of theft")}
-      />
-      <.criticality_display
-        name="criticality_publication"
-        value={@asset.criticality_publication}
-        label={dgettext("assets", "Criticality of publication")}
-      />
-
-      <hr />
-
-      <.criticality_display
-        name="criticality_overall"
-        value={@asset.criticality_overall}
-        label={dgettext("assets", "Criticality overall")}
-        readonly
-      />
+    <hr class="my-5" />
+    <div class="grid grid-cols-4 gap-4 w-full">
+      <div class="bg-gray-100 px-4 py-3 rounded-md border-2 border-purple-00">
+        <.criticality_display
+          name="criticality_overall"
+          value={@asset.criticality_overall}
+          label={dgettext("assets", "Criticality overall")}
+          readonly
+        />
+      </div>
+      <div class="bg-gray-100 px-4 py-3 rounded-md">
+        <.criticality_display
+          name="criticality_loss"
+          value={@asset.criticality_loss}
+          label={dgettext("assets", "Criticality of loss")}
+        />
+      </div>
+      <div class="bg-gray-100 px-4 py-3 rounded-md">
+        <.criticality_display
+          name="criticality_theft"
+          value={@asset.criticality_theft}
+          label={dgettext("assets", "Criticality of theft")}
+        />
+      </div>
+      <div class="bg-gray-100 px-4 py-3 rounded-md">
+        <.criticality_display
+          name="criticality_publication"
+          value={@asset.criticality_publication}
+          label={dgettext("assets", "Criticality of publication")}
+        />
+      </div>
     </div>
   </:custom>
 </.card_detail>

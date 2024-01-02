@@ -51,10 +51,31 @@ defmodule ThreatShieldWeb.TsComponents do
 
   def criticality_display(assigns) do
     ~H"""
-    <.label for={@id}><%= @label %></.label>
+    <div class="flex justify-between">
+      <.label for={@id}><%= @label %></.label>
+      <span
+        class="inline-block w-10 h-10 text-center leading-9 text-gray-800 font-semibold rounded-full appearance-none cursor-pointer border-2"
+        style={"background-color: #{color_code_for_criticality(@value, 0.4)}; border-color: #{color_code_for_criticality(@value, 1)}"}
+      >
+        <%= @value %>
+      </span>
+    </div>
+    """
+  end
+
+  attr :value, :any
+  attr :title, :string, default: nil
+  attr :size_classes, :string, default: "w-10 h-10 leading-9"
+
+  def criticality_batch(assigns) do
+    ~H"""
     <span
-      class="inline-block w-10 h-10 text-center leading-9 text-gray-800 font-semibold rounded-full appearance-none cursor-pointer border-2"
+      class={[
+        "inline-block text-center text-gray-800 font-semibold rounded-full appearance-none cursor-pointer border-2",
+        @size_classes
+      ]}
       style={"background-color: #{color_code_for_criticality(@value, 0.4)}; border-color: #{color_code_for_criticality(@value, 1)}"}
+      title={@title}
     >
       <%= @value %>
     </span>

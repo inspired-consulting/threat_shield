@@ -51,6 +51,33 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
             <%= asset.name %>
           </:col>
           <:col :let={asset}><%= asset.description %></:col>
+          <:col :let={asset}>
+            <.criticality_batch
+              value={asset.criticality_overall}
+              title={dgettext("assets", "Criticality overall")}
+            />
+          </:col>
+          <:col :let={asset}>
+            <.criticality_batch
+              value={asset.criticality_loss}
+              title={dgettext("assets", "Criticality of loss")}
+              size_classes="w-8 h-8 leading-7"
+            />
+          </:col>
+          <:col :let={asset}>
+            <.criticality_batch
+              value={asset.criticality_theft}
+              title={dgettext("assets", "Criticality of theft")}
+              size_classes="w-8 h-8 leading-7"
+            />
+          </:col>
+          <:col :let={asset}>
+            <.criticality_batch
+              value={asset.criticality_publication}
+              title={dgettext("assets", "Criticality of publication")}
+              size_classes="w-8 h-8 leading-7"
+            />
+          </:col>
         </.stacked_list>
 
         <p :if={Enum.empty?(@assets)} class="mt-4">
