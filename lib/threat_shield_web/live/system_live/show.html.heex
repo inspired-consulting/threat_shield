@@ -37,6 +37,7 @@
   <.live_component
     module={ThreatShieldWeb.AssetLive.AssetsList}
     organisation={@organisation}
+    current_user={@current_user}
     assets={@system.assets}
     system={@system}
     membership={@membership}
@@ -44,6 +45,20 @@
     asking_ai_for_threats={@asking_ai_for_threats}
     path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
     id={"assets_for_system_#{@system.id}"}
+  />
+
+  <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
+
+  <.live_component
+    id={"threats_for_system_#{@system.id}"}
+    module={ThreatShieldWeb.ThreatLive.ThreatsList}
+    current_user={@current_user}
+    organisation={@organisation}
+    membership={@membership}
+    system={@system}
+    threats={@system.threats}
+    asking_ai_for_threats={@asking_ai_for_threats}
+    path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
   />
 
   <.modal
@@ -64,58 +79,6 @@
       patch={~p"/organisations/#{@organisation}/systems/#{@system.id}"}
     />
   </.modal>
-
-  <.modal
-    :if={@live_action == :new_system}
-    id="system-modal"
-    show
-    on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
-  >
-    <.live_component
-      module={ThreatShieldWeb.SystemLive.SystemForm}
-      id={@system.id || :new}
-      title={@page_title}
-      action={@live_action}
-      system={@system}
-      organisation={@organisation}
-      current_user={@current_user}
-      attributes={System.attributes()}
-      patch={~p"/organisations/#{@organisation.id}"}
-    />
-  </.modal>
-
-  <.modal
-    :if={@live_action == :new_asset}
-    id="asset-modal"
-    show
-    on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/systems/#{@system.id}")}
-  >
-    <.live_component
-      module={ThreatShieldWeb.AssetLive.AssetForm}
-      id={@asset.id || :new}
-      title={@page_title}
-      action={@live_action}
-      current_user={@current_user}
-      organisation={@organisation}
-      system_options={list_system_options(@organisation)}
-      asset={@asset}
-      patch={~p"/organisations/#{@organisation.id}/systems/#{@system.id}"}
-    />
-  </.modal>
-
-  <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
-
-  <.live_component
-    id={"threats_for_system_#{@system.id}"}
-    module={ThreatShieldWeb.ThreatLive.ThreatsList}
-    current_user={@current_user}
-    organisation={@organisation}
-    membership={@membership}
-    system={@system}
-    threats={@system.threats}
-    asking_ai_for_threats={@asking_ai_for_threats}
-    path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
-  />
 
   <%= if not is_nil(@asking_ai_for_threats) or not is_nil(@asking_ai_for_assets) do %>
     <ThreatShieldWeb.Spinner.spinner />

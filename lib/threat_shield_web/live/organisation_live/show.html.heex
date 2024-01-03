@@ -97,6 +97,7 @@
 
   <.live_component
     module={ThreatShieldWeb.AssetLive.AssetsList}
+    current_user={@current_user}
     organisation={@organisation}
     assets={@organisation.assets}
     membership={@membership}
@@ -105,25 +106,6 @@
     path_prefix={"/organisations/#{@organisation.id}"}
     id={"assets_for_org_#{@organisation.id}"}
   />
-
-  <.modal
-    :if={@live_action == :new_asset}
-    id="asset-modal"
-    show
-    on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
-  >
-    <.live_component
-      module={ThreatShieldWeb.AssetLive.AssetForm}
-      id={@asset.id || :new}
-      title={@page_title}
-      action={@live_action}
-      current_user={@current_user}
-      organisation={@organisation}
-      system_options={list_system_options(@organisation)}
-      asset={@asset}
-      patch={~p"/organisations/#{@organisation.id}"}
-    />
-  </.modal>
 
   <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 

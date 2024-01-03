@@ -75,8 +75,6 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
 
   @impl true
   def handle_event("validate", %{"asset" => asset_params}, socket) do
-    socket.assigns
-
     changeset =
       socket.assigns.asset
       |> update_with_fixed_system(socket)
@@ -101,10 +99,10 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
       {:ok, asset} ->
         notify_parent({:saved, asset})
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Asset updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        socket
+        |> put_flash(:info, "Asset updated successfully")
+        |> push_patch(to: socket.assigns.patch)
+        |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
@@ -118,11 +116,12 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
     case Assets.create_asset(user, organisation, asset_params |> update_with_fixed_system(socket)) do
       {:ok, asset} ->
         notify_parent({:saved, asset})
+        notify_asset_list(id: socket.assigns.parent_id, added_asset: asset)
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Asset created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        socket
+        |> put_flash(:info, "Asset created successfully")
+        |> push_patch(to: socket.assigns.patch)
+        |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
@@ -141,4 +140,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp notify_asset_list(msg),
+    do: send_update(self(), ThreatShieldWeb.AssetLive.AssetsList, msg)
 end

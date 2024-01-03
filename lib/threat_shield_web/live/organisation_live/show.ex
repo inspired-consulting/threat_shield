@@ -9,12 +9,11 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
 
   alias ThreatShield.Assets
   alias ThreatShield.Threats
-  alias ThreatShield.Assets.Asset
   alias ThreatShield.Systems.System
   alias ThreatShield.AI
 
   import ThreatShield.Organisations.Organisation,
-    only: [attributes: 0, list_system_options: 1]
+    only: [attributes: 0]
 
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, convert_date: 1]
 
@@ -76,12 +75,6 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
     socket
     |> assign(:page_title, "New System")
     |> assign(:system, %System{})
-  end
-
-  defp apply_action(socket, :new_asset, _params) do
-    socket
-    |> assign(:page_title, "New Asset")
-    |> assign(:asset, %Asset{})
   end
 
   @impl true

@@ -158,11 +158,6 @@ defmodule ThreatShield.Mitigations do
           false
       end
 
-    IO.puts(
-      "Mitigation status: #{to_string(mitigation.status)}" <>
-        " implemented: #{to_string(implemented)}"
-    )
-
     mitigation_cs
     |> Ecto.Changeset.put_change(:is_implemented, implemented)
   end

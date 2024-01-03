@@ -23,7 +23,7 @@ defmodule ThreatShield.Assets.Asset do
   def changeset(asset, attrs) do
     asset
     |> cast(attrs, @fields)
-    |> validate_required([:description, :organisation, :name])
+    |> validate_required([:name, :description, :organisation])
     |> validate_length(:name, max: 60)
   end
 

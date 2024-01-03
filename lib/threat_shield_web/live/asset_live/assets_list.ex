@@ -1,6 +1,13 @@
 defmodule ThreatShieldWeb.AssetLive.AssetsList do
   use ThreatShieldWeb, :live_component
 
+  alias ThreatShield.Assets
+
+  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Systems.System
+
+  require Logger
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -19,7 +26,8 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
           <:buttons>
             <.link
               :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
-              patch={@path_prefix <> "/assets/new"}
+              phx-click="open-modal"
+              phx-target={@myself}
             >
               <.button_primary>
                 <.icon name="hero-cursor-arrow-ripple" class="mr-1 mb-1" /><%= dgettext(
@@ -87,7 +95,62 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
           There are no assets. Please add them manually.
         </p>
       </div>
+
+      <.modal
+        :if={assigns[:show_modal] == true}
+        id="create-assets-modal"
+        show
+        on_cancel={JS.navigate(@path_prefix)}
+      >
+        <.live_component
+          module={ThreatShieldWeb.AssetLive.AssetForm}
+          id={:new}
+          parent_id={@id}
+          title={dgettext("assets", "New Asset")}
+          action={:new_asset}
+          current_user={@current_user}
+          organisation={@organisation}
+          system_options={systems_of_organisaton(@organisation)}
+          asset={prepare_asset(assigns)}
+          patch={@path_prefix}
+        />
+      </.modal>
     </div>
     """
   end
+
+  # events
+
+  @impl true
+  def handle_event("open-modal", _params, socket) do
+    socket
+    |> assign(:show_modal, true)
+    |> noreply()
+  end
+
+  @impl true
+  def update(%{added_asset: _threat}, socket) do
+    socket
+    |> assign(:show_modal, false)
+    |> ok()
+  end
+
+  @impl true
+  def update(assigns, socket) do
+    socket
+    |> assign(assigns)
+    |> ok()
+  end
+
+  # internal
+
+  defp systems_of_organisaton(%Organisation{} = organisation) do
+    Organisation.list_system_options(organisation)
+  end
+
+  defp prepare_asset(%{system: %System{} = system}) do
+    Assets.prepare_asset(system.id)
+  end
+
+  defp prepare_asset(_other), do: Assets.prepare_asset()
 end

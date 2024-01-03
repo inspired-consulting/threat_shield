@@ -9,7 +9,6 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   alias ThreatShield.AI
   alias ThreatShield.Systems.System
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
-  import ThreatShield.Assets.Asset, only: [list_system_options: 1]
 
   @impl true
   def mount(%{"sys_id" => id}, _session, socket) do
@@ -45,14 +44,6 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   defp apply_action(socket, :edit_system, _params) do
     socket
     |> assign(:page_title, "Edit System")
-  end
-
-  defp apply_action(socket, :new_asset, _params) do
-    current_system = socket.assigns.system
-
-    socket
-    |> assign(:page_title, "New Asset")
-    |> assign(:asset, Assets.prepare_asset(current_system.id))
   end
 
   @impl true

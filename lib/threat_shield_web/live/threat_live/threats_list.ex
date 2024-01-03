@@ -92,7 +92,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           organisation={@organisation}
           system_options={systems_of_organisaton(@organisation)}
           threat={prepare_threat(assigns)}
-          patch={~p"/organisations/#{@organisation.id}"}
+          patch={@pa}
         />
       </.modal>
     </div>
@@ -101,8 +101,6 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
 
   @impl true
   def handle_event("open-modal", _params, socket) do
-    Logger.debug("Opening modal")
-
     socket
     |> assign(:show_modal, true)
     |> noreply()
@@ -114,9 +112,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   end
 
   @impl true
-  def update(%{added_threat: _threat}, socket) do
-    Logger.debug("Closing modal")
-
+  def update(%{added_threat: _asset}, socket) do
     socket
     |> assign(:show_modal, false)
     |> ok()
@@ -136,7 +132,6 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   end
 
   defp prepare_threat(%{system: %System{} = system}) do
-    Logger.info("Preparing threat for system #{inspect(system)}")
     %Threat{system: system, system_id: system.id}
   end
 
