@@ -11,17 +11,117 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: lib/threat_shield_web/live/mitigation_live/mitigation_component.ex:10
+#: lib/threat_shield_web/live/mitigation_live/mitigations_list.ex:14
 #, elixir-autogen, elixir-format
 msgid "Mitigations"
 msgstr ""
 
-#: lib/threat_shield_web/live/mitigation_live/mitigation_component.ex:35
+#: lib/threat_shield_web/live/mitigation_live/mitigations_list.ex:42
 #, elixir-autogen, elixir-format
 msgid "Suggest Mitigations"
 msgstr ""
 
-#: lib/threat_shield_web/live/mitigation_live/mitigation_component.ex:22
+#: lib/threat_shield_web/live/mitigation_live/mitigations_list.ex:29
 #, elixir-autogen, elixir-format, fuzzy
 msgid "New Mitigation"
+msgstr ""
+
+#: lib/threat_shield_web/live/mitigation_live/mitigation_form.ex:14
+#: lib/threat_shield_web/live/mitigation_live/mitigations_list.ex:17
+#, elixir-autogen, elixir-format
+msgid "Mitigations: short description"
+msgstr "Mitigations are strategies and measures put in place to mitigate the risks of a particular threat."
+
+#: lib/threat_shield_web/live/mitigation_live/mitigation_form.ex:32
+#, elixir-autogen, elixir-format
+msgid "Description"
+msgstr ""
+
+#: lib/threat_shield_web/live/mitigation_live/mitigation_form.ex:49
+#: lib/threat_shield_web/live/mitigation_live/show.html.heex:52
+#, elixir-autogen, elixir-format
+msgid "Implementation date"
+msgstr ""
+
+#: lib/threat_shield_web/live/mitigation_live/mitigation_form.ex:44
+#, elixir-autogen, elixir-format
+msgid "Implementation notes"
+msgstr ""
+
+#: lib/threat_shield_web/live/mitigation_live/mitigation_form.ex:34
+#, elixir-autogen, elixir-format
+msgid "Issue link"
+msgstr ""
+
+#: lib/threat_shield_web/live/mitigation_live/mitigation_form.ex:28
+#, elixir-autogen, elixir-format
+msgid "Name"
+msgstr ""
+
+#: lib/threat_shield_web/live/mitigation_live/mitigation_form.ex:38
+#, elixir-autogen, elixir-format
+msgid "Status"
+msgstr ""
+
+#: lib/threat_shield_web/live/mitigation_live/mitigation_form.ex:66
+#: lib/threat_shield_web/live/mitigation_live/show.html.heex:64
+#, elixir-autogen, elixir-format
+msgid "Verification date"
+msgstr ""
+
+#: lib/threat_shield_web/live/mitigation_live/mitigation_form.ex:56
+#: lib/threat_shield_web/live/mitigation_live/show.html.heex:56
+#, elixir-autogen, elixir-format
+msgid "Verification method"
+msgstr ""
+
+#: lib/threat_shield_web/live/mitigation_live/mitigation_form.ex:61
+#: lib/threat_shield_web/live/mitigation_live/show.html.heex:60
+#, elixir-autogen, elixir-format
+msgid "Verification result"
+msgstr ""
+
+#: lib/threat_shield_web/components/labels.ex:62
+#, elixir-autogen, elixir-format
+msgid "State:deferred"
+msgstr "Deferred"
+
+#: lib/threat_shield_web/components/labels.ex:61
+#, elixir-autogen, elixir-format
+msgid "State:failed"
+msgstr "Failed"
+
+#: lib/threat_shield_web/components/labels.ex:59
+#, elixir-autogen, elixir-format
+msgid "State:implemented"
+msgstr "Implemented"
+
+#: lib/threat_shield_web/components/labels.ex:58
+#, elixir-autogen, elixir-format
+msgid "State:in_progress"
+msgstr "In progress"
+
+#: lib/threat_shield_web/components/labels.ex:63
+#, elixir-autogen, elixir-format
+msgid "State:obsolete"
+msgstr "Obsolete"
+
+#: lib/threat_shield_web/components/labels.ex:57
+#, elixir-autogen, elixir-format
+msgid "State:open"
+msgstr "Open"
+
+#: lib/threat_shield_web/components/labels.ex:60
+#, elixir-autogen, elixir-format
+msgid "State:verified"
+msgstr "Verified"
+
+#: lib/threat_shield_web/live/mitigation_live/show.html.heex:40
+#, elixir-autogen, elixir-format
+msgid "Is implemented"
+msgstr ""
+
+#: lib/threat_shield_web/live/mitigation_live/show.html.heex:46
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Implementation note"
 msgstr ""

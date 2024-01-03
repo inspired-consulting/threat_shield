@@ -29,13 +29,13 @@
 
   <:attribute>
     <.label><%= dgettext("threats", "System") %></.label>
-    <p><%= system_name(@asset) %></p>
+    <p><%= system_label(@asset) %></p>
   </:attribute>
 
   <:custom>
     <hr class="my-5" />
     <div class="grid grid-cols-4 gap-4 w-full">
-      <div class="bg-gray-100 px-4 py-3 rounded-md border-2 border-purple-00">
+      <div class="bg-gray-100 px-4 py-3 rounded-md border-2 border-purple-200">
         <.criticality_display
           name="criticality_overall"
           value={@asset.criticality_overall}

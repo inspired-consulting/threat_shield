@@ -86,7 +86,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.ThreatLive.FormComponent, {:saved, threat}}, socket) do
+  def handle_info({ThreatShieldWeb.ThreatLive.ThreatForm, {:saved, threat}}, socket) do
     stale_sys = socket.assigns.system
     updated_sys = %{stale_sys | threats: stale_sys.threats ++ [threat]}
 

@@ -22,11 +22,10 @@ msgstr ""
 msgid "New Asset"
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/asset_form.ex:15
 #: lib/threat_shield_web/live/asset_live/assets_list.ex:13
 #, elixir-autogen, elixir-format
 msgid "Asset: short description"
-msgstr "An asset is any valuable entity within the organization that, if compromised, could have negative consequences. It can be tangible, such as databases and servers, or intangible, such as intellectual properties, confidential information, and brand reputation."
+msgstr "An asset is any valuable entity within the organization that, if compromised, could have negative consequences."
 
 #: lib/threat_shield_web/live/asset_live/asset_form.ex:41
 #: lib/threat_shield_web/live/asset_live/assets_list.ex:66
@@ -61,7 +60,12 @@ msgstr ""
 msgid "Suggest Assets"
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/threat_component.ex:36
+#: lib/threat_shield_web/live/threat_live/threats_list.ex:42
 #, elixir-autogen, elixir-format
 msgid "Suggest Threats"
 msgstr ""
+
+#: lib/threat_shield_web/live/asset_live/asset_form.ex:15
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Asset: long description"
+msgstr "An asset is any valuable entity within the organization that, if compromised, could have negative consequences. It can be tangible, such as databases and servers, or intangible, such as intellectual properties, confidential information, and brand reputation."

@@ -860,6 +860,7 @@ defmodule ThreatShieldWeb.CoreComponents do
   slot :attribute, required: false
   slot :custom, required: false
   slot :links, required: true
+  attr :columns, :integer, default: 2
 
   def card_detail(assigns) do
     ~H"""
@@ -881,7 +882,10 @@ defmodule ThreatShieldWeb.CoreComponents do
         </div>
       </div>
       <%= if @attribute != [] do %>
-        <div class="w-full grid grid-cols-4 gap-4 mt-2 p-6 bg-neutral-100">
+        <div class={[
+          "w-full grid gap-4 mt-2 px-6 py-4 bg-primary-100",
+          "grid-cols-#{@columns}"
+        ]}>
           <%= render_slot(@attribute) %>
         </div>
       <% end %>
@@ -943,7 +947,7 @@ defmodule ThreatShieldWeb.CoreComponents do
           </div>
         </div>
       </div>
-      <div class="w-full grid grid-cols-3 gap-4  p-6">
+      <div class="w-full grid grid-cols-3 gap-3 px-2 py-4">
         <%= render_slot(@attribute) %>
       </div>
     </section>
@@ -953,7 +957,7 @@ defmodule ThreatShieldWeb.CoreComponents do
   def input_attribute(assigns) do
     ~H"""
     <%= for {key, value} <- @attributes do %>
-      <div class="bg-white p-4 w-72">
+      <div class="grid gap-2 px-6 py-4 w-72">
         <div class="text-gray-400 text-xs font-medium"><%= key %></div>
         <div class="text-gray-900 text-sm font-normal"><%= value %></div>
       </div>

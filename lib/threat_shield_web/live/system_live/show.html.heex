@@ -105,7 +105,7 @@
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 
 <.live_component
-  module={ThreatShieldWeb.ThreatLive.ThreatComponent}
+  module={ThreatShieldWeb.ThreatLive.ThreatsList}
   organisation={@organisation}
   membership={@membership}
   threats={@system.threats}
@@ -122,7 +122,7 @@
   on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
 >
   <.live_component
-    module={ThreatShieldWeb.ThreatLive.FormComponent}
+    module={ThreatShieldWeb.ThreatLive.ThreatForm}
     id={@threat.id || :new}
     title={@page_title}
     action={@live_action}

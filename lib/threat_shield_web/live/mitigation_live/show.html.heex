@@ -1,33 +1,68 @@
-<.card_detail>
+<.card_detail columns={3}>
   <:name>
-  <%= @mitigation.name %>
+    <%= @mitigation.name %>
   </:name>
   <:description>
-  <%= @mitigation.description %>
+    <%= @mitigation.description %>
   </:description>
-  <:links> 
-      <.link
+  <:status>
+    <.mitigation_status_badge status={@mitigation.status} />
+  </:status>
+  <:links>
+    <li
       :if={ThreatShield.Members.Rights.may(:delete_mitigation, @membership)}
-      phx-click={JS.push("delete", value: %{mitigation_id: @mitigation.id})}
-      data-confirm="Are you sure?"
+      class="context-menu-item"
     >
-      <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
-    </.link>
-    <.link
+      <.link
+        phx-click={JS.push("delete", value: %{mitigation_id: @mitigation.id})}
+        data-confirm="Are you sure?"
+      >
+        <%= dgettext("common", "Delete") %>
+      </.link>
+    </li>
+    <li
       :if={ThreatShield.Members.Rights.may(:edit_mitigation, @membership)}
-      patch={
+      class="context-menu-item"
+    >
+      <.link
+        patch={
         get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/#{@mitigation.id}/edit"
       }
-      phx-click={JS.push_focus()}
-    >
-      <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
-    </.link>
-    </:links>
+        phx-click={JS.push_focus()}
+      >
+        <%= dgettext("common", "Edit") %>
+      </.link>
+    </li>
+  </:links>
 
   <:attribute>
     <div>
-      <.label><%= dgettext("risks", "Is implemented") %></.label>
-      <p><%= @mitigation.is_implemented %></p>
+      <.label><%= dgettext("mitigations", "Is implemented") %></.label>
+      <p>
+        <.boolean_status_icon value={@mitigation.is_implemented} />
+      </p>
+    </div>
+    <div>
+      <.label><%= dgettext("mitigations", "Implementation note") %></.label>
+      <p>
+        <%= @mitigation.implementation_notes %>
+      </p>
+    </div>
+    <div>
+      <.label><%= dgettext("mitigations", "Implementation date") %></.label>
+      <p><%= @mitigation.implementation_date %></p>
+    </div>
+    <div>
+      <.label><%= dgettext("mitigations", "Verification method") %></.label>
+      <p><%= @mitigation.verification_method %></p>
+    </div>
+    <div>
+      <.label><%= dgettext("mitigations", "Verification result") %></.label>
+      <p><%= @mitigation.verification_result %></p>
+    </div>
+    <div>
+      <.label><%= dgettext("mitigations", "Verification date") %></.label>
+      <p><%= @mitigation.verification_date %></p>
     </div>
   </:attribute>
 </.card_detail>
@@ -44,7 +79,7 @@
   }
 >
   <.live_component
-    module={ThreatShieldWeb.MitigationLive.FormComponent}
+    module={ThreatShieldWeb.MitigationLive.MitigationForm}
     id={@mitigation.id}
     title={@page_title}
     action={@live_action}

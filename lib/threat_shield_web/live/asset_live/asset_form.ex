@@ -14,7 +14,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
       <p>
         <%= dgettext(
           "assets",
-          "Asset: short description"
+          "Asset: long description"
         ) %>
       </p>
 

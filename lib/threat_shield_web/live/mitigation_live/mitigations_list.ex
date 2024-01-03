@@ -1,5 +1,9 @@
-defmodule ThreatShieldWeb.MitigationLive.MitigationComponent do
+defmodule ThreatShieldWeb.MitigationLive.MitigationsList do
   use ThreatShieldWeb, :live_component
+
+  @moduledoc """
+  This component renders a list of mitigations for a given risk.
+  """
 
   @impl true
   def render(assigns) do
@@ -10,7 +14,10 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationComponent do
           <:name><%= dgettext("mitigations", "Mitigations") %></:name>
 
           <:subtitle>
-            Mitigations are strategies and measures put in place to mitigate the risks of a particular threat.
+            <%= dgettext(
+              "mitigations",
+              "Mitigations: short description"
+            ) %>
           </:subtitle>
 
           <:buttons>
@@ -56,11 +63,15 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationComponent do
           <:col :let={mitigation}>
             <%= mitigation.name %>
           </:col>
+          <:col :let={mitigation}><.boolean_status_icon value={mitigation.is_implemented} /></:col>
+          <:col :let={mitigation}>
+            <.mitigation_status_badge status={mitigation.status} light />
+          </:col>
           <:col :let={mitigation}><%= mitigation.description %></:col>
         </.stacked_list>
 
         <p :if={Enum.empty?(@mitigations)} class="mt-4">
-          There are no mitigations. Please add them manually.
+          There are no mitigations. Please add them manually or let suggest some from the AI assistant.
         </p>
       </div>
     </div>

@@ -13,9 +13,9 @@ msgstr ""
 
 #: lib/threat_shield_web/live/asset_live/show.html.heex:17
 #: lib/threat_shield_web/live/members_live/index.html.heex:29
-#: lib/threat_shield_web/live/mitigation_live/show.html.heex:14
+#: lib/threat_shield_web/live/mitigation_live/show.html.heex:20
 #: lib/threat_shield_web/live/organisation_live/show.html.heex:26
-#: lib/threat_shield_web/live/risk_live/show.html.heex:14
+#: lib/threat_shield_web/live/risk_live/show.html.heex:17
 #: lib/threat_shield_web/live/system_live/show.html.heex:17
 #: lib/threat_shield_web/live/threat_live/show.html.heex:17
 #, elixir-autogen, elixir-format
@@ -24,9 +24,9 @@ msgstr ""
 
 #: lib/threat_shield_web/live/asset_live/show.html.heex:25
 #: lib/threat_shield_web/live/members_live/index.html.heex:38
-#: lib/threat_shield_web/live/mitigation_live/show.html.heex:23
+#: lib/threat_shield_web/live/mitigation_live/show.html.heex:33
 #: lib/threat_shield_web/live/organisation_live/show.html.heex:34
-#: lib/threat_shield_web/live/risk_live/show.html.heex:21
+#: lib/threat_shield_web/live/risk_live/show.html.heex:25
 #: lib/threat_shield_web/live/system_live/show.html.heex:25
 #: lib/threat_shield_web/live/threat_live/show.html.heex:25
 #, elixir-autogen, elixir-format
@@ -53,7 +53,12 @@ msgstr ""
 msgid "View"
 msgstr ""
 
-#: lib/threat_shield_web/live/risk_live/risk_form.ex:50
+#: lib/threat_shield_web/live/risk_live/risk_form.ex:57
 #, elixir-autogen, elixir-format
 msgid "Saving..."
+msgstr ""
+
+#: lib/threat_shield_web/components/labels.ex:21
+#, elixir-autogen, elixir-format
+msgid "Organisation wide"
 msgstr ""

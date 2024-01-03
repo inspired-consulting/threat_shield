@@ -49,7 +49,7 @@ defmodule ThreatShieldWeb.MitigationLive.Show do
 
   @impl true
   def handle_info(
-        {ThreatShieldWeb.MitigationLive.FormComponent, {:saved, mitigation}},
+        {ThreatShieldWeb.MitigationLive.MitigationForm, {:saved, mitigation}},
         socket
       ) do
     mitigation = Mitigations.get_mitigation!(socket.assigns.current_user, mitigation.id)

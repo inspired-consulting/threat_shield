@@ -1,7 +1,8 @@
-defmodule ThreatShieldWeb.MitigationLive.FormComponent do
+defmodule ThreatShieldWeb.MitigationLive.MitigationForm do
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.Mitigations
+  alias ThreatShieldWeb.Labels
 
   @impl true
   def render(assigns) do
@@ -9,7 +10,12 @@ defmodule ThreatShieldWeb.MitigationLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage mitigation records in your database.</:subtitle>
+        <:subtitle>
+          <%= dgettext(
+            "mitigations",
+            "Mitigations: short description"
+          ) %>
+        </:subtitle>
       </.header>
 
       <.simple_form
@@ -19,9 +25,47 @@ defmodule ThreatShieldWeb.MitigationLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:description]} type="text" label="Description" />
-        <.input field={@form[:is_implemented]} type="checkbox" label="Is implemented" />
+        <.input field={@form[:name]} type="text" label={dgettext("mitigations", "Name")} />
+        <.input
+          field={@form[:description]}
+          type="text"
+          label={dgettext("mitigations", "Description")}
+        />
+        <.input field={@form[:issue_link]} type="text" label={dgettext("mitigations", "Issue link")} />
+        <.input
+          field={@form[:status]}
+          type="select"
+          label={dgettext("mitigations", "Status")}
+          options={status_options()}
+        />
+        <.input
+          field={@form[:implementation_notes]}
+          type="text"
+          label={dgettext("mitigations", "Implementation notes")}
+        />
+        <.input
+          field={@form[:implementation_date]}
+          type="date"
+          label={dgettext("mitigations", "Implementation date")}
+        />
+
+        <hr />
+        <.input
+          field={@form[:verification_method]}
+          type="text"
+          label={dgettext("mitigations", "Verification method")}
+        />
+        <.input
+          field={@form[:verification_result]}
+          type="text"
+          label={dgettext("mitigations", "Verification result")}
+        />
+        <.input
+          field={@form[:verification_date]}
+          type="date"
+          label={dgettext("mitigations", "Verification date")}
+        />
+
         <:actions>
           <.button_primary phx-disable-with="Saving...">Save Mitigation</.button_primary>
         </:actions>
@@ -52,6 +96,11 @@ defmodule ThreatShieldWeb.MitigationLive.FormComponent do
 
   def handle_event("save", %{"mitigation" => mitigation_params}, socket) do
     save_mitigation(socket, socket.assigns.action, mitigation_params)
+  end
+
+  def status_options() do
+    Labels.available_mitigation_states()
+    |> Enum.map(fn {key, label} -> {label, key} end)
   end
 
   defp save_mitigation(socket, :edit_mitigation, mitigation_params) do

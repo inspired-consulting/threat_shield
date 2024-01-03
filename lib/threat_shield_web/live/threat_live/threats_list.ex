@@ -1,5 +1,11 @@
-defmodule ThreatShieldWeb.ThreatLive.ThreatComponent do
+defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   use ThreatShieldWeb, :live_component
+
+  import ThreatShieldWeb.Labels, only: [system_label: 1]
+
+  @moduledoc """
+  This component renders a list of threats for a given system or for the organization.
+  """
 
   @impl true
   def render(assigns) do
@@ -50,11 +56,14 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatComponent do
           <:col :let={threat}>
             <%= threat.name %>
           </:col>
+          <:col :let={threat}>
+            <%= system_label(threat) %>
+          </:col>
           <:col :let={threat}><%= threat.description %></:col>
         </.stacked_list>
 
         <p :if={Enum.empty?(@threats)} class="mt-4">
-          There are no threats. Please add them manually.
+          There are no threats. Please add them manually or let the AI assistant make some suggestions.
         </p>
       </div>
     </div>

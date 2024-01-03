@@ -90,10 +90,40 @@ defmodule ThreatShieldWeb.TsComponents do
     ~H"""
     <span class={[
       "inline-flex items-center rounded-md px-4 py-1 text-xs font-bold text-center leading-1",
-      if(@light, do: "bg-neutral-300 text-white", else: "bg-neutral-600 text-gray-100")
+      if(@light, do: "bg-neutral-400 text-white", else: "bg-neutral-600 text-gray-100")
     ]}>
       <%= risk_status_label(assigns.status) %>
     </span>
+    """
+  end
+
+  attr :status, :string, default: nil
+  attr :light, :boolean, default: false
+
+  def mitigation_status_badge(assigns) do
+    ~H"""
+    <span class={[
+      "inline-flex items-center rounded-md px-4 py-1 text-xs font-bold text-center leading-1",
+      if(@light, do: "bg-neutral-400 text-white", else: "bg-neutral-600 text-gray-100")
+    ]}>
+      <%= mitigation_status_label(assigns.status) %>
+    </span>
+    """
+  end
+
+  attr :value, :boolean, default: false
+
+  def boolean_status_icon(assigns) do
+    ~H"""
+    <%= if @value do %>
+      <span class="bg-green-200 rounded-full p-1">
+        <.icon name="hero-check" class="text-green-600" />
+      </span>
+    <% else %>
+      <span class="bg-red-200 rounded-full p-1">
+        <.icon name="hero-x-mark" class="text-red-100 mb-0.5" />
+      </span>
+    <% end %>
     """
   end
 

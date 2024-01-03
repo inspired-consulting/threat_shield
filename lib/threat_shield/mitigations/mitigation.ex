@@ -12,9 +12,9 @@ defmodule ThreatShield.Mitigations.Mitigation do
       values: [:open, :in_progress, :implemented, :verified, :failed, :deferred, :obsolete],
       default: :open
 
-    field :is_implemented, :boolean, default: false
-    field :implementation_notes, :string
     field :implementation_date, :date
+    field :implementation_notes, :string
+    field :is_implemented, :boolean, default: false
 
     field :verification_date, :date
     field :verification_method, :string

@@ -73,7 +73,7 @@
   on_cancel={JS.patch(get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}")}
 >
   <.live_component
-    module={ThreatShieldWeb.MitigationLive.FormComponent}
+    module={ThreatShieldWeb.MitigationLive.MitigationForm}
     id={@mitigation.id || :new}
     title={@page_title}
     action={@live_action}
@@ -90,7 +90,7 @@
 />
 
 <.live_component
-  module={ThreatShieldWeb.MitigationLive.MitigationComponent}
+  module={ThreatShieldWeb.MitigationLive.MitigationsList}
   organisation={@organisation}
   id={"mitigations_for_risk_#{@risk.id}"}
   mitigations={@risk.mitigations}

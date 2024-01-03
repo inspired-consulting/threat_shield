@@ -11,7 +11,7 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: lib/threat_shield_web/live/threat_live/threat_component.ex:22
+#: lib/threat_shield_web/live/threat_live/threats_list.ex:28
 #, elixir-autogen, elixir-format, fuzzy
 msgid "New Threat"
 msgstr ""
@@ -21,18 +21,23 @@ msgstr ""
 msgid "Suggest Threats"
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/threat_component.ex:10
+#: lib/threat_shield_web/live/threat_live/threats_list.ex:16
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Threats"
 msgstr ""
 
 #: lib/threat_shield_web/live/asset_live/show.html.heex:31
-#: lib/threat_shield_web/live/threat_live/show.html.heex:30
+#: lib/threat_shield_web/live/threat_live/show.html.heex:31
 #, elixir-autogen, elixir-format
 msgid "System"
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/threat_component.ex:13
+#: lib/threat_shield_web/live/threat_live/threats_list.ex:19
 #, elixir-autogen, elixir-format
 msgid "Threat: short description"
-msgstr "Threats are any potential event or action that can compromise the security of a system, organisation, or individual. Threats are not the negative outcome, i.e. not the loss, damage, or harm resulting from the exploitation of vulnerabilities by threats."
+msgstr "Threats are any potential event or action that can compromise the security of a system, organisation, or individual"
+
+#: lib/threat_shield_web/live/threat_live/threat_form.ex:15
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Threat: long description"
+msgstr "Threats are any potential event or action that can compromise the security of a system, organisation, or individual. Threats are not the negative outcome, i.e. not the loss, damage, or harm resulting from the exploitation of vulnerabilities by threats. Therefore you can record risks."

@@ -64,7 +64,7 @@ defmodule ThreatShieldWeb.RiskLive.RisksList do
       </.stacked_list>
 
       <p :if={Enum.empty?(@risks)} class="mt-4">
-        There are no risks. Please add them manually.
+        There are no risks. Please add them manually or let the AI assistant make some suggestions.
       </p>
     </div>
     """

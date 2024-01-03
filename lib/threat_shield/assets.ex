@@ -155,7 +155,6 @@ defmodule ThreatShield.Assets do
   defp update_overall_criticality(%Ecto.Changeset{} = asset_cs) do
     asset = Ecto.Changeset.apply_changes(asset_cs)
     crit = Asset.calc_overall_criticality(asset)
-    IO.puts("crit: #{crit}")
 
     asset_cs
     |> Ecto.Changeset.put_change(:criticality_overall, crit)

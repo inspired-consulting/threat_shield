@@ -1,4 +1,4 @@
-defmodule ThreatShieldWeb.ThreatLive.FormComponent do
+defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.Threats
@@ -10,6 +10,13 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
       <.header>
         <%= @title %>
       </.header>
+
+      <p class="help-text">
+        <%= dgettext(
+          "threats",
+          "Threat: long description"
+        ) %>
+      </p>
 
       <.simple_form
         for={@form}

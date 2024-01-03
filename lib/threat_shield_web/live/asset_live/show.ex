@@ -4,13 +4,12 @@ defmodule ThreatShieldWeb.AssetLive.Show do
   alias ThreatShield.Assets
   alias ThreatShield.Organisations.Organisation
 
-  import ThreatShield.Assets.Asset,
-    only: [system_name: 1]
-
   import ThreatShield.Organisations.Organisation,
     only: [list_system_options: 1]
 
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, get_path_prefix: 1]
+
+  import ThreatShieldWeb.Labels, only: [system_label: 1]
 
   @impl true
   def mount(%{"asset_id" => asset_id} = params, _session, socket) do

@@ -33,13 +33,6 @@ defmodule ThreatShieldWeb.RiskLive.RiskForm do
           label={dgettext("risks", "Status")}
           options={status_options()}
         >
-          <option value="identified">Identified</option>
-          <option value="assessed">Assessed</option>
-          <option value="mitigation_planned">Mitigation planned</option>
-          <option value="mitigation_in_progress">Mitigation in progress</option>
-          <option value="mitigated">Mitigated</option>
-          <option value="closed">Closed</option>
-          <option value="reopened">Reopened</option>
         </.input>
         <div class="my-2">
           <.criticality_picker field={@form[:severity]} label={dgettext("risks", "Severity")} />

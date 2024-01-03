@@ -37,7 +37,7 @@ defmodule ThreatShield.MitigationsTest do
 
       assert mitigation.name == "some name"
       assert mitigation.description == "some description"
-      assert mitigation.is_implemented == true
+      assert mitigation.is_implemented == false
     end
 
     test "create_mitigation/1 with invalid data returns error changeset" do

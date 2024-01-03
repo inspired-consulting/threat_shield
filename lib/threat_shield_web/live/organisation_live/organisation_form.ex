@@ -1,4 +1,4 @@
-defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
+defmodule ThreatShieldWeb.OrganisationLive.OrganisationForm do
   alias ThreatShield.DynamicAttribute
   use ThreatShieldWeb, :live_component
   import Phoenix.LiveView

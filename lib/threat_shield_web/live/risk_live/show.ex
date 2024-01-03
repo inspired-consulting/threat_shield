@@ -65,7 +65,7 @@ defmodule ThreatShieldWeb.RiskLive.Show do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.MitigationLive.FormComponent, {:saved, mitigation}}, socket) do
+  def handle_info({ThreatShieldWeb.MitigationLive.MitigationForm, {:saved, mitigation}}, socket) do
     stale_risk = socket.assigns.risk
     updated_risk = %{stale_risk | mitigations: stale_risk.mitigations ++ [mitigation]}
     {:noreply, socket |> assign(risk: updated_risk) |> assign(page_title: "Show Risk")}

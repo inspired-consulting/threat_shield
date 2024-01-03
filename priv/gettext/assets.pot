@@ -22,7 +22,6 @@ msgstr ""
 msgid "New Asset"
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/asset_form.ex:15
 #: lib/threat_shield_web/live/asset_live/assets_list.ex:13
 #, elixir-autogen, elixir-format
 msgid "Asset: short description"
@@ -61,7 +60,12 @@ msgstr ""
 msgid "Suggest Assets"
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/threat_component.ex:36
+#: lib/threat_shield_web/live/threat_live/threats_list.ex:42
 #, elixir-autogen, elixir-format
 msgid "Suggest Threats"
+msgstr ""
+
+#: lib/threat_shield_web/live/asset_live/asset_form.ex:15
+#, elixir-autogen, elixir-format
+msgid "Asset: long description"
 msgstr ""
