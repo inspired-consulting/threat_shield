@@ -66,13 +66,32 @@
 
 <section class="ts-container mt-8">
   <.live_component
-    module={ThreatShieldWeb.SystemLive.SystemComponent}
+    module={ThreatShieldWeb.SystemLive.SystemsList}
     organisation={@organisation}
     membership={@membership}
     threat_count={@threat_count}
     asset_count={@asset_count}
     id={"systems_for_org_#{@organisation.id}"}
   />
+
+  <.modal
+    :if={@live_action == :new_system}
+    id="system-modal"
+    show
+    on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
+  >
+    <.live_component
+      module={ThreatShieldWeb.SystemLive.SystemForm}
+      id={@system.id || :new}
+      title={@page_title}
+      action={@live_action}
+      system={@system}
+      organisation={@organisation}
+      current_user={@current_user}
+      attributes={System.attributes()}
+      patch={~p"/organisations/#{@organisation.id}"}
+    />
+  </.modal>
 
   <ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
 
@@ -86,44 +105,6 @@
     path_prefix={"/organisations/#{@organisation.id}"}
     id={"assets_for_org_#{@organisation.id}"}
   />
-
-  <.modal
-    :if={@live_action == :edit_organisation}
-    id="organisation-modal"
-    show
-    on_cancel={JS.patch(~p"/organisations/#{@organisation}")}
-  >
-    <.live_component
-      module={ThreatShieldWeb.OrganisationLive.OrganisationForm}
-      id={@organisation.id}
-      title={@page_title}
-      action={@live_action}
-      organisation={@organisation}
-      attributes={@attributes}
-      locations_options={@locations_options}
-      current_user={@current_user}
-      patch={~p"/organisations/#{@organisation}"}
-    />
-  </.modal>
-
-  <.modal
-    :if={@live_action == :new_system}
-    id="system-modal"
-    show
-    on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
-  >
-    <.live_component
-      module={ThreatShieldWeb.SystemLive.FormComponent}
-      id={@system.id || :new}
-      title={@page_title}
-      action={@live_action}
-      system={@system}
-      organisation={@organisation}
-      current_user={@current_user}
-      attributes={System.attributes()}
-      patch={~p"/organisations/#{@organisation.id}"}
-    />
-  </.modal>
 
   <.modal
     :if={@live_action == :new_asset}
@@ -172,6 +153,25 @@
       system_options={list_system_options(@organisation)}
       threat={@threat}
       patch={~p"/organisations/#{@organisation.id}"}
+    />
+  </.modal>
+
+  <.modal
+    :if={@live_action == :edit_organisation}
+    id="organisation-modal"
+    show
+    on_cancel={JS.patch(~p"/organisations/#{@organisation}")}
+  >
+    <.live_component
+      module={ThreatShieldWeb.OrganisationLive.OrganisationForm}
+      id={@organisation.id}
+      title={@page_title}
+      action={@live_action}
+      organisation={@organisation}
+      attributes={@attributes}
+      locations_options={@locations_options}
+      current_user={@current_user}
+      patch={~p"/organisations/#{@organisation}"}
     />
   </.modal>
 

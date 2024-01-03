@@ -1,4 +1,4 @@
-defmodule ThreatShieldWeb.SystemLive.SystemComponent do
+defmodule ThreatShieldWeb.SystemLive.SystemsList do
   use ThreatShieldWeb, :live_component
 
   @impl true

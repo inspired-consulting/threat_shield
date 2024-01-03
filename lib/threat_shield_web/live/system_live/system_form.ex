@@ -1,4 +1,4 @@
-defmodule ThreatShieldWeb.SystemLive.FormComponent do
+defmodule ThreatShieldWeb.SystemLive.SystemForm do
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.Systems

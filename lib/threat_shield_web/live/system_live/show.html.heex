@@ -53,7 +53,7 @@
     on_cancel={JS.patch(~p"/organisations/#{@organisation}/systems/#{@system.id}")}
   >
     <.live_component
-      module={ThreatShieldWeb.SystemLive.FormComponent}
+      module={ThreatShieldWeb.SystemLive.SystemForm}
       id={@system.id}
       title={@page_title}
       action={@live_action}
@@ -72,7 +72,7 @@
     on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
   >
     <.live_component
-      module={ThreatShieldWeb.SystemLive.FormComponent}
+      module={ThreatShieldWeb.SystemLive.SystemForm}
       id={@system.id || :new}
       title={@page_title}
       action={@live_action}

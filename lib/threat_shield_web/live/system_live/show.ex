@@ -64,7 +64,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
 
   @impl true
   def handle_info(
-        {ThreatShieldWeb.SystemLive.FormComponent, {:saved, system}},
+        {ThreatShieldWeb.SystemLive.SystemForm, {:saved, system}},
         socket
       ) do
     user = socket.assigns.current_user
