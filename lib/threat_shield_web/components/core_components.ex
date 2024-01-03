@@ -865,12 +865,12 @@ defmodule ThreatShieldWeb.CoreComponents do
   def card_detail(assigns) do
     ~H"""
     <section class="w-full px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
-      <div class="flex justify-between w-full pb-10 border-b border-gray-200">
+      <div class="flex justify-between w-full pb-8">
         <div class="min-h-10 pb-2">
           <.h3>
             <%= render_slot(@name) %>
           </.h3>
-          <p class="text-sm leading-6 text-gray-500 font-normal">
+          <p class="text-sm leading-6 text-gray-600 font-normal">
             <%= render_slot(@description) %>
           </p>
           <div :if={@status != []} class="my-2">
@@ -883,7 +883,7 @@ defmodule ThreatShieldWeb.CoreComponents do
       </div>
       <%= if @attribute != [] do %>
         <div class={[
-          "w-full grid gap-4 mt-2 px-6 py-4 bg-primary-100",
+          "w-full grid gap-4 mt-0 px-6 py-4 bg-primary-100",
           "grid-cols-#{@columns}"
         ]}>
           <%= render_slot(@attribute) %>
@@ -922,12 +922,12 @@ defmodule ThreatShieldWeb.CoreComponents do
   def card_detail_org(assigns) do
     ~H"""
     <section class="w-full px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
-      <div class="flex justify-between w-full pb-6 border-b border-gray-200">
+      <div class="flex justify-between w-full pb-6">
         <div class="h-20 pb-5">
           <.h3>
             <%= render_slot(@name) %>
           </.h3>
-          <p class="leading-6 text-gray-500 text-sm font-normal">
+          <p class="leading-6 text-gray-600 text-sm font-normal">
             <%= render_slot(@created) %>
           </p>
         </div>
@@ -947,7 +947,7 @@ defmodule ThreatShieldWeb.CoreComponents do
           </div>
         </div>
       </div>
-      <div class="w-full grid grid-cols-3 gap-3 px-2 py-4">
+      <div class="w-full grid grid-cols-3 gap-3 px-2 py-2 bg-primary-100">
         <%= render_slot(@attribute) %>
       </div>
     </section>
@@ -957,8 +957,8 @@ defmodule ThreatShieldWeb.CoreComponents do
   def input_attribute(assigns) do
     ~H"""
     <%= for {key, value} <- @attributes do %>
-      <div class="grid gap-2 px-6 py-4 w-72">
-        <div class="text-gray-400 text-xs font-medium"><%= key %></div>
+      <div class="grid gap-2 px-6 py-2 w-72">
+        <div class="text-gray-500 text-xs font-medium"><%= key %></div>
         <div class="text-gray-900 text-sm font-normal"><%= value %></div>
       </div>
     <% end %>

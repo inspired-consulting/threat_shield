@@ -72,7 +72,7 @@ defmodule ThreatShieldWeb.TsComponents do
     ~H"""
     <span
       class={[
-        "inline-block text-center text-gray-800 font-semibold rounded-full appearance-none cursor-pointer border-2",
+        "inline-block text-center text-gray-900 font-medium rounded-full appearance-none cursor-pointer border-2",
         @size_classes
       ]}
       style={"background-color: #{color_code_for_criticality(@value, 0.4)}; border-color: #{color_code_for_criticality(@value, 1)}"}
@@ -90,7 +90,7 @@ defmodule ThreatShieldWeb.TsComponents do
     ~H"""
     <span class={[
       "inline-flex items-center rounded-md px-4 py-1 text-xs font-bold text-center leading-1",
-      if(@light, do: "bg-neutral-400 text-white", else: "bg-neutral-600 text-gray-100")
+      if(@light, do: "bg-neutral-00 text-white", else: "bg-neutral-600 text-gray-100")
     ]}>
       <%= risk_status_label(assigns.status) %>
     </span>
