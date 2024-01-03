@@ -5,7 +5,6 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   alias ThreatShield.Systems
 
   alias ThreatShield.Assets
-  alias ThreatShield.Threats.Threat
   alias ThreatShield.Threats
   alias ThreatShield.AI
   alias ThreatShield.Systems.System
@@ -54,12 +53,6 @@ defmodule ThreatShieldWeb.SystemLive.Show do
     socket
     |> assign(:page_title, "New Asset")
     |> assign(:asset, Assets.prepare_asset(current_system.id))
-  end
-
-  defp apply_action(socket, :new_threat, _params) do
-    socket
-    |> assign(:page_title, "New Threat")
-    |> assign(:threat, %Threat{})
   end
 
   @impl true

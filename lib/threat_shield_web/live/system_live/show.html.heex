@@ -106,34 +106,16 @@
   <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 
   <.live_component
+    id={"threats_for_system_#{@system.id}"}
     module={ThreatShieldWeb.ThreatLive.ThreatsList}
+    current_user={@current_user}
     organisation={@organisation}
     membership={@membership}
-    threats={@system.threats}
     system={@system}
+    threats={@system.threats}
     asking_ai_for_threats={@asking_ai_for_threats}
     path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
-    id={"threats_for_system_#{@system.id}"}
   />
-
-  <.modal
-    :if={@live_action == :new_threat}
-    id="threat-modal"
-    show
-    on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
-  >
-    <.live_component
-      module={ThreatShieldWeb.ThreatLive.ThreatForm}
-      id={@threat.id || :new}
-      title={@page_title}
-      action={@live_action}
-      current_user={@current_user}
-      organisation={@organisation}
-      system_options={list_system_options(@organisation)}
-      threat={@threat}
-      patch={~p"/organisations/#{@organisation.id}"}
-    />
-  </.modal>
 
   <%= if not is_nil(@asking_ai_for_threats) or not is_nil(@asking_ai_for_assets) do %>
     <ThreatShieldWeb.Spinner.spinner />

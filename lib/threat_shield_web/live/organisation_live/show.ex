@@ -1,7 +1,8 @@
 defmodule ThreatShieldWeb.OrganisationLive.Show do
   alias ThreatShield.Organisations.Organisation
-  alias ThreatShield.Threats.Threat
   use ThreatShieldWeb, :live_view
+
+  require Logger
 
   alias ThreatShield.Organisations
   alias ThreatShield.Const.Locations
@@ -83,12 +84,6 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
     |> assign(:asset, %Asset{})
   end
 
-  defp apply_action(socket, :new_threat, _params) do
-    socket
-    |> assign(:page_title, "New Threat")
-    |> assign(:threat, %Threat{})
-  end
-
   @impl true
   def handle_info(
         {ThreatShieldWeb.OrganisationLive.AssetForm, {:saved, organisation}},
@@ -103,7 +98,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.SystemLive.AssetForm, {:saved, system}}, socket) do
+  def handle_info({ThreatShieldWeb.SystemLive.SystemForm, {:saved, system}}, socket) do
     stale_org = socket.assigns.organisation
     updated_org = %{stale_org | systems: stale_org.systems ++ [system]}
 
@@ -121,7 +116,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.ThreatLive.AssetForm, {:saved, threat}}, socket) do
+  def handle_info({ThreatShieldWeb.ThreatLive.ThreatForm, {:saved, threat}}, socket) do
     stale_org = socket.assigns.organisation
     user = socket.assigns.current_user
 
@@ -137,12 +132,12 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
 
     Process.demonitor(ref, [:flush])
 
-    {:noreply,
-     socket
-     |> assign(
-       asking_ai_for_assets: nil,
-       asset_suggestions: socket.assigns.asset_suggestions ++ new_assets
-     )}
+    socket
+    |> assign(
+      asking_ai_for_assets: nil,
+      asset_suggestions: socket.assigns.asset_suggestions ++ new_assets
+    )
+    |> noreply()
   end
 
   def handle_info({_from, {:ai_results_threats, new_threats}}, socket) do
@@ -150,12 +145,17 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
 
     Process.demonitor(ref, [:flush])
 
-    {:noreply,
-     socket
-     |> assign(
-       asking_ai_for_threats: nil,
-       threat_suggestions: socket.assigns.threat_suggestions ++ new_threats
-     )}
+    socket
+    |> assign(
+      asking_ai_for_threats: nil,
+      threat_suggestions: socket.assigns.threat_suggestions ++ new_threats
+    )
+    |> noreply()
+  end
+
+  def handle_info(msg, socket) do
+    Logger.warning("Unhandled info: #{inspect(msg)}")
+    {:noreply, socket}
   end
 
   @impl true

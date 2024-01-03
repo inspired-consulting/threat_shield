@@ -129,6 +129,7 @@
 
   <.live_component
     module={ThreatShieldWeb.ThreatLive.ThreatsList}
+    current_user={@current_user}
     organisation={@organisation}
     membership={@membership}
     threats={@organisation.threats}
@@ -136,25 +137,6 @@
     path_prefix={"/organisations/#{@organisation.id}"}
     id={"threats_for_org_#{@organisation.id}"}
   />
-
-  <.modal
-    :if={@live_action == :new_threat}
-    id="threat-modal"
-    show
-    on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
-  >
-    <.live_component
-      module={ThreatShieldWeb.ThreatLive.ThreatForm}
-      id={@threat.id || :new}
-      title={@page_title}
-      action={@live_action}
-      current_user={@current_user}
-      organisation={@organisation}
-      system_options={list_system_options(@organisation)}
-      threat={@threat}
-      patch={~p"/organisations/#{@organisation.id}"}
-    />
-  </.modal>
 
   <.modal
     :if={@live_action == :edit_organisation}
