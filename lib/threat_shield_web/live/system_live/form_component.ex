@@ -14,6 +14,10 @@ defmodule ThreatShieldWeb.SystemLive.FormComponent do
         <%= @title %>
       </.header>
 
+      <p class="help-text">
+        <%= dgettext("systems", "System: long description") %>
+      </p>
+
       <.simple_form
         for={@form}
         id="system-form"

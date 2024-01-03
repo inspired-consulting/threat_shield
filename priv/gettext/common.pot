@@ -14,7 +14,7 @@ msgstr ""
 #: lib/threat_shield_web/live/asset_live/show.html.heex:17
 #: lib/threat_shield_web/live/members_live/index.html.heex:29
 #: lib/threat_shield_web/live/mitigation_live/show.html.heex:20
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:26
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:38
 #: lib/threat_shield_web/live/risk_live/show.html.heex:17
 #: lib/threat_shield_web/live/system_live/show.html.heex:17
 #: lib/threat_shield_web/live/threat_live/show.html.heex:17
@@ -25,7 +25,7 @@ msgstr ""
 #: lib/threat_shield_web/live/asset_live/show.html.heex:25
 #: lib/threat_shield_web/live/members_live/index.html.heex:38
 #: lib/threat_shield_web/live/mitigation_live/show.html.heex:33
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:34
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:46
 #: lib/threat_shield_web/live/risk_live/show.html.heex:25
 #: lib/threat_shield_web/live/system_live/show.html.heex:25
 #: lib/threat_shield_web/live/threat_live/show.html.heex:25
@@ -43,7 +43,7 @@ msgstr ""
 msgid "Revoke"
 msgstr ""
 
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:8
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:10
 #, elixir-autogen, elixir-format
 msgid "Created on"
 msgstr ""

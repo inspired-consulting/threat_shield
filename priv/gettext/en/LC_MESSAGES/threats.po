@@ -26,7 +26,7 @@ msgstr ""
 msgid "Threats"
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/show.html.heex:31
+#: lib/threat_shield_web/live/asset_live/show.html.heex:32
 #: lib/threat_shield_web/live/threat_live/show.html.heex:31
 #, elixir-autogen, elixir-format
 msgid "System"

@@ -1,4 +1,4 @@
-<.card_detail>
+<.entity_info>
   <:name>
     <%= @asset.name %>
   </:name>
@@ -68,23 +68,25 @@
       </div>
     </div>
   </:custom>
-</.card_detail>
+</.entity_info>
 
-<.modal
-  :if={@live_action == :edit}
-  id="asset-modal"
-  show
-  on_cancel={JS.patch(get_path_prefix(assigns) <> "/assets/#{@asset.id}")}
->
-  <.live_component
-    module={ThreatShieldWeb.AssetLive.AssetForm}
-    id={@asset.id}
-    title={@page_title}
-    action={@live_action}
-    asset={@asset}
-    current_user={@current_user}
-    organisation={@organisation}
-    system_options={assigns[:system_options]}
-    patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}"}
-  />
-</.modal>
+<section class="ts-container mt-8">
+  <.modal
+    :if={@live_action == :edit}
+    id="asset-modal"
+    show
+    on_cancel={JS.patch(get_path_prefix(assigns) <> "/assets/#{@asset.id}")}
+  >
+    <.live_component
+      module={ThreatShieldWeb.AssetLive.AssetForm}
+      id={@asset.id}
+      title={@page_title}
+      action={@live_action}
+      asset={@asset}
+      current_user={@current_user}
+      organisation={@organisation}
+      system_options={assigns[:system_options]}
+      patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}"}
+    />
+  </.modal>
+</section>

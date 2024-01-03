@@ -1275,7 +1275,7 @@ msgid "Join"
 msgstr ""
 
 #: lib/threat_shield_web/live/members_live/index.html.heex:2
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:15
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:27
 #, elixir-autogen, elixir-format
 msgid "Members"
 msgstr ""

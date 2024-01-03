@@ -86,6 +86,10 @@ body {
   line-height: normal;
 }
 
+.ts-container {
+  @apply xl:container mx-4 xl:mx-auto;
+}
+
 .help-text {
   @apply text-gray-500 text-sm font-normal;
 }

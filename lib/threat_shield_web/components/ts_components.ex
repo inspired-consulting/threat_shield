@@ -8,6 +8,54 @@ defmodule ThreatShieldWeb.TsComponents do
   import ThreatShieldWeb.CoreComponents
   import ThreatShieldWeb.Labels
 
+  # big building blocks
+
+  slot :name, required: false
+  slot :description, required: false
+  slot :status, required: false
+  slot :attribute, required: false
+  slot :custom, required: false
+  slot :links, required: true
+  attr :columns, :integer, default: 2
+
+  def entity_info(assigns) do
+    ~H"""
+    <section class="w-full bg-white pb-6 shadow-primary-200 shadow-sm">
+      <div class="ts-container flex justify-between w-full">
+        <div class="min-h-10 pb-2">
+          <.h3>
+            <%= render_slot(@name) %>
+          </.h3>
+          <p class="text-sm leading-6 text-gray-600 font-normal">
+            <%= render_slot(@description) %>
+          </p>
+          <div :if={@status != []} class="my-2">
+            <%= render_slot(@status) %>
+          </div>
+        </div>
+        <div>
+          <.dropdown links={@links} />
+        </div>
+      </div>
+      <div class="ts-container">
+        <%= if @attribute != [] do %>
+          <div class={[
+            "w-full grid gap-4 mt-0 px-6 py-4 bg-primary-100",
+            "grid-cols-#{@columns}"
+          ]}>
+            <%= render_slot(@attribute) %>
+          </div>
+        <% end %>
+        <%= if @custom != [] do %>
+          <%= render_slot(@custom) %>
+        <% end %>
+      </div>
+    </section>
+    """
+  end
+
+  # simple components
+
   attr :id, :any, default: nil
   attr :name, :any
   attr :label, :string, default: nil

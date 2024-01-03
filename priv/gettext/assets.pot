@@ -29,28 +29,28 @@ msgstr ""
 
 #: lib/threat_shield_web/live/asset_live/asset_form.ex:41
 #: lib/threat_shield_web/live/asset_live/assets_list.ex:66
-#: lib/threat_shield_web/live/asset_live/show.html.heex:50
+#: lib/threat_shield_web/live/asset_live/show.html.heex:52
 #, elixir-autogen, elixir-format
 msgid "Criticality of loss"
 msgstr ""
 
 #: lib/threat_shield_web/live/asset_live/asset_form.ex:49
 #: lib/threat_shield_web/live/asset_live/assets_list.ex:80
-#: lib/threat_shield_web/live/asset_live/show.html.heex:64
+#: lib/threat_shield_web/live/asset_live/show.html.heex:66
 #, elixir-autogen, elixir-format
 msgid "Criticality of publication"
 msgstr ""
 
 #: lib/threat_shield_web/live/asset_live/asset_form.ex:45
 #: lib/threat_shield_web/live/asset_live/assets_list.ex:73
-#: lib/threat_shield_web/live/asset_live/show.html.heex:57
+#: lib/threat_shield_web/live/asset_live/show.html.heex:59
 #, elixir-autogen, elixir-format
 msgid "Criticality of theft"
 msgstr ""
 
 #: lib/threat_shield_web/live/asset_live/asset_form.ex:55
 #: lib/threat_shield_web/live/asset_live/assets_list.ex:60
-#: lib/threat_shield_web/live/asset_live/show.html.heex:42
+#: lib/threat_shield_web/live/asset_live/show.html.heex:44
 #, elixir-autogen, elixir-format
 msgid "Criticality overall"
 msgstr ""

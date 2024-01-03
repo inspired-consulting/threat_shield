@@ -1,4 +1,4 @@
-<.card_detail columns={3}>
+<.entity_info columns={3}>
   <:name>
     <%= @mitigation.name %>
   </:name>
@@ -38,7 +38,7 @@
   <:attribute>
     <div>
       <.label><%= dgettext("mitigations", "Is implemented") %></.label>
-      <p>
+      <p class="pt-1 px-1">
         <.boolean_status_icon value={@mitigation.is_implemented} />
       </p>
     </div>
@@ -65,7 +65,7 @@
       <p><%= @mitigation.verification_date %></p>
     </div>
   </:attribute>
-</.card_detail>
+</.entity_info>
 
 <.modal
   :if={@live_action == :edit_mitigation}

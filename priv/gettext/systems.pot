@@ -21,3 +21,13 @@ msgstr ""
 #, elixir-autogen, elixir-format
 msgid "Systems"
 msgstr ""
+
+#: lib/threat_shield_web/live/system_live/form_component.ex:18
+#, elixir-autogen, elixir-format
+msgid "System: long description"
+msgstr ""
+
+#: lib/threat_shield_web/live/system_live/system_component.ex:13
+#, elixir-autogen, elixir-format
+msgid "System: short description"
+msgstr ""

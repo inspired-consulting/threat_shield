@@ -1,4 +1,4 @@
-<.card_detail>
+<.entity_info>
   <:name>
     <%= @risk.name %>
   </:name>
@@ -45,62 +45,64 @@
       <.criticality_badge value={@risk.severity} title={dgettext("risks", "Severity")} />
     </div>
   </:attribute>
-</.card_detail>
+</.entity_info>
 
-<.modal
-  :if={@live_action == :edit_risk}
-  id="risk-modal"
-  show
-  on_cancel={JS.patch(get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}")}
->
+<section class="ts-container mt-8">
+  <.modal
+    :if={@live_action == :edit_risk}
+    id="risk-modal"
+    show
+    on_cancel={JS.patch(get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}")}
+  >
+    <.live_component
+      module={ThreatShieldWeb.RiskLive.RiskForm}
+      id={@risk.id}
+      title={@page_title}
+      action={@live_action}
+      risk={@risk}
+      organisation={@organisation}
+      threat={@threat}
+      current_user={@current_user}
+      patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}"}
+    />
+  </.modal>
+
+  <.modal
+    :if={@live_action == :new_mitigation}
+    id="mitigation-modal"
+    show
+    on_cancel={JS.patch(get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}")}
+  >
+    <.live_component
+      module={ThreatShieldWeb.MitigationLive.MitigationForm}
+      id={@mitigation.id || :new}
+      title={@page_title}
+      action={@live_action}
+      mitigation={@mitigation}
+      risk={@risk}
+      user={@current_user}
+      patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}"}
+    />
+  </.modal>
+
+  <ThreatShieldWeb.Suggestions.suggestions
+    suggestions={@mitigation_suggestions}
+    entity_name="mitigation"
+  />
+
   <.live_component
-    module={ThreatShieldWeb.RiskLive.RiskForm}
-    id={@risk.id}
-    title={@page_title}
-    action={@live_action}
-    risk={@risk}
+    module={ThreatShieldWeb.MitigationLive.MitigationsList}
     organisation={@organisation}
+    id={"mitigations_for_risk_#{@risk.id}"}
+    mitigations={@risk.mitigations}
+    membership={@membership}
+    asking_ai_for_mitigations={@asking_ai_for_mitigations}
     threat={@threat}
-    current_user={@current_user}
-    patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}"}
-  />
-</.modal>
-
-<.modal
-  :if={@live_action == :new_mitigation}
-  id="mitigation-modal"
-  show
-  on_cancel={JS.patch(get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}")}
->
-  <.live_component
-    module={ThreatShieldWeb.MitigationLive.MitigationForm}
-    id={@mitigation.id || :new}
-    title={@page_title}
-    action={@live_action}
-    mitigation={@mitigation}
     risk={@risk}
-    user={@current_user}
-    patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}"}
+    path_prefix={get_path_prefix(assigns)}
   />
-</.modal>
 
-<ThreatShieldWeb.Suggestions.suggestions
-  suggestions={@mitigation_suggestions}
-  entity_name="mitigation"
-/>
-
-<.live_component
-  module={ThreatShieldWeb.MitigationLive.MitigationsList}
-  organisation={@organisation}
-  id={"mitigations_for_risk_#{@risk.id}"}
-  mitigations={@risk.mitigations}
-  membership={@membership}
-  asking_ai_for_mitigations={@asking_ai_for_mitigations}
-  threat={@threat}
-  risk={@risk}
-  path_prefix={get_path_prefix(assigns)}
-/>
-
-<%= if not is_nil(@asking_ai_for_mitigations) do %>
-  <ThreatShieldWeb.Spinner.spinner />
-<% end %>
+  <%= if not is_nil(@asking_ai_for_mitigations) do %>
+    <ThreatShieldWeb.Spinner.spinner />
+  <% end %>
+</section>

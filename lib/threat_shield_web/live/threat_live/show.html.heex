@@ -1,4 +1,4 @@
-<.card_detail>
+<.entity_info>
   <:name>
     <%= @threat.name %>
   </:name>
@@ -32,59 +32,61 @@
       <p><%= system_label(@threat) %></p>
     </div>
   </:attribute>
-</.card_detail>
+</.entity_info>
 
-<.modal
-  :if={@live_action == :edit_threat}
-  id="threat-modal"
-  show
-  on_cancel={JS.patch(get_path_prefix(assigns) <> "/threats/#{@threat.id}")}
->
+<section class="ts-container mt-8">
+  <.modal
+    :if={@live_action == :edit_threat}
+    id="threat-modal"
+    show
+    on_cancel={JS.patch(get_path_prefix(assigns) <> "/threats/#{@threat.id}")}
+  >
+    <.live_component
+      module={ThreatShieldWeb.ThreatLive.ThreatForm}
+      id={@threat.id}
+      title={@page_title}
+      action={@live_action}
+      threat={@threat}
+      current_user={@current_user}
+      organisation={@organisation}
+      system_options={assigns[:system_options]}
+      patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}"}
+    />
+  </.modal>
+
+  <.modal
+    :if={@live_action in [:new_risk]}
+    id="risk-modal"
+    show
+    on_cancel={JS.patch(get_path_prefix(assigns) <> "/threats/#{@threat.id}")}
+  >
+    <.live_component
+      module={ThreatShieldWeb.RiskLive.RiskForm}
+      id={@risk.id || :new}
+      title={@page_title}
+      action={@live_action}
+      organisation={@organisation}
+      threat={@threat}
+      risk={@risk}
+      current_user={@current_user}
+      patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}"}
+    />
+  </.modal>
+
+  <ThreatShieldWeb.Suggestions.suggestions suggestions={@risk_suggestions} entity_name="risk" />
+
   <.live_component
-    module={ThreatShieldWeb.ThreatLive.ThreatForm}
-    id={@threat.id}
-    title={@page_title}
-    action={@live_action}
-    threat={@threat}
-    current_user={@current_user}
+    module={ThreatShieldWeb.RiskLive.RisksList}
     organisation={@organisation}
-    system_options={assigns[:system_options]}
-    patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}"}
-  />
-</.modal>
-
-<.modal
-  :if={@live_action in [:new_risk]}
-  id="risk-modal"
-  show
-  on_cancel={JS.patch(get_path_prefix(assigns) <> "/threats/#{@threat.id}")}
->
-  <.live_component
-    module={ThreatShieldWeb.RiskLive.RiskForm}
-    id={@risk.id || :new}
-    title={@page_title}
-    action={@live_action}
-    organisation={@organisation}
+    risks={@threat.risks}
+    membership={@membership}
+    asking_ai_for_risks={@asking_ai_for_risks}
+    path_prefix={get_path_prefix(assigns)}
+    id={"risks_for_threat_#{@threat.id}"}
     threat={@threat}
-    risk={@risk}
-    current_user={@current_user}
-    patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}"}
   />
-</.modal>
 
-<ThreatShieldWeb.Suggestions.suggestions suggestions={@risk_suggestions} entity_name="risk" />
-
-<.live_component
-  module={ThreatShieldWeb.RiskLive.RisksList}
-  organisation={@organisation}
-  risks={@threat.risks}
-  membership={@membership}
-  asking_ai_for_risks={@asking_ai_for_risks}
-  path_prefix={get_path_prefix(assigns)}
-  id={"risks_for_threat_#{@threat.id}"}
-  threat={@threat}
-/>
-
-<%= if not is_nil(@asking_ai_for_risks) do %>
-  <ThreatShieldWeb.Spinner.spinner />
-<% end %>
+  <%= if not is_nil(@asking_ai_for_risks) do %>
+    <ThreatShieldWeb.Spinner.spinner />
+  <% end %>
+</section>
