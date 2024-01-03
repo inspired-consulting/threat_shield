@@ -6,27 +6,31 @@ defmodule ThreatShield.Mitigations.Mitigation do
   schema "mitigations" do
     field :name, :string
     field :description, :string
-    field :is_implemented, :boolean, default: false
-    field :implementation_notes, :string
+    field :issue_link, :string
 
     field :status, Ecto.Enum,
       values: [:open, :in_progress, :implemented, :verified, :failed, :deferred, :obsolete],
       default: :open
 
+    field :is_implemented, :boolean, default: false
+    field :implementation_notes, :string
     field :implementation_date, :date
+
     field :verification_date, :date
     field :verification_method, :string
     field :verification_result, :string
-    field :issue_link, :string
+
     belongs_to :risk, Risk
 
     timestamps()
   end
 
+  @fields ~w(name description issue_link status is_implemented implementation_notes implementation_date verification_date verification_method verification_result risk_id)a
+
   @doc false
   def changeset(mitigation, attrs) do
     mitigation
-    |> cast(attrs, [:name, :description, :is_implemented])
+    |> cast(attrs, @fields)
     |> validate_required([:name, :description, :is_implemented])
     |> validate_length(:name, max: 60)
   end

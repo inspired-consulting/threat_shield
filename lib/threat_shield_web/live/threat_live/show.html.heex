@@ -58,7 +58,7 @@
   on_cancel={JS.patch(get_path_prefix(assigns) <> "/threats/#{@threat.id}")}
 >
   <.live_component
-    module={ThreatShieldWeb.RiskLive.FormComponent}
+    module={ThreatShieldWeb.RiskLive.RiskForm}
     id={@risk.id || :new}
     title={@page_title}
     action={@live_action}
@@ -73,7 +73,7 @@
 <ThreatShieldWeb.Suggestions.suggestions suggestions={@risk_suggestions} entity_name="risk" />
 
 <.live_component
-  module={ThreatShieldWeb.RiskLive.RiskComponent}
+  module={ThreatShieldWeb.RiskLive.RisksList}
   organisation={@organisation}
   risks={@threat.risks}
   membership={@membership}

@@ -497,7 +497,7 @@ defmodule ThreatShieldWeb.CoreComponents do
         <h1 class="text-lg font-semibold leading-8 text-gray-900">
           <%= render_slot(@inner_block) %>
         </h1>
-        <p :if={@subtitle != []} class="mt-2 text-gray-500 text-sm font-normal">
+        <p :if={@subtitle != []} class="mt-2 help-text">
           <%= render_slot(@subtitle) %>
         </p>
       </div>
@@ -856,6 +856,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   slot :name, required: false
   slot :description, required: false
+  slot :status, required: false
   slot :attribute, required: false
   slot :custom, required: false
   slot :links, required: true
@@ -864,20 +865,23 @@ defmodule ThreatShieldWeb.CoreComponents do
     ~H"""
     <section class="w-full px-8 py-6 mb-6 bg-white rounded-lg shadow flex-col justify-start items-start inline-flex">
       <div class="flex justify-between w-full pb-10 border-b border-gray-200">
-        <div class="h-20 pb-5">
+        <div class="min-h-10 pb-2">
           <.h3>
             <%= render_slot(@name) %>
           </.h3>
           <p class="text-sm leading-6 text-gray-500 font-normal">
             <%= render_slot(@description) %>
           </p>
+          <div :if={@status != []} class="my-2">
+            <%= render_slot(@status) %>
+          </div>
         </div>
         <div>
           <.dropdown links={@links} />
         </div>
       </div>
       <%= if @attribute != [] do %>
-        <div class="w-full grid grid-cols-3 gap-4 mt-6 p-6 bg-neutral-100">
+        <div class="w-full grid grid-cols-4 gap-4 mt-2 p-6 bg-neutral-100">
           <%= render_slot(@attribute) %>
         </div>
       <% end %>

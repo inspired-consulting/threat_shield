@@ -6,6 +6,7 @@ defmodule ThreatShieldWeb.TsComponents do
 
   use ThreatShieldWeb, :verified_routes
   import ThreatShieldWeb.CoreComponents
+  import ThreatShieldWeb.Labels
 
   attr :id, :any, default: nil
   attr :name, :any
@@ -67,7 +68,7 @@ defmodule ThreatShieldWeb.TsComponents do
   attr :title, :string, default: nil
   attr :size_classes, :string, default: "w-10 h-10 leading-9"
 
-  def criticality_batch(assigns) do
+  def criticality_badge(assigns) do
     ~H"""
     <span
       class={[
@@ -78,6 +79,20 @@ defmodule ThreatShieldWeb.TsComponents do
       title={@title}
     >
       <%= @value %>
+    </span>
+    """
+  end
+
+  attr :status, :string, default: nil
+  attr :light, :boolean, default: false
+
+  def risk_status_badge(assigns) do
+    ~H"""
+    <span class={[
+      "inline-flex items-center rounded-md px-4 py-1 text-xs font-bold text-center leading-1",
+      if(@light, do: "bg-neutral-300 text-white", else: "bg-neutral-600 text-gray-100")
+    ]}>
+      <%= risk_status_label(assigns.status) %>
     </span>
     """
   end
@@ -101,5 +116,5 @@ defmodule ThreatShieldWeb.TsComponents do
     end
   end
 
-  defp color_code_for_criticality(_criticality, opacity), do: "rgba(100, 100, 100, #{opacity})"
+  defp color_code_for_criticality(_criticality, opacity), do: "rgba(200, 200, 200, #{opacity})"
 end

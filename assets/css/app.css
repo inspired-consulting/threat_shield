@@ -86,6 +86,10 @@ body {
   line-height: normal;
 }
 
+.help-text {
+  @apply text-gray-500 text-sm font-normal;
+}
+
 a {
   color: theme("colors.primary.900");
   text-decoration: none;

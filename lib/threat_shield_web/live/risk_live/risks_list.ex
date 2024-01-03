@@ -1,5 +1,9 @@
-defmodule ThreatShieldWeb.RiskLive.RiskComponent do
+defmodule ThreatShieldWeb.RiskLive.RisksList do
   use ThreatShieldWeb, :live_component
+
+  @moduledoc """
+  This component renders a list of risks for a given threat.
+  """
 
   @impl true
   def render(assigns) do
@@ -9,7 +13,7 @@ defmodule ThreatShieldWeb.RiskLive.RiskComponent do
         <:name><%= dgettext("risks", "Risks") %></:name>
 
         <:subtitle>
-          Risks are the potential negative outcome — loss, damage, or harm resulting from the exploitation of vulnerabilities by threats.
+          <%= dgettext("risks", "Risk: short description") %>
         </:subtitle>
 
         <:buttons>
@@ -50,7 +54,13 @@ defmodule ThreatShieldWeb.RiskLive.RiskComponent do
         <:col :let={risk}>
           <%= risk.name %>
         </:col>
+        <:col :let={risk}>
+          <.risk_status_badge status={risk.status} light={true} />
+        </:col>
         <:col :let={risk}><%= risk.description %></:col>
+        <:col :let={risk}>
+          <.criticality_badge value={risk.severity} title={dgettext("risks", "Severity")} />
+        </:col>
       </.stacked_list>
 
       <p :if={Enum.empty?(@risks)} class="mt-4">

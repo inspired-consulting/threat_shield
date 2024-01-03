@@ -22,7 +22,7 @@
 <%= for threat <- @threats, !Enum.empty?(threat.risks) do %>
   <h3><%= threat.name %></h3>
   <.live_component
-    module={ThreatShieldWeb.RiskLive.RiskComponent}
+    module={ThreatShieldWeb.RiskLive.RisksList}
     id={"risks_for_threat_#{threat.id}"}
     organisation={@organisation}
     threat={threat}

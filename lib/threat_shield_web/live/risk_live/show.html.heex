@@ -5,21 +5,26 @@
   <:description>
     <%= @risk.description %>
   </:description>
+  <:status>
+    <.risk_status_badge status={@risk.status} />
+  </:status>
   <:links>
-    <.link
-      :if={ThreatShield.Members.Rights.may(:delete_risk, @membership)}
-      phx-click={JS.push("delete", value: %{risk_id: @risk.id})}
-      data-confirm="Are you sure?"
-    >
-      <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
-    </.link>
-    <.link
-      :if={ThreatShield.Members.Rights.may(:edit_risk, @membership)}
-      patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/edit"}
-      phx-click={JS.push_focus()}
-    >
-      <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
-    </.link>
+    <li :if={ThreatShield.Members.Rights.may(:delete_risk, @membership)} class="context-menu-item">
+      <.link
+        phx-click={JS.push("delete", value: %{risk_id: @risk.id})}
+        data-confirm="Are you sure?"
+      >
+        <%= dgettext("common", "Delete") %>
+      </.link>
+    </li>
+    <li :if={ThreatShield.Members.Rights.may(:edit_risk, @membership)} class="context-menu-item">
+      <.link
+        patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/edit"}
+        phx-click={JS.push_focus()}
+      >
+        <%= dgettext("common", "Edit") %>
+      </.link>
+    </li>
   </:links>
 
   <:attribute>
@@ -35,6 +40,10 @@
       <.label><%= dgettext("risks", "Risk costs") %></.label>
       <p><%= format_monetary_amount(Risk.estimated_risk_cost(@risk)) %></p>
     </div>
+    <div>
+      <.label><%= dgettext("risks", "Severity") %></.label>
+      <.criticality_badge value={@risk.severity} title={dgettext("risks", "Severity")} />
+    </div>
   </:attribute>
 </.card_detail>
 
@@ -45,7 +54,7 @@
   on_cancel={JS.patch(get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}")}
 >
   <.live_component
-    module={ThreatShieldWeb.RiskLive.FormComponent}
+    module={ThreatShieldWeb.RiskLive.RiskForm}
     id={@risk.id}
     title={@page_title}
     action={@live_action}

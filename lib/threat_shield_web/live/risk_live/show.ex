@@ -52,7 +52,7 @@ defmodule ThreatShieldWeb.RiskLive.Show do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.RiskLive.FormComponent, {:saved, risk}}, socket) do
+  def handle_info({ThreatShieldWeb.RiskLive.RiskForm, {:saved, risk}}, socket) do
     user = socket.assigns.current_user
     risk = Risks.get_risk!(user, risk.id)
 
