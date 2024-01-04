@@ -6,6 +6,7 @@ defmodule ThreatShield.AI do
   alias ThreatShield.Risks.Risk
   alias ThreatShield.Mitigations.Mitigation
   alias ThreatShield.Systems.System
+  alias ThreatShield.Scope
 
   defmodule AiSuggestion do
     @moduledoc """
@@ -76,6 +77,18 @@ defmodule ThreatShield.AI do
     """
   end
 
+  # Assets
+
+  def suggest_assets(%Scope{} = scope) do
+    case scope do
+      %{system: %System{} = system} ->
+        suggest_assets_for_system(system)
+
+      %{organisation: %Organisation{} = organisation} ->
+        suggest_assets_for_organisation(organisation)
+    end
+  end
+
   def suggest_assets_for_organisation(%Organisation{} = organisation) do
     asset_info = """
       Assets are valuable resources or data, that need to be protected.
@@ -134,6 +147,18 @@ defmodule ThreatShield.AI do
       |> Enum.join(" ")
 
     make_chatgpt_request(system_prompt, user_prompt, &get_assets_from_response/1)
+  end
+
+  # Threats
+
+  def suggest_threats(%Scope{} = scope) do
+    case scope do
+      %{system: %System{} = system} ->
+        suggest_threats_for_system(system)
+
+      %{organisation: %Organisation{} = organisation} ->
+        suggest_threats_for_organisation(organisation)
+    end
   end
 
   def suggest_threats_for_organisation(%Organisation{} = organisation) do

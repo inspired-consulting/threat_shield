@@ -26,7 +26,7 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
 
           <:buttons>
             <.link
-              :if={ThreatShield.Members.Rights.may(:create_system, @membership)}
+              :if={ThreatShield.Members.Rights.may(:create_system, @scope.membership)}
               phx-click="open-create-system-modal"
               phx-target={@myself}
             >
@@ -37,11 +37,13 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
           </:buttons>
         </.stacked_list_header>
         <.stacked_list
-          :if={not Enum.empty?(@organisation.systems)}
-          id={"systems_for_org_#{@organisation.id}"}
-          rows={@organisation.systems}
+          :if={not Enum.empty?(@scope.organisation.systems)}
+          id={"systems_for_#{@scope.id}"}
+          rows={@scope.organisation.systems}
           row_click={
-            fn system -> JS.navigate(~p"/organisations/#{@organisation.id}/systems/#{system.id}") end
+            fn system ->
+              JS.navigate(~p"/organisations/#{@scope.organisation.id}/systems/#{system.id}")
+            end
           }
         >
           <:col :let={system}>
@@ -55,7 +57,7 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
           <:col :let={system}><%= system.description %></:col>
         </.stacked_list>
 
-        <p :if={Enum.empty?(@organisation.systems)} class="mt-4">
+        <p :if={Enum.empty?(@scope.organisation.systems)} class="mt-4">
           There are no systems associated with this organisation. Please add them manually.
         </p>
       </div>
@@ -71,8 +73,8 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
           parent_id={@id}
           title={dgettext("assets", "New System")}
           action={:new_system}
-          organisation={@organisation}
-          current_user={@current_user}
+          organisation={@scope.organisation}
+          current_user={@scope.user}
           attributes={System.attributes()}
           system={prepare_system(assigns)}
           patch={@origin}

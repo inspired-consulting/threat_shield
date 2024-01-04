@@ -3,11 +3,10 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   alias ThreatShield.Organisations.Organisation
   use ThreatShieldWeb, :live_view
 
+  alias ThreatShield.Scope
   alias ThreatShield.Systems
-
   alias ThreatShield.Assets
   alias ThreatShield.Threats
-  alias ThreatShield.AI
   alias ThreatShield.Systems.System
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
 
@@ -17,15 +16,14 @@ defmodule ThreatShieldWeb.SystemLive.Show do
 
     system = Systems.get_system!(user, id)
 
-    {:ok,
-     socket
-     |> assign(:system, system)
-     |> assign(:organisation, system.organisation)
-     |> assign(:membership, Organisation.get_membership(system.organisation, user))
-     |> assign(:attributes, System.attributes())
-     |> assign(:asking_ai_for_assets, nil)
-     |> assign(:asset_suggestions, [])
-     |> assign(:ai_suggestions, %{})}
+    socket
+    |> assign(:system, system)
+    |> assign(:organisation, system.organisation)
+    |> assign(:membership, Organisation.get_membership(system.organisation, user))
+    |> assign(:attributes, System.attributes())
+    |> assign(:scope, Scope.for(user, system.organisation, system))
+    |> assign(:ai_suggestions, %{})
+    |> ok()
   end
 
   @impl true
@@ -45,6 +43,8 @@ defmodule ThreatShieldWeb.SystemLive.Show do
     socket
     |> assign(:page_title, "Edit System")
   end
+
+  # events and notifications
 
   @impl true
   def handle_info(
@@ -77,23 +77,23 @@ defmodule ThreatShieldWeb.SystemLive.Show do
     {:noreply, socket |> assign(system: updated_sys) |> assign(page_title: "Show System")}
   end
 
+  @impl true
   def handle_info({task_ref, {:ai_suggestion, suggestion}}, socket) do
     %{type: entity_type, result: result} = suggestion
 
     # stop monitoring the task
     Process.demonitor(task_ref, [:flush])
 
-    Logger.debug("Got AI suggeston form: #{inspect(suggestion)}")
-
     suggestions =
       (socket.assigns[:suggestions] || %{})
       |> Map.put(entity_type, result)
 
-    {:noreply,
-     socket
-     |> assign(ai_suggestions: suggestions)}
+    socket
+    |> assign(ai_suggestions: suggestions)
+    |> noreply()
   end
 
+  @impl true
   def handle_event("delete", %{"sys_id" => id}, socket) do
     current_user = socket.assigns.current_user
 
@@ -104,6 +104,8 @@ defmodule ThreatShieldWeb.SystemLive.Show do
        to: "/organisations/#{socket.assigns.organisation.id}"
      )}
   end
+
+  # to be moved to components
 
   @impl true
   def handle_event("ignore_asset", %{"description" => description}, socket) do

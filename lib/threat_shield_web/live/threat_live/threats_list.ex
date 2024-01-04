@@ -3,7 +3,6 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
 
   alias ThreatShield.AI
   alias ThreatShield.AI.AiSuggestion
-  alias ThreatShield.Systems
 
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Systems.System
@@ -34,7 +33,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
 
           <:buttons>
             <.link
-              :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
+              :if={ThreatShield.Members.Rights.may(:create_threat, @scope.membership)}
               phx-click="open-modal"
               phx-target={@myself}
             >
@@ -47,11 +46,9 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
             </.link>
             <.link>
               <.button_magic
-                :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
+                :if={ThreatShield.Members.Rights.may(:create_threat, @scope.membership)}
                 phx-click="suggest_threats"
                 phx-target={@myself}
-                phx-value-org_id={@organisation.id}
-                phx-value-sys_id={if is_nil(assigns[:system]), do: nil, else: @system.id}
               >
                 <.icon name="hero-sparkles" class="mr-1 mb-1" /><%= dgettext(
                   "assets",
@@ -63,7 +60,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
         </.stacked_list_header>
         <.stacked_list
           :if={not Enum.empty?(@threats)}
-          id={"threats_for_org_#{@organisation.id}"}
+          id={"threats_for_#{@scope.id}"}
           rows={@threats}
           row_click={fn threat -> JS.navigate(@origin <> "/threats/#{threat.id}") end}
         >
@@ -93,9 +90,9 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           parent_id={@id}
           action={:new_threat}
           title={dgettext("threats", "New Threat")}
-          current_user={@current_user}
-          organisation={@organisation}
-          system_options={systems_of_organisaton(@organisation)}
+          current_user={@scope.user}
+          organisation={@scope.organisation}
+          system_options={systems_of_organisaton(@scope.organisation)}
           threat={prepare_threat(assigns)}
           patch={@origin}
         />
@@ -134,17 +131,15 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   end
 
   @impl true
-  def handle_event("suggest_threats", %{"sys_id" => sys_id}, socket) do
-    user = socket.assigns.current_user
+  def handle_event("suggest_threats", _params, socket) do
+    scope = socket.assigns.scope
 
-    task =
-      Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
-        ask_ai_for_threats(user, sys_id)
-      end)
+    Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
+      new_threats =
+        AI.suggest_threats(scope)
 
-    socket =
-      socket
-      |> assign(asking_ai_for_threats: task.ref)
+      {:ai_suggestion, %AiSuggestion{result: new_threats, type: :threats, requestor: self()}}
+    end)
 
     {:noreply, socket}
   end
@@ -160,15 +155,6 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   end
 
   defp prepare_threat(_other), do: %Threat{}
-
-  defp ask_ai_for_threats(user, sys_id) do
-    system = Systems.get_system!(user, sys_id)
-
-    new_threats =
-      AI.suggest_threats_for_system(system)
-
-    {:ai_suggestion, %AiSuggestion{result: new_threats, type: :threats, requestor: self()}}
-  end
 
   defp fetch_suggestions(suggestions) do
     if is_nil(suggestions) do

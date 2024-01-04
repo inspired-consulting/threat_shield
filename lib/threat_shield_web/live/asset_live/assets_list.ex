@@ -3,7 +3,6 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
 
   alias ThreatShield.AI
   alias ThreatShield.AI.AiSuggestion
-  alias ThreatShield.Systems
   alias ThreatShield.Assets
 
   alias ThreatShield.Organisations.Organisation
@@ -28,7 +27,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
 
           <:buttons>
             <.link
-              :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
+              :if={ThreatShield.Members.Rights.may(:create_asset, @scope.membership)}
               phx-click="open-modal"
               phx-target={@myself}
             >
@@ -41,11 +40,9 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
             </.link>
             <.link>
               <.button_magic
-                :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
+                :if={ThreatShield.Members.Rights.may(:create_asset, @scope.membership)}
                 phx-click="suggest_assets"
                 phx-target={@myself}
-                phx-value-org_id={@organisation.id}
-                phx-value-sys_id={if is_nil(assigns[:system]), do: nil, else: @system.id}
               >
                 <.icon name="hero-sparkles" class="mr-1 mb-1" /><%= dgettext(
                   "assets",
@@ -57,7 +54,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
         </.stacked_list_header>
         <.stacked_list
           :if={not Enum.empty?(@assets)}
-          id={"assets_for_org_#{@organisation.id}"}
+          id={"assets_for_org_#{@scope.organisation.id}"}
           rows={@assets}
           row_click={fn asset -> JS.navigate(@origin <> "/assets/#{asset.id}") end}
         >
@@ -111,9 +108,9 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
           parent_id={@id}
           title={dgettext("assets", "New Asset")}
           action={:new_asset}
-          current_user={@current_user}
-          organisation={@organisation}
-          system_options={systems_of_organisaton(@organisation)}
+          current_user={@scope.user}
+          organisation={@scope.organisation}
+          system_options={systems_of_organisaton(@scope.organisation)}
           asset={prepare_asset(assigns)}
           patch={@origin}
         />
@@ -151,17 +148,15 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
   end
 
   @impl true
-  def handle_event("suggest_assets", %{"sys_id" => sys_id}, socket) do
-    user = socket.assigns.current_user
+  def handle_event("suggest_assets", _params, socket) do
+    scope = socket.assigns.scope
 
-    task =
-      Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
-        ask_ai_for_assets(user, sys_id)
-      end)
+    Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
+      new_assets =
+        AI.suggest_assets(scope)
 
-    socket =
-      socket
-      |> assign(asking_ai_for_assets: task.ref)
+      {:ai_suggestion, %AiSuggestion{result: new_assets, type: :assets, requestor: self()}}
+    end)
 
     {:noreply, socket}
   end
@@ -177,13 +172,4 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
   end
 
   defp prepare_asset(_other), do: Assets.prepare_asset()
-
-  defp ask_ai_for_assets(user, sys_id) do
-    system = Systems.get_system!(user, sys_id)
-
-    new_assets =
-      AI.suggest_assets_for_system(system)
-
-    {:ai_suggestion, %AiSuggestion{result: new_assets, type: :assets, requestor: self()}}
-  end
 end

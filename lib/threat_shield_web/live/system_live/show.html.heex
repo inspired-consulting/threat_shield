@@ -32,16 +32,11 @@
 </.entity_info>
 
 <section class="ts-container mt-8">
-  <ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
-
   <.live_component
     module={ThreatShieldWeb.AssetLive.AssetsList}
     id={"assets_for_system_#{@system.id}"}
-    current_user={@current_user}
-    organisation={@organisation}
+    scope={@scope}
     assets={@system.assets}
-    system={@system}
-    membership={@membership}
     ai_suggestions={@ai_suggestions}
     origin={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
   />
@@ -49,10 +44,7 @@
   <.live_component
     module={ThreatShieldWeb.ThreatLive.ThreatsList}
     id={"threats_for_system_#{@system.id}"}
-    current_user={@current_user}
-    organisation={@organisation}
-    membership={@membership}
-    system={@system}
+    scope={@scope}
     threats={@system.threats}
     ai_suggestions={@ai_suggestions}
     origin={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
