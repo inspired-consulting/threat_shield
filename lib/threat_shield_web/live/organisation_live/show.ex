@@ -71,12 +71,6 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
     |> assign(:page_title, "Edit Organisation")
   end
 
-  defp apply_action(socket, :new_system, _params) do
-    socket
-    |> assign(:page_title, "New System")
-    |> assign(:system, %System{})
-  end
-
   @impl true
   def handle_info(
         {ThreatShieldWeb.OrganisationLive.AssetForm, {:saved, organisation}},

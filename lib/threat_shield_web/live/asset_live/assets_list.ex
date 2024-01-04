@@ -56,7 +56,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
           :if={not Enum.empty?(@assets)}
           id={"assets_for_org_#{@organisation.id}"}
           rows={@assets}
-          row_click={fn asset -> JS.navigate(@path_prefix <> "/assets/#{asset.id}") end}
+          row_click={fn asset -> JS.navigate(@origin <> "/assets/#{asset.id}") end}
         >
           <:col :let={asset}>
             <%= asset.name %>
@@ -98,9 +98,9 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
 
       <.modal
         :if={assigns[:show_modal] == true}
-        id="create-assets-modal"
+        id="create-asset-modal"
         show
-        on_cancel={JS.navigate(@path_prefix)}
+        on_cancel={JS.navigate(@origin)}
       >
         <.live_component
           module={ThreatShieldWeb.AssetLive.AssetForm}
@@ -112,7 +112,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
           organisation={@organisation}
           system_options={systems_of_organisaton(@organisation)}
           asset={prepare_asset(assigns)}
-          patch={@path_prefix}
+          patch={@origin}
         />
       </.modal>
     </div>

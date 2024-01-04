@@ -67,57 +67,40 @@
 <section class="ts-container mt-8">
   <.live_component
     module={ThreatShieldWeb.SystemLive.SystemsList}
+    id={"systems_for_org_#{@organisation.id}"}
+    current_user={@current_user}
     organisation={@organisation}
     membership={@membership}
     threat_count={@threat_count}
     asset_count={@asset_count}
-    id={"systems_for_org_#{@organisation.id}"}
+    origin={"/organisations/#{@organisation.id}"}
   />
-
-  <.modal
-    :if={@live_action == :new_system}
-    id="system-modal"
-    show
-    on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
-  >
-    <.live_component
-      module={ThreatShieldWeb.SystemLive.SystemForm}
-      id={@system.id || :new}
-      title={@page_title}
-      action={@live_action}
-      system={@system}
-      organisation={@organisation}
-      current_user={@current_user}
-      attributes={System.attributes()}
-      patch={~p"/organisations/#{@organisation.id}"}
-    />
-  </.modal>
 
   <ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
 
   <.live_component
     module={ThreatShieldWeb.AssetLive.AssetsList}
+    id={"assets_for_org_#{@organisation.id}"}
     current_user={@current_user}
     organisation={@organisation}
     assets={@organisation.assets}
     membership={@membership}
     asking_ai_for_assets={@asking_ai_for_assets}
     asking_ai_for_threats={@asking_ai_for_threats}
-    path_prefix={"/organisations/#{@organisation.id}"}
-    id={"assets_for_org_#{@organisation.id}"}
+    origin={"/organisations/#{@organisation.id}"}
   />
 
   <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 
   <.live_component
     module={ThreatShieldWeb.ThreatLive.ThreatsList}
+    id={"threats_for_org_#{@organisation.id}"}
     current_user={@current_user}
     organisation={@organisation}
     membership={@membership}
     threats={@organisation.threats}
     asking_ai_for_threats={@asking_ai_for_threats}
-    path_prefix={"/organisations/#{@organisation.id}"}
-    id={"threats_for_org_#{@organisation.id}"}
+    origin={"/organisations/#{@organisation.id}"}
   />
 
   <.modal

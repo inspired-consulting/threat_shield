@@ -108,6 +108,7 @@ defmodule ThreatShieldWeb.SystemLive.SystemForm do
     case Systems.create_system(user, organisation, system_params) do
       {:ok, system} ->
         notify_parent({:saved, system})
+        notify_systems_list(id: socket.assigns.parent_id, added_system: system)
 
         {:noreply,
          socket
@@ -124,4 +125,7 @@ defmodule ThreatShieldWeb.SystemLive.SystemForm do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp notify_systems_list(msg),
+    do: send_update(self(), ThreatShieldWeb.SystemLive.SystemsList, msg)
 end

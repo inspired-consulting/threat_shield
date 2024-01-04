@@ -36,29 +36,29 @@
 
   <.live_component
     module={ThreatShieldWeb.AssetLive.AssetsList}
-    organisation={@organisation}
+    id={"assets_for_system_#{@system.id}"}
     current_user={@current_user}
+    organisation={@organisation}
     assets={@system.assets}
     system={@system}
     membership={@membership}
     asking_ai_for_assets={@asking_ai_for_assets}
     asking_ai_for_threats={@asking_ai_for_threats}
-    path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
-    id={"assets_for_system_#{@system.id}"}
+    origin={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
   />
 
   <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 
   <.live_component
-    id={"threats_for_system_#{@system.id}"}
     module={ThreatShieldWeb.ThreatLive.ThreatsList}
+    id={"threats_for_system_#{@system.id}"}
     current_user={@current_user}
     organisation={@organisation}
     membership={@membership}
     system={@system}
     threats={@system.threats}
     asking_ai_for_threats={@asking_ai_for_threats}
-    path_prefix={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
+    origin={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
   />
 
   <.modal

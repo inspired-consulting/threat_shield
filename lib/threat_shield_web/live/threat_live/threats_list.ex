@@ -10,7 +10,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
 
   @moduledoc """
   This component renders a list of threats for a given system or for the organization.
-  It also provides a button to create a new threat in a model dialog.
+  It also provides a button to create a new threat in a modal dialog.
   This component is designed to be used in different contexts,
   e.g. to list and add threats for organisations, systems, and assets.
   """
@@ -60,7 +60,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           :if={not Enum.empty?(@threats)}
           id={"threats_for_org_#{@organisation.id}"}
           rows={@threats}
-          row_click={fn threat -> JS.navigate(@path_prefix <> "/threats/#{threat.id}") end}
+          row_click={fn threat -> JS.navigate(@origin <> "/threats/#{threat.id}") end}
         >
           <:col :let={threat}>
             <%= threat.name %>
@@ -80,7 +80,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
         :if={assigns[:show_modal] == true}
         id="create-threat-modal"
         show
-        on_cancel={JS.navigate(@path_prefix)}
+        on_cancel={JS.navigate(@origin)}
       >
         <.live_component
           module={ThreatShieldWeb.ThreatLive.ThreatForm}
@@ -92,7 +92,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           organisation={@organisation}
           system_options={systems_of_organisaton(@organisation)}
           threat={prepare_threat(assigns)}
-          patch={@pa}
+          patch={@origin}
         />
       </.modal>
     </div>
