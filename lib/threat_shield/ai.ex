@@ -7,6 +7,17 @@ defmodule ThreatShield.AI do
   alias ThreatShield.Mitigations.Mitigation
   alias ThreatShield.Systems.System
 
+  defmodule AiSuggestion do
+    @moduledoc """
+    A suggestion from the AI for a given type (e.g. threat, asset, etc.).
+    """
+    defstruct [
+      :type,
+      :result,
+      :requestor
+    ]
+  end
+
   defp make_chatgpt_request(system_prompt, user_prompt, response_extractor) do
     messages =
       [

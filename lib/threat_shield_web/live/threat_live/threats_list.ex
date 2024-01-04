@@ -1,9 +1,14 @@
 defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   use ThreatShieldWeb, :live_component
 
+  alias ThreatShield.AI
+  alias ThreatShield.AI.AiSuggestion
+  alias ThreatShield.Systems
+
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Systems.System
   alias ThreatShield.Threats.Threat
+
   import ThreatShieldWeb.Labels, only: [system_label: 1]
 
   require Logger
@@ -43,8 +48,8 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
             <.link>
               <.button_magic
                 :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
-                disabled={not is_nil(@asking_ai_for_threats)}
                 phx-click="suggest_threats"
+                phx-target={@myself}
                 phx-value-org_id={@organisation.id}
                 phx-value-sys_id={if is_nil(assigns[:system]), do: nil, else: @system.id}
               >
@@ -95,21 +100,15 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           patch={@origin}
         />
       </.modal>
+      <ThreatShieldWeb.Suggestions.suggestions
+        suggestions={fetch_suggestions(@ai_suggestions)}
+        entity_name="threat"
+      />
     </div>
     """
   end
 
-  @impl true
-  def handle_event("open-modal", _params, socket) do
-    socket
-    |> assign(:show_modal, true)
-    |> noreply()
-  end
-
-  @impl true
-  def handle_event("close-modal", _params, socket) do
-    {:noreply, assign(socket, show_modal: false)}
-  end
+  # lifecycle
 
   @impl true
   def update(%{added_threat: _asset}, socket) do
@@ -125,6 +124,31 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
     |> ok()
   end
 
+  # events
+
+  @impl true
+  def handle_event("open-modal", _params, socket) do
+    socket
+    |> assign(:show_modal, true)
+    |> noreply()
+  end
+
+  @impl true
+  def handle_event("suggest_threats", %{"sys_id" => sys_id}, socket) do
+    user = socket.assigns.current_user
+
+    task =
+      Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
+        ask_ai_for_threats(user, sys_id)
+      end)
+
+    socket =
+      socket
+      |> assign(asking_ai_for_threats: task.ref)
+
+    {:noreply, socket}
+  end
+
   # internal
 
   defp systems_of_organisaton(%Organisation{} = organisation) do
@@ -136,4 +160,21 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   end
 
   defp prepare_threat(_other), do: %Threat{}
+
+  defp ask_ai_for_threats(user, sys_id) do
+    system = Systems.get_system!(user, sys_id)
+
+    new_threats =
+      AI.suggest_threats_for_system(system)
+
+    {:ai_suggestion, %AiSuggestion{result: new_threats, type: :threats, requestor: self()}}
+  end
+
+  defp fetch_suggestions(suggestions) do
+    if is_nil(suggestions) do
+      []
+    else
+      suggestions[:threats] || []
+    end
+  end
 end

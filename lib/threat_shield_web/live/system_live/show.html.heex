@@ -42,12 +42,9 @@
     assets={@system.assets}
     system={@system}
     membership={@membership}
-    asking_ai_for_assets={@asking_ai_for_assets}
-    asking_ai_for_threats={@asking_ai_for_threats}
+    ai_suggestions={@ai_suggestions}
     origin={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
   />
-
-  <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 
   <.live_component
     module={ThreatShieldWeb.ThreatLive.ThreatsList}
@@ -57,7 +54,7 @@
     membership={@membership}
     system={@system}
     threats={@system.threats}
-    asking_ai_for_threats={@asking_ai_for_threats}
+    ai_suggestions={@ai_suggestions}
     origin={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
   />
 
@@ -79,8 +76,4 @@
       patch={~p"/organisations/#{@organisation}/systems/#{@system.id}"}
     />
   </.modal>
-
-  <%= if not is_nil(@asking_ai_for_threats) or not is_nil(@asking_ai_for_assets) do %>
-    <ThreatShieldWeb.Spinner.spinner />
-  <% end %>
 </section>

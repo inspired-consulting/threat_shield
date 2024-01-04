@@ -9,7 +9,6 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
 
   alias ThreatShield.Assets
   alias ThreatShield.Threats
-  alias ThreatShield.Systems.System
   alias ThreatShield.AI
 
   import ThreatShield.Organisations.Organisation,
@@ -171,11 +170,6 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
       |> assign(asking_ai_for_assets: task.ref)
 
     {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("suggest_threats", %{"org_id" => org_id}, socket) do
-    {:noreply, start_threat_suggestions(org_id, socket)}
   end
 
   @impl true

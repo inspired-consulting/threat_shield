@@ -90,8 +90,6 @@
     origin={"/organisations/#{@organisation.id}"}
   />
 
-  <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
-
   <.live_component
     module={ThreatShieldWeb.ThreatLive.ThreatsList}
     id={"threats_for_org_#{@organisation.id}"}
@@ -99,7 +97,7 @@
     organisation={@organisation}
     membership={@membership}
     threats={@organisation.threats}
-    asking_ai_for_threats={@asking_ai_for_threats}
+    ai_suggestions={[]}
     origin={"/organisations/#{@organisation.id}"}
   />
 
