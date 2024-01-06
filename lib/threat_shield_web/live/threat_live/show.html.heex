@@ -73,20 +73,13 @@
     />
   </.modal>
 
-  <ThreatShieldWeb.Suggestions.suggestions suggestions={@risk_suggestions} entity_name="risk" />
-
   <.live_component
     module={ThreatShieldWeb.RiskLive.RisksList}
-    organisation={@organisation}
-    risks={@threat.risks}
-    membership={@membership}
-    asking_ai_for_risks={@asking_ai_for_risks}
-    path_prefix={get_path_prefix(assigns)}
     id={"risks_for_threat_#{@threat.id}"}
+    scope={@scope}
     threat={@threat}
+    risks={@threat.risks}
+    ai_suggestions={@ai_suggestions}
+    origin={"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/#{@threat.id}"}
   />
-
-  <%= if not is_nil(@asking_ai_for_risks) do %>
-    <ThreatShieldWeb.Spinner.spinner />
-  <% end %>
 </section>
