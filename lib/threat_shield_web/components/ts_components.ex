@@ -4,9 +4,12 @@ defmodule ThreatShieldWeb.TsComponents do
   """
   use Phoenix.Component
 
+  alias ThreatShield.Scope
+
   use ThreatShieldWeb, :verified_routes
   import ThreatShieldWeb.CoreComponents
   import ThreatShieldWeb.Labels
+  import ThreatShieldWeb.Gettext
 
   # big building blocks
 
@@ -52,6 +55,52 @@ defmodule ThreatShieldWeb.TsComponents do
       </div>
     </section>
     """
+  end
+
+  attr :scope, Scope, required: true
+  attr :suggestions, :list, default: []
+  attr :listener, :string, required: true
+  attr :title, :string, default: "Suggestions"
+  attr :loading_title, :string, default: "Asking AI assistant for suggestions"
+
+  def suggestions_dialog(assigns) do
+    ~H"""
+    <div class="min-h-64 lg:min-w-5xl">
+      <div :if={has_suggestions?(assigns)}>
+        <.header>
+          <%= @title %>
+        </.header>
+
+        <.form :let={_f} phx-submit="apply_selection" phx-target={@listener}>
+          <.table id="asset_suggestions" rows={@suggestions}>
+            <:col :let={suggestion} label={dgettext("common", "Select")}>
+              <input type="checkbox" name="selected_suggestions[]" value={suggestion.name} />
+            </:col>
+            <:col :let={suggestion} label="Name"><%= suggestion.name %></:col>
+            <:col :let={suggestion} label="Description"><%= suggestion.description %></:col>
+          </.table>
+
+          <div>
+            <.button_primary phx-disable-with="Saving...">
+              <%= dgettext("common", "Apply selection") %>
+            </.button_primary>
+          </div>
+        </.form>
+      </div>
+
+      <div :if={not has_suggestions?(assigns)}>
+        <.header>
+          <%= @loading_title %>
+        </.header>
+
+        <ThreatShieldWeb.Spinner.spinner />
+      </div>
+    </div>
+    """
+  end
+
+  defp has_suggestions?(assigns) do
+    not is_nil(assigns[:suggestions]) and not Enum.empty?(assigns[:suggestions])
   end
 
   # simple components

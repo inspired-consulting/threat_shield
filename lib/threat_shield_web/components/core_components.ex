@@ -85,7 +85,7 @@ defmodule ThreatShieldWeb.CoreComponents do
         tabindex="0"
       >
         <div class="flex min-h-full items-center justify-center">
-          <div class="w-full max-w-3xl p-4 sm:p-6 lg:py-8">
+          <div class="min-w-3xl p-4 sm:p-6 lg:py-8">
             <.focus_wrap
               id={"#{@id}-container"}
               phx-window-keydown={JS.exec("data-cancel", to: "##{@id}")}
@@ -554,7 +554,7 @@ defmodule ThreatShieldWeb.CoreComponents do
           <td
             :for={{col, i} <- Enum.with_index(@col)}
             phx-click={@row_click && @row_click.(row)}
-            class={["relative p-0", @row_click && "hover:cursor-pointer"]}
+            class={["relative px-2 py-0", @row_click && "hover:cursor-pointer"]}
           >
             <div class="block py-4 pr-0">
               <span class="absolute -inset-y-px -right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
