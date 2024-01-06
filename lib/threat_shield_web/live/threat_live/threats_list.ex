@@ -2,13 +2,15 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.AI
+  alias ThreatShield.Scope
   alias ThreatShield.AI.AiSuggestion
 
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Systems.System
   alias ThreatShield.Threats.Threat
+  alias ThreatShield.Threats
 
-  import ThreatShieldWeb.Labels, only: [system_label: 1]
+  import(ThreatShieldWeb.Labels, only: [system_label: 1])
 
   require Logger
 
@@ -34,7 +36,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           <:buttons>
             <.link
               :if={ThreatShield.Members.Rights.may(:create_threat, @scope.membership)}
-              phx-click="open-modal"
+              phx-click="open-create-dialog"
               phx-target={@myself}
             >
               <.button_primary>
@@ -79,7 +81,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
       </div>
 
       <.modal
-        :if={assigns[:show_modal] == true}
+        :if={assigns[:show_create_dialog] == true}
         id="create-threat-modal"
         show
         on_cancel={JS.navigate(@origin)}
@@ -97,9 +99,10 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           patch={@origin}
         />
       </.modal>
-      <ThreatShieldWeb.Suggestions.suggestions
+      <ThreatShieldWeb.ThreatLive.ThreatSuggestions.suggestions_dialog
+        listener={@myself}
+        scope={@scope}
         suggestions={fetch_suggestions(@ai_suggestions)}
-        entity_name="threat"
       />
     </div>
     """
@@ -110,7 +113,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   @impl true
   def update(%{added_threat: _asset}, socket) do
     socket
-    |> assign(:show_modal, false)
+    |> assign(:show_create_dialog, false)
     |> ok()
   end
 
@@ -124,12 +127,17 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   # events
 
   @impl true
-  def handle_event("open-modal", _params, socket) do
+  def handle_event("open-create-dialog", _params, socket) do
     socket
-    |> assign(:show_modal, true)
+    |> assign(:show_create_dialog, true)
     |> noreply()
   end
 
+  @doc """
+  Will start a background task to suggest threats for the current scope
+  When the task is finished, it will send a :new_ai_suggestion message to the current page.
+  The page is expected to add the suggestions to the :ai_suggesstions assigns.
+  """
   @impl true
   def handle_event("suggest_threats", _params, socket) do
     scope = socket.assigns.scope
@@ -138,10 +146,42 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
       new_threats =
         AI.suggest_threats(scope)
 
-      {:ai_suggestion, %AiSuggestion{result: new_threats, type: :threats, requestor: self()}}
+      {:new_ai_suggestion, %AiSuggestion{result: new_threats, type: :threats, requestor: self()}}
     end)
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("add_threat", %{"name" => name, "description" => description}, socket) do
+    scope = %Scope{} = socket.assigns.scope
+
+    ai_suggestions = socket.assigns.ai_suggestions
+
+    {:ok, threat} =
+      Threats.add_threat_with_name_and_description(scope, name, description)
+
+    remaining_suggestions =
+      Enum.filter(ai_suggestions[:threats], fn s -> s.description != description end)
+      |> Enum.to_list()
+
+    socket
+    |> assign(:ai_suggestions, Map.put(ai_suggestions, :threats, remaining_suggestions))
+    |> assign(:threats, socket.assigns.threats ++ [threat])
+    |> noreply()
+  end
+
+  @impl true
+  def handle_event("ignore_threat", %{"description" => description}, socket) do
+    ai_suggestions = socket.assigns.ai_suggestions
+
+    remaining_suggestions =
+      Enum.filter(ai_suggestions[:threats], fn s -> s.description != description end)
+      |> Enum.to_list()
+
+    socket
+    |> assign(:ai_suggestions, Map.put(ai_suggestions, :threats, remaining_suggestions))
+    |> noreply()
   end
 
   # internal

@@ -20,13 +20,15 @@ defmodule ThreatShield.Organisations do
 
   """
 
-  def list_organisations(user) do
+  def list_organisations(%User{} = user) do
     full_user =
       Repo.get(User, user.id)
       |> Repo.preload(:organisations)
 
     full_user.organisations
   end
+
+  def list_organisations(_), do: []
 
   def get_organisation!(%User{id: user_id}, org_id) do
     Organisation.get(org_id)

@@ -96,7 +96,7 @@ defmodule ThreatShield.Organisations.Organisation do
   import Ecto.Query
 
   def get(id) do
-    from(e in __MODULE__, as: :organisation, where: e.id == ^id)
+    from(o in __MODULE__, as: :organisation, where: o.id == ^id)
   end
 
   def for_user(query, user_id) do

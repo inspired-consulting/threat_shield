@@ -5,8 +5,6 @@ defmodule ThreatShieldWeb.SystemLive.Show do
 
   alias ThreatShield.Scope
   alias ThreatShield.Systems
-  alias ThreatShield.Assets
-  alias ThreatShield.Threats
   alias ThreatShield.Systems.System
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
 
@@ -78,7 +76,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   end
 
   @impl true
-  def handle_info({task_ref, {:ai_suggestion, suggestion}}, socket) do
+  def handle_info({task_ref, {:new_ai_suggestion, suggestion}}, socket) do
     %{type: entity_type, result: result} = suggestion
 
     # stop monitoring the task
@@ -103,65 +101,5 @@ defmodule ThreatShieldWeb.SystemLive.Show do
      push_navigate(socket,
        to: "/organisations/#{socket.assigns.organisation.id}"
      )}
-  end
-
-  # to be moved to components
-
-  @impl true
-  def handle_event("ignore_asset", %{"description" => description}, socket) do
-    suggestions =
-      Enum.filter(socket.assigns.asset_suggestions, fn s -> s.description != description end)
-      |> Enum.to_list()
-
-    {:noreply, socket |> assign(asset_suggestions: suggestions)}
-  end
-
-  @impl true
-  def handle_event("ignore_threat", %{"description" => description}, socket) do
-    suggestions =
-      Enum.filter(socket.assigns.threat_suggestions, fn s -> s.description != description end)
-      |> Enum.to_list()
-
-    {:noreply, socket |> assign(threat_suggestions: suggestions)}
-  end
-
-  @impl true
-  def handle_event("add_asset", %{"name" => name, "description" => description}, socket) do
-    user = socket.assigns.current_user
-    system = socket.assigns.system
-
-    {:ok, asset} = Assets.add_asset_with_name_and_description(user, system, name, description)
-
-    suggestions =
-      Enum.filter(socket.assigns.asset_suggestions, fn s -> s.description != description end)
-      |> Enum.to_list()
-
-    stale_sys = socket.assigns.system
-    updated_sys = %{stale_sys | assets: stale_sys.assets ++ [asset]}
-
-    {:noreply,
-     socket
-     |> assign(:system, updated_sys)
-     |> assign(:asset_suggestions, suggestions)}
-  end
-
-  @impl true
-  def handle_event("add_threat", %{"name" => name, "description" => description}, socket) do
-    user = socket.assigns.current_user
-    system = socket.assigns.system
-
-    {:ok, threat} = Threats.add_threat_with_name_and_description(user, system, name, description)
-
-    suggestions =
-      Enum.filter(socket.assigns.threat_suggestions, fn s -> s.description != description end)
-      |> Enum.to_list()
-
-    stale_sys = socket.assigns.system
-    updated_sys = %{stale_sys | threats: stale_sys.threats ++ [threat]}
-
-    {:noreply,
-     socket
-     |> assign(:system, updated_sys)
-     |> assign(:threat_suggestions, suggestions)}
   end
 end

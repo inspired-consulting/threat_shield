@@ -102,7 +102,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   end
 
   @impl true
-  def handle_info({task_ref, {:ai_suggestion, suggestion}}, socket) do
+  def handle_info({task_ref, {:new_ai_suggestion, suggestion}}, socket) do
     %{type: entity_type, result: result} = suggestion
 
     # stop monitoring the task
@@ -127,64 +127,5 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
      push_navigate(socket,
        to: "/organisations"
      )}
-  end
-
-  # to be moved to components
-
-  @impl true
-  def handle_event("ignore_asset", %{"description" => description}, socket) do
-    suggestions =
-      Enum.filter(socket.assigns.asset_suggestions, fn s -> s.description != description end)
-      |> Enum.to_list()
-
-    {:noreply, socket |> assign(asset_suggestions: suggestions)}
-  end
-
-  def handle_event("ignore_threat", %{"description" => description}, socket) do
-    suggestions =
-      Enum.filter(socket.assigns.threat_suggestions, fn s -> s.description != description end)
-      |> Enum.to_list()
-
-    {:noreply, socket |> assign(threat_suggestions: suggestions)}
-  end
-
-  @impl true
-  def handle_event("add_asset", %{"name" => name, "description" => description}, socket) do
-    user = socket.assigns.current_user
-    org_id = socket.assigns.organisation.id
-
-    {:ok, asset} = Assets.add_asset_with_name_and_description(user, org_id, name, description)
-
-    suggestions =
-      Enum.filter(socket.assigns.asset_suggestions, fn s -> s.description != description end)
-      |> Enum.to_list()
-
-    stale_organisation = socket.assigns.organisation
-    updated_organisation = %{stale_organisation | assets: stale_organisation.assets ++ [asset]}
-
-    {:noreply,
-     socket
-     |> assign(:organisation, updated_organisation)
-     |> assign(:asset_suggestions, suggestions)}
-  end
-
-  @impl true
-  def handle_event("add_threat", %{"name" => name, "description" => description}, socket) do
-    user = socket.assigns.current_user
-    org_id = socket.assigns.organisation.id
-
-    {:ok, threat} = Threats.add_threat_with_name_and_description(user, org_id, name, description)
-
-    suggestions =
-      Enum.filter(socket.assigns.threat_suggestions, fn s -> s.description != description end)
-      |> Enum.to_list()
-
-    stale_organisation = socket.assigns.organisation
-    updated_organisation = %{stale_organisation | threats: stale_organisation.threats ++ [threat]}
-
-    {:noreply,
-     socket
-     |> assign(:organisation, updated_organisation)
-     |> assign(:threat_suggestions, suggestions)}
   end
 end

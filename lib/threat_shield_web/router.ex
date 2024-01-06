@@ -20,7 +20,7 @@ defmodule ThreatShieldWeb.Router do
   scope "/", ThreatShieldWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    get "/", WelcomeController, :home
   end
 
   # Other scopes may use custom stacks.
@@ -71,8 +71,6 @@ defmodule ThreatShieldWeb.Router do
       on_mount: [{ThreatShieldWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-
-      live "/dashboard", DashboardLive.Index, :index
 
       live "/join/:token", MembersLive.Join, :join
 

@@ -21,7 +21,7 @@ defmodule ThreatShieldWeb.UserForgotPasswordLiveTest do
         conn
         |> log_in_user(user_fixture())
         |> live(~p"/users/reset_password")
-        |> follow_redirect(conn, ~p"/dashboard")
+        |> follow_redirect(conn, ~p"/organisations")
 
       assert {:ok, _conn} = result
     end

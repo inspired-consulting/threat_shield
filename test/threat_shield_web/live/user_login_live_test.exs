@@ -18,7 +18,7 @@ defmodule ThreatShieldWeb.UserLoginLiveTest do
         conn
         |> log_in_user(user_fixture())
         |> live(~p"/users/log_in")
-        |> follow_redirect(conn, "/dashboard")
+        |> follow_redirect(conn, "/organisations")
 
       assert {:ok, _conn} = result
     end
@@ -36,7 +36,7 @@ defmodule ThreatShieldWeb.UserLoginLiveTest do
 
       conn = submit_form(form, conn)
 
-      assert redirected_to(conn) == ~p"/dashboard"
+      assert redirected_to(conn) == ~p"/organisations"
     end
 
     test "redirects to login page with a flash error if there are no valid credentials", %{

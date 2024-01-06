@@ -5,6 +5,7 @@ defmodule ThreatShield.Assets do
 
   import Ecto.Query, warn: false
   alias ThreatShield.Repo
+  alias ThreatShield.Scope
 
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Accounts.User
@@ -43,6 +44,11 @@ defmodule ThreatShield.Assets do
       criticality_publication: 0.0,
       criticality_overall: 0.0
     }
+  end
+
+  def change_asset(%Asset{} = asset, attrs \\ %{}) do
+    Asset.changeset(asset, attrs)
+    |> update_overall_criticality()
   end
 
   def create_asset(
@@ -95,16 +101,18 @@ defmodule ThreatShield.Assets do
   defp check_related_system_in_asset_changeset(_, _user) do
   end
 
-  def delete_asset_by_id(%User{id: user_id}, asset_id) do
-    Asset.get(asset_id)
-    |> Asset.for_user(user_id, :delete_asset)
-    |> Asset.select()
-    |> Repo.delete_all()
-  end
+  def add_asset_with_name_and_description(
+        %Scope{} = scope,
+        name,
+        description
+      ) do
+    case scope do
+      %Scope{system: %System{} = system} ->
+        add_asset_with_name_and_description(scope.user, system, name, description)
 
-  def change_asset(%Asset{} = asset, attrs \\ %{}) do
-    Asset.changeset(asset, attrs)
-    |> update_overall_criticality()
+      %Scope{organisation: %Organisation{} = organisation} ->
+        add_asset_with_name_and_description(scope.user, organisation, name, description)
+    end
   end
 
   def add_asset_with_name_and_description(
@@ -133,7 +141,12 @@ defmodule ThreatShield.Assets do
     end)
   end
 
-  def add_asset_with_name_and_description(%User{id: user_id}, org_id, name, description) do
+  def add_asset_with_name_and_description(
+        %User{id: user_id},
+        %Organisation{id: org_id},
+        name,
+        description
+      ) do
     Repo.transaction(fn ->
       organisation =
         Organisation.get(org_id)
@@ -154,5 +167,12 @@ defmodule ThreatShield.Assets do
 
     asset_cs
     |> Ecto.Changeset.put_change(:criticality_overall, crit)
+  end
+
+  def delete_asset_by_id(%User{id: user_id}, asset_id) do
+    Asset.get(asset_id)
+    |> Asset.for_user(user_id, :delete_asset)
+    |> Asset.select()
+    |> Repo.delete_all()
   end
 end

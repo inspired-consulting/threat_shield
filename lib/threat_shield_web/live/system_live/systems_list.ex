@@ -2,6 +2,7 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
   alias ThreatShield.Organisations.Organisation
   use ThreatShieldWeb, :live_component
 
+  alias ThreatShield.Scope
   alias ThreatShield.Systems.System
   alias ThreatShield.Organisations.Organisation
 
@@ -37,9 +38,9 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
           </:buttons>
         </.stacked_list_header>
         <.stacked_list
-          :if={not Enum.empty?(@scope.organisation.systems)}
+          :if={not Enum.empty?(@systems)}
           id={"systems_for_#{@scope.id}"}
-          rows={@scope.organisation.systems}
+          rows={@systems}
           row_click={
             fn system ->
               JS.navigate(~p"/organisations/#{@scope.organisation.id}/systems/#{system.id}")
@@ -71,7 +72,7 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
           module={ThreatShieldWeb.SystemLive.SystemForm}
           id={:new}
           parent_id={@id}
-          title={dgettext("assets", "New System")}
+          title={dgettext("systems", "New System")}
           action={:new_system}
           organisation={@scope.organisation}
           current_user={@scope.user}
@@ -87,16 +88,20 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
   # lifecycle and events
 
   @impl true
-  def update(%{added_system: _asset}, socket) do
+  def update(%{added_system: system} = assigns, socket) do
     socket
     |> assign(:show_modal, false)
+    |> assign(:systems, assigns.systems ++ [system])
     |> ok()
   end
 
   @impl true
   def update(assigns, socket) do
+    scope = %Scope{} = assigns.scope
+
     socket
     |> assign(assigns)
+    |> assign(:systems, scope.organisation.systems)
     |> ok()
   end
 
