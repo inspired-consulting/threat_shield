@@ -1,12 +1,19 @@
 defmodule ThreatShieldWeb.AssetLive.AssetsList do
+  alias ElixirSense.Plugins.Phoenix.Scope
   use ThreatShieldWeb, :live_component
 
+  alias ThreatShield.AI
+  alias ThreatShield.Scope
+  alias ThreatShield.AI.AiSuggestion
   alias ThreatShield.Assets
 
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Systems.System
 
   require Logger
+
+  attr :ai_suggestions, :map, default: %{}
+  attr :scope, :any
 
   @impl true
   def render(assigns) do
@@ -25,8 +32,8 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
 
           <:buttons>
             <.link
-              :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
-              phx-click="open-modal"
+              :if={ThreatShield.Members.Rights.may(:create_asset, @scope.membership)}
+              phx-click="open-create-dialog"
               phx-target={@myself}
             >
               <.button_primary>
@@ -38,11 +45,9 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
             </.link>
             <.link>
               <.button_magic
-                :if={ThreatShield.Members.Rights.may(:create_asset, @membership)}
-                disabled={not is_nil(@asking_ai_for_assets)}
+                :if={ThreatShield.Members.Rights.may(:create_asset, @scope.membership)}
                 phx-click="suggest_assets"
-                phx-value-org_id={@organisation.id}
-                phx-value-sys_id={if is_nil(assigns[:system]), do: nil, else: @system.id}
+                phx-target={@myself}
               >
                 <.icon name="hero-sparkles" class="mr-1 mb-1" /><%= dgettext(
                   "assets",
@@ -54,7 +59,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
         </.stacked_list_header>
         <.stacked_list
           :if={not Enum.empty?(@assets)}
-          id={"assets_for_org_#{@organisation.id}"}
+          id={"assets_for_org_#{@scope.organisation.id}"}
           rows={@assets}
           row_click={fn asset -> JS.navigate(@origin <> "/assets/#{asset.id}") end}
         >
@@ -97,7 +102,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
       </div>
 
       <.modal
-        :if={assigns[:show_modal] == true}
+        :if={assigns[:show_create_dialog] == true}
         id="create-asset-modal"
         show
         on_cancel={JS.navigate(@origin)}
@@ -105,14 +110,26 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
         <.live_component
           module={ThreatShieldWeb.AssetLive.AssetForm}
           id={:new}
+          scope={@scope}
           parent_id={@id}
           title={dgettext("assets", "New Asset")}
           action={:new_asset}
-          current_user={@current_user}
-          organisation={@organisation}
-          system_options={systems_of_organisaton(@organisation)}
+          system_options={systems_of_organisaton(@scope.organisation)}
           asset={prepare_asset(assigns)}
-          patch={@origin}
+          origin={@origin}
+        />
+      </.modal>
+      <.modal
+        :if={assigns[:show_suggest_dialog] == true}
+        id="suggest-assets-modal"
+        show
+        on_cancel={JS.navigate(@origin)}
+      >
+        <.suggestions_dialog
+          title={dgettext("assets", "Suggested Assets")}
+          listener={@myself}
+          scope={@scope}
+          suggestions={@ai_suggestions[:assets]}
         />
       </.modal>
     </div>
@@ -122,16 +139,9 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
   # events
 
   @impl true
-  def handle_event("open-modal", _params, socket) do
-    socket
-    |> assign(:show_modal, true)
-    |> noreply()
-  end
-
-  @impl true
   def update(%{added_asset: _threat}, socket) do
     socket
-    |> assign(:show_modal, false)
+    |> assign(:show_create_dialog, false)
     |> ok()
   end
 
@@ -140,6 +150,52 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
     socket
     |> assign(assigns)
     |> ok()
+  end
+
+  @impl true
+  @spec handle_event(<<_::80, _::_*32>>, any(), atom() | map()) :: {:noreply, any()}
+  def handle_event("open-create-dialog", _params, socket) do
+    socket
+    |> assign(:show_create_dialog, true)
+    |> noreply()
+  end
+
+  @doc """
+  Will start a background task to suggest assets for the current scope.
+  When the task is finished, it will send a :new_ai_suggestion message to the current page.
+  The page is expected to add the suggestions to the :ai_suggesstions assigns.
+  """
+  @impl true
+  def handle_event("suggest_assets", _params, socket) do
+    scope = socket.assigns.scope
+
+    Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
+      new_assets =
+        AI.suggest_assets(scope)
+
+      {:new_ai_suggestion, %AiSuggestion{result: new_assets, type: :assets, requestor: self()}}
+    end)
+
+    socket
+    |> assign(:show_suggest_dialog, true)
+    |> noreply()
+  end
+
+  @impl true
+  def handle_event("apply_selection", %{"selected_suggestions" => selected_names}, socket) do
+    scope = %Scope{} = socket.assigns.scope
+
+    ai_suggestions = socket.assigns.ai_suggestions
+
+    new_assets =
+      ai_suggestions[:assets]
+      |> Enum.filter(fn s -> Enum.member?(selected_names, s.name) end)
+      |> Enum.map(fn s -> create_asset(scope, s) end)
+
+    socket
+    |> assign(:show_suggest_dialog, false)
+    |> assign(:assets, socket.assigns.assets ++ new_assets)
+    |> noreply()
   end
 
   # internal
@@ -153,4 +209,9 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
   end
 
   defp prepare_asset(_other), do: Assets.prepare_asset()
+
+  defp create_asset(scope, %{name: name, description: desc}) do
+    {:ok, asset} = Assets.add_asset_with_name_and_description(scope, name, desc)
+    asset
+  end
 end

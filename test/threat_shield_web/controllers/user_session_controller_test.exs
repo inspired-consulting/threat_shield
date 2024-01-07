@@ -15,7 +15,7 @@ defmodule ThreatShieldWeb.UserSessionControllerTest do
         })
 
       assert get_session(conn, :user_token)
-      assert redirected_to(conn) == ~p"/dashboard"
+      assert redirected_to(conn) == ~p"/organisations"
 
       # Now do a logged in request and assert on organisations page
       conn = get(conn, ~p"/")
@@ -33,7 +33,7 @@ defmodule ThreatShieldWeb.UserSessionControllerTest do
         })
 
       assert conn.resp_cookies["_threat_shield_web_user_remember_me"]
-      assert redirected_to(conn) == ~p"/dashboard"
+      assert redirected_to(conn) == ~p"/organisations"
     end
 
     test "logs the user in with return to", %{conn: conn, user: user} do
@@ -61,7 +61,7 @@ defmodule ThreatShieldWeb.UserSessionControllerTest do
           }
         })
 
-      assert redirected_to(conn) == ~p"/dashboard"
+      assert redirected_to(conn) == ~p"/organisations"
       assert Phoenix.Flash.get(conn.assigns.flash, :info) =~ "Account created successfully"
     end
 

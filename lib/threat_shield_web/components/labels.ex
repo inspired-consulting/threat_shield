@@ -4,9 +4,14 @@ defmodule ThreatShieldWeb.Labels do
   use ThreatShieldWeb, :verified_routes
   import ThreatShieldWeb.Gettext
 
+  alias ThreatShield.Systems.System
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Threats.Threat
-  alias ThreatShield.Systems.System
+  alias ThreatShield.Risks.Risk
+
+  def system_label(%Risk{} = risk) do
+    system_label(risk.threat)
+  end
 
   def system_label(%Threat{} = threat) do
     system_label(threat.system)
@@ -18,7 +23,21 @@ defmodule ThreatShieldWeb.Labels do
 
   def system_label(%System{} = system), do: system.name
 
-  def system_label(_), do: dgettext("common", "Organisation wide")
+  def system_label(_), do: "-"
+
+  def asset_label(%Risk{} = risk) do
+    asset_label(risk.threat)
+  end
+
+  def asset_label(%Threat{} = threat) do
+    asset_label(threat.asset)
+  end
+
+  def asset_label(%Asset{} = asset) do
+    asset.name
+  end
+
+  def asset_label(_), do: "-"
 
   def risk_status_label(status) when is_binary(status),
     do: risk_status_label(String.to_existing_atom(status))

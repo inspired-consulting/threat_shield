@@ -6,6 +6,7 @@ defmodule ThreatShield.Threats do
   import Ecto.Query, warn: false
 
   alias ThreatShield.Repo
+  alias ThreatShield.Scope
 
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Accounts.User
@@ -28,8 +29,10 @@ defmodule ThreatShield.Threats do
     Threat.get(threat_id)
     |> Threat.for_user(user_id)
     |> Threat.with_system()
+    |> Threat.with_asset()
     |> Threat.with_organisation_and_risks()
     |> Threat.with_org_systems()
+    |> Threat.with_org_assets()
     |> Threat.preload_membership()
     |> Repo.one!()
   end
@@ -61,6 +64,20 @@ defmodule ThreatShield.Threats do
   end
 
   def add_threat_with_name_and_description(
+        %Scope{} = scope,
+        name,
+        description
+      ) do
+    case scope do
+      %Scope{system: %System{} = system} ->
+        add_threat_with_name_and_description(scope.user, system, name, description)
+
+      %Scope{organisation: %Organisation{} = organisation} ->
+        add_threat_with_name_and_description(scope.user, organisation, name, description)
+    end
+  end
+
+  def add_threat_with_name_and_description(
         %User{id: user_id},
         %System{id: sys_id},
         name,
@@ -86,7 +103,12 @@ defmodule ThreatShield.Threats do
     end)
   end
 
-  def add_threat_with_name_and_description(%User{id: user_id}, org_id, name, description) do
+  def add_threat_with_name_and_description(
+        %User{id: user_id},
+        %Organisation{id: org_id},
+        name,
+        description
+      ) do
     Repo.transaction(fn ->
       organisation =
         Organisation.get(org_id)

@@ -1,40 +1,34 @@
 defmodule ThreatShieldWeb.ThreatLive.Show do
   use ThreatShieldWeb, :live_view
 
+  alias ThreatShield.Scope
   alias ThreatShield.Threats
+  alias ThreatShield.Threats.Threat
   alias ThreatShield.Risks.Risk
-  alias ThreatShield.Risks
-  alias ThreatShield.AI
-  alias ThreatShield.Organisations.Organisation
 
-  import ThreatShield.Organisations.Organisation, only: [list_system_options: 1]
+  import ThreatShield.Organisations.Organisation,
+    only: [list_system_options: 1, list_asset_options: 1]
+
+  import ThreatShieldWeb.ScopeUrlBinding
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, get_path_prefix: 1]
-  import ThreatShieldWeb.Labels, only: [system_label: 1]
+  import ThreatShieldWeb.Labels
 
   @impl true
   def mount(%{"threat_id" => threat_id} = params, _session, socket) do
-    current_user = socket.assigns.current_user
-    threat = Threats.get_threat!(current_user, threat_id)
+    user = socket.assigns.current_user
+    threat = %Threat{} = Threats.get_threat!(user, threat_id)
+    scope = %Scope{} = threat_scope_from_params(user, threat, params)
 
-    socket =
-      socket
-      |> assign(:threat, threat)
-      |> assign(:organisation, threat.organisation)
-      |> assign(:membership, Organisation.get_membership(threat.organisation, current_user))
-      |> assign(:system, threat.system)
-      |> assign(:page_title, page_title(socket.assigns.live_action))
-      |> assign(:asking_ai_for_risks, nil)
-      |> assign(:risk_suggestions, [])
-      |> assign(:called_via_system, Map.has_key?(params, "sys_id"))
-
-    socket_with_options =
-      if socket.assigns.called_via_system do
-        socket
-      else
-        assign(socket, :system_options, list_system_options(threat.organisation))
-      end
-
-    {:ok, socket_with_options}
+    socket
+    |> assign(scope: scope)
+    |> assign(organisation: threat.organisation)
+    |> assign(threat: threat)
+    |> assign(page_title: page_title(socket.assigns.live_action))
+    |> assign(system_options: list_system_options(threat.organisation))
+    |> assign(asset_options: list_asset_options(threat.organisation))
+    |> assign(origin: threat_scope_to_url(scope))
+    |> assign(ai_suggestions: %{})
+    |> ok()
   end
 
   defp apply_action(socket, :new_risk, _params) do
@@ -71,40 +65,6 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   end
 
   @impl true
-  def handle_event("add_risk", %{"name" => name, "description" => description}, socket) do
-    user = socket.assigns.current_user
-    threat_id = socket.assigns.threat.id
-
-    {:ok, risk} = Risks.add_risk(user, threat_id, name, description)
-
-    suggestions =
-      Enum.filter(socket.assigns.risk_suggestions, fn s -> s.description != description end)
-      |> Enum.to_list()
-
-    stale_threat = socket.assigns.threat
-    updated_threat = %{stale_threat | risks: stale_threat.risks ++ [risk]}
-
-    {:noreply,
-     socket
-     |> assign(:threat, updated_threat)
-     |> assign(:risk_suggestions, suggestions)}
-  end
-
-  @impl true
-  def handle_event("ignore_risk", %{"description" => description}, socket) do
-    suggestions =
-      Enum.filter(socket.assigns.risk_suggestions, fn s -> s.description != description end)
-      |> Enum.to_list()
-
-    {:noreply, socket |> assign(:risk_suggestions, suggestions)}
-  end
-
-  @impl true
-  def handle_event("suggest_risks", %{"threat_id" => threat_id}, socket) do
-    {:noreply, start_suggestions(threat_id, socket)}
-  end
-
-  @impl true
   def handle_info({ThreatShieldWeb.RiskLive.RiskForm, {:saved, risk}}, socket) do
     stale_threat = socket.assigns.threat
     updated_threat = %{stale_threat | risks: stale_threat.risks ++ [risk]}
@@ -125,41 +85,23 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
     {:noreply, socket}
   end
 
-  def handle_info({_from, {:ai_results, new_risks}}, socket) do
-    %{asking_ai_for_risks: ref} = socket.assigns
+  @impl true
+  def handle_info({task_ref, {:new_ai_suggestion, suggestion}}, socket) do
+    %{type: entity_type, result: result} = suggestion
 
-    Process.demonitor(ref, [:flush])
+    # stop monitoring the task
+    Process.demonitor(task_ref, [:flush])
 
-    {:noreply,
-     socket
-     |> assign(
-       asking_ai_for_risks: nil,
-       risk_suggestions: socket.assigns.risk_suggestions ++ new_risks
-     )}
+    suggestions =
+      (socket.assigns[:suggestions] || %{})
+      |> Map.put(entity_type, result)
+
+    socket
+    |> assign(ai_suggestions: suggestions)
+    |> noreply()
   end
 
   defp page_title(:show), do: "Show Threat"
   defp page_title(:edit_threat), do: "Edit Threat"
   defp page_title(:new_risk), do: "New Risk"
-
-  defp start_suggestions(threat_id, socket) do
-    user = socket.assigns.current_user
-
-    task =
-      Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
-        ask_ai(user, threat_id)
-      end)
-
-    socket
-    |> assign(asking_ai_for_risks: task.ref)
-  end
-
-  defp ask_ai(user, threat_id) do
-    threat = Threats.get_threat!(user, threat_id)
-
-    risk_descriptions =
-      AI.suggest_risks_for_threat(threat)
-
-    {:ai_results, risk_descriptions}
-  end
 end

@@ -1,12 +1,15 @@
 defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
   use ThreatShieldWeb, :live_component
 
+  alias ThreatShield.Scope
   alias ThreatShield.Threats
+
+  import ThreatShieldWeb.Gettext
 
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div class="max-w-3xl">
       <.header>
         <%= @title %>
       </.header>
@@ -25,8 +28,13 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:description]} type="text" label="Description" />
+        <.input field={@form[:name]} type="text" label={dgettext("threats", "Name")} required />
+        <.input
+          field={@form[:description]}
+          type="text"
+          label={dgettext("threats", "Description")}
+          required
+        />
         <.input
           :if={assigns[:system_options]}
           field={@form[:system_id]}
@@ -34,8 +42,17 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
           label="System"
           options={@system_options}
         />
+        <.input
+          :if={assigns[:asset_options]}
+          field={@form[:asset_id]}
+          type="select"
+          label="Asset"
+          options={@asset_options}
+        />
         <:actions>
-          <.button_primary phx-disable-with="Saving...">Save Threat</.button_primary>
+          <.button_primary phx-disable-with={dgettext("common", "Saving...")} class="mt-2">
+            <%= dgettext("threats", "Save Threat") %>
+          </.button_primary>
         </:actions>
       </.simple_form>
     </div>
@@ -68,10 +85,10 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
   end
 
   defp save_threat(socket, :edit_threat, threat_params) do
-    user = socket.assigns.current_user
+    scope = %Scope{} = socket.assigns.scope
 
     case Threats.update_threat(
-           user,
+           scope.user,
            socket.assigns.threat,
            threat_params |> update_with_fixed_system(socket)
          ) do
@@ -80,7 +97,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
 
         socket
         |> put_flash(:info, "Threat updated successfully")
-        |> push_patch(to: socket.assigns.patch)
+        |> push_patch(to: socket.assigns.origin)
         |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -89,11 +106,11 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
   end
 
   defp save_threat(socket, :new_threat, threat_params) do
-    %{current_user: user, organisation: organisation} = socket.assigns
+    scope = %Scope{} = socket.assigns.scope
 
     Threats.create_threat(
-      user,
-      organisation,
+      scope.user,
+      scope.organisation,
       threat_params |> update_with_fixed_system(socket)
     )
     |> case do
@@ -103,7 +120,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
 
         socket
         |> put_flash(:info, "Threat created successfully")
-        |> push_patch(to: socket.assigns.patch)
+        |> push_patch(to: socket.assigns.origin)
         |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->

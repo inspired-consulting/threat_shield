@@ -29,6 +29,14 @@
 
   <:attribute>
     <div>
+      <.label><%= dgettext("risks", "System") %></.label>
+      <p><%= system_label(@risk) %></p>
+    </div>
+    <div>
+      <.label><%= dgettext("risks", "Asset") %></.label>
+      <p><%= asset_label(@risk) %></p>
+    </div>
+    <div>
       <.label><%= dgettext("risks", "Estimated cost") %></.label>
       <p><%= format_monetary_amount(@risk.estimated_cost) %></p>
     </div>
@@ -85,24 +93,14 @@
     />
   </.modal>
 
-  <ThreatShieldWeb.Suggestions.suggestions
-    suggestions={@mitigation_suggestions}
-    entity_name="mitigation"
-  />
-
   <.live_component
     module={ThreatShieldWeb.MitigationLive.MitigationsList}
-    organisation={@organisation}
     id={"mitigations_for_risk_#{@risk.id}"}
+    scope={@scope}
     mitigations={@risk.mitigations}
-    membership={@membership}
-    asking_ai_for_mitigations={@asking_ai_for_mitigations}
     threat={@threat}
     risk={@risk}
-    path_prefix={get_path_prefix(assigns)}
+    ai_suggestions={@ai_suggestions}
+    origin={@origin}
   />
-
-  <%= if not is_nil(@asking_ai_for_mitigations) do %>
-    <ThreatShieldWeb.Spinner.spinner />
-  <% end %>
 </section>

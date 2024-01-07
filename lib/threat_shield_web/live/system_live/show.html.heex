@@ -32,32 +32,21 @@
 </.entity_info>
 
 <section class="ts-container mt-8">
-  <ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
-
   <.live_component
     module={ThreatShieldWeb.AssetLive.AssetsList}
     id={"assets_for_system_#{@system.id}"}
-    current_user={@current_user}
-    organisation={@organisation}
+    scope={@scope}
     assets={@system.assets}
-    system={@system}
-    membership={@membership}
-    asking_ai_for_assets={@asking_ai_for_assets}
-    asking_ai_for_threats={@asking_ai_for_threats}
+    ai_suggestions={@ai_suggestions}
     origin={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
   />
-
-  <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 
   <.live_component
     module={ThreatShieldWeb.ThreatLive.ThreatsList}
     id={"threats_for_system_#{@system.id}"}
-    current_user={@current_user}
-    organisation={@organisation}
-    membership={@membership}
-    system={@system}
+    scope={@scope}
     threats={@system.threats}
-    asking_ai_for_threats={@asking_ai_for_threats}
+    ai_suggestions={@ai_suggestions}
     origin={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
   />
 
@@ -79,8 +68,4 @@
       patch={~p"/organisations/#{@organisation}/systems/#{@system.id}"}
     />
   </.modal>
-
-  <%= if not is_nil(@asking_ai_for_threats) or not is_nil(@asking_ai_for_assets) do %>
-    <ThreatShieldWeb.Spinner.spinner />
-  <% end %>
 </section>

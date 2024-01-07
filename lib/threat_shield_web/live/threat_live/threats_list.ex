@@ -1,10 +1,17 @@
 defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   use ThreatShieldWeb, :live_component
 
+  alias ThreatShield.AI
+  alias ThreatShield.Scope
+  alias ThreatShield.AI.AiSuggestion
+
+  alias ThreatShield.Threats
+  alias ThreatShield.Threats.Threat
+  alias ThreatShield.Assets.Asset
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Systems.System
-  alias ThreatShield.Threats.Threat
-  import ThreatShieldWeb.Labels, only: [system_label: 1]
+
+  import ThreatShieldWeb.Labels
 
   require Logger
 
@@ -29,8 +36,8 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
 
           <:buttons>
             <.link
-              :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
-              phx-click="open-modal"
+              :if={ThreatShield.Members.Rights.may(:create_threat, @scope.membership)}
+              phx-click="open-create-dialog"
               phx-target={@myself}
             >
               <.button_primary>
@@ -42,14 +49,12 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
             </.link>
             <.link>
               <.button_magic
-                :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
-                disabled={not is_nil(@asking_ai_for_threats)}
+                :if={ThreatShield.Members.Rights.may(:create_threat, @scope.membership)}
                 phx-click="suggest_threats"
-                phx-value-org_id={@organisation.id}
-                phx-value-sys_id={if is_nil(assigns[:system]), do: nil, else: @system.id}
+                phx-target={@myself}
               >
                 <.icon name="hero-sparkles" class="mr-1 mb-1" /><%= dgettext(
-                  "assets",
+                  "threats",
                   "Suggest Threats"
                 ) %>
               </.button_magic>
@@ -58,7 +63,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
         </.stacked_list_header>
         <.stacked_list
           :if={not Enum.empty?(@threats)}
-          id={"threats_for_org_#{@organisation.id}"}
+          id={"threats_for_#{@scope.id}"}
           rows={@threats}
           row_click={fn threat -> JS.navigate(@origin <> "/threats/#{threat.id}") end}
         >
@@ -67,6 +72,9 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           </:col>
           <:col :let={threat}>
             <%= system_label(threat) %>
+          </:col>
+          <:col :let={threat}>
+            <%= asset_label(threat) %>
           </:col>
           <:col :let={threat}><%= threat.description %></:col>
         </.stacked_list>
@@ -77,7 +85,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
       </div>
 
       <.modal
-        :if={assigns[:show_modal] == true}
+        :if={assigns[:show_create_dialog] == true}
         id="create-threat-modal"
         show
         on_cancel={JS.navigate(@origin)}
@@ -88,33 +96,36 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           parent_id={@id}
           action={:new_threat}
           title={dgettext("threats", "New Threat")}
-          current_user={@current_user}
-          organisation={@organisation}
-          system_options={systems_of_organisaton(@organisation)}
-          threat={prepare_threat(assigns)}
-          patch={@origin}
+          scope={@scope}
+          system_options={systems_of_organisaton(@scope.organisation)}
+          asset_options={assets_of_organisaton(@scope.organisation)}
+          threat={prepare_threat(@scope)}
+          origin={@origin}
+        />
+      </.modal>
+      <.modal
+        :if={assigns[:show_suggest_dialog] == true}
+        id="suggest-threats-modal"
+        show
+        on_cancel={JS.navigate(@origin)}
+      >
+        <.suggestions_dialog
+          title={dgettext("threats", "Suggested Threats")}
+          listener={@myself}
+          scope={@scope}
+          suggestions={@ai_suggestions[:threats]}
         />
       </.modal>
     </div>
     """
   end
 
-  @impl true
-  def handle_event("open-modal", _params, socket) do
-    socket
-    |> assign(:show_modal, true)
-    |> noreply()
-  end
+  # events
 
   @impl true
-  def handle_event("close-modal", _params, socket) do
-    {:noreply, assign(socket, show_modal: false)}
-  end
-
-  @impl true
-  def update(%{added_threat: _asset}, socket) do
+  def update(%{added_threat: _threat}, socket) do
     socket
-    |> assign(:show_modal, false)
+    |> assign(:show_create_dialog, false)
     |> ok()
   end
 
@@ -125,10 +136,67 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
     |> ok()
   end
 
+  @impl true
+  def handle_event("open-create-dialog", _params, socket) do
+    socket
+    |> assign(:show_create_dialog, true)
+    |> noreply()
+  end
+
+  @doc """
+  Will start a background task to suggest threats for the current scope
+  When the task is finished, it will send a :new_ai_suggestion message to the current page.
+  The page is expected to add the suggestions to the :ai_suggesstions assigns.
+  """
+  @impl true
+  def handle_event("suggest_threats", _params, socket) do
+    scope = socket.assigns.scope
+
+    Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
+      new_threats =
+        AI.suggest_threats(scope)
+
+      {:new_ai_suggestion, %AiSuggestion{result: new_threats, type: :threats, requestor: self()}}
+    end)
+
+    socket
+    |> assign(:show_suggest_dialog, true)
+    |> noreply()
+  end
+
+  @impl true
+  def handle_event("apply_selection", %{"selected_suggestions" => selected_names}, socket) do
+    scope = %Scope{} = socket.assigns.scope
+
+    ai_suggestions = socket.assigns.ai_suggestions
+
+    new_threats =
+      ai_suggestions[:threats]
+      |> Enum.filter(fn s -> Enum.member?(selected_names, s.name) end)
+      |> Enum.map(fn s -> create_threat(scope, s) end)
+
+    socket
+    |> assign(:show_suggest_dialog, false)
+    |> assign(:threats, socket.assigns.threats ++ new_threats)
+    |> noreply()
+  end
+
   # internal
 
   defp systems_of_organisaton(%Organisation{} = organisation) do
     Organisation.list_system_options(organisation)
+  end
+
+  defp assets_of_organisaton(%Organisation{} = organisation) do
+    Organisation.list_asset_options(organisation)
+  end
+
+  defp prepare_threat(%{asset: %Asset{} = asset, system: %System{} = system}) do
+    %Threat{asset: asset, asset_id: asset.id, system: system, system_id: system.id}
+  end
+
+  defp prepare_threat(%{asset: %Asset{} = asset}) do
+    %Threat{asset: asset, asset_id: asset.id}
   end
 
   defp prepare_threat(%{system: %System{} = system}) do
@@ -136,4 +204,9 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   end
 
   defp prepare_threat(_other), do: %Threat{}
+
+  defp create_threat(scope, %{name: name, description: desc}) do
+    {:ok, threat} = Threats.add_threat_with_name_and_description(scope, name, desc)
+    threat
+  end
 end

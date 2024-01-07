@@ -2,14 +2,21 @@ defmodule ThreatShield.Threats.Threat do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ThreatShield.Systems.System
   alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Systems.System
+  alias ThreatShield.Assets.Asset
+
+  @moduledoc """
+  A threat is a potential danger to an organisation, a system or an asset.
+  """
 
   schema "threats" do
     field :description, :string
     field :name, :string
-    belongs_to :system, System
+
     belongs_to :organisation, Organisation
+    belongs_to :system, System
+    belongs_to :asset, Asset
 
     has_many :risks, ThreatShield.Risks.Risk
 
@@ -29,8 +36,8 @@ defmodule ThreatShield.Threats.Threat do
   @doc false
   def changeset(threat, attrs) do
     threat
-    |> cast(attrs, [:description, :system_id, :name])
-    |> validate_required([:description, :organisation, :name])
+    |> cast(attrs, [:name, :description, :system_id, :asset_id])
+    |> validate_required([:organisation, :name, :description])
     |> validate_length(:name, max: 60)
   end
 
@@ -79,10 +86,22 @@ defmodule ThreatShield.Threats.Threat do
     |> preload([system: s], system: s)
   end
 
+  def with_asset(query) do
+    query
+    |> join(:left, [threat: t], assoc(t, :asset), as: :asset)
+    |> preload([asset: a], asset: a)
+  end
+
   def with_org_systems(query) do
     query
     |> join(:left, [organisation: o], assoc(o, :systems), as: :systems)
     |> preload([organisation: o, systems: s], organisation: {o, systems: s})
+  end
+
+  def with_org_assets(query) do
+    query
+    |> join(:left, [organisation: o], assoc(o, :assets), as: :assets)
+    |> preload([organisation: o, assets: a], organisation: {o, assets: a})
   end
 
   def select(query) do

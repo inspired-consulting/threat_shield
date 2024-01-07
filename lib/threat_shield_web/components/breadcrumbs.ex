@@ -42,7 +42,7 @@ defmodule ThreatShieldWeb.Breadcrumbs do
   defp breadcrumb_item(assigns) when assigns.type == "first" do
     ~H"""
     <li class="inline-flex items-center">
-      <.link navigate="/dashboard" class="inline-flex items-center text-sm font-medium">
+      <.link navigate="/organisations" class="inline-flex items-center text-sm font-medium">
         <.icon name="hero-home" class="h-4 w-4" />
       </.link>
     </li>

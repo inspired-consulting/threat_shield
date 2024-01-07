@@ -1,40 +1,42 @@
-<.header class="mt-6">
-  Listing Organisations
-  <:actions>
-    <.link patch={~p"/organisations/new"}>
-      <.button_primary>New Organisation</.button_primary>
-    </.link>
-  </:actions>
-</.header>
+<section class="container">
+  <.header class="mt-6">
+    Listing Organisations
+    <:actions>
+      <.link patch={~p"/organisations/new"}>
+        <.button_primary>New Organisation</.button_primary>
+      </.link>
+    </:actions>
+  </.header>
 
-<.table
-  id="organisations"
-  rows={@streams.organisations}
-  row_click={fn {_id, organisation} -> JS.navigate(~p"/organisations/#{organisation}") end}
->
-  <:col :let={{_id, organisation}} label="Name"><%= organisation.name %></:col>
-  <:col :let={{_id, organisation}} label="Attributes">
-    <%= for {key, value} <- organisation.attributes do %>
-      <div><%= "#{key} → #{value}" %></div>
-    <% end %>
-  </:col>
-</.table>
+  <.table
+    id="organisations"
+    rows={@streams.organisations}
+    row_click={fn {_id, organisation} -> JS.navigate(~p"/organisations/#{organisation}") end}
+  >
+    <:col :let={{_id, organisation}} label="Name"><%= organisation.name %></:col>
+    <:col :let={{_id, organisation}} label="Attributes">
+      <%= for {key, value} <- organisation.attributes do %>
+        <div><%= "#{key} → #{value}" %></div>
+      <% end %>
+    </:col>
+  </.table>
 
-<.modal
-  :if={@live_action in [:new, :edit]}
-  id="organisation-modal"
-  show
-  on_cancel={JS.patch(~p"/organisations")}
->
-  <.live_component
-    module={ThreatShieldWeb.OrganisationLive.OrganisationForm}
-    id={@edit_organisation.id || :new}
-    title={@page_title}
-    action={@live_action}
-    organisation={@edit_organisation}
-    current_user={@current_user}
-    locations_options={@locations_options}
-    attributes={@attributes}
-    patch={~p"/organisations"}
-  />
-</.modal>
+  <.modal
+    :if={@live_action in [:new, :edit]}
+    id="organisation-modal"
+    show
+    on_cancel={JS.patch(~p"/organisations")}
+  >
+    <.live_component
+      module={ThreatShieldWeb.OrganisationLive.OrganisationForm}
+      id={@edit_organisation.id || :new}
+      title={@page_title}
+      action={@live_action}
+      organisation={@edit_organisation}
+      current_user={@current_user}
+      locations_options={@locations_options}
+      attributes={@attributes}
+      patch={~p"/organisations"}
+    />
+  </.modal>
+</section>

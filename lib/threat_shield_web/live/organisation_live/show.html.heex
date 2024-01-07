@@ -68,38 +68,27 @@
   <.live_component
     module={ThreatShieldWeb.SystemLive.SystemsList}
     id={"systems_for_org_#{@organisation.id}"}
-    current_user={@current_user}
-    organisation={@organisation}
-    membership={@membership}
+    scope={@scope}
     threat_count={@threat_count}
     asset_count={@asset_count}
     origin={"/organisations/#{@organisation.id}"}
   />
 
-  <ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
-
   <.live_component
     module={ThreatShieldWeb.AssetLive.AssetsList}
     id={"assets_for_org_#{@organisation.id}"}
-    current_user={@current_user}
-    organisation={@organisation}
+    scope={@scope}
     assets={@organisation.assets}
-    membership={@membership}
-    asking_ai_for_assets={@asking_ai_for_assets}
-    asking_ai_for_threats={@asking_ai_for_threats}
+    ai_suggestions={@ai_suggestions}
     origin={"/organisations/#{@organisation.id}"}
   />
-
-  <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
 
   <.live_component
     module={ThreatShieldWeb.ThreatLive.ThreatsList}
     id={"threats_for_org_#{@organisation.id}"}
-    current_user={@current_user}
-    organisation={@organisation}
-    membership={@membership}
+    scope={@scope}
     threats={@organisation.threats}
-    asking_ai_for_threats={@asking_ai_for_threats}
+    ai_suggestions={@ai_suggestions}
     origin={"/organisations/#{@organisation.id}"}
   />
 
@@ -121,8 +110,4 @@
       patch={~p"/organisations/#{@organisation}"}
     />
   </.modal>
-
-  <%= if not is_nil(@asking_ai_for_threats) or not is_nil(@asking_ai_for_assets) do %>
-    <ThreatShieldWeb.Spinner.spinner />
-  <% end %>
 </section>

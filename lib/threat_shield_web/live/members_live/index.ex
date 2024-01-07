@@ -81,7 +81,7 @@ defmodule ThreatShieldWeb.MembersLive.Index do
 
     case membership do
       %Membership{user_id: ^user_id} ->
-        {:noreply, push_navigate(socket, to: "/dashboard")}
+        {:noreply, push_navigate(socket, to: "/organisations")}
 
       membership ->
         {:noreply,

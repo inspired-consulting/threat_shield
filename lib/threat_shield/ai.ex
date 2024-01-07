@@ -6,6 +6,18 @@ defmodule ThreatShield.AI do
   alias ThreatShield.Risks.Risk
   alias ThreatShield.Mitigations.Mitigation
   alias ThreatShield.Systems.System
+  alias ThreatShield.Scope
+
+  defmodule AiSuggestion do
+    @moduledoc """
+    A suggestion from the AI for a given type (e.g. threat, asset, etc.).
+    """
+    defstruct [
+      :type,
+      :result,
+      :requestor
+    ]
+  end
 
   defp make_chatgpt_request(system_prompt, user_prompt, response_extractor) do
     messages =
@@ -63,6 +75,18 @@ defmodule ThreatShield.AI do
 
     {"#{resource_name_plural}": [{"name": _, "description": _}, _ ]}
     """
+  end
+
+  # Assets
+
+  def suggest_assets(%Scope{} = scope) do
+    case scope do
+      %{system: %System{} = system} ->
+        suggest_assets_for_system(system)
+
+      %{organisation: %Organisation{} = organisation} ->
+        suggest_assets_for_organisation(organisation)
+    end
   end
 
   def suggest_assets_for_organisation(%Organisation{} = organisation) do
@@ -125,6 +149,21 @@ defmodule ThreatShield.AI do
     make_chatgpt_request(system_prompt, user_prompt, &get_assets_from_response/1)
   end
 
+  # Threats
+
+  def suggest_threats(%Scope{} = scope) do
+    case scope do
+      %{system: %System{} = system} ->
+        suggest_threats_for_system(system)
+
+      %{asset: %Asset{} = asset} ->
+        suggest_threats_for_asset(asset)
+
+      %{organisation: %Organisation{} = organisation} ->
+        suggest_threats_for_organisation(organisation)
+    end
+  end
+
   def suggest_threats_for_organisation(%Organisation{} = organisation) do
     threat_info = """
     Threats are any potential event or action that can compromise the security of a system, organisation, or individual. Threats are not the negative outcome, i.e. not the loss, damage, or harm resulting from the exploitation of vulnerabilities by threats.
@@ -181,6 +220,36 @@ defmodule ThreatShield.AI do
       |> Enum.join(" ")
 
     system_prompt = get_general_job_description(system.organisation)
+
+    make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
+  end
+
+  def suggest_threats_for_asset(%Asset{} = asset) do
+    threat_info = """
+    Threats are any potential event or action that can compromise the security of a system, organisation, or individual. Threats are not the negative outcome, i.e. not the loss, damage, or harm resulting from the exploitation of vulnerabilities by threats.
+    """
+
+    existing_threats =
+      if Enum.empty?(asset.threats) do
+        ""
+      else
+        """
+        I already know about the following threats:\n
+        """ <>
+          (asset.threats
+           |> Enum.map(fn a -> a.name end)
+           |> Enum.join("\n"))
+      end
+
+    assignment = """
+    Please suggest five additional threats that are different from the existing ones. The threats should be specific to the asset "#{asset.name}
+    """
+
+    user_prompt =
+      [get_response_format_description("threats"), threat_info, existing_threats, assignment]
+      |> Enum.join(" ")
+
+    system_prompt = get_general_job_description(asset.organisation)
 
     make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
   end
