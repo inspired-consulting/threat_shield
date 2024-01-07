@@ -5,8 +5,6 @@ defmodule ThreatShieldWeb.RiskLive.RisksList do
   alias ThreatShield.Scope
   alias ThreatShield.AI.AiSuggestion
   alias ThreatShield.Risks
-  alias ThreatShield.Risks.Risk
-  alias ThreatShield.Threats
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Accounts.User
 
@@ -105,7 +103,6 @@ defmodule ThreatShieldWeb.RiskLive.RisksList do
   """
   @impl true
   def handle_event("suggest_risks", _params, socket) do
-    scope = %Scope{} = socket.assigns.scope
     threat = socket.assigns.threat
 
     Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
