@@ -85,6 +85,7 @@ defmodule ThreatShieldWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import ThreatShieldWeb.CoreComponents
+      import ThreatShieldWeb.TsComponents
       import ThreatShieldWeb.Gettext
 
       # Shortcut for generating JS commands
@@ -100,6 +101,9 @@ defmodule ThreatShieldWeb do
     end
   end
 
+  @spec verified_routes() ::
+          {:use, [{:column, 7} | {:context, ThreatShieldWeb} | {:imports, [...]}, ...],
+           [[{any(), any()}, ...] | {:__aliases__, [...], [...]}, ...]}
   def verified_routes do
     quote do
       use Phoenix.VerifiedRoutes,

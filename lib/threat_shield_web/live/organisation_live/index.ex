@@ -65,7 +65,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
 
   @impl true
   def handle_info(
-        {ThreatShieldWeb.OrganisationLive.FormComponent, {:saved, organisation}},
+        {ThreatShieldWeb.OrganisationLive.OrganisationForm, {:saved, organisation}},
         socket
       ) do
     {:noreply, stream_insert(socket, :organisations, organisation)}

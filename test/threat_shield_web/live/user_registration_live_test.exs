@@ -46,7 +46,7 @@ defmodule ThreatShieldWeb.UserRegistrationLiveTest do
       conn = follow_trigger_action(form, conn)
 
       # Now do a logged in request and assert on the menu
-      conn = get(conn, "/")
+      conn = get(conn, "/organisations")
       response = html_response(conn, 200)
       assert response =~ "Account settings"
       assert response =~ "Log out"

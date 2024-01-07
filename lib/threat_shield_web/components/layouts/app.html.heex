@@ -5,15 +5,13 @@
     entity_page={assigns[:entity_page]}
   />
 </header>
-<main class="xl:container mx-4 xl:mx-auto mb-10">
-  <%= if assigns[:breadcrumbs] do %>
+<main class="mb-10">
+  <div :if={assigns[:breadcrumbs]} class="bg-white py-4">
     <ThreatShieldWeb.Breadcrumbs.breadcrumb breadcrumbs={@breadcrumbs} context={assigns} />
-  <% end %>
-
-  <div class="mx-auto">
-    <.flash_group flash={@flash} />
-    <%= @inner_content %>
   </div>
-  
+  <.flash_group flash={@flash} />
+  <%= @inner_content %>
 </main>
-<footer></footer>
+<footer class="text-center text-xs text-gray-500 py-5">
+  &copy; 2024 Inspired Consulting GmbH
+</footer>

@@ -1,7 +1,8 @@
-defmodule ThreatShieldWeb.AssetLive.FormComponent do
+defmodule ThreatShieldWeb.AssetLive.AssetForm do
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.Assets
+  import ThreatShieldWeb.TsComponents
 
   @impl true
   def render(assigns) do
@@ -10,6 +11,12 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
       <.header>
         <%= @title %>
       </.header>
+      <p>
+        <%= dgettext(
+          "assets",
+          "Asset: long description"
+        ) %>
+      </p>
 
       <.simple_form
         for={@form}
@@ -27,7 +34,27 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
           label="System"
           options={@system_options}
         />
-
+        <hr />
+        <div class="lg:grid grid-flow-col justify-stretch space-x-4">
+          <.criticality_picker
+            field={@form[:criticality_loss]}
+            label={dgettext("assets", "Criticality of loss")}
+          />
+          <.criticality_picker
+            field={@form[:criticality_theft]}
+            label={dgettext("assets", "Criticality of theft")}
+          />
+          <.criticality_picker
+            field={@form[:criticality_publication]}
+            label={dgettext("assets", "Criticality of publication")}
+          />
+        </div>
+        <div class="py-5">
+          <.criticality_picker
+            field={@form[:criticality_overall]}
+            label={dgettext("assets", "Criticality overall")}
+          />
+        </div>
         <:actions>
           <.button_primary phx-disable-with="Saving...">Save Asset</.button_primary>
         </:actions>
@@ -48,8 +75,6 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"asset" => asset_params}, socket) do
-    socket.assigns
-
     changeset =
       socket.assigns.asset
       |> update_with_fixed_system(socket)
@@ -74,10 +99,10 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
       {:ok, asset} ->
         notify_parent({:saved, asset})
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Asset updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        socket
+        |> put_flash(:info, "Asset updated successfully")
+        |> push_patch(to: socket.assigns.patch)
+        |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
@@ -91,11 +116,12 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
     case Assets.create_asset(user, organisation, asset_params |> update_with_fixed_system(socket)) do
       {:ok, asset} ->
         notify_parent({:saved, asset})
+        notify_asset_list(id: socket.assigns.parent_id, added_asset: asset)
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Asset created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        socket
+        |> put_flash(:info, "Asset created successfully")
+        |> push_patch(to: socket.assigns.patch)
+        |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
@@ -114,4 +140,7 @@ defmodule ThreatShieldWeb.AssetLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp notify_asset_list(msg),
+    do: send_update(self(), ThreatShieldWeb.AssetLive.AssetsList, msg)
 end

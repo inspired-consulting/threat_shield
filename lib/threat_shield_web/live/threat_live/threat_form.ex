@@ -1,4 +1,4 @@
-defmodule ThreatShieldWeb.ThreatLive.FormComponent do
+defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.Threats
@@ -10,6 +10,13 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
       <.header>
         <%= @title %>
       </.header>
+
+      <p class="help-text">
+        <%= dgettext(
+          "threats",
+          "Threat: long description"
+        ) %>
+      </p>
 
       <.simple_form
         for={@form}
@@ -39,10 +46,10 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
   def update(%{threat: threat} = assigns, socket) do
     changeset = Threats.change_threat(threat)
 
-    {:ok,
-     socket
-     |> assign(assigns)
-     |> assign_form(changeset)}
+    socket
+    |> assign(assigns)
+    |> assign_form(changeset)
+    |> ok()
   end
 
   @impl true
@@ -71,10 +78,10 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
       {:ok, threat} ->
         notify_parent({:saved, threat})
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Threat updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        socket
+        |> put_flash(:info, "Threat updated successfully")
+        |> push_patch(to: socket.assigns.patch)
+        |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
@@ -84,18 +91,20 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
   defp save_threat(socket, :new_threat, threat_params) do
     %{current_user: user, organisation: organisation} = socket.assigns
 
-    case Threats.create_threat(
-           user,
-           organisation,
-           threat_params |> update_with_fixed_system(socket)
-         ) do
+    Threats.create_threat(
+      user,
+      organisation,
+      threat_params |> update_with_fixed_system(socket)
+    )
+    |> case do
       {:ok, threat} ->
         notify_parent({:saved, threat})
+        notify_threat_list(id: socket.assigns.parent_id, added_threat: threat)
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Threat created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        socket
+        |> put_flash(:info, "Threat created successfully")
+        |> push_patch(to: socket.assigns.patch)
+        |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
@@ -114,4 +123,7 @@ defmodule ThreatShieldWeb.ThreatLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp notify_threat_list(msg),
+    do: send_update(self(), ThreatShieldWeb.ThreatLive.ThreatsList, msg)
 end

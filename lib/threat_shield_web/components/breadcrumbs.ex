@@ -10,7 +10,7 @@ defmodule ThreatShieldWeb.Breadcrumbs do
     assigns = assign(assigns, :size, length(assigns.breadcrumbs))
 
     ~H"""
-    <nav class="flex text-gray-500 text-sm font-medium my-4" aria-label="breadcrumb">
+    <nav class="ts-container flex text-gray-500 text-sm font-medium" aria-label="breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-3">
         <.breadcrumb_item
           :for={{breadcrumb, index} <- Enum.with_index(@breadcrumbs)}

@@ -33,7 +33,7 @@ defmodule ThreatShield.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 3.1"},
-      {:phoenix, "~> 1.7.7"},
+      {:phoenix, "~> 1.7.10"},
       {:phoenix_ecto, "~> 4.4"},
       {:dotenv, "~> 3.1.0"},
       {:ecto_sql, "~> 3.10"},
@@ -55,7 +55,8 @@ defmodule ThreatShield.MixProject do
       {:openai, "~> 0.5.2"},
       {:ecto_psql_extras, "~> 0.7.13"},
       {:ex_rated, "~> 2.1"},
-      {:timex, "~> 3.0"}
+      {:timex, "~> 3.0"},
+      {:number, "~> 1.0.1"}
     ]
   end
 

@@ -4,14 +4,11 @@ defmodule ThreatShieldWeb.SystemLive.Show do
 
   alias ThreatShield.Systems
 
-  alias ThreatShield.Assets.Asset
   alias ThreatShield.Assets
-  alias ThreatShield.Threats.Threat
   alias ThreatShield.Threats
   alias ThreatShield.AI
   alias ThreatShield.Systems.System
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
-  import ThreatShield.Assets.Asset, only: [list_system_options: 1]
 
   @impl true
   def mount(%{"sys_id" => id}, _session, socket) do
@@ -49,21 +46,9 @@ defmodule ThreatShieldWeb.SystemLive.Show do
     |> assign(:page_title, "Edit System")
   end
 
-  defp apply_action(socket, :new_asset, _params) do
-    socket
-    |> assign(:page_title, "New Asset")
-    |> assign(:asset, %Asset{})
-  end
-
-  defp apply_action(socket, :new_threat, _params) do
-    socket
-    |> assign(:page_title, "New Threat")
-    |> assign(:threat, %Threat{})
-  end
-
   @impl true
   def handle_info(
-        {ThreatShieldWeb.SystemLive.FormComponent, {:saved, system}},
+        {ThreatShieldWeb.SystemLive.SystemForm, {:saved, system}},
         socket
       ) do
     user = socket.assigns.current_user
@@ -77,7 +62,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.AssetLive.FormComponent, {:saved, asset}}, socket) do
+  def handle_info({ThreatShieldWeb.AssetLive.AssetForm, {:saved, asset}}, socket) do
     stale_sys = socket.assigns.system
     updated_sys = %{stale_sys | assets: stale_sys.assets ++ [asset]}
 
@@ -85,7 +70,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.ThreatLive.FormComponent, {:saved, threat}}, socket) do
+  def handle_info({ThreatShieldWeb.ThreatLive.ThreatForm, {:saved, threat}}, socket) do
     stale_sys = socket.assigns.system
     updated_sys = %{stale_sys | threats: stale_sys.threats ++ [threat]}
 

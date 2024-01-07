@@ -1264,7 +1264,7 @@ msgstr ""
 msgid "editor"
 msgstr "editor"
 
-#: lib/threat_shield_web/live/members_live/index.html.heex:5
+#: lib/threat_shield_web/live/members_live/index.html.heex:6
 #, elixir-autogen, elixir-format
 msgid "Invite"
 msgstr ""
@@ -1275,27 +1275,22 @@ msgid "Join"
 msgstr ""
 
 #: lib/threat_shield_web/live/members_live/index.html.heex:2
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:5
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:27
 #, elixir-autogen, elixir-format
 msgid "Members"
 msgstr ""
 
-#: lib/threat_shield_web/live/dashboard_live/index.html.heex:2
-#, elixir-autogen, elixir-format
-msgid "Organisation Management"
-msgstr ""
-
-#: lib/threat_shield_web/live/members_live/index.html.heex:38
+#: lib/threat_shield_web/live/members_live/index.html.heex:45
 #, elixir-autogen, elixir-format
 msgid "Pending invites"
 msgstr ""
 
-#: lib/threat_shield_web/live/members_live/role_form_component.ex:24
+#: lib/threat_shield_web/live/members_live/role_form_component.ex:35
 #, elixir-autogen, elixir-format
 msgid "Save Membership"
 msgstr ""
 
-#: lib/threat_shield_web/live/members_live/form_component.ex:23
+#: lib/threat_shield_web/live/members_live/form_component.ex:24
 #, elixir-autogen, elixir-format
 msgid "Send invite"
 msgstr ""
@@ -1308,4 +1303,19 @@ msgstr ""
 #: lib/threat_shield_web/live/members_live/join.html.heex:5
 #, elixir-autogen, elixir-format
 msgid "You've been invited to join"
+msgstr ""
+
+#: lib/threat_shield_web/live/members_live/role_form_component.ex:12
+#, elixir-autogen, elixir-format
+msgid "Edit role for"
+msgstr ""
+
+#: lib/threat_shield_web/components/core_components.ex:602
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Organisation"
+msgstr ""
+
+#: lib/threat_shield_web/live/dashboard_live/index.html.heex:2
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Organisation Detail"
 msgstr ""

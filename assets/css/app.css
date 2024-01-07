@@ -13,6 +13,56 @@ body {
   box-sizing: border-box;
 }
 
+/* Fonts */
+
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: url("/fonts/SpaceGrotesk-VariableFont_wght.ttf")
+    format("truetype-variations");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: url("/fonts/SpaceGrotesk-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: url("/fonts/SpaceGrotesk-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: url("/fonts/SpaceGrotesk-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: url("/fonts/SpaceGrotesk-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "SpaceGrotesk";
+  src: url("/fonts/SpaceGrotesk-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Common ThreatShield styles */
 
 .threatshield-gradient {
@@ -34,6 +84,35 @@ body {
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+}
+
+.ts-container {
+  @apply xl:container mx-4 xl:mx-auto;
+}
+
+.help-text {
+  @apply text-gray-500 text-sm font-normal;
+}
+
+a {
+  color: theme("colors.primary.900");
+  text-decoration: none;
+}
+
+li.context-menu-item a {
+  display: inline-block;
+  min-width: 8rem;
+  @apply py-2 px-4 text-gray-900 text-sm font-medium;
+}
+
+li.context-menu-item:hover {
+  min-width: 8rem;
+  background-color: theme("colors.gray.100");
+}
+
+li.context-menu-item a:hover {
+  color: theme("colors.primary.600");
+  font-weight: 800;
 }
 
 /* USER INDICATOR */
@@ -59,42 +138,6 @@ body {
   }
 }
 
-/* CHAT */
-
-/* Style the chat labels */
-.chat-input label {
-  display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  animation: typeText 3s steps(25) 1s;
-}
-
-/* Style the fake input fields */
-.chat-input .fake-input-box {
-  width: 70%;
-  padding: 1rem;
-  font-size: 0.9rem;
-  background-color: #f3f1f1;
-  color: black;
-  border: 0.1rem solid var(--primary-color);
-  border-radius: 0.5rem;
-  overflow: hidden;
-}
-
-/* Style the input fields */
-.chat-input div input {
-  padding: 1rem;
-  background-color: #218aff;
-  color: white;
-  border: 0.1rem solid var(--primary-color);
-  border-radius: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.chat-input div {
-  width: 90%;
-}
-
 @keyframes typeText {
   from {
     width: 0;
@@ -102,4 +145,61 @@ body {
   to {
     width: 100%;
   }
+}
+
+/* Range input styles -- https://www.smashingmagazine.com/2021/12/create-custom-range-input-consistent-browsers/*/
+/*Range Reset*/
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 1rem;
+}
+
+/***** Chrome, Safari, Opera and Edge Chromium styles *****/
+/* slider track */
+input[type="range"]::-webkit-slider-runnable-track {
+  border-radius: 0.5rem;
+  height: 0.5rem;
+}
+
+/* slider thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  margin-top: -10px; /* Centers thumb on the track */
+
+  /*custom styles*/
+  background-color: #150a2a;
+  border-radius: 3px;
+  height: 1.8rem;
+  width: 1rem;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  border: 1px solid #053a5f;
+  outline-offset: 0.125rem;
+}
+
+/******** Firefox styles ********/
+/* slider track */
+input[type="range"]::-moz-range-track {
+  border-radius: 0.5rem;
+  height: 0.5rem;
+}
+
+/* slider thumb */
+input[type="range"]::-moz-range-thumb {
+  border: none; /*Removes extra border that FF applies*/
+  border-radius: 0; /*Removes default border-radius that FF applies*/
+
+  /*custom styles*/
+  background-color: #150a2a;
+  height: 2rem;
+  width: 1rem;
+}
+
+input[type="range"]:focus::-moz-range-thumb {
+  border: 1px solid #053a5f;
+  outline: 3px solid #053a5f;
+  outline-offset: 0.125rem;
 }

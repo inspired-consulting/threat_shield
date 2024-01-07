@@ -6,19 +6,24 @@ defmodule ThreatShield.Assets.Asset do
   alias ThreatShield.Organisations.Organisation
 
   schema "assets" do
-    field :description, :string
     field :name, :string
+    field :description, :string
+    field :criticality_loss, :float
+    field :criticality_theft, :float
+    field :criticality_publication, :float
+    field :criticality_overall, :float
     belongs_to :system, System
     belongs_to :organisation, Organisation
-
     timestamps()
   end
+
+  @fields ~w(name description system_id criticality_loss criticality_theft criticality_publication criticality_overall)a
 
   @doc false
   def changeset(asset, attrs) do
     asset
-    |> cast(attrs, [:description, :system_id, :name])
-    |> validate_required([:description, :organisation, :name])
+    |> cast(attrs, @fields)
+    |> validate_required([:name, :description, :organisation])
     |> validate_length(:name, max: 60)
   end
 
@@ -28,6 +33,20 @@ defmodule ThreatShield.Assets.Asset do
 
   def system_name(%__MODULE__{system: %{name: name}}), do: name
   def system_name(_), do: "None"
+
+  def calc_overall_criticality(%__MODULE__{
+        criticality_loss: loss,
+        criticality_theft: theft,
+        criticality_publication: publication,
+        criticality_overall: overall
+      }) do
+    if not is_nil(loss) and not is_nil(theft) and not is_nil(publication) do
+      calc = (loss + theft + publication) / 3
+      max(calc, overall)
+    else
+      overall
+    end
+  end
 
   import Ecto.Query
 

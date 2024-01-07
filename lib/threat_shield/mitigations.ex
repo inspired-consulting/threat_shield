@@ -75,6 +75,7 @@ defmodule ThreatShield.Mitigations do
 
            %Mitigation{}
            |> Mitigation.changeset(attrs)
+           |> update_implementation_status()
            |> Ecto.Changeset.put_assoc(:risk, risk)
            |> Repo.insert()
          end) do
@@ -101,6 +102,7 @@ defmodule ThreatShield.Mitigations do
     |> Mitigation.for_user(user_id, :edit_mitigation)
     |> Repo.one!()
     |> Mitigation.changeset(attrs)
+    |> update_implementation_status()
     |> Repo.update()
   end
 
@@ -115,6 +117,7 @@ defmodule ThreatShield.Mitigations do
   """
   def change_mitigation(%Mitigation{} = mitigation, attrs \\ %{}) do
     Mitigation.changeset(mitigation, attrs)
+    |> update_implementation_status()
   end
 
   def delete_mitigation_by_id!(%User{id: user_id}, id) do
@@ -136,5 +139,26 @@ defmodule ThreatShield.Mitigations do
       |> Ecto.Changeset.put_assoc(:risk, risk)
       |> Repo.insert!()
     end)
+  end
+
+  # Internal
+
+  defp update_implementation_status(%Ecto.Changeset{} = mitigation_cs) do
+    %Mitigation{} = mitigation = Ecto.Changeset.apply_changes(mitigation_cs)
+
+    implemented =
+      case(to_string(mitigation.status)) do
+        "implemented" ->
+          true
+
+        "verified" ->
+          true
+
+        _ ->
+          false
+      end
+
+    mitigation_cs
+    |> Ecto.Changeset.put_change(:is_implemented, implemented)
   end
 end

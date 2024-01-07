@@ -35,6 +35,16 @@ defmodule ThreatShield.Assets do
     |> Repo.one!()
   end
 
+  def prepare_asset(system_id \\ nil) do
+    %Asset{
+      system_id: system_id,
+      criticality_loss: 0.0,
+      criticality_theft: 0.0,
+      criticality_publication: 0.0,
+      criticality_overall: 0.0
+    }
+  end
+
   def create_asset(
         %User{id: user_id} = user,
         %Organisation{id: org_id} = organisation,
@@ -94,6 +104,7 @@ defmodule ThreatShield.Assets do
 
   def change_asset(%Asset{} = asset, attrs \\ %{}) do
     Asset.changeset(asset, attrs)
+    |> update_overall_criticality()
   end
 
   def add_asset_with_name_and_description(
@@ -135,5 +146,13 @@ defmodule ThreatShield.Assets do
 
       Repo.insert!(changeset)
     end)
+  end
+
+  defp update_overall_criticality(%Ecto.Changeset{} = asset_cs) do
+    asset = Ecto.Changeset.apply_changes(asset_cs)
+    crit = Asset.calc_overall_criticality(asset)
+
+    asset_cs
+    |> Ecto.Changeset.put_change(:criticality_overall, crit)
   end
 end

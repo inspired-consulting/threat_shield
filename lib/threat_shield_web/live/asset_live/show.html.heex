@@ -1,48 +1,92 @@
-<.card_detail>
+<.entity_info>
   <:name>
-  <%= @asset.name %>
+    <%= @asset.name %>
   </:name>
   <:description>
-  <%= @asset.description %>
+    <%= @asset.description %>
   </:description>
-  <:links> 
+  <:links>
+    <li
+      :if={ThreatShield.Members.Rights.may(:delete_asset, @membership)}
+      class="context-menu-item"
+    >
       <.link
-        :if={ThreatShield.Members.Rights.may(:delete_asset, @membership)}
         phx-click={JS.push("delete", value: %{asset_id: @asset.id})}
         data-confirm="Are you sure?"
       >
-        <.button_secondary><%= dgettext("common", "Delete") %></.button_secondary>
+        <%= dgettext("common", "Delete") %>
       </.link>
+    </li>
+    <li :if={ThreatShield.Members.Rights.may(:edit_asset, @membership)} class="context-menu-item">
       <.link
-        :if={ThreatShield.Members.Rights.may(:edit_asset, @membership)}
         patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}/show/edit"}
         phx-click={JS.push_focus()}
       >
-        <.button_secondary><%= dgettext("common", "Edit") %></.button_secondary>
+        <%= dgettext("common", "Edit") %>
       </.link>
-    </:links>
+    </li>
+  </:links>
 
-    <:attribute>
-     <.label><%= dgettext("threats", "System") %></.label>
-     <p> <%= system_name(@asset) %></p>
-    </:attribute>
-</.card_detail>
+  <:attribute>
+    <div>
+      <.label><%= dgettext("threats", "System") %></.label>
+      <p><%= system_label(@asset) %></p>
+    </div>
+  </:attribute>
 
-<.modal
-  :if={@live_action == :edit}
-  id="asset-modal"
-  show
-  on_cancel={JS.patch(get_path_prefix(assigns) <> "/assets/#{@asset.id}")}
->
-  <.live_component
-    module={ThreatShieldWeb.AssetLive.FormComponent}
-    id={@asset.id}
-    title={@page_title}
-    action={@live_action}
-    asset={@asset}
-    current_user={@current_user}
-    organisation={@organisation}
-    system_options={assigns[:system_options]}
-    patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}"}
-  />
-</.modal>
+  <:custom>
+    <hr class="my-5" />
+    <div class="grid grid-cols-4 gap-4 w-full">
+      <div class="bg-gray-100 px-4 py-3 rounded-md border-2 border-purple-200">
+        <.criticality_display
+          name="criticality_overall"
+          value={@asset.criticality_overall}
+          label={dgettext("assets", "Criticality overall")}
+          readonly
+        />
+      </div>
+      <div class="bg-gray-100 px-4 py-3 rounded-md">
+        <.criticality_display
+          name="criticality_loss"
+          value={@asset.criticality_loss}
+          label={dgettext("assets", "Criticality of loss")}
+        />
+      </div>
+      <div class="bg-gray-100 px-4 py-3 rounded-md">
+        <.criticality_display
+          name="criticality_theft"
+          value={@asset.criticality_theft}
+          label={dgettext("assets", "Criticality of theft")}
+        />
+      </div>
+      <div class="bg-gray-100 px-4 py-3 rounded-md">
+        <.criticality_display
+          name="criticality_publication"
+          value={@asset.criticality_publication}
+          label={dgettext("assets", "Criticality of publication")}
+        />
+      </div>
+    </div>
+  </:custom>
+</.entity_info>
+
+<section class="ts-container mt-8">
+  <.modal
+    :if={@live_action == :edit}
+    id="asset-modal"
+    show
+    on_cancel={JS.patch(get_path_prefix(assigns) <> "/assets/#{@asset.id}")}
+  >
+    <.live_component
+      module={ThreatShieldWeb.AssetLive.AssetForm}
+      id={@asset.id}
+      title={@page_title}
+      action={@live_action}
+      asset={@asset}
+      current_user={@current_user}
+      organisation={@organisation}
+      system_options={assigns[:system_options]}
+      patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}"}
+    />
+  </.modal>
+</section>

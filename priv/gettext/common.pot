@@ -11,34 +11,54 @@
 msgid ""
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/show.html.heex:8
-#: lib/threat_shield_web/live/members_live/index.html.heex:24
-#: lib/threat_shield_web/live/mitigation_live/show.html.heex:8
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:12
-#: lib/threat_shield_web/live/risk_live/show.html.heex:5
-#: lib/threat_shield_web/live/system_live/show.html.heex:8
-#: lib/threat_shield_web/live/threat_live/show.html.heex:8
+#: lib/threat_shield_web/live/asset_live/show.html.heex:17
+#: lib/threat_shield_web/live/members_live/index.html.heex:29
+#: lib/threat_shield_web/live/mitigation_live/show.html.heex:20
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:38
+#: lib/threat_shield_web/live/risk_live/show.html.heex:17
+#: lib/threat_shield_web/live/system_live/show.html.heex:17
+#: lib/threat_shield_web/live/threat_live/show.html.heex:17
 #, elixir-autogen, elixir-format
 msgid "Delete"
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/show.html.heex:14
-#: lib/threat_shield_web/live/members_live/index.html.heex:32
-#: lib/threat_shield_web/live/mitigation_live/show.html.heex:16
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:16
-#: lib/threat_shield_web/live/risk_live/show.html.heex:11
-#: lib/threat_shield_web/live/system_live/show.html.heex:14
-#: lib/threat_shield_web/live/threat_live/show.html.heex:14
+#: lib/threat_shield_web/live/asset_live/show.html.heex:25
+#: lib/threat_shield_web/live/members_live/index.html.heex:38
+#: lib/threat_shield_web/live/mitigation_live/show.html.heex:33
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:46
+#: lib/threat_shield_web/live/risk_live/show.html.heex:25
+#: lib/threat_shield_web/live/system_live/show.html.heex:25
+#: lib/threat_shield_web/live/threat_live/show.html.heex:25
 #, elixir-autogen, elixir-format
 msgid "Edit"
 msgstr ""
 
-#: lib/threat_shield_web/live/members_live/index.html.heex:22
+#: lib/threat_shield_web/live/members_live/index.html.heex:27
 #, elixir-autogen, elixir-format
 msgid "Leave"
 msgstr ""
 
-#: lib/threat_shield_web/live/members_live/index.html.heex:51
+#: lib/threat_shield_web/live/members_live/index.html.heex:58
 #, elixir-autogen, elixir-format
 msgid "Revoke"
+msgstr ""
+
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:10
+#, elixir-autogen, elixir-format
+msgid "Created on"
+msgstr ""
+
+#: lib/threat_shield_web/components/core_components.ex:826
+#, elixir-autogen, elixir-format
+msgid "View"
+msgstr ""
+
+#: lib/threat_shield_web/live/risk_live/risk_form.ex:57
+#, elixir-autogen, elixir-format
+msgid "Saving..."
+msgstr ""
+
+#: lib/threat_shield_web/components/labels.ex:21
+#, elixir-autogen, elixir-format
+msgid "Organisation wide"
 msgstr ""

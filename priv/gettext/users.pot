@@ -1,0 +1,32 @@
+## This file is a PO Template file.
+##
+## "msgid"s here are often extracted from source code.
+## Add new messages manually only if they're dynamic
+## messages that can't be statically extracted.
+##
+## Run "mix gettext.extract" to bring this file up to
+## date. Leave "msgstr"s empty as changing them here has no
+## effect: edit them in PO (.po) files instead.
+#
+msgid ""
+msgstr ""
+
+#: lib/threat_shield_web/components/core_components.ex:697
+#, elixir-autogen, elixir-format
+msgid "Account settings"
+msgstr ""
+
+#: lib/threat_shield_web/components/core_components.ex:711
+#, elixir-autogen, elixir-format
+msgid "Log out"
+msgstr ""
+
+#: lib/threat_shield_web/components/core_components.ex:686
+#, elixir-autogen, elixir-format
+msgid "Signed in as"
+msgstr ""
+
+#: lib/threat_shield_web/components/core_components.ex:702
+#, elixir-autogen, elixir-format
+msgid "Support"
+msgstr ""

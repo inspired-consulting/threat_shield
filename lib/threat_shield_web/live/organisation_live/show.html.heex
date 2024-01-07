@@ -1,150 +1,128 @@
+<section class="w-full bg-white pb-6 shadow-primary-200 shadow-sm">
+  <div class="ts-container flex justify-between w-full">
+    <div class="h-20 pb-5">
+      <.h3>
+        <%= @organisation.name %>
+      </.h3>
+      <p class="leading-6 text-gray-600 text-sm font-normal space-x-3">
+        <span :if={@organisation.location}>
+          <.icon name="hero-map-pin" class="w-5 h-5" />
+          <%= @organisation.location %>
+        </span>
+        <span>
+          <.icon name="hero-identification" class="w-5 h-5" />
+          <span>
+            <%= dgettext("common", "Created on") %>
+          </span>
+          <%= convert_date(@organisation.inserted_at) %>
+        </span>
+      </p>
+    </div>
+    <div>
+      <div
+        id="link-dropdown"
+        class="relative nav-dropdown text-[0.8125rem] leading-loose font-semibold hover:cursor-pointer rounded-3xl px-4 py-1"
+        onclick="toggleDropdown(id)"
+      >
+        <.icon name="hero-ellipsis-vertical" class="h-5 w-5" />
 
-<.card_detail_org>
-<:name>
-<%= @organisation.name%>
-</:name>
-<:created><.icon name="hero-identification" class="w-5 h-5"/><span> <%= dgettext("common", "Created on") %> </span><%= convert_date(@organisation.inserted_at) %></:created>
-  <:links> 
-  <li class="px-4 py-2 text-gray-900 text-sm font-medium">
-    <.link navigate={~p"/organisations/#{@organisation}/members"}>
-      <%= dgettext("organisation", "Members") %>
-    </.link>
-  </li>
-    <li class="px-4 py-2 text-gray-900 text-sm font-medium"
- :if={ThreatShield.Members.Rights.may(:delete_organisation, @membership)}>
-    <.link
-      
-      phx-click={JS.push("delete", value: %{organisation_id: @organisation.id})}
-      data-confirm="Are you sure?"
-    ><%= dgettext("common", "Delete") %> 
-    </.link>
-  </li>
-  <li class="px-4 py-2 text-gray-900 text-sm font-medium" :if={ThreatShield.Members.Rights.may(:edit_organisation, @membership)}>
-    <.link
-      
-      patch={~p"/organisations/#{@organisation}/edit"}
-      phx-click={JS.push_focus()}
-    >
-      <%= dgettext("common", "Edit") %>
-    </.link>
-  </li>
-  </:links>
-  <:attribute>
-    <.input_attribute attributes={@organisation.attributes}></.input_attribute>
-  </:attribute>
-</.card_detail_org>
+        <div class="absolute link-dropdown-menu hidden left-0 mt-4 bg-white text-primary-500 rounded-sm shadow-xl">
+          <ul class="">
+            <li class="context-menu-item">
+              <.link navigate={~p"/organisations/#{@organisation}/members"}>
+                <%= dgettext("organisation", "Members") %>
+              </.link>
+            </li>
+            <li
+              :if={ThreatShield.Members.Rights.may(:delete_organisation, @membership)}
+              class="context-menu-item"
+            >
+              <.link
+                phx-click={JS.push("delete", value: %{organisation_id: @organisation.id})}
+                data-confirm="Are you sure?"
+              >
+                <%= dgettext("common", "Delete") %>
+              </.link>
+            </li>
+            <li
+              :if={ThreatShield.Members.Rights.may(:edit_organisation, @membership)}
+              class="context-menu-item"
+            >
+              <.link patch={~p"/organisations/#{@organisation}/edit"} phx-click={JS.push_focus()}>
+                <%= dgettext("common", "Edit") %>
+              </.link>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ts-container w-full">
+    <div class="grid grid-cols-4 gap-2 px-2 py-2 bg-primary-100">
+      <.input_attribute attributes={@organisation.attributes}></.input_attribute>
+    </div>
+  </div>
+</section>
 
+<section class="ts-container mt-8">
   <.live_component
-    module={ThreatShieldWeb.SystemLive.SystemComponent}
+    module={ThreatShieldWeb.SystemLive.SystemsList}
+    id={"systems_for_org_#{@organisation.id}"}
+    current_user={@current_user}
     organisation={@organisation}
     membership={@membership}
     threat_count={@threat_count}
     asset_count={@asset_count}
-    id={"systems_for_org_#{@organisation.id}"}
+    origin={"/organisations/#{@organisation.id}"}
   />
 
-
-<ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
+  <ThreatShieldWeb.Suggestions.suggestions suggestions={@asset_suggestions} entity_name="asset" />
 
   <.live_component
-    module={ThreatShieldWeb.AssetLive.AssetComponent}
+    module={ThreatShieldWeb.AssetLive.AssetsList}
+    id={"assets_for_org_#{@organisation.id}"}
+    current_user={@current_user}
     organisation={@organisation}
     assets={@organisation.assets}
     membership={@membership}
     asking_ai_for_assets={@asking_ai_for_assets}
     asking_ai_for_threats={@asking_ai_for_threats}
-    path_prefix={"/organisations/#{@organisation.id}"}
-    id={"assets_for_org_#{@organisation.id}"}
+    origin={"/organisations/#{@organisation.id}"}
   />
 
-<.modal
-  :if={@live_action == :edit_organisation}
-  id="organisation-modal"
-  show
-  on_cancel={JS.patch(~p"/organisations/#{@organisation}")}
->
+  <ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
+
   <.live_component
-    module={ThreatShieldWeb.OrganisationLive.FormComponent}
-    id={@organisation.id}
-    title={@page_title}
-    action={@live_action}
-    organisation={@organisation}
-    attributes={@attributes}
-    locations_options={@locations_options}
+    module={ThreatShieldWeb.ThreatLive.ThreatsList}
+    id={"threats_for_org_#{@organisation.id}"}
     current_user={@current_user}
-    patch={~p"/organisations/#{@organisation}"}
-  />
-</.modal>
-
-<.modal
-  :if={@live_action == :new_system}
-  id="system-modal"
-  show
-  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
->
-  <.live_component
-    module={ThreatShieldWeb.SystemLive.FormComponent}
-    id={@system.id || :new}
-    title={@page_title}
-    action={@live_action}
-    system={@system}
-    organisation={@organisation}
-    current_user={@current_user}
-    attributes={System.attributes()}
-    patch={~p"/organisations/#{@organisation.id}"}
-  />
-</.modal>
-
-<.modal
-  :if={@live_action == :new_asset}
-  id="asset-modal"
-  show
-  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
->
-  <.live_component
-    module={ThreatShieldWeb.AssetLive.FormComponent}
-    id={@asset.id || :new}
-    title={@page_title}
-    action={@live_action}
-    current_user={@current_user}
-    organisation={@organisation}
-    system_options={list_system_options(@organisation)}
-    asset={@asset}
-    patch={~p"/organisations/#{@organisation.id}"}
-  />
-</.modal>
-
-<ThreatShieldWeb.Suggestions.suggestions suggestions={@threat_suggestions} entity_name="threat" />
-
-  <.live_component
-    module={ThreatShieldWeb.ThreatLive.ThreatComponent}
     organisation={@organisation}
     membership={@membership}
     threats={@organisation.threats}
     asking_ai_for_threats={@asking_ai_for_threats}
-    path_prefix={"/organisations/#{@organisation.id}"}
-    id={"threats_for_org_#{@organisation.id}"}
+    origin={"/organisations/#{@organisation.id}"}
   />
 
-<.modal
-  :if={@live_action == :new_threat}
-  id="threat-modal"
-  show
-  on_cancel={JS.patch(~p"/organisations/#{@organisation.id}")}
->
-  <.live_component
-    module={ThreatShieldWeb.ThreatLive.FormComponent}
-    id={@threat.id || :new}
-    title={@page_title}
-    action={@live_action}
-    current_user={@current_user}
-    organisation={@organisation}
-    system_options={list_system_options(@organisation)}
-    threat={@threat}
-    patch={~p"/organisations/#{@organisation.id}"}
-  />
-</.modal>
+  <.modal
+    :if={@live_action == :edit_organisation}
+    id="organisation-modal"
+    show
+    on_cancel={JS.patch(~p"/organisations/#{@organisation}")}
+  >
+    <.live_component
+      module={ThreatShieldWeb.OrganisationLive.OrganisationForm}
+      id={@organisation.id}
+      title={@page_title}
+      action={@live_action}
+      organisation={@organisation}
+      attributes={@attributes}
+      locations_options={@locations_options}
+      current_user={@current_user}
+      patch={~p"/organisations/#{@organisation}"}
+    />
+  </.modal>
 
-<%= if not is_nil(@asking_ai_for_threats) or not is_nil(@asking_ai_for_assets) do %>
-  <ThreatShieldWeb.Spinner.spinner />
-<% end %>
+  <%= if not is_nil(@asking_ai_for_threats) or not is_nil(@asking_ai_for_assets) do %>
+    <ThreatShieldWeb.Spinner.spinner />
+  <% end %>
+</section>

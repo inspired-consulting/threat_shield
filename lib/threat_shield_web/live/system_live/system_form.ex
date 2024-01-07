@@ -1,10 +1,10 @@
-defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
-  alias ThreatShield.DynamicAttribute
+defmodule ThreatShieldWeb.SystemLive.SystemForm do
   use ThreatShieldWeb, :live_component
-  import Phoenix.LiveView
 
-  alias ThreatShield.Organisations
-  import ThreatShield.Organisations.Organisation, only: [attributes: 0]
+  alias ThreatShield.Systems
+  alias ThreatShield.DynamicAttribute
+
+  import ThreatShield.Systems.System, only: [attributes: 0]
 
   @impl true
   def render(assigns) do
@@ -14,20 +14,19 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
         <%= @title %>
       </.header>
 
+      <p class="help-text">
+        <%= dgettext("systems", "System: long description") %>
+      </p>
+
       <.simple_form
         for={@form}
-        id="organisation-form"
+        id="system-form"
         phx-target={@myself}
         phx-change="validate"
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Name" />
-        <.input
-          field={@form[:location]}
-          type="select"
-          label="Choose your location"
-          options={@locations_options}
-        />
+        <.input field={@form[:description]} type="text" label="Description" />
         <%= for attribute <- @attributes do %>
           <.input
             name={attribute.name}
@@ -38,7 +37,7 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
           <em>e.g. <%= DynamicAttribute.get_suggestions(attribute) |> Enum.join(", ") %></em>
         <% end %>
         <:actions>
-          <.button_primary phx-disable-with="Saving...">Save Organisation</.button_primary>
+          <.button_primary phx-disable-with="Saving...">Save System</.button_primary>
         </:actions>
       </.simple_form>
     </div>
@@ -46,11 +45,12 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   end
 
   @impl true
-  def update(%{organisation: organisation} = assigns, socket) do
-    changeset = Organisations.change_organisation(organisation)
+  def update(%{system: system} = assigns, socket) do
+    changeset =
+      Systems.change_system(system)
 
     attribute_map =
-      case organisation.attributes do
+      case system.attributes do
         nil -> Map.new()
         map -> map
       end
@@ -63,23 +63,19 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"organisation" => organisation_params}, socket) do
+  def handle_event("validate", %{"system" => system_params}, socket) do
     changeset =
-      socket.assigns.organisation
-      |> Organisations.change_organisation(organisation_params)
+      socket.assigns.system
+      |> Systems.change_system(system_params)
       |> Map.put(:action, :validate)
 
     {:noreply, assign_form(socket, changeset)}
   end
 
-  def handle_event("save", %{"organisation" => organisation_params} = params, socket) do
+  def handle_event("save", %{"system" => system_params} = params, socket) do
     attributes = extract_attributes_from_params(params)
 
-    save_organisation(
-      socket,
-      socket.assigns.action,
-      Map.put(organisation_params, "attributes", attributes)
-    )
+    save_system(socket, socket.assigns.action, Map.put(system_params, "attributes", attributes))
   end
 
   defp extract_attributes_from_params(params) do
@@ -88,20 +84,16 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
     |> Map.new()
   end
 
-  defp save_organisation(socket, :edit_organisation, organisation_params) do
-    current_user = socket.assigns.current_user
+  defp save_system(socket, :edit_system, system_params) do
+    user = socket.assigns.current_user
 
-    case Organisations.update_organisation(
-           socket.assigns.organisation,
-           current_user,
-           organisation_params
-         ) do
-      {:ok, organisation} ->
-        notify_parent({:saved, organisation})
+    case Systems.update_system(user, socket.assigns.system, system_params) do
+      {:ok, system} ->
+        notify_parent({:saved, system})
 
         {:noreply,
          socket
-         |> put_flash(:info, "Organisation updated successfully")
+         |> put_flash(:info, "System updated successfully")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -109,16 +101,18 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
     end
   end
 
-  defp save_organisation(socket, :new, organisation_params) do
-    %{current_user: current_user} = socket.assigns
+  defp save_system(socket, :new_system, system_params) do
+    user = socket.assigns.current_user
+    organisation = socket.assigns.organisation
 
-    case Organisations.create_organisation(organisation_params, current_user) do
-      {:ok, organisation} ->
-        notify_parent({:saved, organisation})
+    case Systems.create_system(user, organisation, system_params) do
+      {:ok, system} ->
+        notify_parent({:saved, system})
+        notify_systems_list(id: socket.assigns.parent_id, added_system: system)
 
         {:noreply,
          socket
-         |> put_flash(:info, "Organisation created successfully")
+         |> put_flash(:info, "System created successfully")
          |> push_patch(to: socket.assigns.patch)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -131,4 +125,7 @@ defmodule ThreatShieldWeb.OrganisationLive.FormComponent do
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp notify_systems_list(msg),
+    do: send_update(self(), ThreatShieldWeb.SystemLive.SystemsList, msg)
 end

@@ -13,10 +13,7 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
         </span>
         <:subtitle>
           Already registered?
-          <.link
-            navigate={~p"/users/log_in"}
-            class="font-semibold text-primary_col-500 hover:underline"
-          >
+          <.link navigate={~p"/users/log_in"} class="font-semibold text-primary-500 hover:underline">
             <%= dgettext("accounts", "Sign in") %>
           </.link>
           to your account now.

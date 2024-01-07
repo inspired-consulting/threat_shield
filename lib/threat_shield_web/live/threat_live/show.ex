@@ -7,9 +7,9 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   alias ThreatShield.AI
   alias ThreatShield.Organisations.Organisation
 
-  import ThreatShield.Threats.Threat, only: [system_name: 1]
   import ThreatShield.Organisations.Organisation, only: [list_system_options: 1]
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, get_path_prefix: 1]
+  import ThreatShieldWeb.Labels, only: [system_label: 1]
 
   @impl true
   def mount(%{"threat_id" => threat_id} = params, _session, socket) do
@@ -105,14 +105,14 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.RiskLive.FormComponent, {:saved, risk}}, socket) do
+  def handle_info({ThreatShieldWeb.RiskLive.RiskForm, {:saved, risk}}, socket) do
     stale_threat = socket.assigns.threat
     updated_threat = %{stale_threat | risks: stale_threat.risks ++ [risk]}
     {:noreply, socket |> assign(threat: updated_threat) |> assign(page_title: "Show threat")}
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.ThreatLive.FormComponent, {:saved, threat}}, socket) do
+  def handle_info({ThreatShieldWeb.ThreatLive.ThreatForm, {:saved, threat}}, socket) do
     current_user = socket.assigns.current_user
     threat = Threats.get_threat!(current_user, threat.id)
 

@@ -1,5 +1,9 @@
-defmodule ThreatShieldWeb.RiskLive.RiskComponent do
+defmodule ThreatShieldWeb.RiskLive.RisksList do
   use ThreatShieldWeb, :live_component
+
+  @moduledoc """
+  This component renders a list of risks for a given threat.
+  """
 
   @impl true
   def render(assigns) do
@@ -9,7 +13,7 @@ defmodule ThreatShieldWeb.RiskLive.RiskComponent do
         <:name><%= dgettext("risks", "Risks") %></:name>
 
         <:subtitle>
-          Risks are the potential negative outcome — loss, damage, or harm resulting from the exploitation of vulnerabilities by threats.
+          <%= dgettext("risks", "Risk: short description") %>
         </:subtitle>
 
         <:buttons>
@@ -25,17 +29,17 @@ defmodule ThreatShieldWeb.RiskLive.RiskComponent do
             </.button_primary>
           </.link>
           <.link>
-            <.button_primary
+            <.button_magic
               :if={ThreatShield.Members.Rights.may(:create_threat, @membership)}
               disabled={not is_nil(@asking_ai_for_risks)}
               phx-click="suggest_risks"
               phx-value-threat_id={@threat.id}
             >
-              <.icon name="hero-shield-check" class="mr-1 mb-1" /><%= dgettext(
+              <.icon name="hero-sparkles" class="mr-1 mb-1" /><%= dgettext(
                 "risks",
                 "Suggest Risks"
               ) %>
-            </.button_primary>
+            </.button_magic>
           </.link>
         </:buttons>
       </.stacked_list_header>
@@ -50,11 +54,17 @@ defmodule ThreatShieldWeb.RiskLive.RiskComponent do
         <:col :let={risk}>
           <%= risk.name %>
         </:col>
+        <:col :let={risk}>
+          <.risk_status_badge status={risk.status} light={true} />
+        </:col>
         <:col :let={risk}><%= risk.description %></:col>
+        <:col :let={risk}>
+          <.criticality_badge value={risk.severity} title={dgettext("risks", "Severity")} />
+        </:col>
       </.stacked_list>
 
       <p :if={Enum.empty?(@risks)} class="mt-4">
-        There are no risks. Please add them manually.
+        There are no risks. Please add them manually or let the AI assistant make some suggestions.
       </p>
     </div>
     """

@@ -1,7 +1,8 @@
-defmodule ThreatShieldWeb.RiskLive.FormComponent do
+defmodule ThreatShieldWeb.RiskLive.RiskForm do
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.Risks
+  alias ThreatShieldWeb.Labels
 
   @impl true
   def render(assigns) do
@@ -10,6 +11,12 @@ defmodule ThreatShieldWeb.RiskLive.FormComponent do
       <.header>
         <%= @title %>
       </.header>
+      <p class="help-text">
+        <%= dgettext(
+          "risks",
+          "Risk: short description"
+        ) %>
+      </p>
 
       <.simple_form
         for={@form}
@@ -21,13 +28,35 @@ defmodule ThreatShieldWeb.RiskLive.FormComponent do
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:description]} type="text" label="Description" />
         <.input
-          field={@form[:estimated_cost]}
-          type="number"
-          label={dgettext("risks", "Estimated cost in EUR")}
-        />
-        <.input field={@form[:probability]} type="number" label="Probability in %" step="any" />
+          field={@form[:status]}
+          type="select"
+          label={dgettext("risks", "Status")}
+          options={status_options()}
+        >
+        </.input>
+        <div class="my-2">
+          <.criticality_picker field={@form[:severity]} label={dgettext("risks", "Severity")} />
+        </div>
+        <div class="grid grid-cols-2 space-x-4">
+          <.input
+            field={@form[:estimated_cost]}
+            type="number"
+            label={dgettext("risks", "Estimated cost in EUR")}
+          />
+          <.input
+            field={@form[:probability]}
+            type="number"
+            label="Probability in %"
+            step="1"
+            min="0"
+            max="100"
+          />
+        </div>
+        <hr />
         <:actions>
-          <.button_primary phx-disable-with="Saving...">Save Risk</.button_primary>
+          <.button_primary phx-disable-with={dgettext("common", "Saving...")}>
+            Save Risk
+          </.button_primary>
         </:actions>
       </.simple_form>
     </div>
@@ -56,6 +85,11 @@ defmodule ThreatShieldWeb.RiskLive.FormComponent do
 
   def handle_event("save", %{"risk" => risk_params}, socket) do
     save_risk(socket, socket.assigns.action, risk_params)
+  end
+
+  def status_options() do
+    Labels.available_risk_states()
+    |> Enum.map(fn {key, label} -> {label, key} end)
   end
 
   defp save_risk(socket, :edit_risk, risk_params) do

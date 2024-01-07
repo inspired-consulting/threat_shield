@@ -5,11 +5,35 @@ defmodule ThreatShield.Risks.Risk do
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Mitigations.Mitigation
 
+  @moduledoc """
+  A risk is a combination of a threat and an asset. It is the result of a risk assessment.
+  0.0 - Insignificant: This label suggests that the risk has such a negligible impact that it can be considered as having no real effect or importance.
+  1.0 - Very Low: Minimal impact and likelihood; may be easily mitigated or ignored.
+  2.0 - Low: Slight impact; should be manageable with standard risk mitigation strategies.
+  3.0 - Moderate: Noticeable impact; requires active management and monitoring.
+  4.0 - High: Significant impact; high priority for mitigation and may require substantial resources.
+  5.0 - Catastrophic/Extremely High: Critical impact; immediate and comprehensive action required, possibly involving major resource allocation or changes.
+  """
+
   schema "risks" do
     field :name, :string
     field :description, :string
     field :estimated_cost, :integer
     field :probability, :float
+    field :severity, :float
+
+    field :status, Ecto.Enum,
+      values: [
+        :identified,
+        :assessed,
+        :mitigation_planned,
+        :mitigation_in_progress,
+        :mitigated,
+        :monitored,
+        :closed,
+        :reopened
+      ],
+      default: :identified
 
     belongs_to :threat, Threat
 
@@ -18,14 +42,19 @@ defmodule ThreatShield.Risks.Risk do
     timestamps()
   end
 
+  @fields ~w(name description estimated_cost probability severity status)a
+  @valid_states ~w(identified assessed mitigation_planned mitigation_in_progress mitigated monitored closed reopened)a
+
   def describe(%__MODULE__{description: description, threat: threat}) do
     description <> " " <> Threat.describe(threat)
   end
 
+  def valid_states(), do: @valid_states
+
   @doc false
   def changeset(risk, attrs) do
     risk
-    |> cast(attrs, [:name, :description, :estimated_cost, :probability])
+    |> cast(attrs, @fields)
     |> validate_required([:name, :description])
     |> validate_length(:name, max: 60)
   end
