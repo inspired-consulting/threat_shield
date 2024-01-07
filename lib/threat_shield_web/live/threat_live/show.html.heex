@@ -7,7 +7,7 @@
   </:description>
   <:links>
     <li
-      :if={ThreatShield.Members.Rights.may(:delete_threat, @membership)}
+      :if={ThreatShield.Members.Rights.may(:delete_threat, @scope.membership)}
       class="context-menu-item"
     >
       <.link
@@ -17,7 +17,10 @@
         <%= dgettext("common", "Delete") %>
       </.link>
     </li>
-    <li :if={ThreatShield.Members.Rights.may(:edit_threat, @membership)} class="context-menu-item">
+    <li
+      :if={ThreatShield.Members.Rights.may(:edit_threat, @scope.membership)}
+      class="context-menu-item"
+    >
       <.link
         patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/edit"}
         phx-click={JS.push_focus()}
@@ -30,6 +33,10 @@
     <div>
       <.label><%= dgettext("threats", "System") %></.label>
       <p><%= system_label(@threat) %></p>
+    </div>
+    <div>
+      <.label><%= dgettext("threats", "Asset") %></.label>
+      <p><%= asset_label(@threat) %></p>
     </div>
   </:attribute>
 </.entity_info>
@@ -46,11 +53,11 @@
       id={@threat.id}
       title={@page_title}
       action={@live_action}
+      scope={@scope}
       threat={@threat}
-      current_user={@current_user}
-      organisation={@organisation}
       system_options={assigns[:system_options]}
-      patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}"}
+      asset_options={assigns[:asset_options]}
+      origin={@origin}
     />
   </.modal>
 
@@ -80,6 +87,6 @@
     threat={@threat}
     risks={@threat.risks}
     ai_suggestions={@ai_suggestions}
-    origin={"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/#{@threat.id}"}
+    origin={@origin}
   />
 </section>

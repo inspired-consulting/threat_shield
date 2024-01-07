@@ -5,12 +5,13 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   alias ThreatShield.Scope
   alias ThreatShield.AI.AiSuggestion
 
+  alias ThreatShield.Threats
+  alias ThreatShield.Threats.Threat
+  alias ThreatShield.Assets.Asset
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Systems.System
-  alias ThreatShield.Threats.Threat
-  alias ThreatShield.Threats
 
-  import(ThreatShieldWeb.Labels, only: [system_label: 1])
+  import ThreatShieldWeb.Labels
 
   require Logger
 
@@ -72,6 +73,9 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           <:col :let={threat}>
             <%= system_label(threat) %>
           </:col>
+          <:col :let={threat}>
+            <%= asset_label(threat) %>
+          </:col>
           <:col :let={threat}><%= threat.description %></:col>
         </.stacked_list>
 
@@ -92,11 +96,11 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           parent_id={@id}
           action={:new_threat}
           title={dgettext("threats", "New Threat")}
-          current_user={@scope.user}
-          organisation={@scope.organisation}
+          scope={@scope}
           system_options={systems_of_organisaton(@scope.organisation)}
-          threat={prepare_threat(assigns)}
-          patch={@origin}
+          asset_options={assets_of_organisaton(@scope.organisation)}
+          threat={prepare_threat(@scope)}
+          origin={@origin}
         />
       </.modal>
       <.modal
@@ -181,6 +185,18 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
 
   defp systems_of_organisaton(%Organisation{} = organisation) do
     Organisation.list_system_options(organisation)
+  end
+
+  defp assets_of_organisaton(%Organisation{} = organisation) do
+    Organisation.list_asset_options(organisation)
+  end
+
+  defp prepare_threat(%{asset: %Asset{} = asset, system: %System{} = system}) do
+    %Threat{asset: asset, asset_id: asset.id, system: system, system_id: system.id}
+  end
+
+  defp prepare_threat(%{asset: %Asset{} = asset}) do
+    %Threat{asset: asset, asset_id: asset.id}
   end
 
   defp prepare_threat(%{system: %System{} = system}) do

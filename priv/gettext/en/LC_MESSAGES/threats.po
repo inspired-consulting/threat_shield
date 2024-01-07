@@ -35,7 +35,7 @@ msgstr ""
 #: lib/threat_shield_web/live/threat_live/threats_list.ex:19
 #, elixir-autogen, elixir-format
 msgid "Threat: short description"
-msgstr "Threats are any potential event or action that can compromise the security of a system, organisation, or individual"
+msgstr "Threats are any potential event or action that can compromise the security of a system, asset, organisation, or individual"
 
 #: lib/threat_shield_web/live/threat_live/threat_form.ex:15
 #, elixir-autogen, elixir-format, fuzzy

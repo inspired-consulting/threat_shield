@@ -5,39 +5,30 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   alias ThreatShield.Threats
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Risks.Risk
-  alias ThreatShield.Organisations.Organisation
 
-  import ThreatShield.Organisations.Organisation, only: [list_system_options: 1]
+  import ThreatShield.Organisations.Organisation,
+    only: [list_system_options: 1, list_asset_options: 1]
+
+  import ThreatShieldWeb.ScopeUrlBinding
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, get_path_prefix: 1]
-  import ThreatShieldWeb.Labels, only: [system_label: 1]
+  import ThreatShieldWeb.Labels
 
   @impl true
   def mount(%{"threat_id" => threat_id} = params, _session, socket) do
-    current_user = socket.assigns.current_user
-    threat = %Threat{} = Threats.get_threat!(current_user, threat_id)
+    user = socket.assigns.current_user
+    threat = %Threat{} = Threats.get_threat!(user, threat_id)
+    scope = %Scope{} = threat_scope_from_params(user, threat, params)
 
-    socket =
-      socket
-      |> assign(:threat, threat)
-      |> assign(:organisation, threat.organisation)
-      |> assign(:membership, Organisation.get_membership(threat.organisation, current_user))
-      |> assign(:system, threat.system)
-      |> assign(:page_title, page_title(socket.assigns.live_action))
-      |> assign(:risk_suggestions, [])
-      |> assign(:called_via_system, Map.has_key?(params, "sys_id"))
-      |> assign(:ai_suggestions, %{})
-
-    socket_with_options =
-      if socket.assigns.called_via_system do
-        socket
-        |> assign(:scope, Scope.for(current_user, threat.organisation, threat.system))
-      else
-        socket
-        |> assign(:scope, Scope.for(current_user, threat.organisation))
-        |> assign(:system_options, list_system_options(threat.organisation))
-      end
-
-    {:ok, socket_with_options}
+    socket
+    |> assign(scope: scope)
+    |> assign(organisation: threat.organisation)
+    |> assign(threat: threat)
+    |> assign(page_title: page_title(socket.assigns.live_action))
+    |> assign(system_options: list_system_options(threat.organisation))
+    |> assign(asset_options: list_asset_options(threat.organisation))
+    |> assign(origin: threat_scope_to_url(scope))
+    |> assign(ai_suggestions: %{})
+    |> ok()
   end
 
   defp apply_action(socket, :new_risk, _params) do

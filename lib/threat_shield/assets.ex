@@ -30,8 +30,10 @@ defmodule ThreatShield.Assets do
     Asset.get(asset_id)
     |> Asset.for_user(user_id)
     |> Asset.preload_organisation()
-    |> Asset.with_org_systems()
     |> Asset.with_system()
+    |> Asset.with_threats()
+    |> Asset.with_org_systems()
+    |> Asset.with_org_assets()
     |> Asset.preload_membership()
     |> Repo.one!()
   end

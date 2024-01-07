@@ -7,7 +7,7 @@
   </:description>
   <:links>
     <li
-      :if={ThreatShield.Members.Rights.may(:delete_asset, @membership)}
+      :if={ThreatShield.Members.Rights.may(:delete_asset, @scope.membership)}
       class="context-menu-item"
     >
       <.link
@@ -17,7 +17,10 @@
         <%= dgettext("common", "Delete") %>
       </.link>
     </li>
-    <li :if={ThreatShield.Members.Rights.may(:edit_asset, @membership)} class="context-menu-item">
+    <li
+      :if={ThreatShield.Members.Rights.may(:edit_asset, @scope.membership)}
+      class="context-menu-item"
+    >
       <.link
         patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}/show/edit"}
         phx-click={JS.push_focus()}
@@ -82,11 +85,19 @@
       id={@asset.id}
       title={@page_title}
       action={@live_action}
+      scope={@scope}
       asset={@asset}
-      current_user={@current_user}
-      organisation={@organisation}
       system_options={assigns[:system_options]}
-      patch={get_path_prefix(assigns) <> "/assets/#{@asset.id}"}
+      origin={@origin}
     />
   </.modal>
+
+  <.live_component
+    module={ThreatShieldWeb.ThreatLive.ThreatsList}
+    id={"threats_for_asset_#{@asset.id}"}
+    scope={@scope}
+    threats={@asset.threats}
+    ai_suggestions={@ai_suggestions}
+    origin={@origin}
+  />
 </section>

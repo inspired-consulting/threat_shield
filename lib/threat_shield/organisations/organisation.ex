@@ -67,6 +67,10 @@ defmodule ThreatShield.Organisations.Organisation do
     [{"None", nil} | Enum.map(systems, fn s -> {s.name, s.id} end)]
   end
 
+  def list_asset_options(%__MODULE__{assets: assets}) do
+    [{"None", nil} | Enum.map(assets, fn a -> {a.name, a.id} end)]
+  end
+
   def describe(%__MODULE__{name: name, attributes: attributes, systems: systems}) do
     name_string = """
     The name of the organisation is "#{name}".
@@ -122,8 +126,10 @@ defmodule ThreatShield.Organisations.Organisation do
   def with_threats(query) do
     query
     |> join(:left, [organisation: o], assoc(o, :threats), as: :threats)
-    |> join(:left, [threats: t], assoc(t, :system), as: :threat_systems)
-    |> preload([threats: t, threat_systems: s], threats: {t, system: s})
+    |> join(:left, [threats: t], assoc(t, :system), as: :threat_system)
+    |> join(:left, [threats: t], assoc(t, :asset), as: :threat_asset)
+    |> preload([threats: t, threat_system: s], threats: {t, system: s})
+    |> preload([threats: t, threat_asset: a], threats: {t, asset: a})
   end
 
   def with_risks(query) do

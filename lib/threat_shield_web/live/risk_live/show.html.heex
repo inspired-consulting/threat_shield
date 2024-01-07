@@ -29,6 +29,14 @@
 
   <:attribute>
     <div>
+      <.label><%= dgettext("risks", "System") %></.label>
+      <p><%= system_label(@risk) %></p>
+    </div>
+    <div>
+      <.label><%= dgettext("risks", "Asset") %></.label>
+      <p><%= asset_label(@risk) %></p>
+    </div>
+    <div>
       <.label><%= dgettext("risks", "Estimated cost") %></.label>
       <p><%= format_monetary_amount(@risk.estimated_cost) %></p>
     </div>
@@ -93,6 +101,6 @@
     threat={@threat}
     risk={@risk}
     ai_suggestions={@ai_suggestions}
-    origin={"/organisations/#{@organisation.id}/systems/#{@system.id}/threats/#{@threat.id}/risks/#{@risk.id}"}
+    origin={@origin}
   />
 </section>

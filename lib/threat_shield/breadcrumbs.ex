@@ -1,4 +1,6 @@
 defmodule ThreatShield.Breadcrumbs do
+  alias ThreatShield.Scope
+
   def relevant_url_parts() do
     %{
       "organisations" => :organisations,
@@ -46,12 +48,22 @@ defmodule ThreatShield.Breadcrumbs do
     name
   end
 
+  defp replace_chunk(chunk, %{scope: %Scope{} = scope} = context) do
+    case chunk do
+      ":org_id" -> scope.organisation.id
+      ":sys_id" -> scope.system.id
+      ":threat_id" -> scope.organisation.id
+      ":risk_id" -> context[:risk].id
+      _ -> chunk
+    end
+  end
+
   defp replace_chunk(chunk, context) do
     case chunk do
       ":org_id" -> context[:organisation].id
       ":threat_id" -> context[:threat].id
-      ":risk_id" -> context[:risk].id
       ":sys_id" -> context[:system].id
+      ":risk_id" -> context[:risk].id
       _ -> chunk
     end
   end

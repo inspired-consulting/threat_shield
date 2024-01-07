@@ -29,8 +29,10 @@ defmodule ThreatShield.Threats do
     Threat.get(threat_id)
     |> Threat.for_user(user_id)
     |> Threat.with_system()
+    |> Threat.with_asset()
     |> Threat.with_organisation_and_risks()
     |> Threat.with_org_systems()
+    |> Threat.with_org_assets()
     |> Threat.preload_membership()
     |> Repo.one!()
   end

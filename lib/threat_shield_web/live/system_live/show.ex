@@ -19,7 +19,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
     |> assign(:organisation, system.organisation)
     |> assign(:membership, Organisation.get_membership(system.organisation, user))
     |> assign(:attributes, System.attributes())
-    |> assign(:scope, Scope.for(user, system.organisation, system))
+    |> assign(:scope, Scope.for_system(user, system.organisation, system))
     |> assign(:ai_suggestions, %{})
     |> ok()
   end

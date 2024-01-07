@@ -12,6 +12,8 @@ defmodule ThreatShield.Assets.Asset do
     field :criticality_theft, :float
     field :criticality_publication, :float
     field :criticality_overall, :float
+
+    has_many :threats, ThreatShield.Threats.Threat
     belongs_to :system, System
     belongs_to :organisation, Organisation
     timestamps()
@@ -80,10 +82,22 @@ defmodule ThreatShield.Assets.Asset do
     |> preload([organisation: o, org_systems: s], organisation: {o, systems: s})
   end
 
+  def with_org_assets(query) do
+    query
+    |> join(:left, [organisation: o], assoc(o, :assets), as: :assets)
+    |> preload([organisation: o, assets: a], organisation: {o, assets: a})
+  end
+
   def with_system(query) do
     query
     |> join(:left, [asset: a], assoc(a, :system), as: :system)
     |> preload([system: s], system: s)
+  end
+
+  def with_threats(query) do
+    query
+    |> join(:left, [asset: a], assoc(a, :threats), as: :threats)
+    |> preload([threats: t], threats: t)
   end
 
   def select(query) do

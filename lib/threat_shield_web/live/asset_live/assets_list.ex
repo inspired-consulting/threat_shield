@@ -110,14 +110,13 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
         <.live_component
           module={ThreatShieldWeb.AssetLive.AssetForm}
           id={:new}
+          scope={@scope}
           parent_id={@id}
           title={dgettext("assets", "New Asset")}
           action={:new_asset}
-          current_user={@scope.user}
-          organisation={@scope.organisation}
           system_options={systems_of_organisaton(@scope.organisation)}
           asset={prepare_asset(assigns)}
-          patch={@origin}
+          origin={@origin}
         />
       </.modal>
       <.modal

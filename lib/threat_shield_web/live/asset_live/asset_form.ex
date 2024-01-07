@@ -1,7 +1,9 @@
 defmodule ThreatShieldWeb.AssetLive.AssetForm do
   use ThreatShieldWeb, :live_component
 
+  alias ThreatShield.Scope
   alias ThreatShield.Assets
+
   import ThreatShieldWeb.TsComponents
 
   @impl true
@@ -25,8 +27,8 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:description]} type="text" label="Description" />
+        <.input field={@form[:name]} type="text" label="Name" required />
+        <.input field={@form[:description]} type="text" label="Description" required />
         <.input
           :if={assigns[:system_options]}
           field={@form[:system_id]}
@@ -89,10 +91,10 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
   end
 
   defp save_asset(socket, :edit, asset_params) do
-    user = socket.assigns.current_user
+    scope = %Scope{} = socket.assigns.scope
 
     case Assets.update_asset(
-           user,
+           scope.user,
            socket.assigns.asset,
            asset_params |> update_with_fixed_system(socket)
          ) do
@@ -101,7 +103,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
 
         socket
         |> put_flash(:info, "Asset updated successfully")
-        |> push_patch(to: socket.assigns.patch)
+        |> push_patch(to: socket.assigns.origin)
         |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -110,17 +112,20 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
   end
 
   defp save_asset(socket, :new_asset, asset_params) do
-    user = socket.assigns.current_user
-    organisation = socket.assigns.organisation
+    scope = %Scope{} = socket.assigns.scope
 
-    case Assets.create_asset(user, organisation, asset_params |> update_with_fixed_system(socket)) do
+    case Assets.create_asset(
+           scope.user,
+           scope.organisation,
+           asset_params |> update_with_fixed_system(socket)
+         ) do
       {:ok, asset} ->
         notify_parent({:saved, asset})
         notify_asset_list(id: socket.assigns.parent_id, added_asset: asset)
 
         socket
         |> put_flash(:info, "Asset created successfully")
-        |> push_patch(to: socket.assigns.patch)
+        |> push_patch(to: socket.assigns.origin)
         |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->

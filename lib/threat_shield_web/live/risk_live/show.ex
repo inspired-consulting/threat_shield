@@ -1,40 +1,48 @@
 defmodule ThreatShieldWeb.RiskLive.Show do
-  alias ThreatShield.Organisations.Organisation
-  alias ThreatShield.Mitigations.Mitigation
   use ThreatShieldWeb, :live_view
 
-  alias ThreatShield.Scope
+  alias ThreatShield.Threats.Threat
   alias ThreatShield.Risks
   alias ThreatShield.Risks.Risk
+  alias ThreatShield.Mitigations.Mitigation
+  import ThreatShieldWeb.ScopeUrlBinding
 
   import ThreatShieldWeb.Helpers
+  import ThreatShieldWeb.Labels
+
+  @moduledoc """
+  Live view for showing a risk.
+  The risk always belongs to a threat. But the threat may be part of a system or an asset.
+  """
 
   @impl true
-  def mount(%{"risk_id" => risk_id} = params, _session, socket) do
-    user = socket.assigns.current_user
-    risk = Risks.get_risk!(user, risk_id)
-    threat = risk.threat
-    organisation = threat.organisation
-
+  def mount(_params, _session, socket) do
     socket
-    |> assign(risk: risk)
-    |> assign(threat: threat)
-    |> assign(organisation: organisation)
-    |> assign(:membership, Organisation.get_membership(organisation, user))
-    |> assign(system: threat.system)
-    |> assign(:scope, Scope.for(user, organisation, threat.system))
-    |> assign(:mitigation_suggestions, [])
-    |> assign(:called_via_system, Map.has_key?(params, "sys_id"))
     |> assign(:ai_suggestions, %{})
     |> ok()
   end
 
   @impl true
-  def handle_params(params, url, socket) do
-    {:noreply,
-     socket
-     |> add_breadcrumbs(url)
-     |> apply_action(socket.assigns.live_action, params)}
+  def handle_params(%{"risk_id" => risk_id} = params, url, socket) do
+    user = socket.assigns.current_user
+    risk = %Risk{} = Risks.get_risk!(user, risk_id)
+    threat = %Threat{} = risk.threat
+    organisation = threat.organisation
+
+    scope = threat_scope_from_params(user, threat, params)
+
+    socket
+    |> assign(risk: risk)
+    |> assign(threat: threat)
+    |> assign(organisation: organisation)
+    |> assign(membership: scope.membership)
+    |> assign(system: threat.system)
+    |> assign(scope: scope)
+    |> assign(ai_suggestions: %{})
+    |> assign(origin: risk_scope_to_url(scope, risk))
+    |> add_breadcrumbs(url)
+    |> apply_action(socket.assigns.live_action, params)
+    |> noreply()
   end
 
   defp apply_action(socket, :edit_risk, _params) do
