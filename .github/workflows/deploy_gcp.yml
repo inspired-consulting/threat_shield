@@ -1,0 +1,64 @@
+# This workflow build and push a Docker container to Google Artifact Registry and deploy it on Cloud Run when a commit is pushed to the "main" branch
+
+name: Build and Deploy to Cloud Run
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  PROJECT_ID: threatshield_prod
+  GAR_LOCATION: europe-west3
+  REPO_NAME: threatshield
+  SERVICE: threatshield-webapp
+  REGION: europe-west3
+  SERVICE_ACCOUNT: cloud-run-deployer
+
+jobs:
+  deploy:
+    # Add 'id-token' with the intended permissions for workload identity federation
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Google Auth
+        id: auth
+        uses: "google-github-actions/auth@v2"
+        with:
+          project_id: "${{ env.PROJECT_ID }}"
+          credentials_json: "${{ secrets.CLOUD_RUN_CREDENTIALS_JSON }}"
+
+      # BEGIN - Docker auth and build (NOTE: If you already have a container image, these Docker steps can be omitted)
+
+      # Authenticate Docker to Google Cloud Artifact Registry
+      - name: Login to Google Artifact Registry
+        id: docker-auth
+        uses: "docker/login-action@v3"
+        with:
+          username: _json_key
+          password: "${{ secrets.GAR_JSON_KEY }}"
+          registry: "${{ env.GAR_LOCATION }}-docker.pkg.dev"
+
+      - name: Build and Push Container
+        run: |-
+          docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE }}:${{ github.sha }}" ./
+          docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE }}:${{ github.sha }}"
+
+      # END - Docker auth and build
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v1
+        with:
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          image: ${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE }}:${{ github.sha }}
+
+      # If required, use the Cloud Run url output in later steps
+      - name: Show Output
+        run: echo ${{ steps.deploy.outputs.url }}
