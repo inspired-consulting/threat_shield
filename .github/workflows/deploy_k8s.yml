@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy image to Inspired K8s
 
 on:
   workflow_run:
