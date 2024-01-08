@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
 env:
-  PROJECT_ID: threatshield_prod
+  PROJECT_ID: threatshield-prod
   GAR_LOCATION: europe-west3
   REPO_NAME: threatshield
   SERVICE: threatshield-webapp
