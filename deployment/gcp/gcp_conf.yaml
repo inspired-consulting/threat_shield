@@ -1,0 +1,4 @@
+environments:
+  - env: prod
+    project_id: threatshield-prod
+    external_url: https://app.threatshield.eu
