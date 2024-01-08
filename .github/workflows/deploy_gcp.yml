@@ -48,7 +48,6 @@ jobs:
         run: |-
           docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE }}:${{ github.sha }}" ./
           docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE }}:${{ github.sha }}"
-          europe-west3-docker.pkg.dev/threatshield-prod/threatshield-images
 
       # END - Docker auth and build
 
