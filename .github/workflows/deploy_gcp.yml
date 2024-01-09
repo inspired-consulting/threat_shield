@@ -34,7 +34,7 @@ jobs:
         uses: "google-github-actions/auth@v2"
         with:
           project_id: "${{ env.PROJECT_ID }}"
-          credentials_json: "${{ secrets.CLOUD_RUN_CREDENTIALS_JSON }}"
+          credentials_json: "${{ secrets.GCP_DEPLOYER_JSON }}"
 
       # BEGIN - Docker auth and build (NOTE: If you already have a container image, these Docker steps can be omitted)
 
