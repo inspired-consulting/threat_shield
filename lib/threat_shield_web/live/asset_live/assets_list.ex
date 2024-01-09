@@ -21,7 +21,12 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
     <div class="assets" id="assets">
       <div class="mt-4 px-8 py-6 bg-white rounded-lg shadow">
         <.stacked_list_header>
-          <:name><%= dgettext("assets", "Assets") %></:name>
+          <:name>
+            <span class="text-gray-700 inline-block">
+              <Icons.asset_icon class="w-6 h-6" />
+            </span>
+            <%= dgettext("assets", "Assets") %>
+          </:name>
 
           <:subtitle>
             <%= dgettext(

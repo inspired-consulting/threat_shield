@@ -28,7 +28,12 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
     <div class="threats">
       <div class="mt-4 px-8 py-6 bg-white rounded-lg shadow">
         <.stacked_list_header>
-          <:name><%= dgettext("threats", "Threats") %></:name>
+          <:name>
+            <span class="text-gray-800 inline-block">
+              <Icons.threat_icon class="w-6 h-6" />
+            </span>
+            <%= dgettext("threats", "Threats") %>
+          </:name>
 
           <:subtitle>
             <%= dgettext("threats", "Threat: short description") %>

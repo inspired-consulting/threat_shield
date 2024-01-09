@@ -19,7 +19,12 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
     <div class="systems" id="systems">
       <div class="px-8 py-6 bg-white rounded-lg shadow">
         <.stacked_list_header>
-          <:name><%= dgettext("systems", "Systems") %></:name>
+          <:name>
+            <span class="text-gray-700 inline-block">
+              <Icons.system_icon class="w-5 h-5" />
+            </span>
+            <%= dgettext("systems", "Systems") %>
+          </:name>
 
           <:subtitle>
             <%= dgettext("systems", "System: short description") %>

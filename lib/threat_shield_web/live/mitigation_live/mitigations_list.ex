@@ -19,7 +19,12 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationsList do
     <div class="mitigations">
       <div class="mt-4 px-8 py-6 bg-white rounded-lg shadow">
         <.stacked_list_header>
-          <:name><%= dgettext("mitigations", "Mitigations") %></:name>
+          <:name>
+            <span class="text-gray-700 inline-block">
+              <Icons.mitigation_icon class="w-5 h-5" />
+            </span>
+            <%= dgettext("mitigations", "Mitigations") %>
+          </:name>
 
           <:subtitle>
             <%= dgettext(

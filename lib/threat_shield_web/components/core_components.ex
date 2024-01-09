@@ -628,7 +628,7 @@ defmodule ThreatShieldWeb.CoreComponents do
     <div class="bg-primary-900 flex justify-between h-16">
       <div class="justify-start flex items-center gap-9 px-10">
         <a href="/" class="">
-          <ThreatShieldWeb.Icons.app_icon class="h-8 w-8 text-primary-200" />
+          <ThreatShieldWeb.Icons.app_icon class="h-8 w-8 text-primary-100" />
         </a>
         <%= if assigns[:organisation] do %>
           <.entity_links organisation={@organisation} entity_page={assigns[:entity_page]} />

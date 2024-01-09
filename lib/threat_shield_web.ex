@@ -88,6 +88,8 @@ defmodule ThreatShieldWeb do
       import ThreatShieldWeb.TsComponents
       import ThreatShieldWeb.Gettext
 
+      alias ThreatShieldWeb.Icons
+
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
 
