@@ -1,12 +1,12 @@
 <section class="w-full bg-white pb-6 shadow-primary-200 shadow-sm">
   <div class="ts-container flex justify-between w-full">
     <div class="h-20 pb-5">
-      <.h3>
+      <.h1>
         <span class="text-gray-700 inline-block">
           <Icons.organisation_icon class="w-5 h-5" />
         </span>
         <%= @organisation.name %>
-      </.h3>
+      </.h1>
       <p class="leading-6 text-gray-600 text-sm font-normal space-x-3">
         <span :if={@organisation.location}>
           <.icon name="hero-map-pin" class="w-5 h-5" />
@@ -22,42 +22,34 @@
       </p>
     </div>
     <div>
-      <div
-        id="link-dropdown"
-        class="relative nav-dropdown text-[0.8125rem] leading-loose font-semibold hover:cursor-pointer rounded-3xl px-4 py-1"
-        onclick="toggleDropdown(id)"
-      >
-        <.icon name="hero-ellipsis-vertical" class="h-5 w-5" />
-
-        <div class="absolute link-dropdown-menu hidden left-0 mt-4 bg-white text-primary-500 rounded-sm shadow-xl">
-          <ul class="">
-            <li class="context-menu-item">
-              <.link navigate={~p"/organisations/#{@organisation}/members"}>
-                <%= dgettext("organisation", "Members") %>
-              </.link>
-            </li>
-            <li
-              :if={ThreatShield.Members.Rights.may(:delete_organisation, @membership)}
-              class="context-menu-item"
+      <.dropdown>
+        <:links>
+          <li class="context-menu-item">
+            <.link navigate={~p"/organisations/#{@organisation}/members"}>
+              <%= dgettext("organisation", "Members") %>
+            </.link>
+          </li>
+          <li
+            :if={ThreatShield.Members.Rights.may(:delete_organisation, @membership)}
+            class="context-menu-item"
+          >
+            <.link
+              phx-click={JS.push("delete", value: %{organisation_id: @organisation.id})}
+              data-confirm="Are you sure?"
             >
-              <.link
-                phx-click={JS.push("delete", value: %{organisation_id: @organisation.id})}
-                data-confirm="Are you sure?"
-              >
-                <%= dgettext("common", "Delete") %>
-              </.link>
-            </li>
-            <li
-              :if={ThreatShield.Members.Rights.may(:edit_organisation, @membership)}
-              class="context-menu-item"
-            >
-              <.link patch={~p"/organisations/#{@organisation}/edit"} phx-click={JS.push_focus()}>
-                <%= dgettext("common", "Edit") %>
-              </.link>
-            </li>
-          </ul>
-        </div>
-      </div>
+              <%= dgettext("common", "Delete") %>
+            </.link>
+          </li>
+          <li
+            :if={ThreatShield.Members.Rights.may(:edit_organisation, @membership)}
+            class="context-menu-item"
+          >
+            <.link patch={~p"/organisations/#{@organisation}/edit"} phx-click={JS.push_focus()}>
+              <%= dgettext("common", "Edit") %>
+            </.link>
+          </li>
+        </:links>
+      </.dropdown>
     </div>
   </div>
   <div class="ts-container w-full">

@@ -11,23 +11,24 @@
 msgid ""
 msgstr ""
 
-#: lib/threat_shield_web/live/system_live/system_component.ex:22
+#: lib/threat_shield_web/live/system_live/systems_list.ex:40
+#: lib/threat_shield_web/live/system_live/systems_list.ex:80
 #, elixir-autogen, elixir-format
 msgid "New System"
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:608
-#: lib/threat_shield_web/live/system_live/system_component.ex:10
+#: lib/threat_shield_web/components/core_components.ex:634
+#: lib/threat_shield_web/live/system_live/systems_list.ex:26
 #, elixir-autogen, elixir-format
 msgid "Systems"
 msgstr ""
 
-#: lib/threat_shield_web/live/system_live/form_component.ex:18
+#: lib/threat_shield_web/live/system_live/system_form.ex:18
 #, elixir-autogen, elixir-format
 msgid "System: long description"
 msgstr ""
 
-#: lib/threat_shield_web/live/system_live/system_component.ex:13
+#: lib/threat_shield_web/live/system_live/systems_list.ex:30
 #, elixir-autogen, elixir-format
 msgid "System: short description"
 msgstr ""

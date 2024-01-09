@@ -1,4 +1,5 @@
 defmodule ThreatShieldWeb.Helpers do
+  use Timex
   import Phoenix.Component
   alias ThreatShieldWeb.Endpoint
 
@@ -34,6 +35,11 @@ defmodule ThreatShieldWeb.Helpers do
   def convert_date(date_str) do
     {:ok, result} = Timex.format(date_str, "{0D}.{0M}.{YYYY}")
     result
+  end
+
+  def format_datetime(datetime) do
+    {:ok, formatted} = Timex.format(datetime, "{YYYY}-{0M}-{0D} - {h24}:{m}:{s}")
+    formatted
   end
 
   # Numbers

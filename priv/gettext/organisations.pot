@@ -11,7 +11,17 @@
 msgid ""
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:669
+#: lib/threat_shield_web/components/core_components.ex:695
 #, elixir-autogen, elixir-format
 msgid "Create organisation"
+msgstr ""
+
+#: lib/threat_shield_web/live/organisation_live/index.html.heex:6
+#, elixir-autogen, elixir-format
+msgid "This list contains all organisations where you are a member."
+msgstr ""
+
+#: lib/threat_shield_web/live/organisation_live/index.html.heex:4
+#, elixir-autogen, elixir-format
+msgid "Your organisations"
 msgstr ""

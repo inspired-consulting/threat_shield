@@ -1,42 +1,55 @@
-<section class="container">
-  <.header class="mt-6">
-    Listing Organisations
-    <:actions>
-      <.link patch={~p"/organisations/new"}>
-        <.button_primary>New Organisation</.button_primary>
-      </.link>
-    </:actions>
-  </.header>
+<section class="ts-container my-8">
+  <div class="px-8 py-4 bg-primary-100 rounded-lg shadow">
+    <.header class="mt-6">
+      <%= dgettext("organisations", "Your organisations") %>
+      <p class="text-sm leading-6 text-gray-600 font-normal">
+        <%= dgettext(
+          "organisations",
+          "This list contains all organisations where you are a member."
+        ) %>
+      </p>
+      <:actions>
+        <.link patch={~p"/organisations/new"}>
+          <.button_primary>New Organisation</.button_primary>
+        </.link>
+      </:actions>
+    </.header>
 
-  <.table
-    id="organisations"
-    rows={@streams.organisations}
-    row_click={fn {_id, organisation} -> JS.navigate(~p"/organisations/#{organisation}") end}
-  >
-    <:col :let={{_id, organisation}} label="Name"><%= organisation.name %></:col>
-    <:col :let={{_id, organisation}} label="Attributes">
-      <%= for {key, value} <- organisation.attributes do %>
-        <div><%= "#{key} → #{value}" %></div>
-      <% end %>
-    </:col>
-  </.table>
+    <.table
+      id="organisations"
+      rows={@streams.organisations}
+      row_click={fn {_id, organisation} -> JS.navigate(~p"/organisations/#{organisation}") end}
+    >
+      <:col :let={{_id, organisation}} label="Name"><%= organisation.name %></:col>
+      <:col :let={{_id, organisation}} label="Attributes">
+        <div class="grid grid-cols-2 gap-x-3">
+          <%= for {key, value} <- organisation.attributes do %>
+            <div>
+              <label class="font-semibold text-gray-500"><%= key %>:</label>
+              <span class="text-gray-900"><%= value %></span>
+            </div>
+          <% end %>
+        </div>
+      </:col>
+    </.table>
 
-  <.modal
-    :if={@live_action in [:new, :edit]}
-    id="organisation-modal"
-    show
-    on_cancel={JS.patch(~p"/organisations")}
-  >
-    <.live_component
-      module={ThreatShieldWeb.OrganisationLive.OrganisationForm}
-      id={@edit_organisation.id || :new}
-      title={@page_title}
-      action={@live_action}
-      organisation={@edit_organisation}
-      current_user={@current_user}
-      locations_options={@locations_options}
-      attributes={@attributes}
-      patch={~p"/organisations"}
-    />
-  </.modal>
+    <.modal
+      :if={@live_action in [:new, :edit]}
+      id="organisation-modal"
+      show
+      on_cancel={JS.patch(~p"/organisations")}
+    >
+      <.live_component
+        module={ThreatShieldWeb.OrganisationLive.OrganisationForm}
+        id={@edit_organisation.id || :new}
+        title={@page_title}
+        action={@live_action}
+        organisation={@edit_organisation}
+        current_user={@current_user}
+        locations_options={@locations_options}
+        attributes={@attributes}
+        patch={~p"/organisations"}
+      />
+    </.modal>
+  </div>
 </section>

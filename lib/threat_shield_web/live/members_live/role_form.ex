@@ -1,4 +1,4 @@
-defmodule ThreatShieldWeb.MembersLive.RoleFormComponent do
+defmodule ThreatShieldWeb.MembersLive.RoleForm do
   alias ThreatShield.Organisations.Membership
   use ThreatShieldWeb, :live_component
 
@@ -7,7 +7,7 @@ defmodule ThreatShieldWeb.MembersLive.RoleFormComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div class="md:w-[800px]">
       <.header>
         <%= dgettext("organisation", "Edit role for") %> <%= @membership.user.email %>
       </.header>
@@ -31,9 +31,11 @@ defmodule ThreatShieldWeb.MembersLive.RoleFormComponent do
           }
         />
         <:actions>
-          <.button_primary phx-disable-with="Saving...">
-            <%= dgettext("organisation", "Save Membership") %>
-          </.button_primary>
+          <div class="w-full text-end">
+            <.button_primary phx-disable-with="Saving...">
+              <%= dgettext("organisation", "Save Membership") %>
+            </.button_primary>
+          </div>
         </:actions>
       </.simple_form>
     </div>
@@ -72,10 +74,10 @@ defmodule ThreatShieldWeb.MembersLive.RoleFormComponent do
       {:ok, membership} ->
         notify_parent({:saved, membership})
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Role updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        socket
+        |> put_flash(:info, "Role updated successfully")
+        |> push_patch(to: socket.assigns.patch)
+        |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}

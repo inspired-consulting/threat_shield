@@ -1,4 +1,7 @@
 defmodule ThreatShieldWeb.MembersLive.Index do
+  @moduledoc """
+  LiveView for the members index page.
+  """
   alias ThreatShield.Accounts.UserNotifier
   alias ThreatShield.Organisations.Membership
   use ThreatShieldWeb, :live_view
@@ -6,20 +9,21 @@ defmodule ThreatShieldWeb.MembersLive.Index do
   alias ThreatShield.Members
   alias ThreatShield.Members.Invite
 
-  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, format_datetime: 1]
+  import ThreatShieldWeb.Labels
 
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
     user = socket.assigns.current_user
     organisation = Members.get_organisation!(user, org_id)
 
-    {:ok,
-     socket
-     |> assign(:organisation, organisation)
-     |> assign(
-       :current_org_membership,
-       organisation.memberships |> Enum.find(fn m -> m.user.id == user.id end)
-     )}
+    socket
+    |> assign(:organisation, organisation)
+    |> assign(
+      :current_org_membership,
+      organisation.memberships |> Enum.find(fn m -> m.user.id == user.id end)
+    )
+    |> ok()
   end
 
   @impl true
@@ -43,31 +47,31 @@ defmodule ThreatShieldWeb.MembersLive.Index do
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.MembersLive.FormComponent, {:saved, invite}}, socket) do
+  def handle_info({ThreatShieldWeb.MembersLive.InviteForm, {:saved, invite}}, socket) do
     UserNotifier.deliver_invite(invite)
 
-    {:noreply,
-     socket
-     |> assign(
-       organisation: %{
-         socket.assigns.organisation
-         | invites: socket.assigns.organisation.invites ++ [invite]
-       }
-     )}
+    socket
+    |> assign(
+      organisation: %{
+        socket.assigns.organisation
+        | invites: socket.assigns.organisation.invites ++ [invite]
+      }
+    )
+    |> noreply()
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.MembersLive.RoleFormComponent, {:saved, _membership}}, socket) do
+  def handle_info({ThreatShieldWeb.MembersLive.RoleForm, {:saved, _membership}}, socket) do
     user = socket.assigns.current_user
     organisation = Members.get_organisation!(user, socket.assigns.organisation.id)
 
-    {:noreply,
-     socket
-     |> assign(:organisation, organisation)
-     |> assign(
-       :current_org_membership,
-       organisation.memberships |> Enum.find(fn m -> m.user.id == user.id end)
-     )}
+    socket
+    |> assign(:organisation, organisation)
+    |> assign(
+      :current_org_membership,
+      organisation.memberships |> Enum.find(fn m -> m.user.id == user.id end)
+    )
+    |> noreply()
   end
 
   @impl true
@@ -81,17 +85,17 @@ defmodule ThreatShieldWeb.MembersLive.Index do
 
     case membership do
       %Membership{user_id: ^user_id} ->
-        {:noreply, push_navigate(socket, to: "/organisations")}
+        {:noreply, push_navigate(socket, to: ~p"/organisations")}
 
       membership ->
-        {:noreply,
-         socket
-         |> assign(
-           organisation: %{
-             socket.assigns.organisation
-             | memberships: delete_by_id(socket.assigns.organisation.memberships, membership.id)
-           }
-         )}
+        socket
+        |> assign(
+          organisation: %{
+            socket.assigns.organisation
+            | memberships: delete_by_id(socket.assigns.organisation.memberships, membership.id)
+          }
+        )
+        |> noreply()
     end
   end
 
@@ -99,13 +103,13 @@ defmodule ThreatShieldWeb.MembersLive.Index do
   def handle_event("edit_membership", %{"membership_id" => id}, socket) do
     organisation = socket.assigns.organisation
 
-    {:noreply,
-     socket
-     |> assign(:live_action, :edit_membership)
-     |> assign(
-       :membership_to_edit,
-       Enum.find(organisation.memberships, fn m -> m.id == String.to_integer(id) end)
-     )}
+    socket
+    |> assign(:live_action, :edit_membership)
+    |> assign(
+      :membership_to_edit,
+      Enum.find(organisation.memberships, fn m -> m.id == String.to_integer(id) end)
+    )
+    |> noreply()
   end
 
   @impl true
@@ -114,14 +118,14 @@ defmodule ThreatShieldWeb.MembersLive.Index do
 
     {:ok, invite} = Members.delete_invite_by_id(user, id)
 
-    {:noreply,
-     socket
-     |> assign(
-       organisation: %{
-         socket.assigns.organisation
-         | invites: delete_by_id(socket.assigns.organisation.invites, invite.id)
-       }
-     )}
+    socket
+    |> assign(
+      organisation: %{
+        socket.assigns.organisation
+        | invites: delete_by_id(socket.assigns.organisation.invites, invite.id)
+      }
+    )
+    |> noreply()
   end
 
   defp delete_by_id(list, id) do

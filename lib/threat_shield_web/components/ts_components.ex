@@ -26,9 +26,9 @@ defmodule ThreatShieldWeb.TsComponents do
     <section class="w-full bg-white pb-6 shadow-primary-200 shadow-sm">
       <div class="ts-container flex justify-between w-full">
         <div class="min-h-10 pb-2">
-          <.h3>
+          <.h1>
             <%= render_slot(@name) %>
-          </.h3>
+          </.h1>
           <p class="text-sm leading-6 text-gray-600 font-normal">
             <%= render_slot(@description) %>
           </p>
@@ -37,7 +37,7 @@ defmodule ThreatShieldWeb.TsComponents do
           </div>
         </div>
         <div>
-          <.dropdown links={@links} />
+          <.dropdown links={@links}></.dropdown>
         </div>
       </div>
       <div class="ts-container">

@@ -59,6 +59,17 @@ defmodule ThreatShieldWeb.Labels do
 
   def mitigation_status_label(status), do: status
 
+  def role_label(role) when is_binary(role),
+    do: role_label(String.to_existing_atom(role))
+
+  def role_label(role) when is_atom(role) do
+    case role do
+      :owner -> dgettext("members", "Role:owner")
+      :editor -> dgettext("members", "Role:editor")
+      :viewer -> dgettext("members", "Role:viewer")
+    end
+  end
+
   def available_risk_states() do
     [
       identified: dgettext("risks", "State:identified"),

@@ -11,61 +11,62 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: lib/threat_shield_web/components/core_components.ex:614
-#: lib/threat_shield_web/live/asset_live/assets_list.ex:10
+#: lib/threat_shield_web/components/core_components.ex:640
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:28
 #, elixir-autogen, elixir-format
 msgid "Assets"
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/assets_list.ex:25
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:45
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:120
 #, elixir-autogen, elixir-format
 msgid "New Asset"
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/assets_list.ex:13
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:32
 #, elixir-autogen, elixir-format
 msgid "Asset: short description"
 msgstr "An asset is any valuable entity within the organization that, if compromised, could have negative consequences."
 
-#: lib/threat_shield_web/live/asset_live/asset_form.ex:41
-#: lib/threat_shield_web/live/asset_live/assets_list.ex:66
-#: lib/threat_shield_web/live/asset_live/show.html.heex:52
+#: lib/threat_shield_web/live/asset_live/asset_form.ex:43
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:84
+#: lib/threat_shield_web/live/asset_live/show.html.heex:58
 #, elixir-autogen, elixir-format
 msgid "Criticality of loss"
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/asset_form.ex:49
-#: lib/threat_shield_web/live/asset_live/assets_list.ex:80
-#: lib/threat_shield_web/live/asset_live/show.html.heex:66
+#: lib/threat_shield_web/live/asset_live/asset_form.ex:51
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:98
+#: lib/threat_shield_web/live/asset_live/show.html.heex:72
 #, elixir-autogen, elixir-format
 msgid "Criticality of publication"
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/asset_form.ex:45
-#: lib/threat_shield_web/live/asset_live/assets_list.ex:73
-#: lib/threat_shield_web/live/asset_live/show.html.heex:59
+#: lib/threat_shield_web/live/asset_live/asset_form.ex:47
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:91
+#: lib/threat_shield_web/live/asset_live/show.html.heex:65
 #, elixir-autogen, elixir-format
 msgid "Criticality of theft"
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/asset_form.ex:55
-#: lib/threat_shield_web/live/asset_live/assets_list.ex:60
-#: lib/threat_shield_web/live/asset_live/show.html.heex:44
+#: lib/threat_shield_web/live/asset_live/asset_form.ex:57
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:78
+#: lib/threat_shield_web/live/asset_live/show.html.heex:50
 #, elixir-autogen, elixir-format
 msgid "Criticality overall"
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/assets_list.ex:39
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:57
 #, elixir-autogen, elixir-format
 msgid "Suggest Assets"
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/threats_list.ex:42
-#, elixir-autogen, elixir-format
-msgid "Suggest Threats"
-msgstr ""
-
-#: lib/threat_shield_web/live/asset_live/asset_form.ex:15
+#: lib/threat_shield_web/live/asset_live/asset_form.ex:17
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Asset: long description"
 msgstr "An asset is any valuable entity within the organization that, if compromised, could have negative consequences. It can be tangible, such as databases and servers, or intangible, such as intellectual properties, confidential information, and brand reputation."
+
+#: lib/threat_shield_web/live/asset_live/assets_list.ex:134
+#, elixir-autogen, elixir-format, fuzzy
+msgid "Suggested Assets"
+msgstr ""

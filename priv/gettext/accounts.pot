@@ -32,7 +32,7 @@ msgstr ""
 msgid "Join us"
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:730
+#: lib/threat_shield_web/components/core_components.ex:756
 #: lib/threat_shield_web/live/user_confirmation_instructions_live.ex:25
 #: lib/threat_shield_web/live/user_confirmation_live.ex:22
 #: lib/threat_shield_web/live/user_forgot_password_live.ex:26
@@ -42,7 +42,7 @@ msgstr ""
 msgid "Sign in"
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:722
+#: lib/threat_shield_web/components/core_components.ex:748
 #: lib/threat_shield_web/live/user_confirmation_instructions_live.ex:24
 #: lib/threat_shield_web/live/user_confirmation_live.ex:21
 #: lib/threat_shield_web/live/user_forgot_password_live.ex:25

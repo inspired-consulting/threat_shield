@@ -11,17 +11,17 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: lib/threat_shield_web/components/core_components.ex:695
+#: lib/threat_shield_web/components/labels.ex:68
 #, elixir-autogen, elixir-format
-msgid "Create organisation"
-msgstr ""
+msgid "Role:editor"
+msgstr "Editor"
 
-#: lib/threat_shield_web/live/organisation_live/index.html.heex:6
+#: lib/threat_shield_web/components/labels.ex:67
 #, elixir-autogen, elixir-format
-msgid "This list contains all organisations where you are a member."
-msgstr ""
+msgid "Role:owner"
+msgstr "Owner"
 
-#: lib/threat_shield_web/live/organisation_live/index.html.heex:4
+#: lib/threat_shield_web/components/labels.ex:69
 #, elixir-autogen, elixir-format
-msgid "Your organisations"
-msgstr ""
+msgid "Role:viewer"
+msgstr "Viewer"

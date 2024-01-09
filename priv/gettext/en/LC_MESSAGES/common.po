@@ -11,54 +11,60 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: lib/threat_shield_web/live/asset_live/show.html.heex:17
-#: lib/threat_shield_web/live/members_live/index.html.heex:29
-#: lib/threat_shield_web/live/mitigation_live/show.html.heex:20
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:38
-#: lib/threat_shield_web/live/risk_live/show.html.heex:17
+#: lib/threat_shield_web/live/asset_live/show.html.heex:20
+#: lib/threat_shield_web/live/members_live/index.html.heex:39
+#: lib/threat_shield_web/live/mitigation_live/show.html.heex:23
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:40
+#: lib/threat_shield_web/live/risk_live/show.html.heex:20
 #: lib/threat_shield_web/live/system_live/show.html.heex:17
-#: lib/threat_shield_web/live/threat_live/show.html.heex:17
+#: lib/threat_shield_web/live/threat_live/show.html.heex:20
 #, elixir-autogen, elixir-format
 msgid "Delete"
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/show.html.heex:25
-#: lib/threat_shield_web/live/members_live/index.html.heex:38
-#: lib/threat_shield_web/live/mitigation_live/show.html.heex:33
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:46
-#: lib/threat_shield_web/live/risk_live/show.html.heex:25
+#: lib/threat_shield_web/live/asset_live/show.html.heex:31
+#: lib/threat_shield_web/live/members_live/index.html.heex:48
+#: lib/threat_shield_web/live/mitigation_live/show.html.heex:36
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:48
+#: lib/threat_shield_web/live/risk_live/show.html.heex:28
 #: lib/threat_shield_web/live/system_live/show.html.heex:25
-#: lib/threat_shield_web/live/threat_live/show.html.heex:25
+#: lib/threat_shield_web/live/threat_live/show.html.heex:31
 #, elixir-autogen, elixir-format
 msgid "Edit"
 msgstr ""
 
-#: lib/threat_shield_web/live/members_live/index.html.heex:27
+#: lib/threat_shield_web/live/members_live/index.html.heex:37
 #, elixir-autogen, elixir-format
 msgid "Leave"
 msgstr ""
 
-#: lib/threat_shield_web/live/members_live/index.html.heex:58
+#: lib/threat_shield_web/live/members_live/index.html.heex:74
 #, elixir-autogen, elixir-format
 msgid "Revoke"
 msgstr ""
 
-#: lib/threat_shield_web/live/organisation_live/show.html.heex:10
+#: lib/threat_shield_web/live/organisation_live/show.html.heex:18
 #, elixir-autogen, elixir-format
 msgid "Created on"
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:826
+#: lib/threat_shield_web/components/core_components.ex:852
 #, elixir-autogen, elixir-format
 msgid "View"
 msgstr ""
 
 #: lib/threat_shield_web/live/risk_live/risk_form.ex:57
+#: lib/threat_shield_web/live/threat_live/threat_form.ex:53
 #, elixir-autogen, elixir-format
 msgid "Saving..."
 msgstr ""
 
-#: lib/threat_shield_web/components/labels.ex:21
+#: lib/threat_shield_web/components/ts_components.ex:85
 #, elixir-autogen, elixir-format
-msgid "Organisation wide"
+msgid "Apply selection"
+msgstr ""
+
+#: lib/threat_shield_web/components/ts_components.ex:76
+#, elixir-autogen, elixir-format
+msgid "Select"
 msgstr ""

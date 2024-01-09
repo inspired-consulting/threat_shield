@@ -66,7 +66,7 @@ defmodule ThreatShieldWeb.UserConfirmationLiveTest do
         |> render_submit()
         |> follow_redirect(conn, "/organisations")
 
-      assert {:ok, conn} = result
+      assert {:ok, _conn} = result
     end
 
     test "does not confirm email with invalid token", %{conn: conn, user: user} do

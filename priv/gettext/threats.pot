@@ -11,33 +11,59 @@
 msgid ""
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/threats_list.ex:28
+#: lib/threat_shield_web/live/threat_live/threats_list.ex:49
+#: lib/threat_shield_web/live/threat_live/threats_list.ex:103
 #, elixir-autogen, elixir-format
 msgid "New Threat"
 msgstr ""
 
-#: lib/threat_shield_web/live/dashboard_live/index.html.heex:9
+#: lib/threat_shield_web/live/threat_live/threats_list.ex:61
 #, elixir-autogen, elixir-format
 msgid "Suggest Threats"
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/threats_list.ex:16
+#: lib/threat_shield_web/live/threat_live/threats_list.ex:35
 #, elixir-autogen, elixir-format
 msgid "Threats"
 msgstr ""
 
-#: lib/threat_shield_web/live/asset_live/show.html.heex:32
-#: lib/threat_shield_web/live/threat_live/show.html.heex:31
+#: lib/threat_shield_web/live/asset_live/show.html.heex:38
+#: lib/threat_shield_web/live/threat_live/show.html.heex:37
 #, elixir-autogen, elixir-format
 msgid "System"
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/threats_list.ex:19
+#: lib/threat_shield_web/live/threat_live/threats_list.ex:39
 #, elixir-autogen, elixir-format
 msgid "Threat: short description"
 msgstr ""
 
-#: lib/threat_shield_web/live/threat_live/threat_form.ex:15
+#: lib/threat_shield_web/live/threat_live/threat_form.ex:18
 #, elixir-autogen, elixir-format
 msgid "Threat: long description"
+msgstr ""
+
+#: lib/threat_shield_web/live/threat_live/show.html.heex:41
+#, elixir-autogen, elixir-format
+msgid "Asset"
+msgstr ""
+
+#: lib/threat_shield_web/live/threat_live/threat_form.ex:35
+#, elixir-autogen, elixir-format
+msgid "Description"
+msgstr ""
+
+#: lib/threat_shield_web/live/threat_live/threat_form.ex:31
+#, elixir-autogen, elixir-format
+msgid "Name"
+msgstr ""
+
+#: lib/threat_shield_web/live/threat_live/threat_form.ex:54
+#, elixir-autogen, elixir-format
+msgid "Save Threat"
+msgstr ""
+
+#: lib/threat_shield_web/live/threat_live/threats_list.ex:118
+#, elixir-autogen, elixir-format
+msgid "Suggested Threats"
 msgstr ""

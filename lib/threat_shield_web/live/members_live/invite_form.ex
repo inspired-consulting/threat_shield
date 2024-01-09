@@ -1,4 +1,4 @@
-defmodule ThreatShieldWeb.MembersLive.FormComponent do
+defmodule ThreatShieldWeb.MembersLive.InviteForm do
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.Members
@@ -6,10 +6,16 @@ defmodule ThreatShieldWeb.MembersLive.FormComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div class="md:w-[800px]">
       <.header>
         <%= @title %>
       </.header>
+      <.h3>
+        <span class="text-gray-700 inline-block">
+          <Icons.organisation_icon class="w-5 h-5" />
+        </span>
+        <%= @organisation.name %>
+      </.h3>
 
       <.simple_form
         for={@form}
@@ -20,9 +26,12 @@ defmodule ThreatShieldWeb.MembersLive.FormComponent do
       >
         <.input field={@form[:email]} type="text" label="Email" />
         <:actions>
-          <.button_primary phx-disable-with="Saving...">
-            <%= dgettext("organisation", "Send invite") %>
-          </.button_primary>
+          <div class="w-full text-end">
+            <.button_primary phx-disable-with="Saving...">
+              <.icon name="hero-envelope" class="h-5 w-5 me-2" />
+              <%= dgettext("organisation", "Send invite") %>
+            </.button_primary>
+          </div>
         </:actions>
       </.simple_form>
     </div>

@@ -11,22 +11,17 @@
 msgid ""
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:723
+#: lib/threat_shield_web/components/labels.ex:68
 #, elixir-autogen, elixir-format
-msgid "Account settings"
+msgid "Role:editor"
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:737
+#: lib/threat_shield_web/components/labels.ex:67
 #, elixir-autogen, elixir-format
-msgid "Log out"
+msgid "Role:owner"
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:712
+#: lib/threat_shield_web/components/labels.ex:69
 #, elixir-autogen, elixir-format
-msgid "Signed in as"
-msgstr ""
-
-#: lib/threat_shield_web/components/core_components.ex:728
-#, elixir-autogen, elixir-format
-msgid "Support"
+msgid "Role:viewer"
 msgstr ""

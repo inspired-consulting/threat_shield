@@ -11,17 +11,17 @@
 msgid ""
 msgstr ""
 
-#: lib/threat_shield_web/live/risk_live/risks_list.ex:13
+#: lib/threat_shield_web/live/risk_live/risks_list.ex:25
 #, elixir-autogen, elixir-format
 msgid "Risks"
 msgstr ""
 
-#: lib/threat_shield_web/live/risk_live/risks_list.ex:38
+#: lib/threat_shield_web/live/risk_live/risks_list.ex:50
 #, elixir-autogen, elixir-format
 msgid "Suggest Risks"
 msgstr ""
 
-#: lib/threat_shield_web/live/risk_live/show.html.heex:32
+#: lib/threat_shield_web/live/risk_live/show.html.heex:43
 #, elixir-autogen, elixir-format
 msgid "Estimated cost"
 msgstr ""
@@ -31,23 +31,23 @@ msgstr ""
 msgid "Estimated cost in EUR"
 msgstr ""
 
-#: lib/threat_shield_web/live/risk_live/risks_list.ex:25
+#: lib/threat_shield_web/live/risk_live/risks_list.ex:38
 #, elixir-autogen, elixir-format
 msgid "New Risk"
 msgstr ""
 
-#: lib/threat_shield_web/live/risk_live/show.html.heex:36
+#: lib/threat_shield_web/live/risk_live/show.html.heex:47
 #, elixir-autogen, elixir-format
 msgid "Probability"
 msgstr ""
 
-#: lib/threat_shield_web/live/risk_live/show.html.heex:40
+#: lib/threat_shield_web/live/risk_live/show.html.heex:51
 #, elixir-autogen, elixir-format
 msgid "Risk costs"
 msgstr ""
 
 #: lib/threat_shield_web/live/risk_live/risk_form.ex:15
-#: lib/threat_shield_web/live/risk_live/risks_list.ex:16
+#: lib/threat_shield_web/live/risk_live/risks_list.ex:29
 #, elixir-autogen, elixir-format
 msgid "Risk: short description"
 msgstr ""
@@ -58,44 +58,59 @@ msgid "Status"
 msgstr ""
 
 #: lib/threat_shield_web/live/risk_live/risk_form.ex:38
-#: lib/threat_shield_web/live/risk_live/risks_list.ex:62
-#: lib/threat_shield_web/live/risk_live/show.html.heex:44
-#: lib/threat_shield_web/live/risk_live/show.html.heex:45
+#: lib/threat_shield_web/live/risk_live/risks_list.ex:72
+#: lib/threat_shield_web/live/risk_live/show.html.heex:55
+#: lib/threat_shield_web/live/risk_live/show.html.heex:56
 #, elixir-autogen, elixir-format
 msgid "Severity"
 msgstr ""
 
-#: lib/threat_shield_web/components/labels.ex:46
+#: lib/threat_shield_web/components/labels.ex:76
 #, elixir-autogen, elixir-format
 msgid "State:assessed"
 msgstr ""
 
-#: lib/threat_shield_web/components/labels.ex:50
+#: lib/threat_shield_web/components/labels.ex:80
 #, elixir-autogen, elixir-format
 msgid "State:closed"
 msgstr ""
 
-#: lib/threat_shield_web/components/labels.ex:45
+#: lib/threat_shield_web/components/labels.ex:75
 #, elixir-autogen, elixir-format
 msgid "State:identified"
 msgstr ""
 
-#: lib/threat_shield_web/components/labels.ex:49
+#: lib/threat_shield_web/components/labels.ex:79
 #, elixir-autogen, elixir-format
 msgid "State:mitigated"
 msgstr ""
 
-#: lib/threat_shield_web/components/labels.ex:48
+#: lib/threat_shield_web/components/labels.ex:78
 #, elixir-autogen, elixir-format
 msgid "State:mitigation_in_progress"
 msgstr ""
 
-#: lib/threat_shield_web/components/labels.ex:47
+#: lib/threat_shield_web/components/labels.ex:77
 #, elixir-autogen, elixir-format
 msgid "State:mitigation_planned"
 msgstr ""
 
-#: lib/threat_shield_web/components/labels.ex:51
+#: lib/threat_shield_web/components/labels.ex:81
 #, elixir-autogen, elixir-format
 msgid "State:reopened"
+msgstr ""
+
+#: lib/threat_shield_web/live/risk_live/show.html.heex:39
+#, elixir-autogen, elixir-format
+msgid "Asset"
+msgstr ""
+
+#: lib/threat_shield_web/live/risk_live/risks_list.ex:87
+#, elixir-autogen, elixir-format
+msgid "Suggested Risks"
+msgstr ""
+
+#: lib/threat_shield_web/live/risk_live/show.html.heex:35
+#, elixir-autogen, elixir-format
+msgid "System"
 msgstr ""

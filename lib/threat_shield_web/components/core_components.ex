@@ -22,7 +22,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   def h1(assigns) do
     ~H"""
-    <h1 class="text-3xl font-bold leading-9 text-gray-900">
+    <h1 class="text-2xl font-bold leading-9 text-gray-900">
       <%= render_slot(@inner_block) %>
     </h1>
     """
@@ -30,7 +30,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   def h2(assigns) do
     ~H"""
-    <h2 class="text-gray-900 text-3xl font-bold">
+    <h2 class="text-gray-900 text-xl font-semibold">
       <%= render_slot(@inner_block) %>
     </h2>
     """
@@ -38,7 +38,7 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   def h3(assigns) do
     ~H"""
-    <h3 class="text-gray-900 text-2xl font-semibold leading-normal">
+    <h3 class="text-gray-900 text-lg font-medium leading-normal">
       <%= render_slot(@inner_block) %>
     </h3>
     """
@@ -132,28 +132,31 @@ defmodule ThreatShieldWeb.CoreComponents do
 
   def flash(assigns) do
     ~H"""
-    <div
-      :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
-      id={@id}
-      phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
-      role="alert"
-      data-disappear-after={(@kind == :info && 5000) || -1}
-      class={[
-        "fixed top-2 right-2 w-80 sm:w-96 z-50 rounded-lg p-3 ring-1",
-        @kind == :info && "bg-emerald-50 text-emerald-800 ring-emerald-500 fill-cyan-900",
-        @kind == :error && "bg-rose-50 text-rose-900 shadow-md ring-rose-500 fill-rose-900"
-      ]}
-      {@rest}
-    >
-      <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
-        <.icon :if={@kind == :info} name="hero-information-circle-mini" class="h-4 w-4" />
-        <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" />
-        <%= @title %>
-      </p>
-      <p class="mt-2 text-sm leading-5"><%= msg %></p>
-      <button type="button" class="group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
-        <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
-      </button>
+    <div class="absolute top-2 right-2 z-50">
+      <div
+        :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
+        id={@id}
+        phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
+        role="alert"
+        data-disappear-after={(@kind == :info && 5000) || -1}
+        class={[
+          "mx-auto w-96 p-3 border-l-4 shadow-lg",
+          @kind == :info && "bg-green-200 border-green-500 text-green-800 ring-red-500 fill-red-900",
+          @kind == :error &&
+            "bg-red-100 border-red-500 text-red-700 shadow-md ring-red-500 fill-red-900"
+        ]}
+        {@rest}
+      >
+        <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
+          <.icon :if={@kind == :info} name="hero-information-circle-mini" class="h-4 w-4" />
+          <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" />
+          <%= @title %>
+        </p>
+        <p class="mt-2 text-sm leading-5"><%= msg %></p>
+        <button type="button" class="group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
+          <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
+        </button>
+      </div>
     </div>
     """
   end
@@ -274,7 +277,7 @@ defmodule ThreatShieldWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-white  shadow shadow-inner  hover:bg-primary-500 py-2 px-3",
+        "phx-submit-loading:opacity-75 rounded-lg bg-primary-100  shadow shadow-inner hover:bg-primary-500 py-2 px-3",
         "text-gray-900 text-sm font-semibold hover:text-white active:text-white",
         "disabled:bg-secondary-900 disabled:pointer-events-none",
         @class
@@ -300,6 +303,29 @@ defmodule ThreatShieldWeb.CoreComponents do
         "threatshield-gradient phx-submit-loading:opacity-75 rounded-lg bg-primary-600 hover:bg-primary-600 py-2 px-3",
         "font-semibold leading-6 text-white hover:text-white active:text-white whitespace-nowrap",
         "disabled:bg-secondary-900 disabled:pointer-events-none hover:shadow-lg",
+        @class
+      ]}
+      {@rest}
+    >
+      <%= render_slot(@inner_block) %>
+    </button>
+    """
+  end
+
+  attr :type, :string, default: nil
+  attr :class, :string, default: nil
+  attr :rest, :global, include: ~w(disabled form name value)
+
+  slot :inner_block, required: true
+
+  def button_danger(assigns) do
+    ~H"""
+    <button
+      type={@type}
+      class={[
+        "phx-submit-loading:opacity-75  bg-red-500 hover:bg-red-600 py-2 px-3 shadow rounded-lg shadow-inner",
+        "text-white text-sm font-semibold",
+        "disabled:bg-red-800 disabled:pointer-events-none",
         @class
       ]}
       {@rest}
@@ -539,11 +565,13 @@ defmodule ThreatShieldWeb.CoreComponents do
       end
 
     ~H"""
-    <table class="w-[1016px] mt-10 mx-auto justify-self-center">
+    <table class="w-full mx-4 mt-10 mx-auto justify-self-center">
       <thead class="text-sm text-left leading-6 text-primary-900">
         <tr class="">
-          <th :for={col <- @col} class="p-0 pr-6 pb-4 font-normal"><%= col[:label] %></th>
-          <th class="relative p-0 pb-4"><span class="sr-only"><%= gettext("Actions") %></span></th>
+          <th :for={col <- @col} class="px-2 pb-4 font-normal"><%= col[:label] %></th>
+          <th :if={@action != []} class="relative px-2 pb-4">
+            <span class="sr-only"><%= gettext("Actions") %></span>
+          </th>
         </tr>
       </thead>
       <tbody
@@ -564,7 +592,7 @@ defmodule ThreatShieldWeb.CoreComponents do
               </span>
             </div>
           </td>
-          <td :if={@action != []} class="relative w-14 p-0">
+          <td :if={@action != []} class="relative w-14 px-0">
             <div class="relative whitespace-nowrap py-4 text-right text-sm font-medium">
               <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-zinc-50 sm:rounded-r-xl" />
               <span
@@ -681,7 +709,7 @@ defmodule ThreatShieldWeb.CoreComponents do
               onclick="toggleDropdown(id)"
             >
               <.icon name="hero-user" class="h-5 w-5" />
-              <ul class="absolute user-dropdown-menu hidden right-2 mt-4 py-1 bg-white rounded-lg shadow-xl text-gray-900 text-sm font-normal">
+              <ul class="absolute user-dropdown-menu hidden right-2 w-48 mt-4 py-1 bg-white rounded-lg shadow-xl text-gray-900 text-sm font-normal">
                 <li class="px-4 py-2 border-b border-gray-300">
                   <p>
                     <%= dgettext("users", "Signed in as") %>
@@ -855,13 +883,13 @@ defmodule ThreatShieldWeb.CoreComponents do
     """
   end
 
-  attr :links, :any, required: true
+  slot :links, required: true
 
   def dropdown(assigns) do
     ~H"""
     <div
       id="link-dropdown"
-      class="relative nav-dropdown text-[0.8125rem] leading-loose font-semibold hover:cursor-pointer px-4 py-1"
+      class="relative nav-dropdown text-[0.8125rem] font-semibold hover:cursor-pointer px-2 py-2 border border-gray-400 rounded-md h-10"
       onclick="toggleDropdown(id)"
     >
       <.icon name="hero-ellipsis-vertical" class="h-5 w-5" />

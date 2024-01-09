@@ -11,22 +11,22 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: lib/threat_shield_web/components/core_components.ex:697
+#: lib/threat_shield_web/components/core_components.ex:723
 #, elixir-autogen, elixir-format
 msgid "Account settings"
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:711
+#: lib/threat_shield_web/components/core_components.ex:737
 #, elixir-autogen, elixir-format
 msgid "Log out"
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:686
+#: lib/threat_shield_web/components/core_components.ex:712
 #, elixir-autogen, elixir-format
 msgid "Signed in as"
 msgstr ""
 
-#: lib/threat_shield_web/components/core_components.ex:702
+#: lib/threat_shield_web/components/core_components.ex:728
 #, elixir-autogen, elixir-format
 msgid "Support"
 msgstr ""

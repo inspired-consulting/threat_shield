@@ -1,65 +1,83 @@
-<.header>
-  <%= dgettext("organisation", "Members") %>
-  <:actions>
-    <.link patch={~p"/organisations/#{@organisation.id}/members/new"}>
-      <.button_primary :if={ThreatShield.Members.Rights.may(:invite_new_members, @current_org_membership)}>
-        <%= dgettext("organisation", "Invite") %>
-      </.button_primary>
-    </.link>
-  </:actions>
-</.header>
+<section class="w-full bg-white pb-6 shadow-primary-200 shadow-sm">
+  <div class="ts-container">
+    <.header>
+      <.h1><%= dgettext("organisation", "Members of") %></.h1>
+      <.h3>
+        <span class="text-gray-700 inline-block">
+          <Icons.organisation_icon class="w-5 h-5" />
+        </span>
+        <%= @organisation.name %>
+      </.h3>
+      <:actions>
+        <.link patch={~p"/organisations/#{@organisation.id}/members/new"} class="pe-4">
+          <.button_primary :if={
+            ThreatShield.Members.Rights.may(:invite_new_members, @current_org_membership)
+          }>
+            <%= dgettext("organisation", "Invite") %>
+          </.button_primary>
+        </.link>
+      </:actions>
+    </.header>
 
-<.table id="memberships" rows={@organisation.memberships}>
-  <:col :let={membership} label="User"><%= membership.user.email %></:col>
-  <:col :let={membership} label="Role">
-    <%= Gettext.dgettext(ThreatShieldWeb.Gettext, "organisation", Atom.to_string(membership.role)) %>
-  </:col>
-  <:col :let={membership}>
-    <div class="text-right">
-      <%= if length(@organisation.memberships |> Enum.filter(fn m -> m.role == :owner end )) > 1 do %>
-        <.button_primary
-          :if={ThreatShield.Members.Rights.may(:delete_member, @current_org_membership)}
-          phx-click="delete_membership"
-          phx-value-membership_id={membership.id}
-          data-confirm={"Do you really want to remove #{membership.user.email} from #{@organisation.name}?"}
-        >
-          <%= if membership.user.id == @current_user.id do %>
-            <%= dgettext("common", "Leave") %>
-          <% else %>
-            <%= dgettext("common", "Delete") %>
+    <.table id="memberships" rows={@organisation.memberships}>
+      <:col :let={membership} label="User"><%= membership.user.email %></:col>
+      <:col :let={membership} label="Role">
+        <%= role_label(membership.role) %>
+      </:col>
+      <:col :let={membership}>
+        <div class="text-right pr-4">
+          <%= if length(@organisation.memberships |> Enum.filter(fn m -> m.role == :owner end )) > 1 do %>
+            <.button_primary
+              :if={ThreatShield.Members.Rights.may(:delete_member, @current_org_membership)}
+              phx-click="delete_membership"
+              phx-value-membership_id={membership.id}
+              data-confirm={"Do you really want to remove #{membership.user.email} from #{@organisation.name}?"}
+            >
+              <%= if membership.user.id == @current_user.id do %>
+                <%= dgettext("common", "Leave") %>
+              <% else %>
+                <%= dgettext("common", "Delete") %>
+              <% end %>
+            </.button_primary>
           <% end %>
-        </.button_primary>
-      <% end %>
-      <.button_primary
-        :if={ThreatShield.Members.Rights.may(:edit_membership, @current_org_membership)}
-        phx-click="edit_membership"
-        phx-value-membership_id={membership.id}
-      >
-        <%= dgettext("common", "Edit") %>
-      </.button_primary>
-    </div>
-  </:col>
-</.table>
+          <.button_secondary
+            :if={ThreatShield.Members.Rights.may(:edit_membership, @current_org_membership)}
+            phx-click="edit_membership"
+            phx-value-membership_id={membership.id}
+          >
+            <%= dgettext("common", "Edit") %>
+          </.button_secondary>
+        </div>
+      </:col>
+    </.table>
+  </div>
+</section>
 
 <%= if not Enum.empty?(@organisation.invites) and ThreatShield.Members.Rights.may(:invite_new_members, @current_org_membership) do %>
-  <h3><%= dgettext("organisation", "Pending invites") %></h3>
-  <.table id="invites" rows={@organisation.invites}>
-    <:col :let={invite} label="Email"><%= invite.email %></:col>
-    <:col :let={invite} label="Expiration Date">
-      <%= ThreatShield.Members.Invite.expiration_point(invite) %>
-    </:col>
-    <:col :let={invite}>
-      <div class="text-right">
-        <.button_primary
-          phx-click="revoke_invite"
-          phx-value-invite_id={invite.id}
-          data-confirm={"Do you really want to revoke the invite for #{invite.email}?"}
-        >
-          <%= dgettext("common", "Revoke") %>
-        </.button_primary>
-      </div>
-    </:col>
-  </.table>
+  <section class="ts-container my-8">
+    <div class="px-8 py-4 bg-primary-100 rounded-lg shadow">
+      <.h1>
+        <%= dgettext("organisation", "Pending invites") %>
+      </.h1>
+      <.table id="invites" rows={@organisation.invites}>
+        <:col :let={invite} label="Email"><%= invite.email %></:col>
+        <:col :let={invite} label="Expiration Date">
+          <%= format_datetime(ThreatShield.Members.Invite.expiration_point(invite)) %>
+        </:col>
+        <:col :let={invite}>
+          <div class="text-right">
+            <.button_danger
+              phx-click="revoke_invite"
+              phx-value-invite_id={invite.id}
+              data-confirm={"Do you really want to revoke the invite for #{invite.email}?"}
+            >
+              <%= dgettext("common", "Revoke") %>
+            </.button_danger>
+          </div>
+        </:col>
+      </.table>
+    </div>
+  </section>
 <% end %>
 
 <.modal
@@ -69,7 +87,7 @@
   on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/members")}
 >
   <.live_component
-    module={ThreatShieldWeb.MembersLive.FormComponent}
+    module={ThreatShieldWeb.MembersLive.InviteForm}
     id={@invite.id || :new}
     title={@page_title}
     action={@live_action}
@@ -87,7 +105,7 @@
   on_cancel={JS.patch(~p"/organisations/#{@organisation.id}/members")}
 >
   <.live_component
-    module={ThreatShieldWeb.MembersLive.RoleFormComponent}
+    module={ThreatShieldWeb.MembersLive.RoleForm}
     id={@membership_to_edit.id}
     title={@page_title}
     action={@live_action}
