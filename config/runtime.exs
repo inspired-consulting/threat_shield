@@ -110,13 +110,5 @@ if config_env() == :prod do
     domain: System.get_env("MAILGUN_DOMAIN"),
     base_url: "https://api.eu.mailgun.net/v3"
 
-  # Swoosh API client is needed for adapters other than SMTP.
-  config :swoosh, :api_client, false
-  #
-  # For this example you need include a HTTP client required by Swoosh API client.
-  # Swoosh supports Hackney and Finch out of the box:
-  #
-  #     config :swoosh, :api_client, Swoosh.ApiClient.Hackney
-  #
-  # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
+  config :swoosh, :api_client, Swoosh.ApiClient.Hackney
 end
