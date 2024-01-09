@@ -44,6 +44,7 @@ npm-debug.log
 # Deployment related
 /kubernetes/
 .envrc
+**/__pycache__
 
 
 
