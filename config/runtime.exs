@@ -25,7 +25,13 @@ if config_env() == :prod do
     System.get_env("DATABASE_URL") ||
       raise """
       environment variable DATABASE_URL is missing.
-      For example: ecto://USER:PASS@HOST/DATABASE
+      For example: ecto://@<host|socket_dir>/DATABASE
+      """
+
+  database_pw =
+    System.get_env("DB_PASSWORD") ||
+      raise """
+      environment variable DB_PASSWORD is missing.
       """
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
@@ -33,6 +39,8 @@ if config_env() == :prod do
   config :threat_shield, ThreatShield.Repo,
     # ssl: true,
     url: database_url,
+    username: "pat_mon",
+    password: database_pw,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
 
