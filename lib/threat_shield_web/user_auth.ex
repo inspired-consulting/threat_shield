@@ -227,7 +227,7 @@ defmodule ThreatShieldWeb.UserAuth do
   defp signed_in_path(_conn), do: ~p"/organisations"
 
   defp unauthenticated_flash(%Socket{} = socket) do
-    if unauth_flash_needed(socket.router.assigns[:path_info]) do
+    if is_nil(socket.router) or unauth_flash_needed(socket.router.assigns[:path_info]) do
       socket
       |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
     else
