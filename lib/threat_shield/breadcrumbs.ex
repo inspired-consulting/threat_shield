@@ -75,6 +75,6 @@ defmodule ThreatShield.Breadcrumbs do
     |> Enum.join("/")
   end
 
-  defp id(entity) when not is_nil(entity), do: entity[:id]
-  defp id(_), do: nil
+  defp id(nil), do: nil
+  defp id(entity), do: entity.id
 end
