@@ -4,6 +4,7 @@ defmodule ThreatShieldWeb.UserAuth do
   import Plug.Conn
   import Phoenix.Controller
 
+  alias Phoenix.LiveView.Socket
   alias ThreatShield.Accounts
 
   # Make the remember me cookie valid for 60 days.
@@ -155,7 +156,7 @@ defmodule ThreatShieldWeb.UserAuth do
     else
       socket =
         socket
-        |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
+        |> unauthenticated_flash()
         |> Phoenix.LiveView.redirect(to: ~p"/users/log_in")
 
       {:halt, socket}
@@ -204,7 +205,7 @@ defmodule ThreatShieldWeb.UserAuth do
       conn
     else
       conn
-      |> put_flash(:error, "You must log in to access this page.")
+      |> unauthenticated_flash()
       |> maybe_store_return_to()
       |> redirect(to: ~p"/users/log_in")
       |> halt()
@@ -224,4 +225,33 @@ defmodule ThreatShieldWeb.UserAuth do
   defp maybe_store_return_to(conn), do: conn
 
   defp signed_in_path(_conn), do: ~p"/organisations"
+
+  defp unauthenticated_flash(%Socket{} = socket) do
+    if unauth_flash_needed(socket.router.assigns[:path_info]) do
+      socket
+      |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
+    else
+      socket
+    end
+  end
+
+  defp unauthenticated_flash(%Plug.Conn{} = conn) do
+    if unauth_flash_needed(conn.request_path) do
+      conn
+      |> put_flash(:error, "You must log in to access this page.")
+    else
+      conn
+    end
+  end
+
+  defp unauth_flash_needed(url) do
+    # We don't want to show the flash message unless some deep link has been called
+    case url do
+      "/users/log_in" -> false
+      "/users/sign_up" -> false
+      "/organisations" -> false
+      "/" -> false
+      _ -> true
+    end
+  end
 end
