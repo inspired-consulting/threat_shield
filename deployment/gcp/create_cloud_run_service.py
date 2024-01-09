@@ -23,6 +23,8 @@ DB_USER_NAME = "threat_shield"
 INSTANCE_NAME = "threatshield-db"
 IMAGE="us-docker.pkg.dev/cloudrun/container/hello"
 SECRET_DB_PASSWORD="threatshield-db-password"
+SECRET_MAILGUN_API_KEY="mailgun-api-key"
+SECRET_OPENAI_API_KEY="openai-api-key"
 SECRET_PHX_SECRET_KEY_BASE="phx-secret-key-base"
 
 def create_cloud_run(project):
@@ -37,7 +39,7 @@ def create_cloud_run(project):
         --max-instances=1 \
         --set-env-vars='CLOUD_SQL_CONNECTION_NAME=/cloudsql/{project}:europe-west3:{INSTANCE_NAME},PHX_HOST={host_name},MAILGUN_DOMAIN={mailgun_domain}' \
         --set-cloudsql-instances={project}:europe-west3:{INSTANCE_NAME} \
-        --set-secrets=SECRET_KEY_BASE={SECRET_PHX_SECRET_KEY_BASE}:1,DB_PASSWORD={SECRET_DB_PASSWORD}:1 \
+        --set-secrets=SECRET_KEY_BASE={SECRET_PHX_SECRET_KEY_BASE}:1,DB_PASSWORD={SECRET_DB_PASSWORD}:1,OPENAI_API_KEY={SECRET_OPENAI_API_KEY}:latest,MAILGUN_API_KEY={MAILGUN_API_KEY}:1 \
         --execution-environment=gen2 \
         --region=europe-west3 \
         --project="{project}"

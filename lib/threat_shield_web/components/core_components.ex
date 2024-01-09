@@ -628,7 +628,7 @@ defmodule ThreatShieldWeb.CoreComponents do
     <div class="bg-primary-900 flex justify-between h-16">
       <div class="justify-start flex items-center gap-9 px-10">
         <a href="/" class="">
-          <.icon name="hero-shield-check" class="h-8 w-8 text-primary-200" />
+          <ThreatShieldWeb.Icons.app_icon class="h-8 w-8 text-primary-200" />
         </a>
         <%= if assigns[:organisation] do %>
           <.entity_links organisation={@organisation} entity_page={assigns[:entity_page]} />
@@ -908,30 +908,13 @@ defmodule ThreatShieldWeb.CoreComponents do
   end
 
   @doc """
-  Renders a [Heroicon](https://heroicons.com).
-
-  Heroicons come in three styles – outline, solid, and mini.
-  By default, the outline style is used, but solid and mini may
-  be applied by using the `-solid` and `-mini` suffix.
-
-  You can customize the size and colors of the icons by setting
-  width, height, and background color classes.
-
-  Icons are extracted from your `assets/vendor/heroicons` directory and bundled
-  within your compiled app.css by the plugin in your `assets/tailwind.config.js`.
-
-  ## Examples
-
-      <.icon name="hero-x-mark-solid" />
-      <.icon name="hero-arrow-path" class="ml-1 w-3 h-3 animate-spin" />
+  Renders a link.
   """
   attr :name, :string, required: true
   attr :class, :string, default: nil
 
   def icon(%{name: "hero-" <> _} = assigns) do
-    ~H"""
-    <span class={[@name, @class]} />
-    """
+    ThreatShieldWeb.Icons.heroicon(assigns)
   end
 
   ## JS Commands

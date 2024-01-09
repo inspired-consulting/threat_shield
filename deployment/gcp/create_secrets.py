@@ -14,6 +14,7 @@ def create_service_secrets(project):
     create_secret(project, "threatshield-db-password", gen_secret(30))
     create_secret(project, "phx-secret-key-base", gen_secret(64))
     prepare_secret(project, "mailgun-api-key")
+    prepare_secret(project, "openai-api-key")
 
 
 def create_secret(project, name, secret):
