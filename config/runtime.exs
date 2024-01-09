@@ -38,8 +38,9 @@ if config_env() == :prod do
   config :threat_shield, ThreatShield.Repo,
     # ssl: true,
     socket_dir: cloud_sql_conn,
-    username: "pat_mon",
+    username: "threat_shield",
     password: database_pw,
+    database: "threat_shield",
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
     socket_options: maybe_ipv6
 
@@ -115,7 +116,7 @@ if config_env() == :prod do
 
   # By default it uses the "Local" adapter which stores the emails
   # locally. You can see the emails in your browser, at "/dev/mailbox".
-  config :cf_portal, ThreatShield.Mailer, adapter: Swoosh.Adapters.Local
+  config :threat_shield, ThreatShield.Mailer, adapter: Swoosh.Adapters.Local
 
   # Swoosh API client is needed for adapters other than SMTP.
   config :swoosh, :api_client, false
