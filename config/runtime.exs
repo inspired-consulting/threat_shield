@@ -104,19 +104,11 @@ if config_env() == :prod do
   # Check `Plug.SSL` for all available options in `force_ssl`.
 
   # ## Configuring the mailer
-  #
-  # In production you need to configure the mailer to use a different adapter.
-  # Also, you may need to configure the Swoosh API client of your choice if you
-  # are not using SMTP. Here is an example of the configuration:
-  #
-  #     config :threat_shield, ThreatShield.Mailer,
-  #       adapter: Swoosh.Adapters.Mailgun,
-  #       api_key: System.get_env("MAILGUN_API_KEY"),
-  #       domain: System.get_env("MAILGUN_DOMAIN")
-
-  # By default it uses the "Local" adapter which stores the emails
-  # locally. You can see the emails in your browser, at "/dev/mailbox".
-  config :threat_shield, ThreatShield.Mailer, adapter: Swoosh.Adapters.Local
+  config :pat_mon, PatMon.Mailer,
+    adapter: Swoosh.Adapters.Mailgun,
+    api_key: System.get_env("MAILGUN_API_KEY"),
+    domain: System.get_env("MAILGUN_DOMAIN"),
+    base_url: "https://api.eu.mailgun.net/v3"
 
   # Swoosh API client is needed for adapters other than SMTP.
   config :swoosh, :api_client, false
