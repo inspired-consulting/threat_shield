@@ -50,10 +50,10 @@ defmodule ThreatShield.Breadcrumbs do
 
   defp replace_chunk(chunk, %{scope: %Scope{} = scope} = context) do
     case chunk do
-      ":org_id" -> scope.organisation.id
-      ":sys_id" -> scope.system.id
-      ":threat_id" -> scope.organisation.id
-      ":risk_id" -> context[:risk].id
+      ":org_id" -> id(scope.organisation)
+      ":sys_id" -> id(scope.system)
+      ":threat_id" -> id(scope.organisation)
+      ":risk_id" -> id(context[:risk])
       _ -> chunk
     end
   end
@@ -74,4 +74,7 @@ defmodule ThreatShield.Breadcrumbs do
     |> Enum.map(fn chunk -> replace_chunk(chunk, context) end)
     |> Enum.join("/")
   end
+
+  defp id(entity) when not is_nil(entity), do: entity[:id]
+  defp id(_), do: nil
 end

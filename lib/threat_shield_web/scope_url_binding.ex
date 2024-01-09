@@ -5,14 +5,16 @@ defmodule ThreatShieldWeb.ScopeUrlBinding do
 
   alias ThreatShield.Scope
 
+  alias ThreatShield.Accounts.User
   alias ThreatShield.Assets.Asset
+  alias ThreatShield.Threats.Threat
 
   use Phoenix.VerifiedRoutes,
     endpoint: ThreatShieldWeb.Endpoint,
     router: ThreatShieldWeb.Router,
     statics: ThreatShieldWeb.static_paths()
 
-  def threat_scope_from_params(user, threat, params) when is_map(params) do
+  def threat_scope_from_params(%User{} = user, %Threat{} = threat, params) when is_map(params) do
     system = if Map.has_key?(params, "sys_id"), do: threat.system, else: nil
     asset = if Map.has_key?(params, "asset_id"), do: threat.asset, else: nil
 
@@ -23,7 +25,7 @@ defmodule ThreatShieldWeb.ScopeUrlBinding do
     )
   end
 
-  def asset_scope_from_params(user, %Asset{} = asset, params) when is_map(params) do
+  def asset_scope_from_params(%User{} = user, %Asset{} = asset, params) when is_map(params) do
     system = if Map.has_key?(params, "sys_id"), do: asset.system, else: nil
 
     Scope.for(user, asset.organisation,
