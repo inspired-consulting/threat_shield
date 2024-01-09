@@ -35,10 +35,11 @@ def create_backend(project, name, neg_name):
             gcloud compute backend-services add-backend {name} \
                 --global \
                 --network-endpoint-group={neg_name} \
-                --network-endpoint-group-region={REGION}
+                --network-endpoint-group-region={REGION} \
+                --project="{project}"
             """)
         run(f"""
-            gcloud compute backend-services update {name} --enable-cdn --global
+            gcloud compute backend-services update {name} --enable-cdn --global --project="{project}"
             """)
 
     else:
