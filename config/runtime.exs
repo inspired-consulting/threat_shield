@@ -21,11 +21,10 @@ if System.get_env("PHX_SERVER") do
 end
 
 if config_env() == :prod do
-  database_url =
-    System.get_env("DATABASE_URL") ||
+  cloud_sql_conn =
+    System.get_env("CLOUD_SQL_CONNECTION_NAME") ||
       raise """
-      environment variable DATABASE_URL is missing.
-      For example: ecto://@<host|socket_dir>/DATABASE
+      environment variable CLOUD_SQL_CONNECTION_NAME is missing.
       """
 
   database_pw =
@@ -38,7 +37,7 @@ if config_env() == :prod do
 
   config :threat_shield, ThreatShield.Repo,
     # ssl: true,
-    url: database_url,
+    socket_dir: cloud_sql_conn,
     username: "pat_mon",
     password: database_pw,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
