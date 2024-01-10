@@ -4,7 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
-    <meta http-equiv="Content-Security-Policy" content={"default-src 'self' https://api.openai.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"} />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' https://api.openai.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
+    />
+    <link rel="apple-touch-icon" sizes="180x180" href={~p"/images/apple-touch-icon.png"} />
+    <link rel="icon" type="image/png" sizes="32x32" href={~p"/favicon-32x32.png"} />
+    <link rel="icon" type="image/png" sizes="16x16" href={~p"/favicon-16x16.png"} />
+    <link rel="manifest" href={~p"/site.webmanifest"} />
     <.live_title>
       <%= assigns[:page_title] || "ThreatShield" %>
     </.live_title>
@@ -13,7 +20,6 @@
     </script>
   </head>
   <body class="antialiased bg-neutral-100">
-    
     <%= @inner_content %>
 
     <script>
@@ -22,7 +28,7 @@
         const navDropdown = document.getElementById(id);
         const icon = navDropdown.getElementsByClassName("hero-chevron-down")[0];
         const navMenu = navDropdown.lastElementChild;
-   
+
         if (navMenu) {
           navMenu.classList.toggle("hidden");
         }
@@ -33,7 +39,7 @@
           }
           const isHidden = navMenu.classList.contains("hidden");
           if (icon) {
-          icon.style.transform = isHidden ? "rotate(0deg)" : "rotate(180deg)";
+            icon.style.transform = isHidden ? "rotate(0deg)" : "rotate(180deg)";
           }
         });
       }
