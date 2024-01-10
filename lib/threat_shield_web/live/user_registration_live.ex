@@ -55,12 +55,22 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
               autocomplete="new-password"
             />
 
-            <.input
-              field={@form[:accept_toc]}
-              type="checkbox"
-              required
-              label={dgettext("accounts", "By checking this box, you agree to our terms of service")}
-            />
+            <label class="flex items-center gap-4 text-sm leading-6">
+              <.input field={@form[:accept_toc]} type="checkbox" required />
+              <span>
+                <%= dgettext("accounts", "By checking this box, you agree to our") %>
+                <a href="https://threatshield.eu/terms.html" target="_blank" class="text-primary-500">
+                  <%= dgettext("accounts", "Terms of Service") %>
+                </a>
+                and our <a
+                  href="https://threatshield.eu/privacy.html"
+                  target="_blank"
+                  class="text-primary-500"
+                >
+                <%= dgettext("accounts", "Privacy Policy") %>
+                </a>.
+              </span>
+            </label>
 
             <:actions>
               <.button_magic phx-disable-with="Creating account..." class="text-lg w-full">
