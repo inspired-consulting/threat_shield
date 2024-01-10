@@ -7,7 +7,7 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
   def render(assigns) do
     ~H"""
     <div class="flex h-full bg-white">
-      <div class="w-1/2 flex flex-col justify-stretch px-20 h-full shadow shadow-lg shadow-primary-300">
+      <div class="md:w-1/2 md:flex flex-col justify-stretch px-4 md:px-20 h-full shadow shadow-lg shadow-primary-300">
         <div class="flex-grow h-32 pt-2">
           <.flash_group flash={@flash} />
         </div>
@@ -80,7 +80,7 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
           </div>
         </footer>
       </div>
-      <div class="w-1/2">
+      <div class="hidden md:block w-1/2">
         <img src={~p"/images/shiba-dancing.png"} alt="" class="w-full h-full object-cover" />
       </div>
     </div>
