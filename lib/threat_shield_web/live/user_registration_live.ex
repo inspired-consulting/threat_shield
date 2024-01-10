@@ -6,62 +6,83 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
 
   def render(assigns) do
     ~H"""
-    <div class="w-1/2 me-auto pt-20 px-20 bg-white h-full">
-      <.header class="text-center">
-        <span class="threadshield-jumbo-header">
-          <%= dgettext("accounts", "Join us") %>
-        </span>
-        <:subtitle>
-          Already registered?
-          <.link navigate={~p"/users/log_in"} class="font-semibold text-primary-500 hover:underline">
-            <%= dgettext("accounts", "Sign in") %>
-          </.link>
-          to your account now.
-        </:subtitle>
-      </.header>
-
-      <.flash_group flash={@flash} />
-
-      <.simple_form
-        for={@form}
-        id="registration_form"
-        phx-submit="save"
-        phx-change="validate"
-        phx-trigger-action={@trigger_submit}
-        action={~p"/users/log_in?_action=registered"}
-        method="post"
-      >
-        <.error :if={@check_errors}>
-          Oops, something went wrong! Please check the errors below.
-        </.error>
-
-        <div class="grid grid-cols-2 gap-4">
-          <.input field={@form[:first_name]} label="First name" required />
-          <.input field={@form[:last_name]} label="Last name" required />
+    <div class="flex h-full bg-white">
+      <div class="w-1/2 flex flex-col justify-stretch px-20 h-full shadow shadow-lg shadow-primary-300">
+        <div class="flex-grow h-32 pt-2">
+          <.flash_group flash={@flash} />
         </div>
+        <main class="md:w-[36rem] mx-auto">
+          <.header class="text-center">
+            <span class="threadshield-jumbo-header">
+              <%= dgettext("accounts", "Join us") %>
+            </span>
+            <:subtitle>
+              Already registered?
+              <.link
+                navigate={~p"/users/log_in"}
+                class="font-semibold text-primary-500 hover:underline"
+              >
+                <%= dgettext("accounts", "Sign in") %>
+              </.link>
+              to your account now.
+            </:subtitle>
+          </.header>
 
-        <.input field={@form[:email]} type="email" label="Email" required autocomplete="off" />
-        <.input
-          field={@form[:password]}
-          type="password"
-          label="Password"
-          required
-          autocomplete="new-password"
-        />
+          <.simple_form
+            for={@form}
+            id="registration_form"
+            phx-submit="save"
+            phx-change="validate"
+            phx-trigger-action={@trigger_submit}
+            action={~p"/users/log_in?_action=registered"}
+            method="post"
+          >
+            <.error :if={@check_errors}>
+              Oops, something went wrong! Please check the errors below.
+            </.error>
 
-        <.input
-          field={@form[:accept_toc]}
-          type="checkbox"
-          required
-          label={dgettext("accounts", "By checking this box, you agree to our terms of service")}
-        />
+            <div class="grid grid-cols-2 gap-4">
+              <.input field={@form[:first_name]} label="First name" required />
+              <.input field={@form[:last_name]} label="Last name" required />
+            </div>
 
-        <:actions>
-          <.button_magic phx-disable-with="Creating account..." class="text-lg w-full">
-            <%= dgettext("accounts", "Sign up") %>
-          </.button_magic>
-        </:actions>
-      </.simple_form>
+            <.input field={@form[:email]} type="email" label="Email" required autocomplete="off" />
+            <.input
+              field={@form[:password]}
+              type="password"
+              label="Password"
+              required
+              autocomplete="new-password"
+            />
+
+            <.input
+              field={@form[:accept_toc]}
+              type="checkbox"
+              required
+              label={dgettext("accounts", "By checking this box, you agree to our terms of service")}
+            />
+
+            <:actions>
+              <.button_magic phx-disable-with="Creating account..." class="text-lg w-full">
+                <%= dgettext("accounts", "Sign up") %>
+              </.button_magic>
+            </:actions>
+          </.simple_form>
+        </main>
+        <footer class="flex-grow text-center flex flex-col justify-end text-xs h-32">
+          <div class="p-4 space-x-6">
+            <a href="https://threatshield.eu" class="text-gray-500">
+              threatshield.eu
+            </a>
+            <a href="https://inspired.consulting" class="text-gray-500">
+              inspired.consulting
+            </a>
+          </div>
+        </footer>
+      </div>
+      <div class="w-1/2">
+        <img src={~p"/images/shiba-dancing.png"} alt="" class="w-full h-full object-cover" />
+      </div>
     </div>
     """
   end

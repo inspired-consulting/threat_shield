@@ -127,33 +127,36 @@ defmodule ThreatShieldWeb.CoreComponents do
   attr :title, :string, default: nil
   attr :kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup"
   attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
+  attr :absolute, :boolean, default: false, doc: "the absolute flag for the flash container"
 
   slot :inner_block, doc: "the optional inner block that renders the flash message"
 
   def flash(assigns) do
     ~H"""
-    <div class="absolute top-2 right-2 z-50">
+    <div class={@absolute && "absolute z-50"}>
       <div
         :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
         id={@id}
         phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
         role="alert"
-        data-disappear-after={(@kind == :info && 5000) || -1}
+        data-disappear-after={(@kind == :info && 4000) || -1}
         class={[
-          "mx-auto w-96 p-3 border-l-4 shadow-lg",
+          "w-full p-3 border-l-4 shadow-lg flex",
           @kind == :info && "bg-green-200 border-green-500 text-green-800 ring-red-500 fill-red-900",
           @kind == :error &&
-            "bg-red-100 border-red-500 text-red-700 shadow-md ring-red-500 fill-red-900"
+            "bg-red-100 border-red-500 text-red-700 shadow-md shadow-red-200 ring-red-500 fill-red-900"
         ]}
         {@rest}
       >
-        <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
-          <.icon :if={@kind == :info} name="hero-information-circle-mini" class="h-4 w-4" />
-          <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" />
-          <%= @title %>
-        </p>
-        <p class="mt-2 text-sm leading-5"><%= msg %></p>
-        <button type="button" class="group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
+        <div class="flex-grow">
+          <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
+            <.icon :if={@kind == :info} name="hero-information-circle-mini" class="h-4 w-4" />
+            <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" />
+            <%= @title %>
+          </p>
+          <p class="mt-2 text-sm leading-5"><%= msg %></p>
+        </div>
+        <button type="button" class="group p-2" aria-label={gettext("close")}>
           <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
         </button>
       </div>

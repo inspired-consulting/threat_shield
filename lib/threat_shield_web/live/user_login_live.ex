@@ -3,42 +3,63 @@ defmodule ThreatShieldWeb.UserLoginLive do
 
   def render(assigns) do
     ~H"""
-    <div class="w-1/2 ms-auto pt-20 px-20 bg-white h-full">
-      <div class="mx-auto">
-        <.flash_group flash={@flash} />
+    <div class="flex h-full bg-white">
+      <div class="w-1/2">
+        <img src={~p"/images/shiba-hero1.png"} alt="" class="w-full h-full object-cover" />
       </div>
-      <.header class="text-center">
-        <span class="threadshield-jumbo-header">
-          <%= dgettext("accounts", "Welcome back") %>
-        </span>
-        <:subtitle>
-          <%= dgettext("accounts", "Don't have an account yet?") %>
-          <.link navigate={~p"/users/register"} class="font-semibold text-primary-500 hover:underline">
-            <%= dgettext("accounts", "Sign up now!") %>
-          </.link>
-        </:subtitle>
-      </.header>
+      <div class="w-1/2 flex flex-col justify-stretch px-20 h-full shadow shadow-lg shadow-primary-300">
+        <div class="flex-grow h-32 pt-2">
+          <.flash_group flash={@flash} />
+        </div>
+        <main class="md:w-[36rem] mx-auto">
+          <.header class="text-center">
+            <span class="threadshield-jumbo-header">
+              <%= dgettext("accounts", "Welcome back") %>
+            </span>
+            <:subtitle>
+              <span class="text-gray-700">
+                <%= dgettext("accounts", "Don't have an account yet?") %>
+              </span>
+              <.link
+                navigate={~p"/users/register"}
+                class="font-semibold text-primary-500 hover:underline"
+              >
+                <%= dgettext("accounts", "Sign up now!") %>
+              </.link>
+            </:subtitle>
+          </.header>
+          <.simple_form for={@form} id="login_form" action={~p"/users/log_in"} phx-update="ignore">
+            <.input field={@form[:email]} type="email" label="Email" required />
+            <.input field={@form[:password]} type="password" label="Password" required />
 
-      <.simple_form for={@form} id="login_form" action={~p"/users/log_in"} phx-update="ignore">
-        <.input field={@form[:email]} type="email" label="Email" required />
-        <.input field={@form[:password]} type="password" label="Password" required />
-
-        <:actions>
-          <.input
-            field={@form[:remember_me]}
-            type="checkbox"
-            label={dgettext("accounts", "remember me")}
-          />
-          <.link href={~p"/users/reset_password"} class="text-sm font-semibold">
-            <%= dgettext("accounts", "Forgot your password?") %>
-          </.link>
-        </:actions>
-        <:actions>
-          <.button_magic phx-disable-with="Signing in..." class="text-lg w-full">
-            <%= dgettext("accounts", "Sign in") %>
-          </.button_magic>
-        </:actions>
-      </.simple_form>
+            <:actions>
+              <.input
+                field={@form[:remember_me]}
+                type="checkbox"
+                label={dgettext("accounts", "remember me")}
+              />
+              <.link href={~p"/users/reset_password"} class="text-sm font-semibold text-gray-700">
+                <%= dgettext("accounts", "Forgot your password?") %>
+              </.link>
+            </:actions>
+            <:actions>
+              <.button_magic phx-disable-with="Signing in..." class="mt-4 text-lg w-full">
+                <%= dgettext("accounts", "Sign in") %>
+              </.button_magic>
+            </:actions>
+          </.simple_form>
+        </main>
+        <footer class="flex-grow text-center flex flex-col justify-end text-xs h-32">
+          <div class="p-4 space-x-6">
+            <a href="https://threatshield.eu" class="text-gray-500">
+              threatshield.eu
+            </a>
+            <a href="https://inspired.consulting" class="text-gray-500">
+              inspired.consulting
+            </a>
+          </div>
+        </footer>
+      </div>
     </div>
     """
   end

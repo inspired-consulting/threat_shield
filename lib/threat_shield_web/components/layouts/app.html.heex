@@ -9,7 +9,10 @@
   <div :if={assigns[:breadcrumbs]} class="bg-white py-4">
     <ThreatShieldWeb.Breadcrumbs.breadcrumb breadcrumbs={@breadcrumbs} context={assigns} />
   </div>
-  <.flash_group flash={@flash} />
+  <div class="ts-container mx-auto">
+    <.flash_group flash={@flash} />
+  </div>
+
   <%= @inner_content %>
 </main>
 <footer class="text-center text-xs text-gray-500 py-5">
