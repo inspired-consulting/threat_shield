@@ -21,6 +21,7 @@ defmodule ThreatShieldWeb.Router do
     pipe_through :browser
 
     get "/", WelcomeController, :home
+    get "/exports/excel", ExportController, :export_to_excel
   end
 
   # Other scopes may use custom stacks.

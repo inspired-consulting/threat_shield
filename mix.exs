@@ -56,7 +56,8 @@ defmodule ThreatShield.MixProject do
       {:ecto_psql_extras, "~> 0.7.13"},
       {:ex_rated, "~> 2.1"},
       {:timex, "~> 3.7.11"},
-      {:number, "~> 1.0.1"}
+      {:number, "~> 1.0.1"},
+      {:elixlsx, "~> 0.5.1"}
     ]
   end
 

@@ -48,6 +48,14 @@
               <%= dgettext("common", "Edit") %>
             </.link>
           </li>
+          <li class="context-menu-item w-48">
+            <.link
+              patch={~p"/exports/excel?org_id=#{@organisation.id}"}
+              phx-click={JS.push_focus()}
+            >
+              <%= dgettext("common", "Export Threat Model") %>
+            </.link>
+          </li>
         </:links>
       </.dropdown>
     </div>

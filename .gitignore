@@ -38,6 +38,9 @@ npm-debug.log
 # ENV related
 .env
 
+# temp files
+tmp/
+
 # Ignore Elixir LS generated files
 .elixir_ls/
 
