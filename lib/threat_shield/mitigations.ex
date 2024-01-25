@@ -10,27 +10,6 @@ defmodule ThreatShield.Mitigations do
 
   alias ThreatShield.Mitigations.Mitigation
 
-  def get_risk!(%User{id: user_id}, risk_id) do
-    Risk.get(risk_id)
-    |> Risk.for_user(user_id)
-    |> Risk.with_mitigations()
-    |> Risk.with_organisation()
-    |> Repo.one!()
-  end
-
-  @doc """
-  Returns the list of mitigations.
-
-  ## Examples
-
-      iex> list_mitigations()
-      [%Mitigation{}, ...]
-
-  """
-  def list_mitigations do
-    Repo.all(Mitigation)
-  end
-
   @doc """
   Gets a single mitigation.
 
@@ -52,6 +31,14 @@ defmodule ThreatShield.Mitigations do
     |> Mitigation.preload_full_threat()
     |> Mitigation.preload_membership()
     |> Repo.one!()
+  end
+
+  def get_all_mitigations(%User{id: user_id}, org_id) do
+    Mitigation.all()
+    |> Mitigation.for_user(user_id)
+    |> Mitigation.where_organisation(org_id)
+    |> Mitigation.preload_risk()
+    |> Repo.all()
   end
 
   @doc """

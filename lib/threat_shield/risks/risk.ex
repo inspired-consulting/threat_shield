@@ -75,6 +75,10 @@ defmodule ThreatShield.Risks.Risk do
     from(e in __MODULE__, as: :risk, where: e.id == ^id)
   end
 
+  def all() do
+    from(e in __MODULE__, as: :risk)
+  end
+
   def for_user(query, user_id) do
     join(query, :inner, [risk: r], assoc(r, :threat), as: :threat)
     |> Threat.for_user(user_id)
@@ -83,6 +87,10 @@ defmodule ThreatShield.Risks.Risk do
   def for_user(query, user_id, right) do
     join(query, :inner, [risk: r], assoc(r, :threat), as: :threat)
     |> Threat.for_user(user_id, right)
+  end
+
+  def where_organisation(query, org_id) do
+    where(query, [organisation: o], o.id == ^org_id)
   end
 
   def preload_threat(query) do

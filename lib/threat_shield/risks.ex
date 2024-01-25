@@ -29,6 +29,14 @@ defmodule ThreatShield.Risks do
     |> Repo.one!()
   end
 
+  def get_all_risks(%User{id: user_id}, org_id) do
+    Risk.all()
+    |> Risk.for_user(user_id)
+    |> Risk.where_organisation(org_id)
+    |> Risk.preload_threat()
+    |> Repo.all()
+  end
+
   def create_risk(%User{id: user_id}, threat_id, attrs \\ %{}) do
     Repo.transaction(fn ->
       threat =

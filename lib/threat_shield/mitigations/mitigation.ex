@@ -41,6 +41,10 @@ defmodule ThreatShield.Mitigations.Mitigation do
     from(e in __MODULE__, as: :mitigation, where: e.id == ^id)
   end
 
+  def all() do
+    from(e in __MODULE__, as: :mitigation)
+  end
+
   def for_user(query, user_id) do
     query
     |> join(:inner, [mitigation: m], assoc(m, :risk), as: :risk)
@@ -51,6 +55,10 @@ defmodule ThreatShield.Mitigations.Mitigation do
     query
     |> join(:inner, [mitigation: m], assoc(m, :risk), as: :risk)
     |> Risk.for_user(user_id, right)
+  end
+
+  def where_organisation(query, org_id) do
+    where(query, [organisation: o], o.id == ^org_id)
   end
 
   def preload_risk(query) do

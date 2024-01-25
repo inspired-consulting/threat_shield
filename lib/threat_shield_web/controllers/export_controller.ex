@@ -2,14 +2,17 @@ defmodule ThreatShieldWeb.ExportController do
   use ThreatShieldWeb, :controller
 
   alias ThreatShield.Organisations
+  alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Exporters.ExcelExporter
 
   def export_to_excel(conn, %{"org_id" => org_id} = _params) do
     user = conn.assigns.current_user
 
-    org = Organisations.get_organisation!(user, org_id)
+    org = %Organisation{} = Organisations.get_organisation!(user, org_id)
+    risks = ThreatShield.Risks.get_all_risks(user, org_id)
+    mitigations = ThreatShield.Mitigations.get_all_mitigations(user, org_id)
 
-    case ExcelExporter.export(org.threats) do
+    case ExcelExporter.export(org.systems, org.threats, org.assets, risks, mitigations) do
       {:ok, content} ->
         send_download(conn, {:binary, content},
           filename: "ThreatModel_#{org.name}.xlsx",
