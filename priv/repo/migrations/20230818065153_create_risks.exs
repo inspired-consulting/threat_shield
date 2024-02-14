@@ -3,11 +3,13 @@ defmodule ThreatShield.Repo.Migrations.CreateRisks do
 
   def change do
     create table(:risks) do
-      add :name, :string, null: false
-      add :description, :text, null: false
+      add :name, :string, null: false, size: 255
+      add :description, :string, size: 4000
       add :estimated_cost, :integer
       add :probability, :float
-      add :is_candidate, :boolean, default: false, null: false
+      add :severity, :float
+      add :status, :string, default: "identified"
+
       add :threat_id, references(:threats, on_delete: :delete_all), null: false
 
       timestamps()
