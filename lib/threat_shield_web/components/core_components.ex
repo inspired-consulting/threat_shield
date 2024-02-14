@@ -714,7 +714,7 @@ defmodule ThreatShieldWeb.CoreComponents do
               onclick="toggleDropdown(id)"
             >
               <.icon name="hero-user" class="h-5 w-5" />
-              <ul class="absolute user-dropdown-menu hidden right-2 w-48 mt-4 py-1 bg-white rounded-lg shadow-xl text-gray-900 text-sm font-normal">
+              <ul class="absolute hidden right-2 mt-4 py-1 bg-white rounded-lg shadow-xl text-gray-900 text-sm font-normal">
                 <li class="px-4 py-2 border-b border-gray-300">
                   <p>
                     <%= dgettext("users", "Signed in as") %>
@@ -723,7 +723,7 @@ defmodule ThreatShieldWeb.CoreComponents do
                     <%= @current_user.email %>
                   </p>
                 </li>
-                <li class="px-4 py-2">
+                <li class="context-menu-item">
                   <.link
                     href={~p"/users/settings"}
                     class="text-[0.8125rem] leading-6 text-primary-500 hover:underline"
@@ -731,12 +731,12 @@ defmodule ThreatShieldWeb.CoreComponents do
                     <%= dgettext("users", "Account settings") %>
                   </.link>
                 </li>
-                <li class="px-4 py-2">
+                <li class="context-menu-item">
                   <.link class="text-[0.8125rem] leading-6 text-primary-500 hover:underline text-gray-200">
                     <%= dgettext("users", "Support") %>
                   </.link>
                 </li>
-                <li class="px-4 py-2 border-t border-gray-300">
+                <li class="context-menu-item border-t border-gray-300">
                   <.link
                     href={~p"/users/log_out"}
                     method="delete"

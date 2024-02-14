@@ -118,6 +118,16 @@ li.context-menu-item a:hover {
   font-weight: 800;
 }
 
+.tooltip {
+  z-index: 1000;
+  background-color: #333;
+  line-height: 12pt;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 10pt;
+}
+
 /* USER INDICATOR */
 
 /* User indicator for waiting */
