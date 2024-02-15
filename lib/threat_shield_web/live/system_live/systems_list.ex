@@ -94,9 +94,11 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
 
   @impl true
   def update(%{added_system: system} = assigns, socket) do
+    old_systems = assigns[:systems] || []
+
     socket
     |> assign(:show_modal, false)
-    |> assign(:systems, assigns.systems ++ [system])
+    |> assign(:systems, old_systems ++ [system])
     |> ok()
   end
 

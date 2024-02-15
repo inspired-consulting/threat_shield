@@ -28,7 +28,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Name" required />
-        <.input field={@form[:description]} type="text" label="Description" required />
+        <.input field={@form[:description]} type="textarea" label="Description" required />
         <.input
           :if={assigns[:system_options]}
           field={@form[:system_id]}

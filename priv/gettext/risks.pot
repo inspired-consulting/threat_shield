@@ -97,7 +97,7 @@ msgstr ""
 
 #: lib/threat_shield_web/components/labels.ex:81
 #, elixir-autogen, elixir-format
-msgid "State:reopened"
+msgid "State:accepted"
 msgstr ""
 
 #: lib/threat_shield_web/live/risk_live/show.html.heex:39

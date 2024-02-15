@@ -26,12 +26,8 @@ defmodule ThreatShield.Risks.Risk do
       values: [
         :identified,
         :assessed,
-        :mitigation_planned,
-        :mitigation_in_progress,
         :mitigated,
-        :monitored,
-        :closed,
-        :reopened
+        :accepted
       ],
       default: :identified
 
@@ -43,7 +39,7 @@ defmodule ThreatShield.Risks.Risk do
   end
 
   @fields ~w(name description estimated_cost probability severity status)a
-  @valid_states ~w(identified assessed mitigation_planned mitigation_in_progress mitigated monitored closed reopened)a
+  @valid_states ~w(identified assessed mitigated accepted)a
 
   def describe(%__MODULE__{description: description, threat: threat}) do
     description <> " " <> Threat.describe(threat)

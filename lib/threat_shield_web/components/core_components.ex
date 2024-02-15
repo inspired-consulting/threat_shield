@@ -127,7 +127,7 @@ defmodule ThreatShieldWeb.CoreComponents do
   attr :title, :string, default: nil
   attr :kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup"
   attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
-  attr :absolute, :boolean, default: false, doc: "the absolute flag for the flash container"
+  attr :absolute, :boolean, default: false, doc: "position absolute or relative"
 
   slot :inner_block, doc: "the optional inner block that renders the flash message"
 
@@ -148,8 +148,8 @@ defmodule ThreatShieldWeb.CoreComponents do
         ]}
         {@rest}
       >
-        <div class="flex">
-          <div class="flex-grow">
+        <div class="flex items-start gap-3">
+          <div class="flex-grow ">
             <p :if={@title} class="flex items-center gap-1.5 text-sm font-semibold leading-6">
               <.icon :if={@kind == :info} name="hero-information-circle-mini" class="h-4 w-4" />
               <.icon :if={@kind == :error} name="hero-exclamation-circle-mini" class="h-4 w-4" />
@@ -157,7 +157,7 @@ defmodule ThreatShieldWeb.CoreComponents do
             </p>
             <p class="mt-2 text-sm leading-5"><%= msg %></p>
           </div>
-          <button type="button" class="group absolute top-1 right-1 p-2" aria-label={gettext("close")}>
+          <button type="button" class="group" aria-label={gettext("close")}>
             <.icon name="hero-x-mark-solid" class="h-5 w-5 opacity-40 group-hover:opacity-70" />
           </button>
         </div>
@@ -174,11 +174,12 @@ defmodule ThreatShieldWeb.CoreComponents do
       <.flash_group flash={@flash} />
   """
   attr :flash, :map, required: true, doc: "the map of flash messages"
+  attr :absolute, :boolean, default: false, doc: "position absolute or relative"
 
   def flash_group(assigns) do
     ~H"""
-    <.flash kind={:info} title="Success!" flash={@flash} />
-    <.flash kind={:error} title="Error!" flash={@flash} />
+    <.flash kind={:info} title="Success!" flash={@flash} absolute={@absolute} />
+    <.flash kind={:error} title="Error!" flash={@flash} absolute={@absolute} />
     <.flash
       id="client-error"
       kind={:error}
@@ -186,6 +187,7 @@ defmodule ThreatShieldWeb.CoreComponents do
       phx-disconnected={show(".phx-client-error #client-error")}
       phx-connected={hide("#client-error")}
       hidden
+      absolute={@absolute}
     >
       Attempting to reconnect <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
     </.flash>
@@ -197,6 +199,7 @@ defmodule ThreatShieldWeb.CoreComponents do
       phx-disconnected={show(".phx-server-error #server-error")}
       phx-connected={hide("#server-error")}
       hidden
+      absolute={@absolute}
     >
       Hang in there while we get back on track
       <.icon name="hero-arrow-path" class="ml-1 h-3 w-3 animate-spin" />
@@ -466,7 +469,7 @@ defmodule ThreatShieldWeb.CoreComponents do
   def input(assigns) do
     ~H"""
     <div phx-feedback-for={@name}>
-      <.label for={@id}><%= @label %></.label>
+      <.label for={@id} mandatory={not is_nil(assigns[:required])}><%= @label %></.label>
       <input
         type={@type}
         name={@name}
@@ -489,11 +492,15 @@ defmodule ThreatShieldWeb.CoreComponents do
   Renders a label.
   """
   attr :for, :string, default: nil
+  attr :mandatory, :boolean, default: false
   slot :inner_block, required: true
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-gray-500">
+    <label
+      for={@for}
+      class={["block text-sm font-semibold leading-6 text-gray-500", @mandatory && "mandatory"]}
+    >
       <%= render_slot(@inner_block) %>
     </label>
     """
@@ -825,7 +832,7 @@ defmodule ThreatShieldWeb.CoreComponents do
       <tbody
         id={@id}
         phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
-        class="relative divide-y-2 divide-zinc-100 text-sm leading-6 text-gray-500"
+        class="relative divide-y-2 divide-zinc-100 text-sm leading-6 text-gray-900"
       >
         <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-zinc-50">
           <td
@@ -835,7 +842,7 @@ defmodule ThreatShieldWeb.CoreComponents do
           >
             <div class="block py-4 pr-4">
               <span class="absolute -inset-y-px -right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
-              <span class={["relative", i == 0 && "font-semibold text-gray-900"]}>
+              <span class={["relative", i == 0 && "font-semibold"]}>
                 <%= render_slot(col, @row_item.(row)) %>
               </span>
             </div>
@@ -894,7 +901,7 @@ defmodule ThreatShieldWeb.CoreComponents do
     ~H"""
     <div
       id="link-dropdown"
-      class="relative nav-dropdown text-[0.8125rem] font-semibold hover:cursor-pointer px-2 py-2 border border-gray-400 rounded-md h-10"
+      class="relative nav-dropdown text-[0.8125rem] font-semibold px-2 py-2 border border-gray-400 rounded-md h-10 hover:cursor-pointer hover:bg-primary-100 hover:border-gray-800"
       onclick="toggleDropdown(id)"
     >
       <.icon name="hero-ellipsis-vertical" class="h-5 w-5" />

@@ -97,8 +97,8 @@ msgstr "Mitigation planned"
 
 #: lib/threat_shield_web/components/labels.ex:81
 #, elixir-autogen, elixir-format
-msgid "State:reopened"
-msgstr "Reopened"
+msgid "State:accepted"
+msgstr "Accepted"
 
 #: lib/threat_shield_web/live/risk_live/show.html.heex:39
 #, elixir-autogen, elixir-format

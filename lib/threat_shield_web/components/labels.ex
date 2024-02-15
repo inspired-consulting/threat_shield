@@ -74,11 +74,8 @@ defmodule ThreatShieldWeb.Labels do
     [
       identified: dgettext("risks", "State:identified"),
       assessed: dgettext("risks", "State:assessed"),
-      mitigation_planned: dgettext("risks", "State:mitigation_planned"),
-      mitigation_in_progress: dgettext("risks", "State:mitigation_in_progress"),
       mitigated: dgettext("risks", "State:mitigated"),
-      closed: dgettext("risks", "State:closed"),
-      reopened: dgettext("risks", "State:reopened")
+      accepted: dgettext("risks", "State:accepted")
     ]
   end
 
