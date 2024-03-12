@@ -52,6 +52,7 @@ defmodule ThreatShield.Breadcrumbs do
     case chunk do
       ":org_id" -> id(scope.organisation)
       ":sys_id" -> id(scope.system)
+      ":asset_id" -> id(scope.asset)
       ":threat_id" -> id(scope.organisation)
       ":risk_id" -> id(context[:risk])
       _ -> chunk
@@ -62,6 +63,7 @@ defmodule ThreatShield.Breadcrumbs do
     case chunk do
       ":org_id" -> context[:organisation].id
       ":threat_id" -> context[:threat].id
+      ":asset_id" -> context[:asset].id
       ":sys_id" -> context[:system].id
       ":risk_id" -> context[:risk].id
       _ -> chunk

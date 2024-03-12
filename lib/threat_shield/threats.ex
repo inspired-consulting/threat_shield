@@ -13,6 +13,7 @@ defmodule ThreatShield.Threats do
   alias ThreatShield.Organisations
   alias ThreatShield.Organisations.Organisation
   alias ThreatShield.Systems.System
+  alias ThreatShield.Assets.Asset
 
   def get_organisation!(%User{} = user, org_id) do
     Organisations.get_organisation!(user, org_id)
@@ -69,12 +70,51 @@ defmodule ThreatShield.Threats do
         description
       ) do
     case scope do
+      %Scope{system: %System{} = system, asset: %Asset{} = asset} ->
+        add_threat_with_name_and_description(scope.user, system, asset, name, description)
+
+      %Scope{asset: %Asset{} = asset} ->
+        add_threat_with_name_and_description(scope.user, asset, name, description)
+
       %Scope{system: %System{} = system} ->
         add_threat_with_name_and_description(scope.user, system, name, description)
 
       %Scope{organisation: %Organisation{} = organisation} ->
         add_threat_with_name_and_description(scope.user, organisation, name, description)
     end
+  end
+
+  def add_threat_with_name_and_description(
+        %User{id: user_id},
+        %System{id: sys_id},
+        %Asset{id: asset_id},
+        name,
+        description
+      ) do
+    Repo.transaction(fn ->
+      system =
+        System.get(sys_id)
+        |> System.for_user(user_id, :create_threat)
+        |> System.preload_organisation()
+        |> Repo.one!()
+
+      asset =
+        Asset.get(asset_id)
+        |> Asset.for_user(user_id, :create_threat)
+        |> Repo.one!()
+
+      changeset =
+        %Threat{
+          system: system,
+          asset: asset,
+          organisation: system.organisation,
+          name: name,
+          description: description
+        }
+        |> Ecto.Changeset.change()
+
+      Repo.insert!(changeset)
+    end)
   end
 
   def add_threat_with_name_and_description(
@@ -94,6 +134,32 @@ defmodule ThreatShield.Threats do
         %Threat{
           system: system,
           organisation: system.organisation,
+          name: name,
+          description: description
+        }
+        |> Ecto.Changeset.change()
+
+      Repo.insert!(changeset)
+    end)
+  end
+
+  def add_threat_with_name_and_description(
+        %User{id: user_id},
+        %Asset{id: asset_id},
+        name,
+        description
+      ) do
+    Repo.transaction(fn ->
+      asset =
+        Asset.get(asset_id)
+        |> Asset.for_user(user_id, :create_threat)
+        |> Asset.preload_organisation()
+        |> Repo.one!()
+
+      changeset =
+        %Threat{
+          asset: asset,
+          organisation: asset.organisation,
           name: name,
           description: description
         }
