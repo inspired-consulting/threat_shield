@@ -203,6 +203,14 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
     |> noreply()
   end
 
+  @impl true
+  def handle_event("apply_selection", _params, socket) do
+    socket
+    |> put_flash(:error, dgettext("common", "No suggestions selected."))
+    |> assign(:show_suggest_dialog, false)
+    |> noreply()
+  end
+
   # internal
 
   defp systems_of_organisaton(%Organisation{} = organisation) do

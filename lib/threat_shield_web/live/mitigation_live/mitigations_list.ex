@@ -150,6 +150,14 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationsList do
     |> noreply()
   end
 
+  @impl true
+  def handle_event("apply_selection", _params, socket) do
+    socket
+    |> put_flash(:error, dgettext("common", "No suggestions selected."))
+    |> assign(:show_suggest_dialog, false)
+    |> noreply()
+  end
+
   defp create_mitigation(%User{} = user, %Risk{} = risk, %{name: name, description: desc}) do
     {:ok, mitigation} = Mitigations.add_mitigation(user, risk.id, name, desc)
     mitigation

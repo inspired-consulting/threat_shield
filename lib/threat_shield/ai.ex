@@ -8,6 +8,11 @@ defmodule ThreatShield.AI do
   alias ThreatShield.Systems.System
   alias ThreatShield.Scope
 
+  require Logger
+
+  @open_ai_model "gpt-3.5-turbo"
+  # @open_ai_model "gpt-4-turbo-preview"
+
   defmodule AiSuggestion do
     @moduledoc """
     A suggestion from the AI for a given type (e.g. threat, asset, etc.).
@@ -33,7 +38,7 @@ defmodule ThreatShield.AI do
       ]
 
     case OpenAI.chat_completion(
-           model: "gpt-3.5-turbo",
+           model: @open_ai_model,
            messages: messages
          ) do
       {:ok, response} ->
@@ -71,7 +76,7 @@ defmodule ThreatShield.AI do
 
   defp get_response_format_description(resource_name_plural) do
     """
-    Your response should comprise five response items, each item has a name and a description. The name should be up to 40 characters, the descriptions should be between 400 and 2000 characters long. The result is valid JSON like so:
+    Your response should comprise five response items, each item has a name and a description. The name should be up to 40 characters, the descriptions should be between 400 and 1000 characters long. The result must be valid JSON in this format:
 
     {"#{resource_name_plural}": [{"name": _, "description": _}, _ ]}
     """
@@ -294,7 +299,7 @@ defmodule ThreatShield.AI do
         ""
       else
         """
-        I already know about the following risks:\n
+        I already know about the following mitigations:\n
         """ <>
           (risk.mitigations
            |> Enum.map(fn a -> a.name end)
@@ -334,10 +339,15 @@ defmodule ThreatShield.AI do
     %{"message" => message} = first_choice
     %{"content" => raw_response_string} = message
 
-    {:ok, data} = Jason.decode(raw_response_string)
+    case Jason.decode(raw_response_string) do
+      {:error, error} ->
+        Logger.error("Failed to decode response from OpenAI: #{inspect(error)}")
+        []
 
-    %{^root_key => content} = data
-    content
+      {:ok, data} ->
+        %{^root_key => content} = data
+        content
+    end
   end
 
   defp get_assets_from_response(response) do

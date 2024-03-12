@@ -140,6 +140,14 @@ defmodule ThreatShieldWeb.RiskLive.RisksList do
     |> noreply()
   end
 
+  @impl true
+  def handle_event("apply_selection", _params, socket) do
+    socket
+    |> put_flash(:error, dgettext("common", "No suggestions selected."))
+    |> assign(:show_suggest_dialog, false)
+    |> noreply()
+  end
+
   defp create_risk(%User{} = user, %Threat{} = threat, %{name: name, description: desc}) do
     {:ok, risk} = Risks.add_risk(user, threat.id, name, desc)
     risk

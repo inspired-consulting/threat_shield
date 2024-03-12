@@ -138,6 +138,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   def update(assigns, socket) do
     socket
     |> assign(assigns)
+    |> load_and_filter_threats(assigns)
     |> ok()
   end
 
@@ -186,7 +187,25 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
     |> noreply()
   end
 
+  @impl true
+  def handle_event("apply_selection", _params, socket) do
+    socket
+    |> put_flash(:error, dgettext("common", "No suggestions selected."))
+    |> assign(:show_suggest_dialog, false)
+    |> noreply()
+  end
+
   # internal
+
+  defp load_and_filter_threats(socket, %{threats: threats}) when is_list(threats) do
+    Logger.info("Threats already provided by caller")
+    socket
+  end
+
+  defp load_and_filter_threats(socket, _assigns) do
+    Logger.info("Loading threats for scope: #{inspect(socket.assigns.scope)}")
+    socket
+  end
 
   defp systems_of_organisaton(%Organisation{} = organisation) do
     Organisation.list_system_options(organisation)
