@@ -1,6 +1,8 @@
 defmodule ThreatShieldWeb.SystemLive.Show do
   require Logger
   alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Organisations
+  alias ThreatShield.Accounts.User
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Scope
@@ -10,16 +12,16 @@ defmodule ThreatShieldWeb.SystemLive.Show do
 
   @impl true
   def mount(%{"sys_id" => id}, _session, socket) do
-    user = socket.assigns.current_user
-
-    system = Systems.get_system!(user, id)
+    %User{} = user = socket.assigns.current_user
+    %System{} = system = Systems.get_system!(user, id)
+    %Organisation{} = organisation = Organisations.get_organisation!(user, system.organisation.id)
 
     socket
     |> assign(:system, system)
-    |> assign(:organisation, system.organisation)
-    |> assign(:membership, Organisation.get_membership(system.organisation, user))
+    |> assign(:organisation, organisation)
+    |> assign(:membership, Organisation.get_membership(organisation, user))
     |> assign(:attributes, System.attributes())
-    |> assign(:scope, Scope.for_system(user, system.organisation, system))
+    |> assign(:scope, Scope.for_system(user, organisation, system))
     |> assign(:ai_suggestions, %{})
     |> ok()
   end
