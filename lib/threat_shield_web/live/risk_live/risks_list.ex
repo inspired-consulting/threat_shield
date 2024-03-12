@@ -65,7 +65,7 @@ defmodule ThreatShieldWeb.RiskLive.RisksList do
             <%= risk.name %>
           </:col>
           <:col :let={risk}>
-            <.risk_status_badge status={risk.status} light={true} />
+            <.risk_status_badge status={risk.status} />
           </:col>
           <:col :let={risk}><%= risk.description %></:col>
           <:col :let={risk}>

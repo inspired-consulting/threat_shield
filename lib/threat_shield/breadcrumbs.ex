@@ -53,7 +53,7 @@ defmodule ThreatShield.Breadcrumbs do
       ":org_id" -> id(scope.organisation)
       ":sys_id" -> id(scope.system)
       ":asset_id" -> id(scope.asset)
-      ":threat_id" -> id(scope.organisation)
+      ":threat_id" -> id(scope.threat)
       ":risk_id" -> id(context[:risk])
       _ -> chunk
     end
@@ -62,9 +62,9 @@ defmodule ThreatShield.Breadcrumbs do
   defp replace_chunk(chunk, context) do
     case chunk do
       ":org_id" -> context[:organisation].id
-      ":threat_id" -> context[:threat].id
-      ":asset_id" -> context[:asset].id
       ":sys_id" -> context[:system].id
+      ":asset_id" -> context[:asset].id
+      ":threat_id" -> context[:threat].id
       ":risk_id" -> context[:risk].id
       _ -> chunk
     end

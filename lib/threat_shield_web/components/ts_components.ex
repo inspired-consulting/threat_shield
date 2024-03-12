@@ -181,13 +181,12 @@ defmodule ThreatShieldWeb.TsComponents do
   end
 
   attr :status, :string, default: nil
-  attr :light, :boolean, default: false
 
   def risk_status_badge(assigns) do
     ~H"""
     <span class={[
-      "inline-flex items-center rounded-md px-4 py-1 text-xs font-bold text-center leading-1",
-      if(@light, do: "bg-neutral-00 text-white", else: "bg-neutral-600 text-gray-100")
+      "inline-flex items-center rounded-md px-4 py-1 text-xs font-bold text-center leading-1 text-gray-100",
+      bg_class_for_risk_status(assigns.status)
     ]}>
       <%= risk_status_label(assigns.status) %>
     </span>
@@ -244,4 +243,13 @@ defmodule ThreatShieldWeb.TsComponents do
   end
 
   defp color_code_for_criticality(_criticality, opacity), do: "rgba(200, 200, 200, #{opacity})"
+
+  defp bg_class_for_risk_status(status) do
+    case status do
+      :mitigated -> "bg-green-700"
+      :identified -> "bg-red-500"
+      :assessed -> "bg-orange-600"
+      _ -> "bg-neutral-600"
+    end
+  end
 end

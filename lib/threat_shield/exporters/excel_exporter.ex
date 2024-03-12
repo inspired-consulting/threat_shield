@@ -66,7 +66,7 @@ defmodule ThreatShield.Exporters.ExcelExporter do
       [title: "Threat", width: 25, content: &threat_name/1],
       [title: "Severity", width: 25, content: & &1.severity],
       [title: "Probability", width: 25, content: & &1.probability],
-      [title: "Estimated_cost_per_instance", width: 25, content: & &1.estimated_cost],
+      [title: "Estimated_cost_per_incidence", width: 25, content: & &1.estimated_cost],
       [title: "Estimated_cost_per_year", width: 25, content: &Risk.estimated_risk_cost/1],
       [title: "Description", width: 200, content: & &1.description]
     ]

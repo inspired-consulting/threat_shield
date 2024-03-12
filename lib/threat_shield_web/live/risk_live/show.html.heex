@@ -40,20 +40,23 @@
       <p><%= asset_label(@risk) %></p>
     </div>
     <div>
-      <.label><%= dgettext("risks", "Estimated cost") %></.label>
+      <.label><%= dgettext("risks", "Frequency of incidences per year") %></.label>
+      <p><%= format_number(@risk.probability) %></p>
+    </div>
+    <div>
+      <.label><%= dgettext("risks", "Estimated cost per incidence") %></.label>
       <p><%= format_monetary_amount(@risk.estimated_cost) %></p>
     </div>
     <div>
-      <.label><%= dgettext("risks", "Probability") %></.label>
-      <p><%= format_percentage(@risk.probability) %></p>
-    </div>
-    <div>
-      <.label><%= dgettext("risks", "Risk costs") %></.label>
+      <.label><%= dgettext("risks", "Risk costs per year") %></.label>
       <p><%= format_monetary_amount(Risk.estimated_risk_cost(@risk)) %></p>
     </div>
     <div>
       <.label><%= dgettext("risks", "Severity") %></.label>
-      <.criticality_badge value={@risk.severity} title={dgettext("risks", "Severity")} />
+      <.criticality_badge
+        value={@risk.severity}
+        title={dgettext("risks", "Severity - from 0 to 5")}
+      />
     </div>
   </:attribute>
 </.entity_info>

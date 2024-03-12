@@ -41,15 +41,14 @@ defmodule ThreatShieldWeb.RiskLive.RiskForm do
           <.input
             field={@form[:estimated_cost]}
             type="number"
-            label={dgettext("risks", "Estimated cost in EUR")}
+            label={dgettext("risks", "Estimated cost per indicence in EUR")}
           />
           <.input
             field={@form[:probability]}
             type="number"
-            label="Probability in %"
-            step="1"
+            label="Frequency of incidences per year"
+            step="0.1"
             min="0"
-            max="100"
           />
         </div>
         <hr />
