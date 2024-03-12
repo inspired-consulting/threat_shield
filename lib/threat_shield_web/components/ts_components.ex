@@ -24,7 +24,7 @@ defmodule ThreatShieldWeb.TsComponents do
   def entity_info(assigns) do
     ~H"""
     <section class="w-full bg-white pb-6 shadow-primary-200 shadow-sm">
-      <div class="ts-container flex justify-between w-full">
+      <div class="ts-container flex justify-between">
         <div class="min-h-10 pb-2">
           <.h1>
             <%= render_slot(@name) %>

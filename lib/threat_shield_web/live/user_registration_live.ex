@@ -7,11 +7,11 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
   def render(assigns) do
     ~H"""
     <div class="flex h-full bg-white">
-      <div class="md:w-1/2 md:flex flex-col justify-stretch px-4 md:px-20 h-full shadow shadow-lg shadow-primary-300">
+      <div class="md:w-1/2 md:flex flex-col justify-stretch px-4 md:px-12 xl:px-20 h-full shadow shadow-lg shadow-primary-300">
         <div class="flex-grow h-32 pt-2">
           <.flash_group flash={@flash} />
         </div>
-        <main class="md:w-[36rem] mx-auto">
+        <main class="xl:w-[36rem] mx-auto">
           <.header class="text-center">
             <span class="threadshield-jumbo-header">
               <%= dgettext("accounts", "Join us") %>

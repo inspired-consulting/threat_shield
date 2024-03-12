@@ -60,7 +60,7 @@ defmodule ThreatShield.Risks.Risk do
 
   def estimated_risk_cost(estimated_cost, probability)
       when is_number(estimated_cost) and is_number(probability) do
-    round(estimated_cost * probability / 100)
+    round(estimated_cost * probability)
   end
 
   def estimated_risk_cost(_estimated_cost, _probability), do: nil

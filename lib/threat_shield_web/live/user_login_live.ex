@@ -7,11 +7,11 @@ defmodule ThreatShieldWeb.UserLoginLive do
       <div class="hidden md:block md:w-1/2">
         <img src={~p"/images/shiba-hero1.png"} alt="" class="w-full h-full object-cover" />
       </div>
-      <div class="md:w-1/2 flex flex-col justify-stretch px-4 md:px-20 h-full shadow shadow-lg shadow-primary-300">
+      <div class="md:w-1/2 flex flex-col justify-stretch px-4 lg:px-12 xl:px-20 h-full shadow shadow-lg shadow-primary-300">
         <div class="flex-grow h-32 pt-2">
           <.flash_group flash={@flash} />
         </div>
-        <main class="md:w-[36rem] mx-auto">
+        <main class="xl:w-[36rem] mx-auto">
           <.header class="text-center">
             <span class="threadshield-jumbo-header">
               <%= dgettext("accounts", "Welcome back") %>
