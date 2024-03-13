@@ -9,7 +9,7 @@ defmodule ThreatShield.Accounts.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"ThreatShield", "no-replay@mg.inspired.consulting"})
+      |> from({"ThreatShield", "no-reply@mg.inspired.consulting"})
       |> reply_to({"ThreatShield", "threatshield@inspired.consulting"})
       |> subject(subject)
       |> text_body(body)
@@ -83,17 +83,16 @@ defmodule ThreatShield.Accounts.UserNotifier do
   Deliver organisation invites.
   """
   def deliver_invite(%Invite{} = invite) do
-    deliver(invite.email, "Organisation invite", """
-
-    ==============================
-
+    deliver(invite.email, "You have been invited to an organisation in ThreatShield", """
     Hi,
 
     You have been invited to join #{invite.organisation.name} on ThreatShield 🙂 Follow the link below to accept the invite:
 
     #{ThreatShield.Members.Invite.generate_url(invite)}
 
-    ==============================
+    Best regards,
+    Your ThreatShield team
+    https://threatshield.eu
     """)
   end
 end
