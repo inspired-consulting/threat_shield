@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.INFO)
 CONFIG = {
     "threatshield-prod": {
         "host-name": "app.threatshield.eu",
-        "mailgun-domain": "mg.inspired.jetzt"
+        "mailgun-domain": "mg.inspired.consulting"
     }
 }
 

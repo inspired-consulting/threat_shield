@@ -9,7 +9,8 @@ defmodule ThreatShield.Accounts.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"ThreatShield", "threatshield@inspired.consulting"})
+      |> from({"ThreatShield", "no-replay@mg.inspired.consulting"})
+      |> reply_to({"ThreatShield", "threatshield@inspired.consulting"})
       |> subject(subject)
       |> text_body(body)
 
