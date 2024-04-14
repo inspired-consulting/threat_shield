@@ -1,4 +1,4 @@
-defmodule ThreatShield.Organisations.Organisation do
+defmodule ThreatShield.Accounts.Organisation do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -32,10 +32,12 @@ defmodule ThreatShield.Organisations.Organisation do
     field :name, :string
     field :location, :string
     field :attributes, :map
+    field :ai_request_quota, :integer, default: 100
+    field :quota_period, Ecto.Enum, values: [:day, :month], default: :month
 
     many_to_many :users, ThreatShield.Accounts.User, join_through: "memberships"
 
-    has_many :memberships, ThreatShield.Organisations.Membership
+    has_many :memberships, ThreatShield.Accounts.Membership
     has_many :systems, ThreatShield.Systems.System
     has_many :threats, ThreatShield.Threats.Threat
     has_many :assets, ThreatShield.Assets.Asset

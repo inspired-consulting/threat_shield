@@ -3,7 +3,7 @@ defmodule ThreatShield.Assets.Asset do
   import Ecto.Changeset
 
   alias ThreatShield.Systems.System
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
 
   schema "assets" do
     field :name, :string

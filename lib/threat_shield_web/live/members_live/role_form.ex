@@ -1,5 +1,5 @@
 defmodule ThreatShieldWeb.MembersLive.RoleForm do
-  alias ThreatShield.Organisations.Membership
+  alias ThreatShield.Accounts.Membership
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.Members

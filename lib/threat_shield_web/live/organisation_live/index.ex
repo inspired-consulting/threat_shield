@@ -2,10 +2,10 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Organisations
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Const.Locations
 
-  import ThreatShield.Organisations.Organisation, only: [attributes: 0]
+  import ThreatShield.Accounts.Organisation, only: [attributes: 0]
 
   @impl true
   def mount(_params, _session, socket) do

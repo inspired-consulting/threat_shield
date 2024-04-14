@@ -6,7 +6,7 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Risks.Risk
 
-  import ThreatShield.Organisations.Organisation,
+  import ThreatShield.Accounts.Organisation,
     only: [list_system_options: 1, list_asset_options: 1]
 
   import ThreatShieldWeb.ScopeUrlBinding

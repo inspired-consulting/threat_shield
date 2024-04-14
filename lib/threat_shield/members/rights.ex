@@ -1,5 +1,5 @@
 defmodule ThreatShield.Members.Rights do
-  alias ThreatShield.Organisations.Membership
+  alias ThreatShield.Accounts.Membership
 
   @rights %{
     :invite_new_members => [:owner],

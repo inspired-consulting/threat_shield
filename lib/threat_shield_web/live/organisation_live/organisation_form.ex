@@ -4,7 +4,7 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationForm do
   import Phoenix.LiveView
 
   alias ThreatShield.Organisations
-  import ThreatShield.Organisations.Organisation, only: [attributes: 0]
+  import ThreatShield.Accounts.Organisation, only: [attributes: 0]
 
   @impl true
   def render(assigns) do

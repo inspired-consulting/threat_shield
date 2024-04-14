@@ -8,7 +8,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   alias ThreatShield.Threats
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Assets.Asset
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Systems.System
 
   import ThreatShieldWeb.Labels

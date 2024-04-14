@@ -4,14 +4,14 @@ defmodule ThreatShield.Accounts.User do
 
   schema "users" do
     field :email, :string
-    # field :first_name, :string
-    # field :last_name, :string
+    field :first_name, :string
+    field :last_name, :string
+    field(:global_roles, {:array, :string}, default: ["reader"])
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
 
-    many_to_many :organisations, ThreatShield.Organisations.Organisation,
-      join_through: "memberships"
+    many_to_many :organisations, ThreatShield.Accounts.Organisation, join_through: "memberships"
 
     timestamps()
   end

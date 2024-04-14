@@ -1,5 +1,5 @@
 defmodule ThreatShield.Members.Invite do
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -9,7 +9,7 @@ defmodule ThreatShield.Members.Invite do
     field :token, :string
     field :email, :string
 
-    belongs_to :organisation, ThreatShield.Organisations.Organisation
+    belongs_to :organisation, ThreatShield.Accounts.Organisation
 
     timestamps()
   end

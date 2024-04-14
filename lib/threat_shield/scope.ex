@@ -3,7 +3,7 @@ defmodule ThreatShield.Scope do
   Defined a scope for domain objects
   """
   alias ThreatShield.Accounts.User
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Systems.System
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Threats.Threat

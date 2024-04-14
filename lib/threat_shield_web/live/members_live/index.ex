@@ -3,7 +3,7 @@ defmodule ThreatShieldWeb.MembersLive.Index do
   LiveView for the members index page.
   """
   alias ThreatShield.Accounts.UserNotifier
-  alias ThreatShield.Organisations.Membership
+  alias ThreatShield.Accounts.Membership
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Members

@@ -2,7 +2,7 @@ defmodule ThreatShield.Threats.Threat do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Systems.System
   alias ThreatShield.Assets.Asset
 

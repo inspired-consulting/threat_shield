@@ -10,7 +10,7 @@ defmodule ThreatShield.Assets do
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Accounts.User
   alias ThreatShield.Systems.System
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
 
   def get_organisation!(%User{id: user_id}, org_id) do
     Organisation.get(org_id)

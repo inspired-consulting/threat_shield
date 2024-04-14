@@ -6,6 +6,7 @@ defmodule ThreatShieldWeb.UserAuth do
 
   alias Phoenix.LiveView.Socket
   alias ThreatShield.Accounts
+  alias ThreatShield.Accounts.RBAC
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -173,6 +174,23 @@ defmodule ThreatShieldWeb.UserAuth do
     end
   end
 
+  def on_mount(:ensure_platform_admin, _params, session, socket) do
+    socket = mount_current_user(socket, session)
+    current_user = socket.assigns.current_user
+    current_org = socket.assigns.current_org
+
+    if RBAC.has_permission(current_user, current_org, :administer_platform) do
+      {:cont, socket}
+    else
+      socket =
+        socket
+        |> flash("You are not allowed to access this page.")
+        |> Phoenix.LiveView.redirect(to: ~p"/")
+
+      {:halt, socket}
+    end
+  end
+
   defp mount_current_user(socket, session) do
     Phoenix.Component.assign_new(socket, :current_user, fn ->
       if user_token = session["user_token"] do
@@ -227,18 +245,26 @@ defmodule ThreatShieldWeb.UserAuth do
   defp signed_in_path(_conn), do: ~p"/organisations"
 
   defp unauthenticated_flash(%Socket{} = socket) do
+    flash(socket, "You must log in to access this page.")
+  end
+
+  defp unauthenticated_flash(%Plug.Conn{} = conn) do
+    flash(conn, "You must log in to access this page.")
+  end
+
+  defp flash(%Socket{} = socket, message) do
     if is_nil(socket.router) or unauth_flash_needed(socket.router.assigns[:path_info]) do
       socket
-      |> Phoenix.LiveView.put_flash(:error, "You must log in to access this page.")
+      |> Phoenix.LiveView.put_flash(:error, message)
     else
       socket
     end
   end
 
-  defp unauthenticated_flash(%Plug.Conn{} = conn) do
+  defp flash(%Plug.Conn{} = conn, message) do
     if unauth_flash_needed(conn.request_path) do
       conn
-      |> put_flash(:error, "You must log in to access this page.")
+      |> put_flash(:error, message)
     else
       conn
     end

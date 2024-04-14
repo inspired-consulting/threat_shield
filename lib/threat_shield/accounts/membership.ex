@@ -1,4 +1,4 @@
-defmodule ThreatShield.Organisations.Membership do
+defmodule ThreatShield.Accounts.Membership do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -8,7 +8,7 @@ defmodule ThreatShield.Organisations.Membership do
     field :role, Ecto.Enum, values: [:owner, :editor, :viewer]
 
     belongs_to :user, ThreatShield.Accounts.User
-    belongs_to :organisation, ThreatShield.Organisations.Organisation
+    belongs_to :organisation, ThreatShield.Accounts.Organisation
   end
 
   @doc false

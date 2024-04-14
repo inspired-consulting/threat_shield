@@ -2,7 +2,7 @@ defmodule ThreatShieldWeb.ExportController do
   use ThreatShieldWeb, :controller
 
   alias ThreatShield.Organisations
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Exporters.ExcelExporter
 
   def export_to_excel(conn, %{"org_id" => org_id} = _params) do

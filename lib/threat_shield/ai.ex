@@ -1,6 +1,6 @@
 defmodule ThreatShield.AI do
   alias ThreatShield.DynamicAttribute
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Risks.Risk

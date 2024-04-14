@@ -160,6 +160,12 @@ defmodule ThreatShieldWeb.Router do
       live "/organisations/:org_id/assets/:asset_id/threats/:threat_id", ThreatLive.Show, :show
       live "/organisations/:org_id/assets/:asset_id/show/edit", AssetLive.Show, :edit
     end
+
+    live_session :platform_admin,
+      on_mount: [{ThreatShieldWeb.UserAuth, :ensure_authenticated}],
+      layout: {ThreatShieldWeb.Layouts, :admin} do
+      live "/platform-administration/organisations", AdminLive.OrganisationsManagement, :index
+    end
   end
 
   scope "/", ThreatShieldWeb do

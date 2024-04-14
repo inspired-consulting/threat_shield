@@ -4,13 +4,13 @@ defmodule ThreatShield.Members do
   """
 
   import Ecto.Query, warn: false
-  alias ThreatShield.Organisations.Membership
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Membership
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Repo
 
   alias ThreatShield.Members.Invite
   alias ThreatShield.Accounts.User
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
 
   import ThreatShieldWeb.Helpers, only: [generate_token: 0]
 

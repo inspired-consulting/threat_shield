@@ -6,7 +6,7 @@ defmodule ThreatShieldWeb.AssetLive.Show do
 
   import ThreatShieldWeb.ScopeUrlBinding
 
-  import ThreatShield.Organisations.Organisation,
+  import ThreatShield.Accounts.Organisation,
     only: [list_system_options: 1, list_asset_options: 1]
 
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, get_path_prefix: 1]

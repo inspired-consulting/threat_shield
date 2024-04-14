@@ -4,14 +4,14 @@ defmodule ThreatShield.Organisations do
   """
 
   import Ecto.Query, warn: false
+  alias ThreatShield.Accounts.RBAC
   alias ThreatShield.Repo
 
-  alias ThreatShield.Organisations.Organisation
-  alias ThreatShield.Organisations.Membership
-  alias ThreatShield.Accounts.User
+  alias ThreatShield.Accounts.{User, Organisation, Membership, RBAC}
 
+  @spec list_organisations(any()) :: any()
   @doc """
-  Returns the list of organisations.
+  Returns the list of organisations, where the user is a member of.
 
   ## Examples
 
@@ -28,7 +28,16 @@ defmodule ThreatShield.Organisations do
     full_user.organisations
   end
 
-  def list_organisations(_), do: []
+  @doc """
+  Returns all organisaitions for given admin.
+  """
+  def list_all_organisations(%User{} = admin) do
+    with :ok <- RBAC.verify_permission(admin, :administer_platform) do
+      Repo.all(Organisation)
+    else
+      _ -> {:error, :not_allowed}
+    end
+  end
 
   def get_organisation!(%User{id: user_id}, org_id) do
     Organisation.get(org_id)

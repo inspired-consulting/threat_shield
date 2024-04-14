@@ -663,16 +663,25 @@ defmodule ThreatShieldWeb.CoreComponents do
   attr :organisation, :any, required: false
   attr :current_user, :any, required: false
   attr :entity_page, :any, required: false
+  attr :background, :string, default: "bg-primary-900"
 
   def navbar(assigns) do
     ~H"""
-    <div class="bg-primary-900 flex justify-between h-16">
+    <div class={["flex justify-between h-16", @background]}>
       <div class="justify-start flex items-center gap-9 px-10">
         <a href="/" class="">
           <ThreatShieldWeb.Icons.app_icon class="h-8 w-8 text-primary-100" />
         </a>
         <%= if assigns[:organisation] do %>
           <.entity_links organisation={@organisation} entity_page={assigns[:entity_page]} />
+        <% end %>
+        <%= if ThreatShield.Accounts.RBAC.has_permission(assigns[:current_user], :administer_platform) do %>
+          <.link
+            href={~p"/platform-administration/organisations"}
+            class="leading-6 text-white hover:underline"
+          >
+            <%= dgettext("admin", "Admin") %>
+          </.link>
         <% end %>
       </div>
       <nav class="text-white flex items-center px-10">

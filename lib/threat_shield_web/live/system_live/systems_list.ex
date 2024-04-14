@@ -1,10 +1,10 @@
 defmodule ThreatShieldWeb.SystemLive.SystemsList do
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.Scope
   alias ThreatShield.Systems.System
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
 
   require Logger
 

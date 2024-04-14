@@ -4,7 +4,7 @@ defmodule ThreatShield.Systems do
   """
 
   import Ecto.Query, warn: false
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Repo
 
   alias ThreatShield.Accounts.User

@@ -11,7 +11,7 @@ defmodule ThreatShield.Threats do
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Accounts.User
   alias ThreatShield.Organisations
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Systems.System
   alias ThreatShield.Assets.Asset
 

@@ -1,5 +1,5 @@
 defmodule ThreatShieldWeb.OrganisationLive.Show do
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   use ThreatShieldWeb, :live_view
 
   require Logger
@@ -10,7 +10,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
   alias ThreatShield.Assets
   alias ThreatShield.Threats
 
-  import ThreatShield.Organisations.Organisation,
+  import ThreatShield.Accounts.Organisation,
     only: [attributes: 0]
 
   alias ThreatShield.Scope

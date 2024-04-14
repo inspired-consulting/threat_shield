@@ -1,6 +1,6 @@
 defmodule ThreatShieldWeb.SystemLive.Show do
   require Logger
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Organisations
   alias ThreatShield.Accounts.User
   use ThreatShieldWeb, :live_view

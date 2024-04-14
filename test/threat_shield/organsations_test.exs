@@ -3,7 +3,7 @@ defmodule ThreatShield.OrganisationsTest do
   use ThreatShield.DataCase
 
   alias ThreatShield.Organisations
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.OrganisationsFixtures
   alias ThreatShield.AccountsFixtures
 

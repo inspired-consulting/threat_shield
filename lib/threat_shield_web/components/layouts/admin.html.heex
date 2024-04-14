@@ -1,0 +1,19 @@
+<header>
+  <.navbar current_user={assigns[:current_user]} background="bg-red-600" />
+</header>
+<main class="mb-10">
+  <div :if={assigns[:breadcrumbs]} class="bg-white py-4">
+    <ThreatShieldWeb.Breadcrumbs.breadcrumb breadcrumbs={@breadcrumbs} context={assigns} />
+  </div>
+  <div class="bg-white">
+    <div class="ts-container">
+      <.flash_group flash={@flash} absolute={true} />
+    </div>
+  </div>
+
+  <%= @inner_content %>
+</main>
+<footer class="text-center text-xs text-gray-500 py-5">
+  <p>Admin Panel</p>
+  &copy; 2024 Inspired Consulting GmbH
+</footer>

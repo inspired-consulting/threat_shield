@@ -2,7 +2,7 @@ defmodule ThreatShield.Systems.System do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.DynamicAttribute
 
   @attributes [
@@ -24,7 +24,7 @@ defmodule ThreatShield.Systems.System do
     field :attributes, :map
     field :name, :string
     field :description, :string
-    belongs_to :organisation, ThreatShield.Organisations.Organisation
+    belongs_to :organisation, ThreatShield.Accounts.Organisation
 
     has_many :threats, ThreatShield.Threats.Threat
     has_many :assets, ThreatShield.Assets.Asset

@@ -2,7 +2,7 @@ defmodule ThreatShieldWeb.MitigationLive.Show do
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Mitigations
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
 
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, get_path_prefix: 1]
 

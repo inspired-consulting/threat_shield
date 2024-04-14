@@ -7,7 +7,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
   alias ThreatShield.AI.AiSuggestion
   alias ThreatShield.Assets
 
-  alias ThreatShield.Organisations.Organisation
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Systems.System
 
   require Logger
