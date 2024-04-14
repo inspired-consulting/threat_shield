@@ -34,6 +34,13 @@ config :threat_shield, ThreatShieldWeb.Endpoint,
   live_view: [signing_salt: "TOOUQx8Y"],
   git_version: System.get_env("GIT_VERSION_TAG", "version_not_found")
 
+# Configures Elixir's Logger
+config :logger_json, :backend,
+  format: "$message\n",
+  metadata: :all,
+  json_encoder: Jason,
+  formatter: LoggerJSON.Formatters.GoogleCloudLogger
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails

@@ -57,7 +57,8 @@ defmodule ThreatShield.MixProject do
       {:ex_rated, "~> 2.1"},
       {:timex, "~> 3.7.11"},
       {:number, "~> 1.0.1"},
-      {:elixlsx, "~> 0.5.1"}
+      {:elixlsx, "~> 0.5.1"},
+      {:logger_json, "~> 5.1"}
     ]
   end
 
