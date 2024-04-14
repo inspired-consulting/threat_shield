@@ -32,8 +32,7 @@ defmodule ThreatShield.Accounts.Organisation do
     field :name, :string
     field :location, :string
     field :attributes, :map
-    field :ai_request_quota, :integer, default: 100
-    field :quota_period, Ecto.Enum, values: [:day, :month], default: :month
+    field :quotas, :map, default: %{ai_requests_per_month: 100}
 
     many_to_many :users, ThreatShield.Accounts.User, join_through: "memberships"
 

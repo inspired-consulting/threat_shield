@@ -13,7 +13,7 @@
     <.table id="organisations" rows={@streams.organisations}>
       <:col :let={{_id, organisation}} label="Name"><%= organisation.name %></:col>
       <:col :let={{_id, organisation}} label="Quota">
-        <%= organisation.ai_request_quota %> / <%= organisation.quota_period %>
+        <%= organisation.quotas |> Jason.encode!() %>
       </:col>
       <:col :let={{_id, organisation}} label="Attributes">
         <div class="grid grid-cols-2 gap-x-3">

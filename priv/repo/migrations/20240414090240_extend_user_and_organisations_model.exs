@@ -3,8 +3,7 @@ defmodule ThreatShield.Repo.Migrations.ExtendUserAndOrganisationsModel do
 
   def change do
     alter table(:organisations) do
-      add :ai_request_quota, :integer, default: 100
-      add :quota_period, :string, default: "month"
+      add :quotas, :map, default: %{ai_requests_per_month: 100}
     end
 
     alter table(:users) do
