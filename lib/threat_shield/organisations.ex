@@ -28,6 +28,8 @@ defmodule ThreatShield.Organisations do
     full_user.organisations
   end
 
+  def list_organisations(_), do: []
+
   @doc """
   Returns all organisaitions for given admin.
   """

@@ -23,7 +23,7 @@ defmodule ThreatShield.Accounts.RBAC do
     end
   end
 
-  def has_permission(%User{} = user, permission), do: has_permission(user, nil, permission)
+  def has_permission(user, permission), do: has_permission(user, nil, permission)
 
   def has_permission(%User{} = user, _organisation, permission)
       when is_atom(permission) do
@@ -34,6 +34,8 @@ defmodule ThreatShield.Accounts.RBAC do
       _ -> false
     end
   end
+
+  def has_permission(_user, _org, _permission), do: false
 
   defp has_global_role(%User{} = user, role) when is_binary(role) do
     Enum.member?(user.global_roles, role)
