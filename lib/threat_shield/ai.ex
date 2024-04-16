@@ -7,6 +7,7 @@ defmodule ThreatShield.AI do
   alias ThreatShield.Mitigations.Mitigation
   alias ThreatShield.Systems.System
   alias ThreatShield.Scope
+  alias ThreatShield.Quotas.QuotaManager
 
   require Logger
 
@@ -14,6 +15,8 @@ defmodule ThreatShield.AI do
   # @open_ai_model "gpt-4-turbo-preview"
 
   @threat_info "Threats are any potential event or action that can compromise the security of a system, organisation, or individual. Threats are not the negative outcome, i.e. not the loss, damage, or harm resulting from the exploitation of vulnerabilities by threats."
+
+  @quota_ai_requests_per_month "ai_requests_per_month"
 
   defmodule AiSuggestion do
     @moduledoc """
@@ -26,33 +29,22 @@ defmodule ThreatShield.AI do
     ]
   end
 
-  defp make_chatgpt_request(system_prompt, user_prompt, response_extractor) do
-    messages =
-      [
-        %{
-          role: "system",
-          content: system_prompt
-        },
-        %{
-          role: "user",
-          content: user_prompt
-        }
-      ]
+  # Common runner
 
-    case OpenAI.chat_completion(
-           model: @open_ai_model,
-           messages: messages
-         ) do
-      {:ok, response} ->
-        response_extractor.(response)
+  def run_task(%Scope{organisation: %Organisation{} = org} = scope, fun) do
+    case QuotaManager.check_quota(org, @quota_ai_requests_per_month, 1) do
+      {:ok, :quota_available} ->
+        Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fun)
+        Task.start(fn -> protocol_quota_usage(scope, "AI request") end)
+        {:ok, :task_started}
 
-      {:error, %{"error" => error}} ->
-        {:error, error}
-
-      {:error, :timeout} ->
-        {:error, :timeout}
+      {:error, :quota_exceeded} ->
+        Logger.warning("AI quota exceeded for organisation '#{org.name}'")
+        {:error, :quota_exceeded}
     end
   end
+
+  # Attribute suggestions
 
   def suggest_values(%DynamicAttribute{name: name, description: description}) do
     # {resource_name_plural}": [{"name": _, "description": _}, _ ]}."
@@ -99,7 +91,7 @@ defmodule ThreatShield.AI do
     end
   end
 
-  def suggest_assets_for_organisation(%Organisation{} = organisation) do
+  defp suggest_assets_for_organisation(%Organisation{} = organisation) do
     asset_info = """
       Assets are valuable resources or data, that need to be protected.
     """
@@ -129,7 +121,7 @@ defmodule ThreatShield.AI do
     make_chatgpt_request(system_prompt, user_prompt, &get_assets_from_response/1)
   end
 
-  def suggest_assets_for_system(%System{} = system) do
+  defp suggest_assets_for_system(%System{} = system) do
     asset_info = """
       Assets are valuable resources or data for a particular system, that need to be protected.
     """
@@ -178,7 +170,7 @@ defmodule ThreatShield.AI do
     end
   end
 
-  def suggest_threats_for_organisation(%Organisation{} = organisation) do
+  defp suggest_threats_for_organisation(%Organisation{} = organisation) do
     existing_threats =
       if Enum.empty?(organisation.threats) do
         ""
@@ -204,7 +196,7 @@ defmodule ThreatShield.AI do
     make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
   end
 
-  def suggest_threats_for_system(%System{} = system) do
+  defp suggest_threats_for_system(%System{} = system) do
     existing_threats =
       if Enum.empty?(system.threats) do
         ""
@@ -230,7 +222,7 @@ defmodule ThreatShield.AI do
     make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
   end
 
-  def suggest_threats_for_asset(%Asset{} = asset) do
+  defp suggest_threats_for_asset(%Asset{} = asset) do
     existing_threats =
       if Enum.empty?(asset.threats) do
         ""
@@ -256,7 +248,7 @@ defmodule ThreatShield.AI do
     make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
   end
 
-  def suggest_threats_for_system_and_asset(%System{} = system, %Asset{} = asset) do
+  defp suggest_threats_for_system_and_asset(%System{} = system, %Asset{} = asset) do
     existing_threats =
       if Enum.empty?(asset.threats) do
         ""
@@ -282,7 +274,9 @@ defmodule ThreatShield.AI do
     make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
   end
 
-  def suggest_risks_for_threat(%Threat{} = threat) do
+  # Risks
+
+  def suggest_risks_for_threat(%Scope{} = scope, %Threat{} = threat) do
     risk_info = """
     Risks are the potential negative outcome — loss, damage, or harm resulting from the exploitation of vulnerabilities by threats.
     """
@@ -312,7 +306,7 @@ defmodule ThreatShield.AI do
     make_chatgpt_request(system_prompt, user_prompt, &get_risks_from_response/1)
   end
 
-  def suggest_mitigations_for_risk(%Risk{} = risk) do
+  def suggest_mitigations_for_risk(%Scope{} = scope, %Risk{} = risk) do
     mitigation_info = """
     Mitigations are strategies and measures put in place to mitigate the risks of a particular threat.
     """
@@ -357,6 +351,36 @@ defmodule ThreatShield.AI do
     make_chatgpt_request(system_prompt, user_prompt, &get_mitigations_from_response/1)
   end
 
+  # OpenAI
+
+  defp make_chatgpt_request(system_prompt, user_prompt, response_extractor) do
+    messages =
+      [
+        %{
+          role: "system",
+          content: system_prompt
+        },
+        %{
+          role: "user",
+          content: user_prompt
+        }
+      ]
+
+    case OpenAI.chat_completion(
+           model: @open_ai_model,
+           messages: messages
+         ) do
+      {:ok, response} ->
+        response_extractor.(response)
+
+      {:error, %{"error" => error}} ->
+        {:error, error}
+
+      {:error, :timeout} ->
+        {:error, :timeout}
+    end
+  end
+
   defp get_content_from_reponse(response, root_key) do
     [first_choice | _] = response.choices
     %{"message" => message} = first_choice
@@ -391,5 +415,19 @@ defmodule ThreatShield.AI do
   defp get_mitigations_from_response(response) do
     get_content_from_reponse(response, "mitigations")
     |> Enum.map(fn %{"name" => n, "description" => d} -> %Mitigation{name: n, description: d} end)
+  end
+
+  # Quotas
+
+  defp protocol_quota_usage(%Scope{} = scope, message) do
+    QuotaManager.add_usage_async(
+      scope.organisation,
+      scope.user,
+      @quota_ai_requests_per_month,
+      1.0,
+      message
+    )
+
+    {:ok, :usage_recorded}
   end
 end

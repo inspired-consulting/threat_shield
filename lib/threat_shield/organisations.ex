@@ -9,7 +9,6 @@ defmodule ThreatShield.Organisations do
 
   alias ThreatShield.Accounts.{User, Organisation, Membership, RBAC}
 
-  @spec list_organisations(any()) :: any()
   @doc """
   Returns the list of organisations, where the user is a member of.
 

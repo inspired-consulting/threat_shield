@@ -158,16 +158,24 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   def handle_event("suggest_threats", _params, socket) do
     scope = socket.assigns.scope
 
-    Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fn ->
+    AI.run_task(scope, fn ->
       new_threats =
         AI.suggest_threats(scope)
 
       {:new_ai_suggestion, %AiSuggestion{result: new_threats, type: :threats, requestor: self()}}
     end)
+    |> case do
+      {:ok, _} ->
+        socket
+        |> assign(:show_suggest_dialog, true)
+        |> noreply()
 
-    socket
-    |> assign(:show_suggest_dialog, true)
-    |> noreply()
+      {:error, :quota_exceeded} ->
+        socket
+        |> put_flash(:error, dgettext("common", "Your quota for AI suggestions is exceeded."))
+        |> push_navigate(to: socket.assigns.origin)
+        |> noreply()
+    end
   end
 
   @impl true
