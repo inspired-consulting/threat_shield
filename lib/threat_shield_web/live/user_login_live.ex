@@ -13,9 +13,9 @@ defmodule ThreatShieldWeb.UserLoginLive do
         </div>
         <main class="xl:w-[36rem] mx-auto">
           <.header class="text-center">
-            <span class="threadshield-jumbo-header">
+            <div class="threadshield-header text-7xl">
               <%= dgettext("accounts", "Welcome back") %>
-            </span>
+            </div>
             <:subtitle>
               <span class="text-gray-700">
                 <%= dgettext("accounts", "Don't have an account yet?") %>

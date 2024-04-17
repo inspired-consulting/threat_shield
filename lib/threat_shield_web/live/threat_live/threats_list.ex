@@ -206,12 +206,12 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   # internal
 
   defp load_and_filter_threats(socket, %{threats: threats}) when is_list(threats) do
-    Logger.info("Threats already provided by caller")
+    Logger.debug("Threats already provided by caller")
     socket
   end
 
   defp load_and_filter_threats(socket, _assigns) do
-    Logger.info("Loading threats for scope: #{inspect(socket.assigns.scope)}")
+    # Todo: Implement loading and filtering of threats
     socket
   end
 

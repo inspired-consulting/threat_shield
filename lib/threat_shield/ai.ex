@@ -276,7 +276,7 @@ defmodule ThreatShield.AI do
 
   # Risks
 
-  def suggest_risks_for_threat(%Scope{} = scope, %Threat{} = threat) do
+  def suggest_risks_for_threat(%Scope{} = _scope, %Threat{} = threat) do
     risk_info = """
     Risks are the potential negative outcome — loss, damage, or harm resulting from the exploitation of vulnerabilities by threats.
     """
@@ -306,7 +306,7 @@ defmodule ThreatShield.AI do
     make_chatgpt_request(system_prompt, user_prompt, &get_risks_from_response/1)
   end
 
-  def suggest_mitigations_for_risk(%Scope{} = scope, %Risk{} = risk) do
+  def suggest_mitigations_for_risk(%Scope{} = _scope, %Risk{} = risk) do
     mitigation_info = """
     Mitigations are strategies and measures put in place to mitigate the risks of a particular threat.
     """

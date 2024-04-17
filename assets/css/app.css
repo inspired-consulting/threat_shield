@@ -75,12 +75,11 @@ body {
   );
 }
 
-.threadshield-jumbo-header {
+.threadshield-header {
   color: #000;
   leading-trim: both;
   text-edge: cap;
   font-family: Jockey One;
-  font-size: 88px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;

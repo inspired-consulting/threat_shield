@@ -57,10 +57,14 @@ defmodule ThreatShield.Quotas.QuotaManager do
     Task.async(fn -> add_usage(org, user, quota_type, amount, message) end)
   end
 
-  defp start_time(quota_type) do
+  defp start_time(quota_type) when is_atom(quota_type) do
     case quota_type do
       :ai_requests_per_month -> Timex.subtract(Timex.now(), months: 1)
       _ -> Timex.beginning_of_day(Timex.now())
     end
+  end
+
+  defp start_time(quota_type) when is_binary(quota_type) do
+    start_time(String.to_existing_atom(quota_type))
   end
 end

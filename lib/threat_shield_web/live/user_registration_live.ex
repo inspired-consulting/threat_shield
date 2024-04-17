@@ -13,9 +13,12 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
         </div>
         <main class="xl:w-[36rem] mx-auto">
           <.header class="text-center">
-            <span class="threadshield-jumbo-header">
+            <div class="threadshield-header text-7xl">
               <%= dgettext("accounts", "Join us") %>
-            </span>
+            </div>
+            <div class="threadshield-header text-xl mb-5">
+              <%= dgettext("accounts", "in our beta phase.") %>
+            </div>
             <:subtitle>
               Already registered?
               <.link
