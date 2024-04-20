@@ -60,6 +60,7 @@ defmodule ThreatShieldWeb.Router do
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new
       live "/users/reset_password/:token", UserResetPasswordLive, :edit
+      live "/join/:token", MembersLive.Join, :join
     end
 
     post "/users/log_in", UserSessionController, :create
@@ -72,8 +73,6 @@ defmodule ThreatShieldWeb.Router do
       on_mount: [{ThreatShieldWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-
-      live "/join/:token", MembersLive.Join, :join
 
       live "/organisations", OrganisationLive.Index, :index
       live "/organisations/new", OrganisationLive.Index, :new

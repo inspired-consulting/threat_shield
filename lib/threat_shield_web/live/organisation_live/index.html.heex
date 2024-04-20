@@ -2,10 +2,21 @@
   <div class="px-8 py-4 bg-primary-100 rounded-lg shadow">
     <.header class="mt-6">
       <%= dgettext("organisations", "Your organisations") %>
-      <p class="text-sm leading-6 text-gray-600 font-normal">
+      <p :if={@has_memberships} class="text-sm leading-6 text-gray-600 font-normal">
         <%= dgettext(
           "organisations",
           "This list contains all organisations where you are a member."
+        ) %>
+      </p>
+      <p :if={!@has_memberships} class="text-sm leading-6 text-gray-600 font-normal">
+        <%= dgettext(
+          "organisations",
+          "You are not a member of any organisations yet."
+        ) %>
+        <br />
+        <%= dgettext(
+          "organisations",
+          "Please ask an organisations admin to invite you or create a new organisation to get started."
         ) %>
       </p>
       <:actions>
@@ -16,6 +27,7 @@
     </.header>
 
     <.table
+      :if={@has_memberships}
       id="organisations"
       rows={@streams.organisations}
       row_click={fn {_id, organisation} -> JS.navigate(~p"/organisations/#{organisation}") end}

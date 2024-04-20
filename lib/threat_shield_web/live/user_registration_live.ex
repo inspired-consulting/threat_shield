@@ -1,9 +1,12 @@
 defmodule ThreatShieldWeb.UserRegistrationLive do
   use ThreatShieldWeb, :live_view
 
+  alias ThreatShield.Members
+  alias ThreatShield.Members.Invite
   alias ThreatShield.Accounts
   alias ThreatShield.Accounts.User
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="flex h-full bg-white">
@@ -13,10 +16,10 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
         </div>
         <main class="xl:w-[36rem] mx-auto">
           <.header class="text-center">
-            <div class="threadshield-header text-7xl">
+            <div class="threadshield-header text-4xl md:text-6xl xl:text-8xl">
               <%= dgettext("accounts", "Join us") %>
             </div>
-            <div class="threadshield-header text-xl mb-5">
+            <div class="threadshield-header md:text-2xl mb-5">
               <%= dgettext("accounts", "in our beta phase.") %>
             </div>
             <:subtitle>
@@ -100,22 +103,51 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
     """
   end
 
-  @spec mount(any(), any(), any()) :: {:ok, any(), any()}
+  @impl true
   def mount(_params, _session, socket) do
-    changeset = Accounts.change_user_registration(%User{})
-
     socket
     |> assign(
       trigger_submit: false,
       check_errors: false
     )
-    |> assign_form(changeset)
     |> ok(temporary_assigns: [form: nil], layout: {ThreatShieldWeb.Layouts, :unauthenticated})
   end
 
+  @impl true
+  def handle_params(%{"token" => token}, _url, socket) when is_binary(token) do
+    case Members.get_invite_by_token(token) do
+      %Invite{} = invite ->
+        changeset = Accounts.change_user_registration(%User{email: invite.email})
+
+        socket
+        |> assign(:token, token)
+        |> assign(:invite, invite)
+        |> assign_form(changeset)
+        |> noreply()
+
+      nil ->
+        socket
+        |> clear_flash()
+        |> put_flash(:error, dgettext("accounts", "Invalid invitation token."))
+        |> push_navigate(to: ~p"/users/register")
+        |> noreply()
+    end
+  end
+
+  def handle_params(_params, _url, socket) do
+    changeset = Accounts.change_user_registration(%User{})
+
+    socket
+    |> assign_form(changeset)
+    |> noreply()
+  end
+
+  @impl true
   def handle_event("save", %{"user" => user_params}, socket) do
     case Accounts.register_user(user_params) do
       {:ok, user} ->
+        maybe_join_organisation(user, socket.assigns[:token])
+
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
             user,
@@ -147,6 +179,13 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
     else
       socket
       |> assign(form: form)
+    end
+  end
+
+  defp maybe_join_organisation(%User{} = user, token) do
+    case token do
+      nil -> :ok
+      _ -> Members.join_with_token(user, token)
     end
   end
 end

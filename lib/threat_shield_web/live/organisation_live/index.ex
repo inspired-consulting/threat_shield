@@ -9,23 +9,11 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    locations_options = Locations.list_locations()
-
-    organisations = Organisations.list_organisations(socket.assigns.current_user)
-
     socket
-    |> assign(locations_options: locations_options)
-    |> stream_organisations(organisations)
+    |> stream_organisations()
+    |> assign(locations_options: Locations.list_locations())
     |> assign(:attributes, attributes())
     |> ok()
-  end
-
-  defp stream_organisations(socket, organisations) do
-    stream(
-      socket,
-      :organisations,
-      organisations
-    )
   end
 
   @impl true
@@ -71,6 +59,16 @@ defmodule ThreatShieldWeb.OrganisationLive.Index do
     organisation = Organisations.get_organisation!(user, org_id)
     {:ok, _} = Organisations.delete_organisation(organisation)
 
-    {:noreply, stream_delete(socket, :organisations, organisation)}
+    socket
+    |> stream_delete(:organisations, organisation)
+    |> noreply()
+  end
+
+  defp stream_organisations(socket) do
+    organisations = Organisations.list_organisations(socket.assigns.current_user)
+
+    socket
+    |> assign(:has_memberships, not Enum.empty?(organisations))
+    |> stream(:organisations, organisations)
   end
 end

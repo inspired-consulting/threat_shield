@@ -13,7 +13,7 @@ defmodule ThreatShieldWeb.UserLoginLive do
         </div>
         <main class="xl:w-[36rem] mx-auto">
           <.header class="text-center">
-            <div class="threadshield-header text-7xl">
+            <div class="threadshield-header text-4xl md:text-6xl xl:text-8xl">
               <%= dgettext("accounts", "Welcome back") %>
             </div>
             <:subtitle>
@@ -49,8 +49,8 @@ defmodule ThreatShieldWeb.UserLoginLive do
             </:actions>
           </.simple_form>
         </main>
-        <footer class="flex-grow text-center flex flex-col justify-end text-xs h-32">
-          <div class="p-4 space-x-6">
+        <footer class="flex-grow text-center flex flex-col justify-center md:justify-end text-xs h-32">
+          <div class="py-6 space-x-6">
             <a href="https://threatshield.eu" class="text-gray-500">
               threatshield.eu
             </a>

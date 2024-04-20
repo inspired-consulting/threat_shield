@@ -24,6 +24,11 @@ defmodule ThreatShield.Accounts.Membership do
     from(e in __MODULE__, as: :membership, where: e.id == ^id)
   end
 
+  def for_user(user_id) do
+    from(e in __MODULE__, as: :membership)
+    |> for_user(user_id)
+  end
+
   def for_user(query, user_id) do
     query
     |> join(:inner, [membership: m], assoc(m, :organisation), as: :organisation)

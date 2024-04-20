@@ -31,23 +31,19 @@ defmodule ThreatShield.Members do
   end
 
   def join_with_token(%User{} = user, token) do
-    case Repo.transaction(fn ->
-           invite = get_invite_by_token(token)
+    with %Invite{} = invite <- get_invite_by_token(token),
+         {:ok, :no_member} <- check_membership(user, invite.organisation_id) do
+      Repo.transaction(fn ->
+        membership =
+          %Membership{user: user, organisation: invite.organisation, role: :viewer}
+          |> Repo.insert!()
 
-           if not is_nil(invite) do
-             membership =
-               %Membership{user: user, organisation: invite.organisation, role: :viewer}
-               |> Repo.insert!()
-
-             Repo.delete(invite)
-             {:ok, membership}
-           else
-             {:error, :invalid_token}
-           end
-         end) do
-      {:ok, {:ok, membership}} -> {:ok, membership}
-      {:ok, {:error, err}} -> {:error, err}
-      {:error, err} -> {:error, err}
+        Repo.delete(invite)
+        membership
+      end)
+    else
+      {:ok, :is_member} -> {:error, :already_member}
+      nil -> {:error, :invalid_token}
     end
   end
 
@@ -149,6 +145,18 @@ defmodule ThreatShield.Members do
       {:ok, {:ok, membership}} -> {:ok, membership}
       {:ok, {:error, e}} -> {:error, e}
       {:error, e} -> {:error, e}
+    end
+  end
+
+  defp check_membership(%User{id: user_id}, org_id) do
+    memberships =
+      Membership.for_user(user_id)
+      |> Repo.all()
+
+    if Enum.any?(memberships, fn m -> m.organisation_id == org_id end) do
+      {:ok, :is_member}
+    else
+      {:ok, :no_member}
     end
   end
 end

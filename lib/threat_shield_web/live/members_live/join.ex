@@ -1,14 +1,32 @@
 defmodule ThreatShieldWeb.MembersLive.Join do
-  alias ThreatShield.Members
   use ThreatShieldWeb, :live_view
 
-  @impl true
-  def mount(%{"token" => token}, _session, socket) do
-    {:ok, _} = ExRated.check_rate(socket.assigns.current_user.email <> "_join_org", 10_000, 10)
+  alias ThreatShield.Members
+  alias ThreatShield.Accounts.User
 
-    {:ok,
-     socket
-     |> assign(invite: Members.get_invite_by_token(token))}
+  @impl true
+  def mount(
+        %{"token" => token},
+        _session,
+        %{assigns: %{current_user: %User{} = current_user}} = socket
+      ) do
+    {:ok, _} = ExRated.check_rate(current_user.email <> "_join_org", 10_000, 10)
+
+    socket
+    |> assign(invite: Members.get_invite_by_token(token))
+    |> ok()
+  end
+
+  def mount(
+        %{"token" => token},
+        _session,
+        socket
+      ) do
+    # User not logged in, must sign up first
+    socket
+    |> put_flash(:info, dgettext("accounts", "Please sign up to join this organisation."))
+    |> push_navigate(to: ~p"/users/register?token=#{token}")
+    |> ok()
   end
 
   @impl true
@@ -26,11 +44,25 @@ defmodule ThreatShieldWeb.MembersLive.Join do
     user = socket.assigns.current_user
 
     {:ok, _} = ExRated.check_rate(socket.assigns.current_user.email <> "_join_org", 10_000, 10)
-    {:ok, membership} = Members.join_with_token(user, token)
 
-    {:noreply,
-     push_navigate(socket,
-       to: "/organisations/" <> Integer.to_string(membership.organisation_id)
-     )}
+    case Members.join_with_token(user, token) do
+      {:ok, membership} ->
+        push_navigate(socket,
+          to: ~p"/organisations/" <> Integer.to_string(membership.organisation_id)
+        )
+        |> noreply()
+
+      {:error, :already_member} ->
+        socket
+        |> put_flash(:info, dgettext("accounts", "You are already a member of this organisation"))
+        |> push_navigate(to: ~p"/organisations")
+        |> noreply()
+
+      {:error, :invalid_token} ->
+        socket
+        |> put_flash(:error, dgettext("accounts", "This token is not valid (anymore)."))
+        |> push_navigate(to: "/", clear_flash: true)
+        |> noreply()
+    end
   end
 end
