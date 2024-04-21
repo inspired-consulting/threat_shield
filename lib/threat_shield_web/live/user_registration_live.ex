@@ -9,9 +9,9 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="flex h-full bg-white">
-      <div class="md:w-1/2 md:flex flex-col justify-stretch px-4 md:px-12 xl:px-20 h-full shadow shadow-lg shadow-primary-300">
-        <div class="flex-grow h-32 pt-2">
+    <div class="md:flex md:h-full">
+      <div class="md:w-1/2 md:flex flex-col justify-stretch px-4 md:px-12 xl:px-20 h-full bg-white md:shadow md:shadow-lg shadow-primary-300">
+        <div class="flex-grow h-16 md:h-32 pt-2">
           <.flash_group flash={@flash} />
         </div>
         <main class="xl:w-[36rem] mx-auto">
@@ -85,7 +85,7 @@ defmodule ThreatShieldWeb.UserRegistrationLive do
             </:actions>
           </.simple_form>
         </main>
-        <footer class="flex-grow text-center flex flex-col justify-end text-xs h-32">
+        <footer class="flex-grow text-center justify-center md:justify-end text-xs h-32 bg-white">
           <div class="p-4 space-x-6">
             <a href="https://threatshield.eu" class="text-gray-500">
               threatshield.eu

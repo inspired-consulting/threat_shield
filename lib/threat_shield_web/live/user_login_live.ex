@@ -3,17 +3,17 @@ defmodule ThreatShieldWeb.UserLoginLive do
 
   def render(assigns) do
     ~H"""
-    <div class="md:flex h-full bg-white">
+    <div class="md:flex md:h-full bg-white">
       <div class="hidden md:block md:w-1/2">
         <img src={~p"/images/shiba-hero1.png"} alt="" class="w-full h-full object-cover" />
       </div>
-      <div class="md:w-1/2 flex flex-col justify-stretch px-4 lg:px-12 xl:px-20 h-full shadow shadow-lg shadow-primary-300">
+      <div class="md:w-1/2 flex flex-col justify-stretch px-4 lg:px-12 xl:px-20 h-full md:shadow md:shadow-lg shadow-primary-300">
         <div class="flex-grow h-32 pt-2">
           <.flash_group flash={@flash} />
         </div>
-        <main class="xl:w-[36rem] mx-auto">
+        <main class="xxl:w-[36rem] mx-auto">
           <.header class="text-center">
-            <div class="threadshield-header text-4xl md:text-6xl xl:text-8xl">
+            <div class="threadshield-header text-4xl md:text-6xl 2xl:text-8xl">
               <%= dgettext("accounts", "Welcome back") %>
             </div>
             <:subtitle>
