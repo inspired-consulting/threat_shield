@@ -7,16 +7,31 @@ defmodule ThreatShield.Systems.System do
 
   @attributes [
     %DynamicAttribute{
-      name: "Database",
-      description: "Examples of databases are Postgres, MySQL, Neo4j."
+      name: "Application type",
+      description:
+        "Examples of application types are online-shops, information systems, web applications, etc."
+    },
+    %DynamicAttribute{
+      name: "Audience",
+      description: "Examples of audiences are customers, employees, partners, etc."
     },
     %DynamicAttribute{
       name: "Application Framework",
       description: "Examples of application frameworks are Django, Ruby on Rails, Flutter."
     },
     %DynamicAttribute{
-      name: "Authentication Framework",
-      description: "Examples of authentication frameworks are Passport.js, Okta, Keycloak."
+      name: "Database",
+      description: "Examples of databases are Postgres, MySQL, Neo4j."
+    },
+    %DynamicAttribute{
+      name: "Security frameworks",
+      description:
+        "Examples of authentication frameworks are Passport.js, Okta, Keycloak, Spring Security."
+    },
+    %DynamicAttribute{
+      name: "Infrastructure",
+      description:
+        "Examples of infrastructure are AWS, Azure, GCP, Kubernetes, On-Premise, Windows Server, etc."
     }
   ]
 

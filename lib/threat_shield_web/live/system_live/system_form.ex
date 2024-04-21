@@ -27,6 +27,12 @@ defmodule ThreatShieldWeb.SystemLive.SystemForm do
       >
         <.input field={@form[:name]} type="text" label="Name" />
         <.input field={@form[:description]} type="text" label="Description" />
+        <em>
+          <%= dgettext(
+            "common",
+            "The more details you provide about context and purpose of this system, the better the suggestions can be."
+          ) %>
+        </em>
         <%= for attribute <- @attributes do %>
           <.input
             name={attribute.name}
