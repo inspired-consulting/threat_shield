@@ -59,7 +59,7 @@ defmodule ThreatShield.Quotas.QuotaManager do
 
   defp start_time(quota_type) when is_atom(quota_type) do
     case quota_type do
-      :ai_requests_per_month -> Timex.subtract(Timex.now(), months: 1)
+      :ai_requests_per_month -> Timex.shift(Timex.now(), months: -1)
       _ -> Timex.beginning_of_day(Timex.now())
     end
   end
