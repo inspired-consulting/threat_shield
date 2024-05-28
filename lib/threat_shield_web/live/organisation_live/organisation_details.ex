@@ -1,4 +1,4 @@
-defmodule ThreatShieldWeb.OrganisationLive.Show do
+defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
   alias ThreatShield.Accounts.Organisation
   use ThreatShieldWeb, :live_view
 
@@ -30,7 +30,6 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
     socket
     |> assign(:attributes, attributes())
     |> assign(:organisation, organisation)
-    |> assign(:entity_page, :organisation)
     |> assign(:membership, membership)
     |> assign(locations_options: Locations.list_locations())
     |> assign(:attributes, Organisation.attributes())
@@ -43,10 +42,10 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
 
   @impl true
   def handle_params(params, url, socket) do
-    {:noreply,
-     socket
-     |> add_breadcrumbs(url)
-     |> apply_action(socket.assigns.live_action, params)}
+    socket
+    |> add_breadcrumbs(url)
+    |> apply_action(socket.assigns.live_action, params)
+    |> noreply()
   end
 
   defp apply_action(socket, :show, _params) do
@@ -60,7 +59,7 @@ defmodule ThreatShieldWeb.OrganisationLive.Show do
 
   @impl true
   def handle_info(
-        {ThreatShieldWeb.OrganisationLive.AssetForm, {:saved, organisation}},
+        {ThreatShieldWeb.OrganisationLive.OrganisationForm, {:saved, organisation}},
         socket
       ) do
     user = socket.assigns.current_user

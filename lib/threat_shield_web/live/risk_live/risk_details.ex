@@ -1,4 +1,4 @@
-defmodule ThreatShieldWeb.RiskLive.Show do
+defmodule ThreatShieldWeb.RiskLive.RiskDetails do
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Threats.Threat

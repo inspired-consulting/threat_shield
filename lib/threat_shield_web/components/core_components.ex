@@ -621,48 +621,8 @@ defmodule ThreatShieldWeb.CoreComponents do
     """
   end
 
-  defp entity_link(assigns) do
-    ~H"""
-    <%= if assigns[:current_page] == @linked_page do %>
-      <span class="text-white bg-gray-900 px-3 py-2 rounded-md">
-        <%= @name %>
-      </span>
-    <% else %>
-      <a href={@link} class="text-secondary-400 px-3 py-2">
-        <%= @name %>
-      </a>
-    <% end %>
-    """
-  end
-
-  defp entity_links(assigns) do
-    ~H"""
-    <nav class="flex gap-5">
-      <.entity_link
-        link={~p"/organisations/#{@organisation.id}"}
-        name={dgettext("organisation", "Organisation")}
-        current_page={assigns[:entity_page]}
-        linked_page={:organisation}
-      />
-      <.entity_link
-        link={~p"/organisations/#{@organisation.id}/#systems"}
-        name={dgettext("systems", "Systems")}
-        current_page={assigns[:entity_page]}
-        linked_page={:systems}
-      />
-      <.entity_link
-        link={~p"/organisations/#{@organisation.id}/#assets"}
-        name={dgettext("assets", "Assets")}
-        current_page={assigns[:entity_page]}
-        linked_page={:assets}
-      />
-    </nav>
-    """
-  end
-
   attr :organisation, :any, required: false
   attr :current_user, :any, required: false
-  attr :entity_page, :any, required: false
   attr :background, :string, default: "bg-primary-900"
 
   def navbar(assigns) do
@@ -673,7 +633,18 @@ defmodule ThreatShieldWeb.CoreComponents do
           <ThreatShieldWeb.Icons.app_icon class="h-8 w-8 text-primary-100" />
         </a>
         <%= if assigns[:organisation] do %>
-          <.entity_links organisation={@organisation} entity_page={assigns[:entity_page]} />
+          <.link
+            href={~p"/organisations/#{@organisation.id}"}
+            class="leading-6 text-white hover:underline"
+          >
+            <%= dgettext("common", "Threat model") %>
+          </.link>
+          <.link
+            href={~p"/organisations/#{@organisation.id}/risk-board"}
+            class="leading-6 text-white hover:underline"
+          >
+            <%= dgettext("common", "Risk board") %>
+          </.link>
         <% end %>
         <%= if ThreatShield.Accounts.RBAC.has_permission(assigns[:current_user], :administer_platform) do %>
           <.link

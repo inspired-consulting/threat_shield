@@ -76,11 +76,13 @@ defmodule ThreatShieldWeb.Router do
 
       live "/organisations", OrganisationLive.Index, :index
       live "/organisations/new", OrganisationLive.Index, :new
-      live "/organisations/:org_id", OrganisationLive.Show, :show
-      live "/organisations/:org_id/edit", OrganisationLive.Show, :edit_organisation
+      live "/organisations/:org_id", OrganisationLive.OrganisationDetails, :show
+      live "/organisations/:org_id/edit", OrganisationLive.OrganisationDetails, :edit_organisation
 
       live "/organisations/:org_id/members", MembersLive.Index, :index
       live "/organisations/:org_id/members/new", MembersLive.Index, :new_invite
+
+      live "/organisations/:org_id/risk-board", RiskLive.RiskBoard, :show
 
       live "/organisations/:org_id/systems/:sys_id", SystemLive.Show, :show
       live "/organisations/:org_id/systems/:sys_id/edit", SystemLive.Show, :edit_system
@@ -118,25 +120,25 @@ defmodule ThreatShieldWeb.Router do
       live "/organisations/:org_id/threats/:threat_id/risks/new", ThreatLive.Show, :new_risk
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/edit",
-           RiskLive.Show,
+           RiskLive.RiskDetails,
            :edit_risk
 
       live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id",
-           RiskLive.Show,
+           RiskLive.RiskDetails,
            :show
 
       live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id/edit",
-           RiskLive.Show,
+           RiskLive.RiskDetails,
            :edit_risk
 
-      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.Show, :show
+      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.RiskDetails, :show
 
       live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id/mitigations/new",
-           RiskLive.Show,
+           RiskLive.RiskDetails,
            :new_mitigation
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/new",
-           RiskLive.Show,
+           RiskLive.RiskDetails,
            :new_mitigation
 
       live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id",

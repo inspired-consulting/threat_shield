@@ -2,12 +2,12 @@ defmodule ThreatShieldWeb.MembersLive.Index do
   @moduledoc """
   LiveView for the members index page.
   """
-  alias ThreatShield.Accounts.UserNotifier
-  alias ThreatShield.Accounts.Membership
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Members
   alias ThreatShield.Members.Invite
+  alias ThreatShield.Accounts.UserNotifier
+  alias ThreatShield.Accounts.Membership
 
   import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, format_datetime: 1]
   import ThreatShieldWeb.Labels
