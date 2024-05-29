@@ -621,6 +621,25 @@ defmodule ThreatShieldWeb.CoreComponents do
     """
   end
 
+  attr :label, :string, required: true
+  attr :name, :atom, required: true
+  attr :active, :boolean, default: false
+
+  def tab_button(assigns) do
+    ~H"""
+    <button
+      phx-click="switch_tab"
+      phx-value-tab={@name}
+      class={[
+        "text-center py-2 bg-white cursor-pointer px-4 hover:bg-primary-100",
+        @active && "border-b-2 border-primary-300"
+      ]}
+    >
+      <%= @label %>
+    </button>
+    """
+  end
+
   attr :organisation, :any, required: false
   attr :current_user, :any, required: false
   attr :background, :string, default: "bg-primary-900"

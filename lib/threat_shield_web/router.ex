@@ -84,18 +84,30 @@ defmodule ThreatShieldWeb.Router do
 
       live "/organisations/:org_id/risk-board", RiskLive.RiskBoard, :show
 
-      live "/organisations/:org_id/systems/:sys_id", SystemLive.Show, :show
-      live "/organisations/:org_id/systems/:sys_id/edit", SystemLive.Show, :edit_system
-      live "/organisations/:org_id/systems/:sys_id/show/edit", SystemLive.Show, :edit
+      # Systems
+
+      live "/organisations/:org_id/systems/:sys_id", SystemLive.SystemDetails, :show
+      live "/organisations/:org_id/systems/:sys_id/edit", SystemLive.SystemDetails, :edit_system
+      live "/organisations/:org_id/systems/:sys_id/show/edit", SystemLive.SystemDetails, :edit
+
+      # Assets
+
       live "/organisations/:org_id/systems/:sys_id/assets/:asset_id", AssetLive.Show, :show
+
+      live "/organisations/:org_id/systems/:sys_id/assets/:asset_id/show/edit",
+           AssetLive.Show,
+           :edit
+
+      live "/organisations/:org_id/assets/:asset_id", AssetLive.Show, :show
+      live "/organisations/:org_id/assets/:asset_id/show/edit", AssetLive.Show, :edit
+
+      # Threats
 
       live "/organisations/:org_id/systems/:sys_id/assets/:asset_id/threats/:threat_id",
            ThreatLive.Show,
            :show
 
-      live "/organisations/:org_id/systems/:sys_id/assets/:asset_id/show/edit",
-           AssetLive.Show,
-           :edit
+      live "/organisations/:org_id/assets/:asset_id/threats/:threat_id", ThreatLive.Show, :show
 
       live "/organisations/:org_id/systems/:sys_id/threats/:threat_id", ThreatLive.Show, :show
 
@@ -116,6 +128,8 @@ defmodule ThreatShieldWeb.Router do
       live "/organisations/:org_id/threats/:threat_id/show/edit",
            ThreatLive.Show,
            :edit
+
+      # Risks
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.RiskDetails, :show
 
@@ -141,6 +155,8 @@ defmodule ThreatShieldWeb.Router do
            RiskLive.RiskDetails,
            :new_mitigation
 
+      # Mitigations
+
       live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id",
            MitigationLive.Show,
            :show
@@ -156,10 +172,6 @@ defmodule ThreatShieldWeb.Router do
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id/edit",
            MitigationLive.Show,
            :edit_mitigation
-
-      live "/organisations/:org_id/assets/:asset_id", AssetLive.Show, :show
-      live "/organisations/:org_id/assets/:asset_id/threats/:threat_id", ThreatLive.Show, :show
-      live "/organisations/:org_id/assets/:asset_id/show/edit", AssetLive.Show, :edit
     end
 
     live_session :platform_admin,

@@ -1,4 +1,4 @@
-defmodule ThreatShieldWeb.SystemLive.Show do
+defmodule ThreatShieldWeb.SystemLive.SystemDetails do
   require Logger
   alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Organisations
@@ -17,6 +17,7 @@ defmodule ThreatShieldWeb.SystemLive.Show do
     %Organisation{} = organisation = Organisations.get_organisation!(user, system.organisation.id)
 
     socket
+    |> assign(:current_tab, :assets)
     |> assign(:system, system)
     |> assign(:organisation, organisation)
     |> assign(:membership, Organisation.get_membership(organisation, user))
@@ -28,10 +29,10 @@ defmodule ThreatShieldWeb.SystemLive.Show do
 
   @impl true
   def handle_params(params, url, socket) do
-    {:noreply,
-     socket
-     |> add_breadcrumbs(url)
-     |> apply_action(socket.assigns.live_action, params)}
+    socket
+    |> add_breadcrumbs(url)
+    |> apply_action(socket.assigns.live_action, params)
+    |> noreply()
   end
 
   defp apply_action(socket, :show, _params) do
@@ -103,5 +104,12 @@ defmodule ThreatShieldWeb.SystemLive.Show do
      push_navigate(socket,
        to: "/organisations/#{socket.assigns.organisation.id}"
      )}
+  end
+
+  @impl true
+  def handle_event("switch_tab", %{"tab" => tab}, socket) do
+    socket
+    |> assign(current_tab: String.to_existing_atom(tab))
+    |> noreply()
   end
 end

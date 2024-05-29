@@ -28,6 +28,7 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
     asset_count = Assets.count_all_assets()
 
     socket
+    |> assign(:current_tab, :systems)
     |> assign(:attributes, attributes())
     |> assign(:organisation, organisation)
     |> assign(:membership, membership)
@@ -122,9 +123,15 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
 
     {1, [_org | _]} = Organisations.delete_org_by_id!(current_user, id)
 
-    {:noreply,
-     push_navigate(socket,
-       to: ~p"/organisations"
-     )}
+    socket
+    |> push_navigate(to: ~p"/organisations")
+    |> noreply()
+  end
+
+  @impl true
+  def handle_event("switch_tab", %{"tab" => tab}, socket) do
+    socket
+    |> assign(current_tab: String.to_existing_atom(tab))
+    |> noreply()
   end
 end

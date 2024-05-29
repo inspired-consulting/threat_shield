@@ -1,4 +1,4 @@
-<section class="w-full bg-white pb-6 shadow-primary-200 shadow-sm">
+<section class="w-full bg-white shadow-primary-200 shadow-sm">
   <div class="ts-container flex justify-between">
     <div class="h-20 pb-5">
       <.h1>
@@ -65,10 +65,28 @@
       <.input_attribute attributes={@organisation.attributes}></.input_attribute>
     </div>
   </div>
+  <div class="tabs ts-container mt-6 flex gap-x-2">
+    <.tab_button
+      label={dgettext("common", "Systems")}
+      name={:systems}
+      active={@current_tab == :systems}
+    />
+    <.tab_button
+      label={dgettext("common", "Assets")}
+      name={:assets}
+      active={@current_tab == :assets}
+    />
+    <.tab_button
+      label={dgettext("common", "Threats")}
+      name={:threats}
+      active={@current_tab == :threats}
+    />
+  </div>
 </section>
 
 <section class="ts-container mt-8">
   <.live_component
+    :if={@current_tab == :systems}
     module={ThreatShieldWeb.SystemLive.SystemsList}
     id={"systems_for_org_#{@organisation.id}"}
     scope={@scope}
@@ -78,6 +96,7 @@
   />
 
   <.live_component
+    :if={@current_tab == :assets}
     module={ThreatShieldWeb.AssetLive.AssetsList}
     id={"assets_for_org_#{@organisation.id}"}
     scope={@scope}
@@ -87,6 +106,7 @@
   />
 
   <.live_component
+    :if={@current_tab == :threats}
     module={ThreatShieldWeb.ThreatLive.ThreatsList}
     id={"threats_for_org_#{@organisation.id}"}
     scope={@scope}
