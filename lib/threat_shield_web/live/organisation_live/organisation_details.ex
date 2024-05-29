@@ -24,7 +24,7 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
     organisation = Organisations.get_organisation!(user, org_id)
     membership = Organisation.get_membership(organisation, user)
 
-    threat_count = Threats.count_all_threats()
+    threat_count = Threats.count_all_threats(organisation)
     asset_count = Assets.count_all_assets()
 
     socket
@@ -124,7 +124,7 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
 
     {:noreply,
      push_navigate(socket,
-       to: "/organisations"
+       to: ~p"/organisations"
      )}
   end
 end

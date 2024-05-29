@@ -1,7 +1,15 @@
 defmodule ThreatShieldWeb.Helpers do
-  use Timex
+  use Phoenix.VerifiedRoutes,
+    endpoint: ThreatShieldWeb.Endpoint,
+    router: ThreatShieldWeb.Router
+
+  alias ThreatShield.Accounts.Organisation
+
   import Phoenix.Component
   alias ThreatShieldWeb.Endpoint
+
+  alias ThreatShield.Accounts.Organisation
+  alias ThreatShield.Risks.Risk
 
   @moduledoc """
   Helpers are functions that can be used in your contexts.
@@ -65,4 +73,10 @@ defmodule ThreatShieldWeb.Helpers do
 
   def format_percentage(nil), do: "-"
   def format_percentage(number), do: number
+
+  # URLs
+
+  def link_to(%Risk{id: risk_id, threat_id: threat_id}, %Organisation{id: org_id}) do
+    ~p"/organisations/#{org_id}/threats/#{threat_id}/risks/#{risk_id}"
+  end
 end

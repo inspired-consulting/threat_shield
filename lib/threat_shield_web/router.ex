@@ -117,6 +117,8 @@ defmodule ThreatShieldWeb.Router do
            ThreatLive.Show,
            :edit
 
+      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.RiskDetails, :show
+
       live "/organisations/:org_id/threats/:threat_id/risks/new", ThreatLive.Show, :new_risk
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/edit",
@@ -130,8 +132,6 @@ defmodule ThreatShieldWeb.Router do
       live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id/edit",
            RiskLive.RiskDetails,
            :edit_risk
-
-      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.RiskDetails, :show
 
       live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id/mitigations/new",
            RiskLive.RiskDetails,

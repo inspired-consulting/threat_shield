@@ -21,8 +21,9 @@ defmodule ThreatShield.Threats do
     |> Repo.preload(:systems)
   end
 
-  def count_all_threats() do
-    Threat
+  def count_all_threats(%Organisation{id: org_id}) do
+    Threat.from()
+    |> Threat.where_organisation(org_id)
     |> Repo.aggregate(:count, :id)
   end
 

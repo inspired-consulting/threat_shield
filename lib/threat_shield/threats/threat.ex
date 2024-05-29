@@ -46,6 +46,10 @@ defmodule ThreatShield.Threats.Threat do
 
   import Ecto.Query
 
+  def from() do
+    from(e in __MODULE__, as: :threat)
+  end
+
   def get(id) do
     from(e in __MODULE__, as: :threat, where: e.id == ^id)
   end
@@ -60,8 +64,17 @@ defmodule ThreatShield.Threats.Threat do
     |> Organisation.for_user(user_id, right)
   end
 
+  def join_organisation(query) do
+    if has_named_binding?(query, :organisation) do
+      query
+    else
+      join(query, :inner, [threat: t], assoc(t, :organisation), as: :organisation)
+    end
+  end
+
   def where_organisation(query, org_id) do
-    where(query, [organisation: o], o.id == ^org_id)
+    join_organisation(query)
+    |> where([organisation: o], o.id == ^org_id)
   end
 
   def with_organisation(query) do
