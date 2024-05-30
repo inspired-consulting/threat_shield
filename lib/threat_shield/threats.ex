@@ -10,22 +10,9 @@ defmodule ThreatShield.Threats do
 
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Accounts.User
-  alias ThreatShield.Organisations
   alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Systems.System
   alias ThreatShield.Assets.Asset
-
-  def get_organisation!(%User{} = user, org_id) do
-    Organisations.get_organisation!(user, org_id)
-    |> Repo.preload(threats: :system)
-    |> Repo.preload(:systems)
-  end
-
-  def count_all_threats(%Organisation{id: org_id}) do
-    Threat.from()
-    |> Threat.where_organisation(org_id)
-    |> Repo.aggregate(:count, :id)
-  end
 
   def get_threat!(%User{id: user_id}, threat_id) do
     Threat.get(threat_id)
@@ -37,6 +24,21 @@ defmodule ThreatShield.Threats do
     |> Threat.with_org_assets()
     |> Threat.preload_membership()
     |> Repo.one!()
+  end
+
+  def find_by_asset(%Asset{id: asset_id, organisation_id: org_id}) do
+    Threat.from()
+    |> Threat.where_organisation(org_id)
+    |> Threat.where_asset(asset_id)
+    |> Threat.with_system()
+    |> Threat.with_asset()
+    |> Repo.all()
+  end
+
+  def count_all_threats(%Organisation{id: org_id}) do
+    Threat.from()
+    |> Threat.where_organisation(org_id)
+    |> Repo.aggregate(:count, :id)
   end
 
   def count_threats_for_system(system_id) do

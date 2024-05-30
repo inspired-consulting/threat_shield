@@ -77,6 +77,11 @@ defmodule ThreatShield.Threats.Threat do
     |> where([organisation: o], o.id == ^org_id)
   end
 
+  def where_asset(query, asset_id) do
+    query
+    |> where([threat: t], t.asset_id == ^asset_id)
+  end
+
   def with_organisation(query) do
     query
     |> preload([organisation: o], organisation: o)

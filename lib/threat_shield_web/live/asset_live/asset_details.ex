@@ -1,7 +1,7 @@
-defmodule ThreatShieldWeb.AssetLive.Show do
+defmodule ThreatShieldWeb.AssetLive.AssetDetails do
   use ThreatShieldWeb, :live_view
 
-  alias ThreatShield.Assets
+  alias ThreatShield.{Assets, Threats}
   alias ThreatShield.Assets.Asset
 
   import ThreatShieldWeb.ScopeUrlBinding
@@ -17,12 +17,14 @@ defmodule ThreatShieldWeb.AssetLive.Show do
   def mount(%{"asset_id" => asset_id} = params, _session, socket) do
     current_user = socket.assigns.current_user
     asset = Assets.get_asset!(current_user, asset_id)
+    threats = Threats.find_by_asset(asset)
 
     scope = asset_scope_from_params(current_user, asset, params)
 
     socket
     |> assign(scope: scope)
     |> assign(asset: asset)
+    |> assign(threats: threats)
     |> assign(organisation: asset.organisation)
     |> assign(system: asset.system)
     |> assign(system_options: list_system_options(asset.organisation))
@@ -34,10 +36,10 @@ defmodule ThreatShieldWeb.AssetLive.Show do
 
   @impl true
   def handle_params(_params, url, socket) do
-    {:noreply,
-     socket
-     |> add_breadcrumbs(url)
-     |> assign(:page_title, page_title(socket.assigns.live_action))}
+    socket
+    |> add_breadcrumbs(url)
+    |> assign(page_title: page_title(socket.assigns.live_action))
+    |> noreply()
   end
 
   @impl true
@@ -45,7 +47,9 @@ defmodule ThreatShieldWeb.AssetLive.Show do
     user = socket.assigns.current_user
     {1, [_asset]} = Assets.delete_asset_by_id(user, asset_id)
 
-    {:noreply, push_navigate(socket, to: get_path_prefix(socket.assigns))}
+    socket
+    |> push_navigate(to: get_path_prefix(socket.assigns))
+    |> noreply()
   end
 
   @impl true
@@ -64,12 +68,12 @@ defmodule ThreatShieldWeb.AssetLive.Show do
       ) do
     asset = Assets.get_asset!(socket.assigns.current_user, asset.id)
 
-    {:noreply,
-     socket
-     |> assign(asset: asset)
-     |> assign(organisation: asset.organisation)
-     |> assign(:system, asset.system)
-     |> assign(page_title: "Show Asset")}
+    socket
+    |> assign(asset: asset)
+    |> assign(organisation: asset.organisation)
+    |> assign(system: asset.system)
+    |> assign(page_title: "Show Asset")
+    |> noreply()
   end
 
   @impl true

@@ -92,14 +92,16 @@ defmodule ThreatShieldWeb.Router do
 
       # Assets
 
-      live "/organisations/:org_id/systems/:sys_id/assets/:asset_id", AssetLive.Show, :show
+      live "/organisations/:org_id/systems/:sys_id/assets/:asset_id",
+           AssetLive.AssetDetails,
+           :show
 
       live "/organisations/:org_id/systems/:sys_id/assets/:asset_id/show/edit",
-           AssetLive.Show,
+           AssetLive.AssetDetails,
            :edit
 
-      live "/organisations/:org_id/assets/:asset_id", AssetLive.Show, :show
-      live "/organisations/:org_id/assets/:asset_id/show/edit", AssetLive.Show, :edit
+      live "/organisations/:org_id/assets/:asset_id", AssetLive.AssetDetails, :show
+      live "/organisations/:org_id/assets/:asset_id/show/edit", AssetLive.AssetDetails, :edit
 
       # Threats
 

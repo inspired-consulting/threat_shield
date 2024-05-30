@@ -289,7 +289,7 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
   defp normalized_risk_frequency(%Risk{} = risk, max_frequency) do
     case risk.probability do
       nil -> 0
-      frequency -> 0.02 + frequency / max_frequency * 0.96
+      frequency -> 0.05 + frequency / max_frequency * 0.9
     end
   end
 
