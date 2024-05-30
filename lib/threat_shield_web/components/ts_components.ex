@@ -244,7 +244,7 @@ defmodule ThreatShieldWeb.TsComponents do
 
   defp color_code_for_criticality(_criticality, opacity), do: "rgba(200, 200, 200, #{opacity})"
 
-  defp bg_class_for_risk_status(status) do
+  def bg_class_for_risk_status(status) do
     case status do
       :mitigated -> "bg-green-700"
       :identified -> "bg-red-500"

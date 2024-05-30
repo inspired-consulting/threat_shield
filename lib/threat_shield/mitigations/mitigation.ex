@@ -41,7 +41,7 @@ defmodule ThreatShield.Mitigations.Mitigation do
     from(e in __MODULE__, as: :mitigation, where: e.id == ^id)
   end
 
-  def all() do
+  def from() do
     from(e in __MODULE__, as: :mitigation)
   end
 
@@ -57,8 +57,38 @@ defmodule ThreatShield.Mitigations.Mitigation do
     |> Risk.for_user(user_id, right)
   end
 
+  def join_risk(query) do
+    if has_named_binding?(query, :risk) do
+      query
+    else
+      join(query, :inner, [mitigation: m], assoc(m, :risk), as: :risk)
+    end
+  end
+
+  def join_threat(query) do
+    if has_named_binding?(query, :risk) do
+      query
+    else
+      query
+      |> join_risk()
+      |> join(:inner, [risk: r], assoc(r, :threat), as: :threat)
+    end
+  end
+
+  def join_organisation(query) do
+    if has_named_binding?(query, :organisation) do
+      query
+    else
+      query
+      |> join_threat()
+      |> join(:inner, [threat: t], assoc(t, :organisation), as: :organisation)
+    end
+  end
+
   def where_organisation(query, org_id) do
-    where(query, [organisation: o], o.id == ^org_id)
+    query
+    |> join_organisation()
+    |> where([organisation: o], o.id == ^org_id)
   end
 
   def preload_risk(query) do

@@ -4,7 +4,7 @@ defmodule ThreatShield.Mitigations do
   """
 
   import Ecto.Query, warn: false
-  alias ThreatShield.Accounts.User
+  alias ThreatShield.Accounts.{User, Organisation}
   alias ThreatShield.Risks.Risk
   alias ThreatShield.Repo
 
@@ -34,11 +34,17 @@ defmodule ThreatShield.Mitigations do
   end
 
   def get_all_mitigations(%User{id: user_id}, org_id) do
-    Mitigation.all()
+    Mitigation.from()
     |> Mitigation.for_user(user_id)
     |> Mitigation.where_organisation(org_id)
     |> Mitigation.preload_risk()
     |> Repo.all()
+  end
+
+  def count_all_mitigations(%Organisation{id: org_id}) do
+    Mitigation.from()
+    |> Mitigation.where_organisation(org_id)
+    |> Repo.aggregate(:count, :id)
   end
 
   @doc """

@@ -24,6 +24,7 @@ import topbar from "../vendor/topbar";
 import disappear from "./components/disappear";
 import collapseTrigger from "./components/collapse-trigger";
 import tooltips from "./components/tooltips";
+import chartJs from "./components/charts";
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -55,6 +56,7 @@ function initialize(container) {
   // visually helpers that are optional and can be loaded last
   tooltips(container, "[title]");
   disappear(container, "[data-disappear-after]");
+  chartJs(container, "[data-chart-type]");
 }
 
 document.addEventListener("phx:update", function () {
