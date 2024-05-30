@@ -16,11 +16,22 @@ defmodule ThreatShieldWeb.Helpers do
   """
 
   def add_breadcrumbs(socket, url) do
+    relevant_url_parts =
+      %{
+        "organisations" => :organisations,
+        "assets" => :assets,
+        "systems" => :systems,
+        "threats" => :threats,
+        "risks" => :risks,
+        "mitigations" => :mitigations,
+        "members" => :members
+      }
+
     breadcrumbs =
       url
       |> String.replace_prefix(Endpoint.url(), "")
       |> String.split("/")
-      |> Enum.map(fn key -> Map.get(ThreatShield.Breadcrumbs.relevant_url_parts(), key) end)
+      |> Enum.map(fn key -> Map.get(relevant_url_parts, key) end)
       |> Enum.filter(&(!is_nil(&1)))
 
     assign(socket, :breadcrumbs, [:home | breadcrumbs])

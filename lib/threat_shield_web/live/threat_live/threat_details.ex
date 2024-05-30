@@ -1,4 +1,4 @@
-defmodule ThreatShieldWeb.ThreatLive.Show do
+defmodule ThreatShieldWeb.ThreatLive.ThreatDetails do
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Scope
@@ -22,6 +22,8 @@ defmodule ThreatShieldWeb.ThreatLive.Show do
     socket
     |> assign(scope: scope)
     |> assign(organisation: threat.organisation)
+    |> assign(system: threat.system)
+    |> assign(asset: threat.asset)
     |> assign(threat: threat)
     |> assign(page_title: page_title(socket.assigns.live_action))
     |> assign(system_options: list_system_options(threat.organisation))

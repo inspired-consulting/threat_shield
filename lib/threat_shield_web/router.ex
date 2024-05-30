@@ -104,36 +104,42 @@ defmodule ThreatShieldWeb.Router do
       # Threats
 
       live "/organisations/:org_id/systems/:sys_id/assets/:asset_id/threats/:threat_id",
-           ThreatLive.Show,
+           ThreatLive.ThreatDetails,
            :show
 
-      live "/organisations/:org_id/assets/:asset_id/threats/:threat_id", ThreatLive.Show, :show
+      live "/organisations/:org_id/assets/:asset_id/threats/:threat_id",
+           ThreatLive.ThreatDetails,
+           :show
 
-      live "/organisations/:org_id/systems/:sys_id/threats/:threat_id", ThreatLive.Show, :show
+      live "/organisations/:org_id/systems/:sys_id/threats/:threat_id",
+           ThreatLive.ThreatDetails,
+           :show
 
       live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/edit",
-           ThreatLive.Show,
+           ThreatLive.ThreatDetails,
            :edit_threat
 
       live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/new",
-           ThreatLive.Show,
+           ThreatLive.ThreatDetails,
            :new_risk
 
       live "/organisations/:org_id/threats/:threat_id/edit",
-           ThreatLive.Show,
+           ThreatLive.ThreatDetails,
            :edit_threat
 
-      live "/organisations/:org_id/threats/:threat_id", ThreatLive.Show, :show
+      live "/organisations/:org_id/threats/:threat_id", ThreatLive.ThreatDetails, :show
 
       live "/organisations/:org_id/threats/:threat_id/show/edit",
-           ThreatLive.Show,
+           ThreatLive.ThreatDetails,
            :edit
 
       # Risks
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.RiskDetails, :show
 
-      live "/organisations/:org_id/threats/:threat_id/risks/new", ThreatLive.Show, :new_risk
+      live "/organisations/:org_id/threats/:threat_id/risks/new",
+           ThreatLive.ThreatDetails,
+           :new_risk
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/edit",
            RiskLive.RiskDetails,
