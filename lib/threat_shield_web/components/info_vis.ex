@@ -52,13 +52,13 @@ defmodule ThreatShieldWeb.InfoVis do
       </text>
 
       <a :for={risk <- @risk_model} xlink:href={risk.link}>
+        <title><%= "#{risk.name}: EUR #{risk.cost_label}" %></title>
         <circle
           cx={risk.severity * @size}
           cy={@size - risk.frequency * @size}
           r={risk.cost * @size / 10}
           fill={risk.color}
         >
-          <title><%= "#{risk.name}: EUR #{risk.cost_label}" %></title>
         </circle>
         <text
           :if={@show_labels && risk.severity < 0.7}

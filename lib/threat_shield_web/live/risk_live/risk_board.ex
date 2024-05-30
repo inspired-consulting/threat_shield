@@ -18,7 +18,7 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
   @impl true
   def render(assigns) do
     ~H"""
-    <section class="w-full bg-white py-6 shadow-primary-200 shadow-sm">
+    <section class="w-full bg-white py-4 shadow-primary-200 shadow-sm">
       <div class="ts-container">
         <.header>
           <.h1><%= dgettext("risks", "Risk board") %></.h1>
@@ -38,13 +38,17 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
       </div>
     </section>
 
-    <section class="mx-4 lg:mx-8 xl:mx-10 2xl:mx-12 mt-6 flex flex-wrap gap-6 justify-center">
-      <div class="px-8 py-6 bg-white rounded-lg shadow" id="risks_by_status" phx-update="ignore">
-        <h2 class="font-semibold flex">
+    <section class="mx-2 lg:mx-auto mt-4 flex flex-wrap gap-4 justify-center lg:max-w-[82rem] 2xl:max-w-[92rem]">
+      <div class="none md:block px-6 py-6 bg-white rounded-lg shadow">
+        <.risk_quadrants risk_model={@risk_model} size={700} show_labels={true} />
+      </div>
+
+      <div class="px-4 pt-4 bg-white rounded-lg shadow" id="risks_by_status" phx-update="ignore">
+        <h2 class="px-2 font-semibold flex">
           <.risk_icon class="w-5 h-6 mr-2" /><%= dgettext("risks", "Risk by status") %>
         </h2>
         <div
-          class="chart p-4 w-[24rem]"
+          class="chart px-2 lg:px-4 w-[16rem] lg:w-[22rem] xl:w-[22rem] "
           data-chart-type="doughnut"
           data-data-point-label={dgettext("risk-board", "Number of risks")}
           data-datasets={@risks_by_status.data |> Jason.encode!()}
@@ -53,13 +57,13 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
         >
           <canvas></canvas>
         </div>
-        <h2 class="font-semibold flex">
+        <h2 class="px-2 font-semibold flex">
           <.mitigation_icon class="w-6 h-6 mr-2" /><%= dgettext("risks", "Mitigations by status") %>
         </h2>
         <div
-          class="chart p-4 w-[24rem]"
+          class="chart px-2 lg:px-4 py-2 w-[16rem] lg:w-[22rem]"
           data-chart-type="doughnut"
-          data-data-point-label={dgettext("risk-board", "Number of risks")}
+          data-data-point-label={dgettext("risk-board", "Number of mitigations")}
           data-datasets={@mitigations_by_status.data |> Jason.encode!()}
           data-dataset-labels={@mitigations_by_status.labels |> Jason.encode!()}
           data-colors={@mitigations_by_status.colors |> Jason.encode!()}
@@ -68,12 +72,8 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
         </div>
       </div>
 
-      <div class="px-8 py-6 bg-white rounded-lg shadow">
-        <.risk_quadrants risk_model={@risk_model} size={800} show_labels={true} />
-      </div>
-
-      <div class="px-8 py-6 bg-white rounded-lg shadow min-w-[40rem]">
-        <h2 class="font-semibold"><%= dgettext("risks", "Top 10 risks by severity") %></h2>
+      <div class="px-6 py-6 bg-white rounded-lg shadow w-[24rem] lg:w-[34rem] xl:w-[38rem]">
+        <h2 class="px-2 font-semibold"><%= dgettext("risks", "Top 10 risks by severity") %></h2>
         <table class="mt-2 w-full">
           <tr
             :for={risk <- @top_10_severity}
@@ -81,7 +81,7 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
             phx-value-risk-id={risk.id}
             class="cursor-pointer hover:bg-gray-100"
           >
-            <td><%= risk.name %></td>
+            <td class="pl-2 leading-1"><%= risk.name %></td>
             <td class="pl-8 py-1">
               <.criticality_badge value={risk.severity} title={dgettext("risks", "Severity")} />
             </td>
@@ -89,8 +89,8 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
         </table>
       </div>
 
-      <div class="px-8 py-6 bg-white rounded-lg shadow min-w-[40rem]">
-        <h2 class="font-semibold"><%= dgettext("risks", "Top 10 risks by costs") %></h2>
+      <div class="px-6 py-6 bg-white rounded-lg shadow w-[24rem] lg:w-[34rem] xl:w-[38rem]">
+        <h2 class="px-2 font-semibold"><%= dgettext("risks", "Top 10 risks by costs") %></h2>
         <table class="mt-2 w-full">
           <tr
             :for={risk <- @top_10_costs}
@@ -98,7 +98,7 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
             phx-value-risk-id={risk.id}
             class="cursor-pointer hover:bg-gray-100"
           >
-            <td><%= risk.name %></td>
+            <td class="pl-2 leading-1"><%= risk.name %></td>
             <td class="px-4 py-2 text-end">
               <%= risk_cost(risk) |> format_monetary_amount() %>
             </td>
