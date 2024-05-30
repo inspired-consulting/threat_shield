@@ -68,9 +68,11 @@ defmodule ThreatShieldWeb.Helpers do
   end
 
   def format_number(number) do
-    number
+    Number.Delimit.number_to_delimited(number, delimiter: ".", separator: ",", precision: 0)
   end
 
+  @spec format_monetary_amount(nil | binary() | number() | Decimal.t(), any()) ::
+          nonempty_binary()
   def format_monetary_amount(number, currency \\ "EUR")
   def format_monetary_amount(nil, _currency), do: "-"
 

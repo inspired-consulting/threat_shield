@@ -55,6 +55,20 @@ defmodule ThreatShield.Risks.Risk do
     |> validate_length(:name, max: 60)
   end
 
+  def frequency_per_year(%{probability: probability}) do
+    case probability do
+      nil -> 0
+      p -> p
+    end
+  end
+
+  def severity(%{severity: severity}) do
+    case severity do
+      nil -> 0
+      s -> s
+    end
+  end
+
   def estimated_risk_cost(%{estimated_cost: estimated_cost, probability: probability}),
     do: estimated_risk_cost(estimated_cost, probability)
 

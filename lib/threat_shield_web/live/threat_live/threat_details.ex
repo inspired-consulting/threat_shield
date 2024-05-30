@@ -78,13 +78,11 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatDetails do
     current_user = socket.assigns.current_user
     threat = Threats.get_threat!(current_user, threat.id)
 
-    socket =
-      socket
-      |> assign(:threat, threat)
-      |> assign(:organisation, threat.organisation)
-      |> assign(:page_title, page_title(socket.assigns.live_action))
-
-    {:noreply, socket}
+    socket
+    |> assign(:threat, threat)
+    |> assign(:organisation, threat.organisation)
+    |> assign(:page_title, page_title(socket.assigns.live_action))
+    |> noreply()
   end
 
   @impl true

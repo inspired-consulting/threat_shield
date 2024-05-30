@@ -11,6 +11,17 @@
   <:status>
     <.mitigation_status_badge status={@mitigation.status} />
   </:status>
+  <:actions>
+    <.link
+      class="inline-block px-4 py-2 border font-semibold border-gray-400 rounded-md h-10 hover:bg-primary-100 hover:border-gray-800"
+      patch={
+        get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/#{@mitigation.id}/edit"
+      }
+      phx-click={JS.push_focus()}
+    >
+      <%= dgettext("common", "Edit") %>
+    </.link>
+  </:actions>
   <:links>
     <li
       :if={ThreatShield.Members.Rights.may(:delete_mitigation, @membership)}
@@ -27,14 +38,6 @@
       :if={ThreatShield.Members.Rights.may(:edit_mitigation, @membership)}
       class="context-menu-item"
     >
-      <.link
-        patch={
-        get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/mitigations/#{@mitigation.id}/edit"
-      }
-        phx-click={JS.push_focus()}
-      >
-        <%= dgettext("common", "Edit") %>
-      </.link>
     </li>
   </:links>
 

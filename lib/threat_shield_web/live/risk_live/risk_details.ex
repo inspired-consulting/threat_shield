@@ -1,4 +1,5 @@
 defmodule ThreatShieldWeb.RiskLive.RiskDetails do
+  require Logger
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Threats.Threat
@@ -9,6 +10,8 @@ defmodule ThreatShieldWeb.RiskLive.RiskDetails do
 
   import ThreatShieldWeb.Helpers
   import ThreatShieldWeb.Labels
+
+  require Logger
 
   @moduledoc """
   Live view for showing a risk.
@@ -69,10 +72,9 @@ defmodule ThreatShieldWeb.RiskLive.RiskDetails do
 
     {1, [_risk | _]} = Risks.delete_risk_by_id!(current_user, id)
 
-    {:noreply,
-     push_navigate(socket,
-       to: get_path_prefix(socket.assigns) <> "/threats/#{threat.id}"
-     )}
+    socket
+    |> push_navigate(to: get_path_prefix(socket.assigns) <> "/threats/#{threat.id}")
+    |> noreply()
   end
 
   @impl true
@@ -80,19 +82,18 @@ defmodule ThreatShieldWeb.RiskLive.RiskDetails do
     user = socket.assigns.current_user
     risk = Risks.get_risk!(user, risk.id)
 
-    {:noreply,
-     socket
-     |> assign(risk: risk)
-     |> assign(threat: risk.threat)
-     |> assign(organisation: risk.threat.organisation)
-     |> assign(:page_title, page_title(socket.assigns.live_action))}
+    socket
+    |> assign(risk: risk)
+    |> assign(threat: risk.threat)
+    |> assign(organisation: risk.threat.organisation)
+    |> assign(:page_title, page_title(socket.assigns.live_action))
+    |> noreply()
   end
 
   @impl true
-  def handle_info({ThreatShieldWeb.MitigationLive.MitigationForm, {:saved, mitigation}}, socket) do
-    stale_risk = socket.assigns.risk
-    updated_risk = %{stale_risk | mitigations: stale_risk.mitigations ++ [mitigation]}
-    {:noreply, socket |> assign(risk: updated_risk) |> assign(page_title: "Show Risk")}
+  def handle_info({ThreatShieldWeb.MitigationLive.MitigationForm, {:saved, _mitigation}}, socket) do
+    socket
+    |> noreply()
   end
 
   @impl true

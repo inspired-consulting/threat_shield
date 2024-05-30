@@ -18,6 +18,7 @@ defmodule ThreatShieldWeb.TsComponents do
   slot :status, required: false
   slot :attribute, required: false
   slot :custom, required: false
+  slot :actions, required: false
   slot :links, required: true
   attr :columns, :integer, default: 2
 
@@ -36,7 +37,10 @@ defmodule ThreatShieldWeb.TsComponents do
             <%= render_slot(@status) %>
           </div>
         </div>
-        <div>
+        <div class="flex gap-2">
+          <div :if={@actions != []}>
+            <%= render_slot(@actions) %>
+          </div>
           <.dropdown links={@links}></.dropdown>
         </div>
       </div>
@@ -223,11 +227,11 @@ defmodule ThreatShieldWeb.TsComponents do
     """
   end
 
-  # internal
+  # utilities
 
-  defp color_code_for_criticality(criticality, opacity \\ 1.0)
+  def color_code_for_criticality(criticality, opacity \\ 1.0)
 
-  defp color_code_for_criticality(criticality, opacity) when is_number(criticality) do
+  def color_code_for_criticality(criticality, opacity) when is_number(criticality) do
     red = if criticality < 2.5, do: trunc(220 * criticality / 2.5), else: 220
     green = if criticality > 2.5, do: trunc(220 * (5 - criticality) / 2.5), else: 220
 
@@ -235,14 +239,14 @@ defmodule ThreatShieldWeb.TsComponents do
     "rgba(#{red}, #{green}, #{blue}, #{opacity})"
   end
 
-  defp color_code_for_criticality(criticality, opacity) when is_binary(criticality) do
+  def color_code_for_criticality(criticality, opacity) when is_binary(criticality) do
     case Float.parse(criticality) do
       {criticality, _} -> color_code_for_criticality(criticality, opacity)
       :error -> color_code_for_criticality(0)
     end
   end
 
-  defp color_code_for_criticality(_criticality, opacity), do: "rgba(200, 200, 200, #{opacity})"
+  def color_code_for_criticality(_criticality, opacity), do: "rgba(200, 200, 200, #{opacity})"
 
   def bg_class_for_risk_status(status) do
     case status do

@@ -78,10 +78,10 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationForm do
   def update(%{mitigation: mitigation} = assigns, socket) do
     changeset = Mitigations.change_mitigation(mitigation)
 
-    {:ok,
-     socket
-     |> assign(assigns)
-     |> assign_form(changeset)}
+    socket
+    |> assign(assigns)
+    |> assign_form(changeset)
+    |> ok()
   end
 
   @impl true

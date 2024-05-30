@@ -103,6 +103,10 @@ defmodule ThreatShieldWeb.Router do
 
       # Threats
 
+      live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/new",
+           ThreatLive.ThreatDetails,
+           :new_risk
+
       live "/organisations/:org_id/systems/:sys_id/assets/:asset_id/threats/:threat_id",
            ThreatLive.ThreatDetails,
            :show
@@ -119,10 +123,6 @@ defmodule ThreatShieldWeb.Router do
            ThreatLive.ThreatDetails,
            :edit_threat
 
-      live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/new",
-           ThreatLive.ThreatDetails,
-           :new_risk
-
       live "/organisations/:org_id/threats/:threat_id/edit",
            ThreatLive.ThreatDetails,
            :edit_threat
@@ -135,11 +135,11 @@ defmodule ThreatShieldWeb.Router do
 
       # Risks
 
-      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.RiskDetails, :show
-
       live "/organisations/:org_id/threats/:threat_id/risks/new",
            ThreatLive.ThreatDetails,
            :new_risk
+
+      live "/organisations/:org_id/threats/:threat_id/risks/:risk_id", RiskLive.RiskDetails, :show
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/edit",
            RiskLive.RiskDetails,
@@ -164,19 +164,19 @@ defmodule ThreatShieldWeb.Router do
       # Mitigations
 
       live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id",
-           MitigationLive.Show,
+           MitigationLive.MitigationDetails,
            :show
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id",
-           MitigationLive.Show,
+           MitigationLive.MitigationDetails,
            :show
 
       live "/organisations/:org_id/systems/:sys_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id/edit",
-           MitigationLive.Show,
+           MitigationLive.MitigationDetails,
            :edit_mitigation
 
       live "/organisations/:org_id/threats/:threat_id/risks/:risk_id/mitigations/:mitigation_id/edit",
-           MitigationLive.Show,
+           MitigationLive.MitigationDetails,
            :edit_mitigation
     end
 

@@ -1,4 +1,4 @@
-defmodule ThreatShieldWeb.MitigationLive.Show do
+defmodule ThreatShieldWeb.MitigationLive.MitigationDetails do
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Mitigations
