@@ -248,6 +248,8 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
 
   defp risk_cost(%Risk{} = risk), do: Risk.estimated_risk_cost(risk)
 
+  defp risk_model([], _organisation), do: []
+
   defp risk_model(risks, %Organisation{} = organisation) when is_list(risks) do
     max_cost =
       risks
