@@ -255,13 +255,13 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
       risks
       |> Enum.filter(&(Risk.estimated_risk_cost(&1) != nil))
       |> Enum.map(&Risk.estimated_risk_cost/1)
-      |> Enum.max()
+      |> max_value()
 
     max_frequency =
       risks
       |> Enum.filter(&(Risk.frequency_per_year(&1) != nil))
       |> Enum.map(&Risk.frequency_per_year/1)
-      |> Enum.max()
+      |> max_value()
 
     risks
     |> Enum.sort_by(&Risk.severity/1)
@@ -300,5 +300,9 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
       nil -> 0
       severity -> severity / max_severity
     end
+  end
+
+  defp max_value(values) do
+    Enum.max(values, &>=/2, fn -> 0 end)
   end
 end
