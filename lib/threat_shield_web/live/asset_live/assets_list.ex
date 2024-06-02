@@ -10,6 +10,8 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
   alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Systems.System
 
+  import ThreatShieldWeb.Helpers, only: [link_to: 1]
+
   require Logger
 
   attr :ai_suggestions, :map, default: %{}
@@ -66,7 +68,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
           :if={not Enum.empty?(@assets)}
           id={"assets_for_org_#{@scope.organisation.id}"}
           rows={@assets}
-          row_click={fn asset -> JS.navigate(@origin <> "/assets/#{asset.id}") end}
+          row_click={fn asset -> JS.navigate(link_to(asset)) end}
         >
           <:col :let={asset}>
             <%= asset.name %>

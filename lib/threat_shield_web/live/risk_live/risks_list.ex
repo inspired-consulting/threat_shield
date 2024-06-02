@@ -7,6 +7,7 @@ defmodule ThreatShieldWeb.RiskLive.RisksList do
   alias ThreatShield.Risks
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Accounts.User
+  import ThreatShieldWeb.Helpers
 
   @moduledoc """
   This component renders a list of risks for a given threat.
@@ -59,7 +60,7 @@ defmodule ThreatShieldWeb.RiskLive.RisksList do
           :if={not Enum.empty?(@risks)}
           id={"risks_for_threat_#{@threat.id}"}
           rows={@risks}
-          row_click={fn risk -> JS.navigate(@origin <> "/risks/#{risk.id}") end}
+          row_click={fn risk -> JS.navigate(link_to(risk, @scope)) end}
         >
           <:col :let={risk}>
             <%= risk.name %>

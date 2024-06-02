@@ -12,6 +12,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   alias ThreatShield.Systems.System
 
   import ThreatShieldWeb.Labels
+  import ThreatShieldWeb.Helpers
 
   require Logger
 
@@ -70,7 +71,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           :if={not Enum.empty?(@threats)}
           id={"threats_for_#{@scope.id}"}
           rows={@threats}
-          row_click={fn threat -> JS.navigate(@origin <> "/threats/#{threat.id}") end}
+          row_click={fn threat -> JS.navigate(link_to(threat)) end}
         >
           <:col :let={threat}>
             <%= threat.name %>

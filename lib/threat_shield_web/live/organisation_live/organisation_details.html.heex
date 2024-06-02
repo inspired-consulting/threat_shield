@@ -92,7 +92,7 @@
     scope={@scope}
     threat_count={@threat_count}
     asset_count={@asset_count}
-    origin={"/organisations/#{@organisation.id}"}
+    origin={link_to(@organisation)}
   />
 
   <.live_component
@@ -102,7 +102,7 @@
     scope={@scope}
     assets={@organisation.assets}
     ai_suggestions={@ai_suggestions}
-    origin={"/organisations/#{@organisation.id}"}
+    origin={link_to(@organisation)}
   />
 
   <.live_component
@@ -112,14 +112,14 @@
     scope={@scope}
     threats={@organisation.threats}
     ai_suggestions={@ai_suggestions}
-    origin={"/organisations/#{@organisation.id}"}
+    origin={link_to(@organisation)}
   />
 
   <.modal
     :if={@live_action == :edit_organisation}
     id="organisation-modal"
     show
-    on_cancel={JS.patch(~p"/organisations/#{@organisation}")}
+    on_cancel={JS.patch(link_to(@organisation))}
   >
     <.live_component
       module={ThreatShieldWeb.OrganisationLive.OrganisationForm}
@@ -130,7 +130,7 @@
       attributes={@attributes}
       locations_options={@locations_options}
       current_user={@current_user}
-      patch={~p"/organisations/#{@organisation}"}
+      patch={link_to(@organisation)}
     />
   </.modal>
 </section>

@@ -15,7 +15,7 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
 
   alias ThreatShield.Scope
 
-  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, convert_date: 1]
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, convert_date: 1, link_to: 1]
 
   @impl true
   def mount(%{"org_id" => org_id} = _params, _session, socket) do

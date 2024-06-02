@@ -3,6 +3,7 @@ defmodule ThreatShieldWeb.Helpers do
     endpoint: ThreatShieldWeb.Endpoint,
     router: ThreatShieldWeb.Router
 
+  alias ElixirLS.LanguageServer.Plugins.Phoenix.Scope
   alias ThreatShield.Accounts.Organisation
 
   import Phoenix.Component
@@ -10,6 +11,11 @@ defmodule ThreatShieldWeb.Helpers do
 
   alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Risks.Risk
+  alias ThreatShield.Threats.Threat
+  alias ThreatShield.Systems.System
+  alias ThreatShield.Assets.Asset
+
+  alias ThreatShield.Scope
 
   @moduledoc """
   Helpers are functions that can be used in your contexts.
@@ -89,7 +95,54 @@ defmodule ThreatShieldWeb.Helpers do
 
   # URLs
 
+  def link_to(%Risk{id: risk_id, threat: %Threat{id: threat_id} = threat}, %Organisation{
+        id: org_id
+      }) do
+    case {threat.system_id, threat.asset_id} do
+      {nil, nil} ->
+        ~p"/organisations/#{org_id}/threats/#{threat_id}/risks/#{risk_id}"
+
+      {system_id, _} ->
+        ~p"/organisations/#{org_id}/systems/#{system_id}/threats/#{threat_id}/risks/#{risk_id}"
+    end
+  end
+
   def link_to(%Risk{id: risk_id, threat_id: threat_id}, %Organisation{id: org_id}) do
     ~p"/organisations/#{org_id}/threats/#{threat_id}/risks/#{risk_id}"
+  end
+
+  def link_to(%Risk{} = risk, %Scope{organisation: org}) do
+    link_to(risk, org)
+  end
+
+  def link_to(%Threat{id: threat_id, organisation_id: org_id} = threat) do
+    case {threat.system_id, threat.asset_id} do
+      {nil, nil} ->
+        ~p"/organisations/#{org_id}/threats/#{threat_id}"
+
+      {system_id, nil} ->
+        ~p"/organisations/#{org_id}/systems/#{system_id}/threats/#{threat_id}"
+
+      {nil, asset_id} ->
+        ~p"/organisations/#{org_id}/assets/#{asset_id}/threats/#{threat_id}"
+
+      {system_id, asset_id} ->
+        ~p"/organisations/#{org_id}/systems/#{system_id}/assets/#{asset_id}/threats/#{threat_id}"
+    end
+  end
+
+  def link_to(%Asset{organisation_id: org_id} = asset) do
+    case asset.system_id do
+      nil -> ~p"/organisations/#{org_id}/assets/#{asset.id}"
+      system_id -> ~p"/organisations/#{org_id}/systems/#{system_id}/assets/#{asset.id}"
+    end
+  end
+
+  def link_to(%System{id: system_id, organisation_id: org_id}) do
+    ~p"/organisations/#{org_id}/systems/#{system_id}"
+  end
+
+  def link_to(%Organisation{id: org_id}) do
+    ~p"/organisations/#{org_id}"
   end
 end

@@ -65,7 +65,7 @@
     scope={@scope}
     assets={@system.assets}
     ai_suggestions={@ai_suggestions}
-    origin={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
+    origin={link_to(@system)}
   />
 
   <.live_component
@@ -75,7 +75,7 @@
     scope={@scope}
     threats={@system.threats}
     ai_suggestions={@ai_suggestions}
-    origin={"/organisations/#{@organisation.id}/systems/#{@system.id}"}
+    origin={link_to(@system)}
   />
 
   <.modal
@@ -93,7 +93,7 @@
       system={@system}
       current_user={@current_user}
       attributes={System.attributes()}
-      patch={~p"/organisations/#{@organisation}/systems/#{@system.id}"}
+      origin={link_to(@system)}
     />
   </.modal>
 </section>

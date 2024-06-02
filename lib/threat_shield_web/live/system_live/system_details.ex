@@ -8,7 +8,7 @@ defmodule ThreatShieldWeb.SystemLive.SystemDetails do
   alias ThreatShield.Scope
   alias ThreatShield.Systems
   alias ThreatShield.Systems.System
-  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2]
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, link_to: 1]
 
   @impl true
   def mount(%{"sys_id" => id}, _session, socket) do
