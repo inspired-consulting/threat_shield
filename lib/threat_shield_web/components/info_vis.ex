@@ -43,10 +43,10 @@ defmodule ThreatShieldWeb.InfoVis do
         <%= dgettext("risks", "Severity") %> &rarr;
       </text>
       <text
-        x={@size / 25}
+        x={@size / 70 + 5}
         y={@size * 0.92}
         font-size="12"
-        transform={"rotate(-90, #{@size / 25}, #{@size * 0.92})"}
+        transform={"rotate(-90, #{@size / 70 + 5}, #{@size * 0.92})"}
       >
         <%= dgettext("risks", "Frequency") %> &rarr;
       </text>

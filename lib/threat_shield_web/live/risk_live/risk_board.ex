@@ -1,11 +1,13 @@
 defmodule ThreatShieldWeb.RiskLive.RiskBoard do
   require Logger
-  alias ThreatShield.Accounts.Organisation
+
   use ThreatShieldWeb, :live_view
 
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.{Risks, Threats, Mitigations, Members}
   alias ThreatShield.Risks.Risk
 
+  import ThreatShield.Analytics.RiskAnalytics
   import ThreatShieldWeb.Helpers
   import ThreatShieldWeb.Gettext
   import ThreatShieldWeb.Icons
@@ -29,16 +31,10 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
             <%= @organisation.name %>
           </.h3>
         </.header>
-        <div class="flex gap-4">
-          <div :for={item <- @summary}>
-            <span class="text-gray-700 inline-block"><%= item.label %>:</span>
-            <span class="text-gray-700 inline-block"><%= item.value %></span>
-          </div>
-        </div>
       </div>
     </section>
 
-    <section class="mx-2 lg:mx-auto mt-4 flex flex-wrap gap-4 justify-center lg:max-w-[82rem] 2xl:max-w-[92rem]">
+    <section class="mx-2 lg:mx-auto mt-4 flex flex-wrap gap-4 justify-center lg:max-w-[82rem] 2xl:max-w-[120rem]">
       <div class="none md:block px-6 py-6 bg-white rounded-lg shadow">
         <.risk_quadrants risk_model={@risk_model} size={700} show_labels={true} />
       </div>
@@ -72,7 +68,20 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
         </div>
       </div>
 
-      <div class="px-6 py-6 bg-white rounded-lg shadow w-[24rem] lg:w-[34rem] xl:w-[38rem]">
+      <div class="px-6 py-6 bg-white rounded-lg shadow">
+        <h2 class="px-2 font-semibold"><%= dgettext("risks", "Risk summary") %></h2>
+
+        <table class="mt-2 w-full">
+          <tr :for={item <- @summary}>
+            <td class="pl-2 leading-1"><%= item.label %></td>
+            <td class="pl-8 py-1 text-right">
+              <%= item.value %>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="px-6 py-6 bg-white rounded-lg shadow">
         <h2 class="px-2 font-semibold"><%= dgettext("risks", "Top 10 risks by severity") %></h2>
         <table class="mt-2 w-full">
           <tr
@@ -89,7 +98,7 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
         </table>
       </div>
 
-      <div class="px-6 py-6 bg-white rounded-lg shadow w-[24rem] lg:w-[34rem] xl:w-[38rem]">
+      <div class="px-6 py-6 bg-white rounded-lg shadow">
         <h2 class="px-2 font-semibold"><%= dgettext("risks", "Top 10 risks by costs") %></h2>
         <table class="mt-2 w-full">
           <tr
@@ -144,21 +153,6 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
   end
 
   # internal
-
-  defp top_10_severity(risks) do
-    risks
-    |> Enum.sort_by(& &1.severity)
-    |> Enum.reverse()
-    |> Enum.take(10)
-  end
-
-  defp top_10_risk_costs(risks) do
-    risks
-    |> Enum.filter(&(Risk.estimated_risk_cost(&1) != nil))
-    |> Enum.sort_by(fn risk -> Risk.estimated_risk_cost(risk) end)
-    |> Enum.reverse()
-    |> Enum.take(10)
-  end
 
   defp risks_by_status(risks) do
     groups = %{identified: 0, assessed: 0, mitigated: 0, accepted: 0}
@@ -222,46 +216,41 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
   end
 
   defp summary(organisation, risks) do
-    total_cost =
-      risks
-      |> Enum.filter(&(Risk.estimated_risk_cost(&1) != nil))
-      |> Enum.reduce(0, fn risk, acc ->
-        acc + Risk.estimated_risk_cost(risk)
-      end)
+    total_cost = sum_up_risk_costs(risks)
+    mitigated_cost = sum_up_risk_costs(risks, :mitigated)
+    unmitigated_cost = sum_up_risk_costs(risks, [:identified, :assessed, :accepted])
 
     [
-      %{label: dgettext("common", "Number of risks"), value: Enum.count(risks)},
       %{
         label: dgettext("common", "Number of threats"),
         value: Threats.count_all_threats(organisation)
       },
+      %{label: dgettext("common", "Number of risks"), value: Enum.count(risks)},
       %{
         label: dgettext("common", "Number of mitigations"),
         value: Mitigations.count_all_mitigations(organisation)
       },
       %{
-        label: dgettext("common", "Total risk cost"),
+        label: dgettext("common", "Total risk costs"),
         value: format_monetary_amount(total_cost)
+      },
+      %{
+        label: dgettext("common", "Unmitigated risk costs"),
+        value: format_monetary_amount(unmitigated_cost)
+      },
+      %{
+        label: dgettext("common", "Mitigated risk costs"),
+        value: format_monetary_amount(mitigated_cost)
       }
     ]
   end
 
-  defp risk_cost(%Risk{} = risk), do: Risk.estimated_risk_cost(risk)
-
   defp risk_model([], _organisation), do: []
 
   defp risk_model(risks, %Organisation{} = organisation) when is_list(risks) do
-    max_cost =
-      risks
-      |> Enum.filter(&(Risk.estimated_risk_cost(&1) != nil))
-      |> Enum.map(&Risk.estimated_risk_cost/1)
-      |> max_value()
+    max_cost = max_cost(risks)
 
-    max_frequency =
-      risks
-      |> Enum.filter(&(Risk.frequency_per_year(&1) != nil))
-      |> Enum.map(&Risk.frequency_per_year/1)
-      |> max_value()
+    max_frequency = max_frequency(risks)
 
     risks
     |> Enum.sort_by(&Risk.severity/1)
@@ -281,28 +270,26 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
     end)
   end
 
+  defp risk_cost(%Risk{} = risk), do: Risk.estimated_risk_cost(risk)
+
   defp normalized_risk_cost(%Risk{} = risk, max_cost) do
-    case risk_cost(risk) do
-      nil -> 0.0
+    case Risk.estimated_risk_cost(risk) do
+      nil -> 0.05
       cost -> 0.1 + cost / max_cost
     end
   end
 
   defp normalized_risk_frequency(%Risk{} = risk, max_frequency) do
     case risk.probability do
-      nil -> 0
-      frequency -> 0.05 + frequency / max_frequency * 0.9
+      nil -> 0.015
+      frequency -> 0.02 + frequency / max_frequency * 0.9
     end
   end
 
   defp normalized_risk_severity(%Risk{} = risk, max_severity \\ 5.0) do
     case risk.severity do
-      nil -> 0
+      nil -> 0.015
       severity -> severity / max_severity
     end
-  end
-
-  defp max_value(values) do
-    Enum.max(values, &>=/2, fn -> 0 end)
   end
 end

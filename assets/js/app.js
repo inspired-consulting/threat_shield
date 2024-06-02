@@ -54,9 +54,10 @@ function initialize(container) {
   // mid urgent
 
   // visually helpers that are optional and can be loaded last
-  tooltips(container, "[title]");
+
   disappear(container, "[data-disappear-after]");
   chartJs(container, "[data-chart-type]");
+  tooltips(container, "[title], svg title");
 }
 
 document.addEventListener("phx:update", function () {
