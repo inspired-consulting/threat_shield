@@ -98,10 +98,10 @@ defmodule ThreatShieldWeb.RiskLive.RiskForm do
       {:ok, risk} ->
         notify_parent({:saved, risk})
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Risk updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        socket
+        |> put_flash(:info, "Risk updated successfully")
+        |> push_patch(to: socket.assigns.patch)
+        |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
@@ -115,10 +115,10 @@ defmodule ThreatShieldWeb.RiskLive.RiskForm do
       {:ok, risk} ->
         notify_parent({:saved, risk})
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Risk created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        socket
+        |> put_flash(:info, "Risk created successfully")
+        |> push_patch(to: socket.assigns.patch)
+        |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}

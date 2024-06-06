@@ -69,10 +69,10 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
   def update(%{asset: asset} = assigns, socket) do
     changeset = Assets.change_asset(asset)
 
-    {:ok,
-     socket
-     |> assign(assigns)
-     |> assign_form(changeset)}
+    socket
+    |> assign(assigns)
+    |> assign_form(changeset)
+    |> ok()
   end
 
   @impl true

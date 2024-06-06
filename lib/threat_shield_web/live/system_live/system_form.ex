@@ -61,11 +61,11 @@ defmodule ThreatShieldWeb.SystemLive.SystemForm do
         map -> map
       end
 
-    {:ok,
-     socket
-     |> assign(assigns)
-     |> assign_form(changeset)
-     |> assign(:attribute_map, attribute_map)}
+    socket
+    |> assign(assigns)
+    |> assign_form(changeset)
+    |> assign(:attribute_map, attribute_map)
+    |> ok()
   end
 
   @impl true
@@ -97,10 +97,10 @@ defmodule ThreatShieldWeb.SystemLive.SystemForm do
       {:ok, system} ->
         notify_parent({:saved, system})
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "System updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        socket
+        |> put_flash(:info, "System updated successfully")
+        |> push_patch(to: socket.assigns.origin)
+        |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
@@ -116,10 +116,10 @@ defmodule ThreatShieldWeb.SystemLive.SystemForm do
         notify_parent({:saved, system})
         notify_systems_list(id: socket.assigns.parent_id, added_system: system)
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "System created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+        socket
+        |> put_flash(:info, "System created successfully")
+        |> push_patch(to: socket.assigns.origin)
+        |> noreply()
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}

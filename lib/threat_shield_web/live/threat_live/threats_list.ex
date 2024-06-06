@@ -129,9 +129,15 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   # events
 
   @impl true
-  def update(%{added_threat: _threat}, socket) do
+  def update(%{added_threat: threat}, socket) do
+    old_threats = socket.assigns[:threats] || []
+
+    # reload to resolve associations
+    threat = Threats.get_threat!(socket.assigns.scope.user, threat.id)
+
     socket
     |> assign(:show_create_dialog, false)
+    |> assign(:threats, old_threats ++ [threat])
     |> ok()
   end
 
