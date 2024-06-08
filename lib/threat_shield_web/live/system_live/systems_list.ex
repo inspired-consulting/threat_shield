@@ -2,7 +2,6 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
   alias ThreatShield.Accounts.Organisation
   use ThreatShieldWeb, :live_component
 
-  alias ThreatShield.Scope
   alias ThreatShield.Systems.System
   alias ThreatShield.Accounts.Organisation
 
@@ -55,9 +54,9 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
           <:col :let={system}>
             <%= system.name %>
             <p class="text-gray-500 text-xs font-normal">
-              <%= @threat_count %><span> Threats</span>
+              <%= system.threats |> Enum.count() %><span> Threats</span>
               <span>•</span>
-              <%= @asset_count %><span> Assets</span>
+              <%= system.assets |> Enum.count() %><span> Assets</span>
             </p>
           </:col>
           <:col :let={system}><%= system.description %></:col>
@@ -104,11 +103,8 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
 
   @impl true
   def update(assigns, socket) do
-    scope = %Scope{} = assigns.scope
-
     socket
     |> assign(assigns)
-    |> assign(:systems, scope.organisation.systems)
     |> ok()
   end
 

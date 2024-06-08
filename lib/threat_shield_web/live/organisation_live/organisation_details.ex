@@ -7,7 +7,8 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
   alias ThreatShield.Organisations
   alias ThreatShield.Const.Locations
 
-  alias ThreatShield.Assets
+  alias ThreatShield.Systems
+
   alias ThreatShield.Threats
 
   import ThreatShield.Accounts.Organisation,
@@ -24,20 +25,18 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
     organisation = Organisations.get_organisation!(user, org_id)
     membership = Organisation.get_membership(organisation, user)
 
-    threat_count = Threats.count_all_threats(organisation)
-    asset_count = Assets.count_all_assets()
+    systems = Systems.list_systems(user, organisation)
 
     socket
-    |> assign(:current_tab, :systems)
     |> assign(:attributes, attributes())
     |> assign(:organisation, organisation)
     |> assign(:membership, membership)
+    |> assign(:systems, systems)
     |> assign(locations_options: Locations.list_locations())
     |> assign(:attributes, Organisation.attributes())
-    |> assign(:threat_count, threat_count)
-    |> assign(:asset_count, asset_count)
     |> assign(:scope, Scope.for(user, organisation))
     |> assign(:ai_suggestions, %{})
+    |> show_tab(:systems)
     |> ok()
   end
 
@@ -66,9 +65,9 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
     user = socket.assigns.current_user
     organisation = Organisations.get_organisation!(user, organisation.id)
 
-    {:noreply,
-     socket
-     |> assign(:organisation, organisation)}
+    socket
+    |> assign(:organisation, organisation)
+    |> noreply()
   end
 
   @impl true
@@ -76,8 +75,10 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
     stale_org = socket.assigns.organisation
     updated_org = %{stale_org | systems: stale_org.systems ++ [system]}
 
-    {:noreply,
-     socket |> assign(organisation: updated_org) |> assign(page_title: "Show Organisation")}
+    socket
+    |> assign(organisation: updated_org)
+    |> assign(page_title: "Show Organisation")
+    |> noreply()
   end
 
   @impl true
@@ -85,8 +86,10 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
     stale_org = socket.assigns.organisation
     updated_org = %{stale_org | assets: stale_org.assets ++ [asset]}
 
-    {:noreply,
-     socket |> assign(organisation: updated_org) |> assign(page_title: "Show Organisation")}
+    socket
+    |> assign(organisation: updated_org)
+    |> assign(page_title: "Show Organisation")
+    |> noreply()
   end
 
   @impl true
@@ -97,8 +100,10 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
     new_threat_with_system = Threats.get_threat!(user, threat.id)
     updated_org = %{stale_org | threats: stale_org.threats ++ [new_threat_with_system]}
 
-    {:noreply,
-     socket |> assign(organisation: updated_org) |> assign(page_title: "Show Organisation")}
+    socket
+    |> assign(organisation: updated_org)
+    |> assign(page_title: "Show Organisation")
+    |> noreply()
   end
 
   @impl true
@@ -131,7 +136,14 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
   @impl true
   def handle_event("switch_tab", %{"tab" => tab}, socket) do
     socket
-    |> assign(current_tab: String.to_existing_atom(tab))
+    |> show_tab(String.to_existing_atom(tab))
     |> noreply()
+  end
+
+  # internal
+
+  defp show_tab(socket, tab) do
+    socket
+    |> assign(:current_tab, tab)
   end
 end

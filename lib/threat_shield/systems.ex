@@ -9,12 +9,6 @@ defmodule ThreatShield.Systems do
 
   alias ThreatShield.Accounts.User
   alias ThreatShield.Systems.System
-  alias ThreatShield.Organisations
-
-  def get_organisation!(user, org_id) do
-    Organisations.get_organisation!(user, org_id)
-    |> Repo.preload(:systems)
-  end
 
   def get_system!(%User{id: user_id}, sys_id) do
     System.get(sys_id)
@@ -25,6 +19,15 @@ defmodule ThreatShield.Systems do
     |> System.with_org_systems()
     |> System.preload_membership()
     |> Repo.one!()
+  end
+
+  def list_systems(%User{id: user_id}, %Organisation{id: org_id}) do
+    System.from()
+    |> System.for_user(user_id)
+    |> System.for_organisation(org_id)
+    |> System.with_assets()
+    |> System.with_threats()
+    |> Repo.all()
   end
 
   @doc """

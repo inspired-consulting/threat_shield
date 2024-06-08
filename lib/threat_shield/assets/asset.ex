@@ -52,8 +52,16 @@ defmodule ThreatShield.Assets.Asset do
 
   import Ecto.Query
 
+  def from() do
+    from(e in __MODULE__, as: :asset)
+  end
+
   def get(id) do
     from(e in __MODULE__, as: :asset, where: e.id == ^id)
+  end
+
+  def for_organisation(query, org_id) do
+    where(query, organisation_id: ^org_id)
   end
 
   def for_user(query, user_id) do
@@ -64,6 +72,10 @@ defmodule ThreatShield.Assets.Asset do
   def for_user(query, user_id, right) do
     join(query, :inner, [asset: t], assoc(t, :organisation), as: :organisation)
     |> Organisation.for_user(user_id, right)
+  end
+
+  def where_system(query, system_id) do
+    where(query, system_id: ^system_id)
   end
 
   def preload_organisation(query) do

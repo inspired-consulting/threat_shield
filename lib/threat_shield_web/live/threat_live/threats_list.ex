@@ -217,9 +217,18 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
     socket
   end
 
-  defp load_and_filter_threats(socket, _assigns) do
-    # Todo: Implement loading and filtering of threats
+  defp load_and_filter_threats(socket, %{scope: %Scope{user: user, organisation: org} = scope}) do
+    threats =
+      case scope do
+        %Scope{system: %System{} = system} ->
+          Threats.find_by_system(user, system)
+
+        _ ->
+          Threats.list_threats(user, org)
+      end
+
     socket
+    |> assign(threats: threats)
   end
 
   defp systems_of_organisaton(%Organisation{} = organisation) do

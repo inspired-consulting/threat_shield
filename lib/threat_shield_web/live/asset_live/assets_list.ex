@@ -72,6 +72,9 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
         >
           <:col :let={asset}>
             <%= asset.name %>
+            <p :if={is_list(asset.threats)} class="text-gray-500 text-xs font-normal">
+              <%= asset.threats |> Enum.count() %><span> Threats</span>
+            </p>
           </:col>
           <:col :let={asset}><%= asset.description %></:col>
           <:col :let={asset}>
@@ -156,6 +159,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
   def update(assigns, socket) do
     socket
     |> assign(assigns)
+    |> load_and_filter_assets(assigns)
     |> ok()
   end
 
@@ -222,6 +226,25 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
   end
 
   # internal
+
+  defp load_and_filter_assets(socket, %{assets: assets}) when is_list(assets) do
+    Logger.debug("Assets already provided by caller")
+    socket
+  end
+
+  defp load_and_filter_assets(socket, %{scope: %Scope{user: user, organisation: org} = scope}) do
+    assets =
+      case scope do
+        %Scope{system: %System{} = system} ->
+          Assets.find_by_system(user, system)
+
+        _ ->
+          Assets.list_assets(user, org)
+      end
+
+    socket
+    |> assign(assets: assets)
+  end
 
   defp systems_of_organisaton(%Organisation{} = organisation) do
     Organisation.list_system_options(organisation)

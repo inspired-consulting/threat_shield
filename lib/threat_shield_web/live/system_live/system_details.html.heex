@@ -2,6 +2,9 @@
   <div class="ts-container flex justify-between">
     <div class="min-h-10 pb-2">
       <.h1>
+        <span class="text-gray-800 inline-block">
+          <Icons.system_icon class="w-5 h-5" />
+        </span>
         <%= @system.name %>
       </.h1>
       <p class="text-sm leading-6 text-gray-600 font-normal">
@@ -63,7 +66,6 @@
     module={ThreatShieldWeb.AssetLive.AssetsList}
     id={"assets_for_system_#{@system.id}"}
     scope={@scope}
-    assets={@system.assets}
     system={@system}
     ai_suggestions={@ai_suggestions}
     origin={link_to(@system)}
@@ -74,7 +76,6 @@
     module={ThreatShieldWeb.ThreatLive.ThreatsList}
     id={"threats_for_system_#{@system.id}"}
     scope={@scope}
-    threats={@system.threats}
     ai_suggestions={@ai_suggestions}
     origin={link_to(@system)}
   />
@@ -83,7 +84,7 @@
     :if={@live_action == :edit_system}
     id="system-modal"
     show
-    on_cancel={JS.patch(~p"/organisations/#{@organisation}/systems/#{@system.id}")}
+    on_cancel={JS.patch(link_to(@system))}
   >
     <.live_component
       module={ThreatShieldWeb.SystemLive.SystemForm}

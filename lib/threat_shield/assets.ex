@@ -12,20 +12,6 @@ defmodule ThreatShield.Assets do
   alias ThreatShield.Systems.System
   alias ThreatShield.Accounts.Organisation
 
-  def get_organisation!(%User{id: user_id}, org_id) do
-    Organisation.get(org_id)
-    |> Organisation.for_user(user_id)
-    |> Organisation.with_systems()
-    |> Organisation.with_threats()
-    |> Organisation.with_assets()
-    |> Repo.one!()
-  end
-
-  def count_all_assets() do
-    Asset
-    |> Repo.aggregate(:count, :id)
-  end
-
   def get_asset!(%User{id: user_id}, asset_id) do
     Asset.get(asset_id)
     |> Asset.for_user(user_id)
@@ -36,6 +22,23 @@ defmodule ThreatShield.Assets do
     |> Asset.with_org_assets()
     |> Asset.preload_membership()
     |> Repo.one!()
+  end
+
+  def list_assets(%User{id: user_id}, %Organisation{id: org_id}) do
+    Asset.from()
+    |> Asset.for_user(user_id)
+    |> Asset.for_organisation(org_id)
+    |> Asset.with_threats()
+    |> Repo.all()
+  end
+
+  def find_by_system(%User{id: user_id}, %System{id: system_id, organisation_id: org_id}) do
+    Asset.from()
+    |> Asset.for_user(user_id)
+    |> Asset.for_organisation(org_id)
+    |> Asset.where_system(system_id)
+    |> Asset.with_threats()
+    |> Repo.all()
   end
 
   def prepare_asset(system_id \\ nil) do

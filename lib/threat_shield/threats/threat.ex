@@ -64,6 +64,10 @@ defmodule ThreatShield.Threats.Threat do
     |> Organisation.for_user(user_id, right)
   end
 
+  def for_organisation(query, org_id) do
+    where(query, organisation_id: ^org_id)
+  end
+
   def join_organisation(query) do
     if has_named_binding?(query, :organisation) do
       query
@@ -80,6 +84,11 @@ defmodule ThreatShield.Threats.Threat do
   def where_asset(query, asset_id) do
     query
     |> where([threat: t], t.asset_id == ^asset_id)
+  end
+
+  def where_system(query, system_id) do
+    query
+    |> where([threat: t], t.system_id == ^system_id)
   end
 
   def with_organisation(query) do

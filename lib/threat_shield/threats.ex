@@ -26,6 +26,28 @@ defmodule ThreatShield.Threats do
     |> Repo.one!()
   end
 
+  def list_threats(%User{id: user_id}, %Organisation{id: org_id}) do
+    Threat.from()
+    |> Threat.for_user(user_id)
+    |> Threat.for_organisation(org_id)
+    |> Threat.with_system()
+    |> Threat.with_asset()
+    |> Threat.with_organisation_and_risks()
+    |> Threat.with_org_systems()
+    |> Threat.with_org_assets()
+    |> Repo.all()
+  end
+
+  def find_by_system(%User{id: user_id}, %System{id: system_id, organisation_id: org_id}) do
+    Threat.from()
+    |> Threat.for_user(user_id)
+    |> Threat.where_organisation(org_id)
+    |> Threat.where_system(system_id)
+    |> Threat.with_system()
+    |> Threat.with_asset()
+    |> Repo.all()
+  end
+
   def find_by_asset(%Asset{id: asset_id, organisation_id: org_id}) do
     Threat.from()
     |> Threat.where_organisation(org_id)

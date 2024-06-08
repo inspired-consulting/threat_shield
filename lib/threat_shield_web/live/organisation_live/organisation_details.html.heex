@@ -89,9 +89,8 @@
     :if={@current_tab == :systems}
     module={ThreatShieldWeb.SystemLive.SystemsList}
     id={"systems_for_org_#{@organisation.id}"}
+    systems={@systems}
     scope={@scope}
-    threat_count={@threat_count}
-    asset_count={@asset_count}
     origin={link_to(@organisation)}
   />
 
@@ -100,7 +99,6 @@
     module={ThreatShieldWeb.AssetLive.AssetsList}
     id={"assets_for_org_#{@organisation.id}"}
     scope={@scope}
-    assets={@organisation.assets}
     ai_suggestions={@ai_suggestions}
     origin={link_to(@organisation)}
   />
@@ -110,7 +108,6 @@
     module={ThreatShieldWeb.ThreatLive.ThreatsList}
     id={"threats_for_org_#{@organisation.id}"}
     scope={@scope}
-    threats={@organisation.threats}
     ai_suggestions={@ai_suggestions}
     origin={link_to(@organisation)}
   />
