@@ -34,7 +34,7 @@ defmodule ThreatShieldWeb.RiskLive.RiskBoard do
       </div>
     </section>
 
-    <section class="mx-2 lg:mx-auto mt-4 flex flex-wrap gap-4 justify-center lg:max-w-[82rem] 2xl:max-w-[120rem]">
+    <section class="mx-2 lg:mx-auto lg:px-4 mt-4 flex flex-wrap gap-4 justify-center ">
       <div class="none md:block px-6 py-6 bg-white rounded-lg shadow">
         <.risk_quadrants risk_model={@risk_model} size={700} show_labels={true} />
       </div>
