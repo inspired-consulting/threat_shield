@@ -1,0 +1,101 @@
+<section class="ts-container my-8">
+  <div class="px-8 py-4 bg-white rounded-lg shadow">
+    <.header class="mt-6">
+      <%= dgettext("organisations", "Your organisations") %>
+      <p :if={@has_memberships} class="text-sm leading-6 text-gray-600 font-normal">
+        <%= dgettext(
+          "organisations",
+          "This list contains all organisations where you are a member."
+        ) %>
+      </p>
+      <p :if={!@has_memberships} class="text-sm leading-6 text-gray-600 font-normal">
+        <%= dgettext(
+          "organisations",
+          "You are not a member of any organisations yet."
+        ) %>
+        <br />
+        <%= dgettext(
+          "organisations",
+          "Please ask an organisations admin to invite you or create a new organisation to get started."
+        ) %>
+      </p>
+      <:actions>
+        <.link patch={~p"/organisations/new"}>
+          <.button_primary>New Organisation</.button_primary>
+        </.link>
+      </:actions>
+    </.header>
+
+    <.table
+      :if={@has_memberships}
+      id="organisations"
+      rows={@streams.organisations}
+      row_click={fn {_id, organisation} -> JS.navigate(~p"/organisations/#{organisation}") end}
+    >
+      <:col :let={{_id, organisation}} label="Name"><%= organisation.name %></:col>
+      <:col :let={{_id, organisation}} label="Attributes">
+        <div class="grid grid-cols-2 gap-x-3">
+          <%= for {key, value} <- organisation.attributes do %>
+            <div>
+              <label class="font-semibold text-gray-500"><%= key %>:</label>
+              <span class="text-gray-900"><%= value %></span>
+            </div>
+          <% end %>
+        </div>
+      </:col>
+    </.table>
+  </div>
+</section>
+
+<section :if={length(@open_invitations) > 0} class="ts-container my-8">
+  <div class="px-8 py-4 bg-primary-100 rounded-lg shadow">
+    <.h1>
+      <%= dgettext("organisation", "Open invitations") %>
+    </.h1>
+    <.table id="invites" rows={@open_invitations}>
+      <:col :let={invite} label={dgettext("common", "Organisation")}>
+        <%= invite.organisation.name %>
+      </:col>
+      <:col :let={invite} label={dgettext("common", "Valid until")}>
+        <%= format_datetime(ThreatShield.Members.Invite.expiration_point(invite)) %>
+      </:col>
+      <:col :let={invite}>
+        <div class="flex flex-grow gap-x-2">
+          <div class="md:ms-auto">
+            <.button_secondary
+              phx-click="reject_invitation"
+              phx-value-invite_id={invite.id}
+              data-confirm={"Do you really want to revoke the invite for #{invite.email}?"}
+            >
+              <%= dgettext("common", "Reject") %>
+            </.button_secondary>
+          </div>
+          <div>
+            <.button_primary phx-click="accept_invitation" phx-value-invite_id={invite.id}>
+              <%= dgettext("common", "Accept") %>
+            </.button_primary>
+          </div>
+        </div>
+      </:col>
+    </.table>
+  </div>
+</section>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="organisation-modal"
+  show
+  on_cancel={JS.patch(~p"/organisations")}
+>
+  <.live_component
+    module={ThreatShieldWeb.OrganisationLive.OrganisationForm}
+    id={@edit_organisation.id || :new}
+    title={@page_title}
+    action={@live_action}
+    organisation={@edit_organisation}
+    current_user={@current_user}
+    locations_options={@locations_options}
+    attributes={@attributes}
+    patch={~p"/organisations"}
+  />
+</.modal>

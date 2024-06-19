@@ -1,8 +1,9 @@
 defmodule ThreatShield.Members.Invite do
-  alias ThreatShield.Accounts.Organisation
   use Ecto.Schema
-  import Ecto.Changeset
 
+  alias ThreatShield.Accounts.{Organisation, User}
+
+  import Ecto.Changeset
   import ThreatShield.Const.RetentionTimes, only: [invite_lifetime_in_seconds: 0]
 
   schema "invites" do
@@ -54,6 +55,13 @@ defmodule ThreatShield.Members.Invite do
   def where_expired(query) do
     query
     |> where([invite: i], i.inserted_at < ^cutoff_time())
+  end
+
+  def where_invitee(query, %User{email: email}), do: where_invitee(query, email)
+
+  def where_invitee(query, email) do
+    query
+    |> where([invite: i], i.email == ^email)
   end
 
   def with_time_limit(query) do

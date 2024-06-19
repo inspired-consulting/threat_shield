@@ -6,32 +6,31 @@ defmodule ThreatShieldWeb.MembersLive.Index do
 
   alias ThreatShield.Members
   alias ThreatShield.Members.Invite
-  alias ThreatShield.Accounts.UserNotifier
-  alias ThreatShield.Accounts.Membership
+  alias ThreatShield.Accounts.{User, Organisation, Membership, UserNotifier}
 
-  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, format_datetime: 1]
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, format_datetime: 1, full_name: 1]
   import ThreatShieldWeb.Labels
 
   @impl true
   def mount(%{"org_id" => org_id}, _session, socket) do
-    user = socket.assigns.current_user
-    organisation = Members.get_organisation!(user, org_id)
+    %User{} = user = socket.assigns.current_user
+    %Organisation{} = organisation = Members.get_organisation!(user, org_id)
+    current_membership = organisation.memberships |> Enum.find(fn m -> m.user.id == user.id end)
+    owner_count = organisation.memberships |> Enum.count(fn m -> m.role == :owner end)
 
     socket
     |> assign(:organisation, organisation)
-    |> assign(
-      :current_org_membership,
-      organisation.memberships |> Enum.find(fn m -> m.user.id == user.id end)
-    )
+    |> assign(:current_org_membership, current_membership)
+    |> assign(:owner_count, owner_count)
     |> ok()
   end
 
   @impl true
   def handle_params(params, url, socket) do
-    {:noreply,
-     socket
-     |> add_breadcrumbs(url)
-     |> apply_action(socket.assigns.live_action, params)}
+    socket
+    |> add_breadcrumbs(url)
+    |> apply_action(socket.assigns.live_action, params)
+    |> noreply()
   end
 
   defp apply_action(socket, :new_invite, _params) do
@@ -114,9 +113,7 @@ defmodule ThreatShieldWeb.MembersLive.Index do
 
   @impl true
   def handle_event("revoke_invite", %{"invite_id" => id}, socket) do
-    user = socket.assigns.current_user
-
-    {:ok, invite} = Members.delete_invite_by_id(user, id)
+    {:ok, invite} = Members.delete_invite(id)
 
     socket
     |> assign(

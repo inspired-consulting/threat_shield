@@ -20,14 +20,14 @@
     </.header>
 
     <.table id="memberships" rows={@organisation.memberships}>
-      <:col :let={membership} label="User"><%= membership.user.email %></:col>
+      <:col :let={membership} label="E-mail"><%= membership.user.email %></:col>
       <:col :let={membership} label="Role">
         <%= role_label(membership.role) %>
       </:col>
       <:col :let={membership}>
         <div class="text-right pr-4">
-          <%= if length(@organisation.memberships |> Enum.filter(fn m -> m.role == :owner end )) > 1 do %>
-            <.button_primary
+          <%= if @owner_count > 1 or membership.role != :owner do %>
+            <.button_secondary
               :if={ThreatShield.Members.Rights.may(:delete_member, @current_org_membership)}
               phx-click="delete_membership"
               phx-value-membership_id={membership.id}
@@ -38,7 +38,7 @@
               <% else %>
                 <%= dgettext("common", "Delete") %>
               <% end %>
-            </.button_primary>
+            </.button_secondary>
           <% end %>
           <.button_secondary
             :if={ThreatShield.Members.Rights.may(:edit_membership, @current_org_membership)}

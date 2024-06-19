@@ -285,7 +285,30 @@ defmodule ThreatShieldWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-primary-100  shadow shadow-inner hover:bg-primary-500 py-2 px-3",
+        "phx-submit-loading:opacity-75 rounded-lg bg-gray-200 hover:bg-gray-300 py-2 px-3",
+        "font-semibold leading-6 text-gray-900 active:text-white whitespace-nowrap",
+        "disabled:bg-secondary-900 disabled:pointer-events-none",
+        @class
+      ]}
+      {@rest}
+    >
+      <%= render_slot(@inner_block) %>
+    </button>
+    """
+  end
+
+  attr :type, :string, default: nil
+  attr :class, :string, default: nil
+  attr :rest, :global, include: ~w(disabled form name value)
+
+  slot :inner_block, required: true
+
+  def button_unobstrusive(assigns) do
+    ~H"""
+    <button
+      type={@type}
+      class={[
+        "phx-submit-loading:opacity-75 rounded-lg bg-primary-100 shadow shadow-inner hover:bg-primary-500 py-2 px-3",
         "text-gray-900 text-sm font-semibold hover:text-white active:text-white",
         "disabled:bg-secondary-900 disabled:pointer-events-none",
         @class
@@ -863,7 +886,7 @@ defmodule ThreatShieldWeb.CoreComponents do
               phx-click={@row_click && @row_click.(row)}
               class={["relative p-0", @row_click && "hover:cursor-pointer"]}
             >
-              <.button_secondary><%= dgettext("common", "View") %></.button_secondary>
+              <.button_unobstrusive><%= dgettext("common", "View") %></.button_unobstrusive>
             </.link>
           </td>
         </tr>

@@ -2,12 +2,6 @@ defmodule ThreatShield.Analytics.RiskAnalyticsTest do
   use ExUnit.Case
   alias ThreatShield.Analytics.RiskAnalytics
 
-  alias ThreatShield.Analytics.RiskAnalytics
-  alias ThreatShield.OrganisationsFixtures
-  alias ThreatShield.AccountsFixtures
-  alias ThreatShield.Threats
-  alias ThreatShield.Threats.Threat
-
   describe "risk analytics" do
     test "can handle empty lists" do
       assert 0.0 == RiskAnalytics.max_cost([])

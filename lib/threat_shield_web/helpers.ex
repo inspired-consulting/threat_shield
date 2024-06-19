@@ -4,12 +4,11 @@ defmodule ThreatShieldWeb.Helpers do
     router: ThreatShieldWeb.Router
 
   alias ElixirLS.LanguageServer.Plugins.Phoenix.Scope
-  alias ThreatShield.Accounts.Organisation
+  alias ThreatShield.Accounts.{Organisation, User}
 
   import Phoenix.Component
   alias ThreatShieldWeb.Endpoint
 
-  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Risks.Risk
   alias ThreatShield.Threats.Threat
   alias ThreatShield.Systems.System
@@ -92,6 +91,14 @@ defmodule ThreatShieldWeb.Helpers do
 
   def format_percentage(nil), do: "-"
   def format_percentage(number), do: number
+
+  # user
+
+  def full_name(%User{} = user) do
+    "#{user.first_name} #{user.last_name}"
+  end
+
+  def full_name(_), do: "-"
 
   # URLs
 

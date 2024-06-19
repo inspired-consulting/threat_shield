@@ -4,15 +4,15 @@ defmodule ThreatShield.Members do
   """
 
   import Ecto.Query, warn: false
-  alias ThreatShield.Accounts.Membership
-  alias ThreatShield.Accounts.Organisation
-  alias ThreatShield.Repo
 
+  alias ThreatShield.Accounts.{Membership, Organisation, User}
+  alias ThreatShield.Repo
+  alias ThreatShield.Members.Rights
   alias ThreatShield.Members.Invite
-  alias ThreatShield.Accounts.User
-  alias ThreatShield.Accounts.Organisation
 
   import ThreatShieldWeb.Helpers, only: [generate_token: 0]
+
+  require Logger
 
   def get_organisation!(%User{id: user_id}, org_id) do
     Organisation.get(org_id)
@@ -28,6 +28,14 @@ defmodule ThreatShield.Members do
     |> Invite.with_organisation()
     |> Invite.with_time_limit()
     |> Repo.one()
+  end
+
+  def get_invites_by_user(%User{} = invitee) do
+    Invite.from()
+    |> Invite.where_invitee(invitee)
+    |> Invite.with_organisation()
+    |> Invite.with_time_limit()
+    |> Repo.all()
   end
 
   def join_with_token(%User{} = user, token) do
@@ -67,32 +75,59 @@ defmodule ThreatShield.Members do
     end
   end
 
-  def delete_membership_by_id(%User{id: user_id}, org_id, membership_id) do
-    case Repo.transaction(fn ->
-           organisation =
-             Organisation.get(org_id)
-             |> Organisation.for_user(user_id, :delete_member)
-             |> Organisation.with_memberships()
-             |> Repo.one!()
+  def delete_membership_by_id(%User{} = actor, org_id, membership_id) do
+    membership =
+      Membership.get(membership_id)
+      |> Membership.preload_org_memberships()
+      |> Repo.one()
 
-           if length(organisation.memberships |> Enum.filter(fn m -> m.role == :owner end)) >= 2 do
-             Membership.get(membership_id)
-             |> Membership.for_user(user_id)
-             |> Membership.select()
-             |> Repo.delete_all()
-           else
-             {:error, :last_member}
-           end
-         end) do
-      {:ok, {1, [membership]}} -> {:ok, membership}
-      {:ok, {:error, err}} -> {:error, err}
-      {:error, err} -> {:error, err}
+    organisation =
+      Organisation.get(org_id)
+      |> Organisation.with_memberships()
+      |> Repo.one()
+
+    delete_membership(actor, organisation, membership)
+  end
+
+  def delete_membership(
+        %User{} = actor,
+        %Organisation{} = org,
+        %Membership{} = membership
+      ) do
+    Logger.warning(
+      "User #{actor.email} is deleting membership #{membership.id} from organisation #{org.id}"
+    )
+
+    with :ok <- Rights.check_permissioned(:delete_member, actor, org),
+         :ok <- assert_not_last_member(org, membership),
+         :ok <- assert_not_last_owner(org, membership) do
+      Repo.delete(membership)
+
+      {:ok, membership}
+    else
+      {:error, :last_owner} -> {:error, :last_owner}
+      {:error, :not_allowed} -> {:error, :not_allowed}
     end
   end
 
-  def delete_invite_by_id(%User{id: user_id}, invite_id) do
+  def accept_invite(%User{email: invitee_email} = invitee, invite_id) do
+    invite =
+      Invite.get(invite_id)
+      |> Invite.with_time_limit()
+      |> Invite.with_organisation()
+      |> Repo.one()
+
+    with %Invite{email: ^invitee_email} <- invite,
+         {:ok, :no_member} <- check_membership(invitee, invite.organisation_id) do
+      convert_to_membership(invitee, invite)
+    else
+      {:ok, :is_member} -> {:error, :already_member}
+      nil -> {:error, :invalid_invite}
+    end
+  end
+
+  def delete_invite(invite_id) do
     case Invite.get(invite_id)
-         |> Invite.for_user(user_id, :invite_new_members)
          |> Invite.select()
          |> Repo.delete_all() do
       {1, [invite]} -> {:ok, invite}
@@ -148,6 +183,22 @@ defmodule ThreatShield.Members do
     end
   end
 
+  # internal
+
+  defp convert_to_membership(
+         %User{} = user,
+         %Invite{} = invite
+       ) do
+    Repo.transaction(fn ->
+      membership =
+        %Membership{user: user, organisation: invite.organisation, role: :viewer}
+        |> Repo.insert!()
+
+      Repo.delete(invite)
+      membership
+    end)
+  end
+
   defp check_membership(%User{id: user_id}, org_id) do
     memberships =
       Membership.for_user(user_id)
@@ -159,4 +210,33 @@ defmodule ThreatShield.Members do
       {:ok, :no_member}
     end
   end
+
+  defp assert_not_last_member(
+         %Organisation{} = organisation,
+         %Membership{}
+       ) do
+    if organisation.memberships |> Enum.count() > 1 do
+      :ok
+    else
+      {:error, :last_member}
+    end
+  end
+
+  defp assert_not_last_owner(
+         %Organisation{} = organisation,
+         %Membership{role: :owner}
+       ) do
+    owner_count =
+      organisation.memberships
+      |> Enum.filter(fn m -> m.role == :owner end)
+      |> Enum.count()
+
+    if owner_count <= 1 do
+      {:error, :last_owner}
+    else
+      :ok
+    end
+  end
+
+  defp assert_not_last_owner(_organisation, %Membership{role: _non_owner_role}), do: :ok
 end

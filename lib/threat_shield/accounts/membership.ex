@@ -46,8 +46,17 @@ defmodule ThreatShield.Accounts.Membership do
 
   def preload_org_memberships(query) do
     query
+    |> join_organisation()
     |> join(:inner, [organisation: o], assoc(o, :memberships), as: :org_memberships)
     |> preload([organisation: o, org_memberships: m], organisation: {o, memberships: m})
+  end
+
+  def join_organisation(query) do
+    if has_named_binding?(query, :organisation) do
+      query
+    else
+      join(query, :inner, [membership: m], assoc(m, :organisation), as: :organisation)
+    end
   end
 
   def select(query) do
