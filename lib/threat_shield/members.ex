@@ -5,9 +5,8 @@ defmodule ThreatShield.Members do
 
   import Ecto.Query, warn: false
 
-  alias ThreatShield.Accounts.{Membership, Organisation, User}
+  alias ThreatShield.Accounts.{Membership, Organisation, User, RBAC}
   alias ThreatShield.Repo
-  alias ThreatShield.Members.Rights
   alias ThreatShield.Members.Invite
 
   import ThreatShieldWeb.Helpers, only: [generate_token: 0]
@@ -55,13 +54,13 @@ defmodule ThreatShield.Members do
     end
   end
 
-  def create_invite(%User{id: user_id}, %Organisation{id: org_id}, attrs \\ %{}) do
+  def create_invite(%User{} = actor, %Organisation{id: org_id}, attrs \\ %{}) do
     token = generate_token()
 
     case Repo.transaction(fn ->
            organisation =
              Organisation.get(org_id)
-             |> Organisation.for_user(user_id, :invite_new_members)
+             |> Organisation.for_user(actor.id, :invite_new_members)
              |> Repo.one!()
 
            %Invite{token: token}
@@ -98,15 +97,16 @@ defmodule ThreatShield.Members do
       "User #{actor.email} is deleting membership #{membership.id} from organisation #{org.id}"
     )
 
-    with :ok <- Rights.check_permissioned(:delete_member, actor, org),
+    with :ok <- RBAC.verify_permission(actor, org, :delete_member),
          :ok <- assert_not_last_member(org, membership),
          :ok <- assert_not_last_owner(org, membership) do
       Repo.delete(membership)
 
       {:ok, membership}
     else
+      :not_allowed -> {:error, :not_allowed}
       {:error, :last_owner} -> {:error, :last_owner}
-      {:error, :not_allowed} -> {:error, :not_allowed}
+      {:error, :last_member} -> {:error, :last_member}
     end
   end
 

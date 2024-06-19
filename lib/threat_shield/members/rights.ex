@@ -1,5 +1,5 @@
 defmodule ThreatShield.Members.Rights do
-  alias ThreatShield.Accounts.{Membership, User, Organisation}
+  alias ThreatShield.Accounts.{Membership}
 
   @rights %{
     :invite_new_members => [:owner],
@@ -30,18 +30,5 @@ defmodule ThreatShield.Members.Rights do
 
   def may(right, %Membership{role: role}) do
     role in get_authorised_roles(right)
-  end
-
-  def check_permissioned(permission, %User{} = user, %Organisation{} = organisation) do
-    membership = organisation.memberships |> Enum.find(fn m -> m.user.id == user.id end)
-    check_permissioned(permission, membership)
-  end
-
-  def check_permissioned(permission, %Membership{} = membership) do
-    if may(permission, membership) do
-      :ok
-    else
-      {:error, :not_allowed}
-    end
   end
 end
