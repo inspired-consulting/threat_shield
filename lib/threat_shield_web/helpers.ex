@@ -92,14 +92,6 @@ defmodule ThreatShieldWeb.Helpers do
   def format_percentage(nil), do: "-"
   def format_percentage(number), do: number
 
-  # user
-
-  def full_name(%User{} = user) do
-    "#{user.first_name} #{user.last_name}"
-  end
-
-  def full_name(_), do: "-"
-
   # URLs
 
   def link_to(%Risk{id: risk_id, threat: %Threat{id: threat_id} = threat}, %Organisation{

@@ -8,7 +8,7 @@ defmodule ThreatShieldWeb.MembersLive.Index do
   alias ThreatShield.Members.Invite
   alias ThreatShield.Accounts.{User, Organisation, Membership, UserNotifier}
 
-  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, format_datetime: 1, full_name: 1]
+  import ThreatShieldWeb.Helpers, only: [add_breadcrumbs: 2, format_datetime: 1]
   import ThreatShieldWeb.Labels
 
   @impl true

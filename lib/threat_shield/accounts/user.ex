@@ -6,7 +6,7 @@ defmodule ThreatShield.Accounts.User do
     field :email, :string
     field :first_name, :string
     field :last_name, :string
-    field(:global_roles, {:array, :string}, default: ["reader"])
+    field :global_roles, {:array, :string}, default: []
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
