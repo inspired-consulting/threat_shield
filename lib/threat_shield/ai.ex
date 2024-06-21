@@ -11,9 +11,10 @@ defmodule ThreatShield.AI do
 
   require Logger
 
-  @open_ai_model "gpt-3.5-turbo"
+  # @open_ai_model "gpt-3.5-turbo"
   # @open_ai_model "gpt-4-turbo-preview"
-
+  # @open_ai_model "llama3"
+  @open_ai_model "mistral"
   @threat_info "Threats are any potential event or action that can compromise the security of a system, organisation, or individual. Threats are not the negative outcome, i.e. not the loss, damage, or harm resulting from the exploitation of vulnerabilities by threats."
 
   @quota_ai_requests_per_month "ai_requests_per_month"
@@ -49,7 +50,7 @@ defmodule ThreatShield.AI do
   def suggest_values(%DynamicAttribute{name: name, description: description}) do
     # {resource_name_plural}": [{"name": _, "description": _}, _ ]}."
     system_prompt = """
-    You are a software engineer. Your answer is in valid JSON format like so {"suggestions": [{"value": _}, _ ]}.
+    You are a software engineer. Your answer is in valid JSON format like so {"suggestions": [{"value": _}, _ ]}. Do not add any text before or after the response.
     """
 
     user_prompt = """

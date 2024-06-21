@@ -49,17 +49,17 @@ services:
     container_name: ThreatShield-migration
     networks:
       - threatshield-network
-  tests:
-    build:
-      context: .
-      dockerfile: Dockerfile.tests
-    depends_on:
-      - db
-    env_file:
-      - .env
-    container_name: ThreatShield-tests
-    networks:
-      - threatshield-network
+  # tests:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.tests
+  #   depends_on:
+  #     - db
+  #   env_file:
+  #     - .env
+  #   container_name: ThreatShield-tests
+  #   networks:
+  #     - threatshield-network
 
 volumes:
   db-data:
