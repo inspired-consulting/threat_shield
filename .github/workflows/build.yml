@@ -24,6 +24,9 @@ jobs:
       packages: write
     timeout-minutes: 60
     steps:
+      - name: Check if Test Workflow Passed
+        id: check-test
+        run: echo ::set-output name=success::$(if [ ${{ github.event.workflow_run.conclusion }} == 'success' ]; then echo "true"; else echo "false"; fi)
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Set up QEMU
@@ -47,3 +50,4 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}-app:${{ github.sha }}
             ghcr.io/${{ github.repository }}-app:latest
+        if: steps.check-test.outputs.success == 'true'
