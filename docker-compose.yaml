@@ -1,69 +1,14 @@
+version: "3.8"
+
 services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - MIX_ENV=dev
-    ports:
-      - "4000:4000"
-    env_file:
-      - .env
-    # important for live reloading:
-    volumes:
-      - ./:/app
-    depends_on:
-      db:
-        condition: service_healthy
-    container_name: ThreatShield-server
-    networks:
-      - threatshield-network
   db:
-    image: postgres
-    restart: always
-    user: ${POSTGRES_USER}
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    env_file:
-      - .env
+    image: postgres:15
+    restart: unless-stopped
     ports:
-      - "15432:5432"
-    healthcheck:
-      test: ["CMD", "pg_isready"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    container_name: ThreatShield-db
-    networks:
-      - threatshield-network
-  migration:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      db:
-        condition: service_healthy
-    command: ["mix", "ecto.migrate"]
-    env_file:
-      - .env
-    container_name: ThreatShield-migration
-    networks:
-      - threatshield-network
-  tests:
-    build:
-      context: .
-      dockerfile: Dockerfile.tests
-    depends_on:
-      - db
-    env_file:
-      - .env
-    container_name: ThreatShield-tests
-    networks:
-      - threatshield-network
-
-volumes:
-  db-data:
-
-networks:
-  threatshield-network:
-    driver: bridge
+      - "5432:5432"
+    volumes:
+      - ./data/base_version:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: threat_shield
