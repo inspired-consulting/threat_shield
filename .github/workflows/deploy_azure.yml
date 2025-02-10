@@ -1,0 +1,41 @@
+# This workflow build and push a Docker container to Google Artifact Registry and deploy it on Cloud Run when a commit is pushed to the "main" branch
+
+name: Build and Deploy to Azure Registry
+
+on: push
+env:
+  AZURE_WEBAPP_NAME: threatshield # set this to your application's name
+
+jobs:
+  build-and-deploy-to-dev:
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v3
+      - name: Azure authentication
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: "Build and push image"
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - run: |
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/threatshield:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/threatshield:${{ github.sha }}
+
+      - name: "Deploy to Azure Container Instances"
+        uses: "azure/aci-deploy@v1"
+        with:
+          cpu: 1
+          memory: 1
+          resource-group: ${{ secrets.RESOURCE_GROUP }}
+          registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          registry-username: ${{ secrets.REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+          name: ${{ env.AZURE_WEBAPP_NAME }}
+          dns-name-label: threatshield-demo
+          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/threatshield:${{ github.sha }}
+          location: ${{ secrets.CONTAINER_INSTANCES_LOCATION }}
