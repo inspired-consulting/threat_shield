@@ -30,7 +30,12 @@ if config_env() == :prod do
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :threat_shield, ThreatShield.Repo,
-    url: db_url,
+    username: System.get_env("POSTGRES_USER"),
+    password: System.get_env("POSTGRES_PASSWORD"),
+    hostname: System.get_env("POSTGRES_HOST"),
+    database: System.get_env("POSTGRES_DB"),
+    ssl: true,
+    ssl_opts: [verify: :verify_none],
     pool_size: 10
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
