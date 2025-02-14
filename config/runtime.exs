@@ -21,28 +21,17 @@ if System.get_env("PHX_SERVER") do
 end
 
 if config_env() == :prod do
-  cloud_sql_conn =
-    System.get_env("CLOUD_SQL_CONNECTION_NAME") ||
+  db_url =
+    System.get_env("DB_URL") ||
       raise """
-      environment variable CLOUD_SQL_CONNECTION_NAME is missing.
-      """
-
-  database_pw =
-    System.get_env("DB_PASSWORD") ||
-      raise """
-      environment variable DB_PASSWORD is missing.
+      environment variable DB_URL is missing.
       """
 
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :threat_shield, ThreatShield.Repo,
-    # ssl: true,
-    socket_dir: cloud_sql_conn,
-    username: "threat_shield",
-    password: database_pw,
-    database: "threat_shield",
-    pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
-    socket_options: maybe_ipv6
+    url: db_url,
+    pool_size: 10
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
   # A default value is used in config/dev.exs and config/test.exs but you

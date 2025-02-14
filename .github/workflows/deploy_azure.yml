@@ -39,5 +39,5 @@ jobs:
           dns-name-label: threatshield-demo
           image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/threatshield:${{ github.sha }}
           location: ${{ secrets.CONTAINER_INSTANCES_LOCATION }}
-          vnet: ${{ secrets.AZURE_VNET_NAME }}
-          subnet: ${{ secrets.AZURE_SUBNET_NAME }}
+          environment-variables: PHX_SERVER=true
+          secure-environment-variables: CLOUD_SQL_CONNECTION_NAME=${{ secrets.CLOUD_SQL_CONNECTION_NAME }} DB_PASSWORD=${{ secrets.DB_PASSWORD }} OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} OPENAI_ORG_KEY=${{ secrets.OPENAI_ORG_KEY }} SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}
