@@ -36,6 +36,7 @@ jobs:
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
           name: ${{ env.AZURE_WEBAPP_NAME }}
+          ports: 4000
           dns-name-label: threatshield-demo
           image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/threatshield:${{ github.sha }}
           location: ${{ secrets.CONTAINER_INSTANCES_LOCATION }}
