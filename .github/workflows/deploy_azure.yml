@@ -36,10 +36,9 @@ jobs:
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
           name: ${{ env.AZURE_WEBAPP_NAME }}
-          dns-name-label: threatshield-demo
+          ip-address: "Private"
           image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/threatshield:${{ github.sha }}
           location: ${{ secrets.CONTAINER_INSTANCES_LOCATION }}
           environment-variables: PHX_SERVER=true
           secure-environment-variables: DB_URL="${{ secrets.DB_URL }}" OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" OPENAI_ORG_KEY="${{ secrets.OPENAI_ORG_KEY }}" SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}
           subnet-ids: ${{ secrets.AZURE_SUBNET_ID }}
-          ip-address: "Private"
