@@ -27,7 +27,7 @@ jobs:
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/threatshield:${{ github.sha }}
 
       - name: "Deploy to Azure Container Instances"
-        uses: "azure/aci-deploy@v1"
+        uses: "nirit100/aci-deploy@implement-subnet-ids"
         with:
           cpu: 1
           memory: 1
@@ -41,3 +41,4 @@ jobs:
           location: ${{ secrets.CONTAINER_INSTANCES_LOCATION }}
           environment-variables: PHX_SERVER=true
           secure-environment-variables: DB_URL="${{ secrets.DB_URL }}" OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" OPENAI_ORG_KEY="${{ secrets.OPENAI_ORG_KEY }}" SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}
+          subnet-ids: ${{ secrets.AZURE_SUBNET_ID }}
