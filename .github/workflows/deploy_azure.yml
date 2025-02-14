@@ -39,3 +39,5 @@ jobs:
           dns-name-label: threatshield-demo
           image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/threatshield:${{ github.sha }}
           location: ${{ secrets.CONTAINER_INSTANCES_LOCATION }}
+          vnet: ${{ secrets.AZURE_VNET_NAME }}
+          subnet: ${{ secrets.AZURE_SUBNET_NAME }}
