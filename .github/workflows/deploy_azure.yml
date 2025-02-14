@@ -27,7 +27,7 @@ jobs:
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/threatshield:${{ github.sha }}
 
       - name: "Deploy to Azure Container Instances"
-        uses: "azure/aci-deploy@v1"
+        uses: "nirit100/aci-deploy@implement-subnet-ids"
         with:
           cpu: 1
           memory: 1
