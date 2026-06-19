@@ -21,7 +21,6 @@ defmodule ThreatShieldWeb.Router do
     pipe_through :browser
 
     get "/", WelcomeController, :home
-    get "/exports/excel", ExportController, :export_to_excel
   end
 
   # Other scopes may use custom stacks.
@@ -68,6 +67,8 @@ defmodule ThreatShieldWeb.Router do
 
   scope "/", ThreatShieldWeb do
     pipe_through [:browser, :require_authenticated_user]
+
+    get "/exports/excel", ExportController, :export_to_excel
 
     live_session :require_authenticated_user,
       on_mount: [{ThreatShieldWeb.UserAuth, :ensure_authenticated}] do
@@ -183,7 +184,7 @@ defmodule ThreatShieldWeb.Router do
     end
 
     live_session :platform_admin,
-      on_mount: [{ThreatShieldWeb.UserAuth, :ensure_authenticated}],
+      on_mount: [{ThreatShieldWeb.UserAuth, :ensure_platform_admin}],
       layout: {ThreatShieldWeb.Layouts, :admin} do
       live "/platform-administration/organisations", AdminLive.OrganisationsManagement, :index
     end

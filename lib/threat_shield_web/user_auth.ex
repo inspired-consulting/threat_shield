@@ -177,7 +177,7 @@ defmodule ThreatShieldWeb.UserAuth do
   def on_mount(:ensure_platform_admin, _params, session, socket) do
     socket = mount_current_user(socket, session)
     current_user = socket.assigns.current_user
-    current_org = socket.assigns.current_org
+    current_org = socket.assigns[:current_org]
 
     if RBAC.has_permission(current_user, current_org, :administer_platform) do
       {:cont, socket}
