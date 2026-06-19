@@ -28,8 +28,8 @@ jobs:
       - name: Set up Elixir and Mix
         uses: erlef/setup-beam@v1
         with:
-          otp-version: 25.0
-          elixir-version: 1.15
+          otp-version: 26.2.1
+          elixir-version: 1.16.2-otp-26
           version-type: strict
 
       # Step: Define how to cache deps. Restores existing cache if present.
