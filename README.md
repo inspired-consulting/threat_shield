@@ -1,14 +1,38 @@
 # ThreatShield
 
-## Safeguarding Your Digital Realm
+**Your intelligent threat-analysis and threat-modeling companion.**
 
-ThreatShield is an AI-powered web application built with Elixir and Phoenix Framework designed to perform threat analysis and threat modeling.
+ThreatShield is an open-source, AI-assisted web application for structured
+threat modeling. You describe your organisation and its systems and assets,
+and ThreatShield helps you identify the **threats** you face, assess the
+**risks** they pose, and plan **mitigations** — with an AI assistant suggesting
+relevant entries at each step so you start from a draft instead of a blank page.
 
-In short, ThreatShield is your Intelligent Threat Analysis Companion.
+Built with Elixir, the Phoenix Framework (LiveView) and PostgreSQL.
+
+## Features
+
+- **Guided threat-modeling workflow** — organisations → systems & assets →
+  threats → risks → mitigations, all linked together.
+- **AI-assisted suggestions** — generate candidate threats, assets, risks and
+  mitigations from your organisation's context (powered by OpenAI), reviewed
+  and accepted by a human before anything is saved.
+- **Multi-tenant & role-based** — collaborate within an organisation with
+  owner/editor/viewer roles; data is isolated per organisation.
+- **Risk board & analytics** — visualise and prioritise risks across your model.
+- **Excel export** — export your threat model for reporting and sharing.
+- **Usage quotas** — per-organisation monthly limits on AI requests.
+
+## Open Source
+
+ThreatShield is open source under the [MIT License](LICENSE.txt).
+Contributions, issues and pull requests are welcome.
 
 ## Table of Contents
 
 - [ThreatShield](#threatshield)
+  - [Features](#features)
+  - [Open Source](#open-source)
   - [Development setup](#development-setup)
   - [Configuration](#configuration)
   - [Development setup with docker](#development-setup-with-docker)
@@ -24,18 +48,23 @@ In short, ThreatShield is your Intelligent Threat Analysis Companion.
       - [Running the application](#running-the-application)
       - [Stopping the server/application](#stopping-the-serverapplication)
   - [CI/CD Deployment](#cicd-deployment)
+  - [License](#license)
 
 ## Development setup
 
-Clone this repo and switch to `threat_shield`:
+Clone this repo and switch into the `threat_shield` directory:
 
 ```bash
-git clone git@github.com:inspired-consulting/ThreatShields.git
+git clone https://github.com/inspired-consulting/threat_shield.git
+cd threat_shield
 ```
 
 ## Configuration
 
-The Threat Shield application requires the environment variables that are defined in the `.env` file provided to you. Copy the file into the root of this application.
+ThreatShield is configured via environment variables. Copy `.env.template`
+to `.env` and fill in the values — at minimum a PostgreSQL connection and an
+**OpenAI API key** for the AI suggestion features. See `config/runtime.exs`
+for the full list of supported variables.
 
 ## Development setup with docker
 
@@ -107,9 +136,9 @@ MIX_ENV=test mix test
 
 You will need the following installed on your system:
 
-- Erlang/OTP >= 26
-- Elixir >= 1.15
-- Node.js >= 18.17
+- Erlang/OTP 26.2.1
+- Elixir 1.16.2
+- Node.js 20.11
 
 If you use asdf, you can install these dependencies with `asdf install`.
 
@@ -156,3 +185,7 @@ kubectl create secret docker-registry github-container-registry \
 ```
 
 For more context: [Set up Kubernetes secret](https://nicwortel.nl/blog/2022/continuous-deployment-to-kubernetes-with-github-actions#creating-the-image-pull-secret).
+
+## License
+
+Released under the [MIT License](LICENSE.txt) — © 2024–2026 Inspired Consulting GmbH.
