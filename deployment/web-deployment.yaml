@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: ghcr.io/inspired-consulting/threat_shield-app:latest
+          image: ghcr.io/inspired-consulting/threat_shield-app:${{ github.sha }}
           imagePullPolicy: Always
           ports:
             - containerPort: 4000
