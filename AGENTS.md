@@ -128,6 +128,16 @@ respected.
 - User-facing strings go through `gettext`.
 - Run `mix format` before committing; `.formatter.exs` governs style.
 
+## Documentation
+
+Plans, specs, and architecture decision records live in `docs/`. The folder structure and
+the rules are defined in `docs/README.md` — read it before adding or changing a document.
+
+- **Plan to spec:** when a step of a plan is built, remove it from the plan and describe
+  the result in the spec.
+- **Decisions:** a decision with a serious rejected alternative gets an ADR in `docs/adr/`.
+- Working rules stay in this file; specs do not repeat them.
+
 ## Testing
 
 - `mix test` auto-creates and migrates the test DB.
