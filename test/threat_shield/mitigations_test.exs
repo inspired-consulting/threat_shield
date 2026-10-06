@@ -46,5 +46,26 @@ defmodule ThreatShield.MitigationsTest do
       assert {:error, %Ecto.Changeset{}} =
                Mitigations.create_mitigation(user, risk, @invalid_attrs)
     end
+
+    test "update_mitigation/3 does not move the mitigation to another risk" do
+      %{user: user, risk: risk} = user_risk_fixture()
+      %{risk: foreign_risk} = user_risk_fixture()
+
+      {:ok, mitigation} =
+        Mitigations.create_mitigation(user, risk, %{
+          name: "some name",
+          description: "some description",
+          is_implemented: false
+        })
+
+      assert {:ok, %Mitigation{} = updated} =
+               Mitigations.update_mitigation(user, mitigation, %{
+                 "name" => "new name",
+                 "risk_id" => foreign_risk.id
+               })
+
+      assert updated.name == "new name"
+      assert Repo.get!(Mitigation, mitigation.id).risk_id == risk.id
+    end
   end
 end

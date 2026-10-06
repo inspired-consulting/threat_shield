@@ -78,15 +78,13 @@ defmodule ThreatShieldWeb.MembersLive.Index do
     user = socket.assigns.current_user
     organisation = socket.assigns.organisation
 
-    {:ok, membership} = Members.delete_membership_by_id(user, organisation.id, id)
-
     user_id = user.id
 
-    case membership do
-      %Membership{user_id: ^user_id} ->
+    case Members.delete_membership_by_id(user, organisation.id, id) do
+      {:ok, %Membership{user_id: ^user_id}} ->
         {:noreply, push_navigate(socket, to: ~p"/organisations")}
 
-      membership ->
+      {:ok, membership} ->
         socket
         |> assign(
           organisation: %{
@@ -94,6 +92,11 @@ defmodule ThreatShieldWeb.MembersLive.Index do
             | memberships: delete_by_id(socket.assigns.organisation.memberships, membership.id)
           }
         )
+        |> noreply()
+
+      {:error, _reason} ->
+        socket
+        |> put_flash(:error, dgettext("members", "This member cannot be removed."))
         |> noreply()
     end
   end
@@ -113,16 +116,22 @@ defmodule ThreatShieldWeb.MembersLive.Index do
 
   @impl true
   def handle_event("revoke_invite", %{"invite_id" => id}, socket) do
-    {:ok, invite} = Members.delete_invite(id)
+    case Members.revoke_invite(socket.assigns.current_user, id) do
+      {:ok, invite} ->
+        socket
+        |> assign(
+          organisation: %{
+            socket.assigns.organisation
+            | invites: delete_by_id(socket.assigns.organisation.invites, invite.id)
+          }
+        )
+        |> noreply()
 
-    socket
-    |> assign(
-      organisation: %{
-        socket.assigns.organisation
-        | invites: delete_by_id(socket.assigns.organisation.invites, invite.id)
-      }
-    )
-    |> noreply()
+      {:error, _reason} ->
+        socket
+        |> put_flash(:error, dgettext("members", "This invitation cannot be revoked."))
+        |> noreply()
+    end
   end
 
   defp delete_by_id(list, id) do

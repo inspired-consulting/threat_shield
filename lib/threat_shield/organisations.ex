@@ -109,10 +109,6 @@ defmodule ThreatShield.Organisations do
     end)
   end
 
-  def delete_organisation(%Organisation{} = organisation) do
-    Repo.delete(organisation)
-  end
-
   def change_organisation(%Organisation{} = organisation, attrs \\ %{}) do
     Organisation.changeset(organisation, attrs)
   end

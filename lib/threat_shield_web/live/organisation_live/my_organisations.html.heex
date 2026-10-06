@@ -47,6 +47,20 @@
   </div>
 </section>
 
+<section :if={is_nil(@current_user.confirmed_at)} class="ts-container my-8">
+  <div class="px-8 py-4 bg-primary-100 rounded-lg shadow">
+    <p class="text-sm leading-6 text-gray-600">
+      <%= dgettext(
+        "organisations",
+        "Please confirm your email address to see invitations to organisations."
+      ) %>
+      <.link navigate={~p"/users/confirm"} class="underline">
+        <%= dgettext("organisations", "Send the confirmation email again") %>
+      </.link>
+    </p>
+  </div>
+</section>
+
 <section :if={length(@open_invitations) > 0} class="ts-container my-8">
   <div class="px-8 py-4 bg-primary-100 rounded-lg shadow">
     <.h1>

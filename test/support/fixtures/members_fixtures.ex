@@ -19,4 +19,12 @@ defmodule ThreatShield.MembersFixtures do
 
     invites
   end
+
+  @doc """
+  Adds the user to the organisation with the given role.
+  """
+  def membership_fixture(organisation, user, role) do
+    %ThreatShield.Accounts.Membership{organisation: organisation, user: user, role: role}
+    |> ThreatShield.Repo.insert!()
+  end
 end

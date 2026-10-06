@@ -5,7 +5,7 @@ defmodule ThreatShield.Members do
 
   import Ecto.Query, warn: false
 
-  alias ThreatShield.Accounts.{Membership, Organisation, User, RBAC}
+  alias ThreatShield.Accounts.{Membership, Organisation, User}
   alias ThreatShield.Repo
   alias ThreatShield.Members.Invite
 
@@ -28,6 +28,9 @@ defmodule ThreatShield.Members do
     |> Invite.with_time_limit()
     |> Repo.one()
   end
+
+  # Invites are matched by email address, so the address must be confirmed first.
+  def get_invites_by_user(%User{confirmed_at: nil}), do: []
 
   def get_invites_by_user(%User{} = invitee) do
     Invite.from()
@@ -77,38 +80,26 @@ defmodule ThreatShield.Members do
   def delete_membership_by_id(%User{} = actor, org_id, membership_id) do
     membership =
       Membership.get(membership_id)
+      |> Membership.for_user(actor.id, :delete_member)
       |> Membership.preload_org_memberships()
       |> Repo.one()
 
-    organisation =
-      Organisation.get(org_id)
-      |> Organisation.with_memberships()
-      |> Repo.one()
-
-    delete_membership(actor, organisation, membership)
-  end
-
-  def delete_membership(
-        %User{} = actor,
-        %Organisation{} = org,
-        %Membership{} = membership
-      ) do
-    Logger.warning(
-      "User #{actor.email} is deleting membership #{membership.id} from organisation #{org.id}"
-    )
-
-    with :ok <- RBAC.verify_permission(actor, org, :delete_member),
+    with %Membership{organisation: %Organisation{id: ^org_id} = org} <- membership,
          :ok <- assert_not_last_member(org, membership),
          :ok <- assert_not_last_owner(org, membership) do
-      Repo.delete(membership)
+      Logger.warning(
+        "User #{actor.id} is deleting membership #{membership.id} from organisation #{org.id}"
+      )
 
-      {:ok, membership}
+      Repo.delete(membership)
     else
-      :not_allowed -> {:error, :not_allowed}
       {:error, :last_owner} -> {:error, :last_owner}
       {:error, :last_member} -> {:error, :last_member}
+      _ -> {:error, :not_allowed}
     end
   end
+
+  def accept_invite(%User{confirmed_at: nil}, _invite_id), do: {:error, :email_not_confirmed}
 
   def accept_invite(%User{email: invitee_email} = invitee, invite_id) do
     invite =
@@ -122,16 +113,36 @@ defmodule ThreatShield.Members do
       convert_to_membership(invitee, invite)
     else
       {:ok, :is_member} -> {:error, :already_member}
-      nil -> {:error, :invalid_invite}
+      _ -> {:error, :invalid_invite}
     end
   end
 
-  def delete_invite(invite_id) do
-    case Invite.get(invite_id)
+  @doc """
+  Deletes an invite that was sent to the given user.
+  """
+  def reject_invite(%User{confirmed_at: nil}, _invite_id), do: {:error, :not_found}
+
+  def reject_invite(%User{} = invitee, invite_id) do
+    Invite.get(invite_id)
+    |> Invite.where_invitee(invitee)
+    |> delete_invite()
+  end
+
+  @doc """
+  Deletes an invite of an organisation. The actor needs the right to invite members.
+  """
+  def revoke_invite(%User{id: actor_id}, invite_id) do
+    Invite.get(invite_id)
+    |> Invite.for_user(actor_id, :invite_new_members)
+    |> delete_invite()
+  end
+
+  defp delete_invite(query) do
+    case query
          |> Invite.select()
          |> Repo.delete_all() do
       {1, [invite]} -> {:ok, invite}
-      _ -> {:error}
+      _ -> {:error, :not_found}
     end
   end
 
