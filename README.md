@@ -137,8 +137,8 @@ MIX_ENV=test mix test
 
 You will need the following installed on your system:
 
-- Erlang/OTP 26.2.1
-- Elixir 1.16.2
+- Erlang/OTP 29.1.1
+- Elixir 1.20.4
 - Node.js 20.11
 
 If you use asdf, you can install these dependencies with `asdf install`.
@@ -146,7 +146,7 @@ If you use asdf, you can install these dependencies with `asdf install`.
 You also need to set up a PostgreSQL database. For local development, you can use Docker, e.g.:
 
 ```bash
-docker run -e POSTGRES_USER=threat_shield -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=threat_shield -p 5432:5432 --name threat-shield-db -d postgres:14
+docker run -e POSTGRES_USER=threat_shield -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=threat_shield -p 5432:5432 --name threat-shield-db -d postgres:18
 ```
 
 For local testing a separate DB is necessary. You can create this besides the dev database in the same docker instance:
