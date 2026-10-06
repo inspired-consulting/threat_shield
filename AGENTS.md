@@ -137,6 +137,6 @@ respected.
 
 ## CI/CD
 
-- `.github/workflows/test.yml` — runs `mix test` against a Postgres 12 service on every push.
+- `.github/workflows/test.yml` — runs `mix test` against a Postgres 18 service on every push.
 - `.github/workflows/build.yml`, `deploy_gcp.yml` — build and deploy to GCP. Deployment
   manifests are in `deployment/` and `rel/`.

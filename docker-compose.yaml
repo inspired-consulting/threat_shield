@@ -19,11 +19,12 @@ services:
     networks:
       - threatshield-network
   db:
-    image: postgres
+    image: postgres:18
     restart: always
     user: ${POSTGRES_USER}
     volumes:
-      - db-data:/var/lib/postgresql/data
+      # PostgreSQL 18+ images keep data in a versioned subdirectory of this path
+      - db-data:/var/lib/postgresql
     env_file:
       - .env
     ports:

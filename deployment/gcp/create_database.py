@@ -26,7 +26,7 @@ def setup_database(project):
 def create_db_instance(project):
     run(f"""
         gcloud sql instances create {INSTANCE_NAME} \
-        --database-version=POSTGRES_15 \
+        --database-version=POSTGRES_18 \
         --tier={MACHINE_TYPE} \
         --region=europe-west3 \
         --project="{project}"

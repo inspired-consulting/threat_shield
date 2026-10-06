@@ -9,7 +9,7 @@ jobs:
   run-tests:
     services:
       db:
-        image: postgres:12
+        image: postgres:18
         ports: ["5432:5432"]
         env:
           POSTGRES_USER: threat_shield
