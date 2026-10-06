@@ -9,7 +9,7 @@ Folders are created on demand, when the first document needs them.
 | `specs/`     | What is built and how it behaves. Enough to rebuild behavior and design.  | Permanent. Updated with every change.               |
 | `adr/`       | Architecture decision records: why we decided, and what we rejected.      | Permanent. Not edited after acceptance.             |
 | `resources/` | Reference material, such as threat-modeling background and product facts. | Permanent.                                          |
-| `audit/`     | Reviews and audit results.                                                | Kept as a record.                                   |
+| `audit/`     | Reviews and audit results.                                                | Local only. Ignored by git.                         |
 
 ## Rules
 

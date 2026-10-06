@@ -60,7 +60,7 @@ defmodule ThreatShieldWeb.OrganisationLive.MyOrganisations do
 
   @impl true
   def handle_event("reject_invitation", %{"invite_id" => invite_id}, socket) do
-    Members.delete_invite(invite_id)
+    Members.reject_invite(socket.assigns.current_user, invite_id)
 
     socket
     |> assign_open_invitations()
@@ -82,18 +82,24 @@ defmodule ThreatShieldWeb.OrganisationLive.MyOrganisations do
         socket
         |> put_flash(:info, dgettext("members", "You are already a member of this organisation."))
         |> noreply()
+
+      {:error, :email_not_confirmed} ->
+        socket
+        |> put_flash(
+          :error,
+          dgettext(
+            "members",
+            "Please confirm your email address before you accept an invitation."
+          )
+        )
+        |> noreply()
+
+      {:error, :invalid_invite} ->
+        socket
+        |> put_flash(:error, dgettext("members", "This invitation is not valid any more."))
+        |> assign_open_invitations()
+        |> noreply()
     end
-  end
-
-  @impl true
-  def handle_event("delete", %{"org_id" => org_id}, socket) do
-    user = socket.assigns.current_user
-    organisation = Organisations.get_organisation!(user, org_id)
-    {:ok, _} = Organisations.delete_organisation(organisation)
-
-    socket
-    |> stream_delete(:organisations, organisation)
-    |> noreply()
   end
 
   defp stream_organisations(socket) do

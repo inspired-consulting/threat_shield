@@ -25,7 +25,7 @@ defmodule ThreatShield.Mitigations.Mitigation do
     timestamps()
   end
 
-  @fields ~w(name description issue_link status is_implemented implementation_notes implementation_date verification_date verification_method verification_result risk_id)a
+  @fields ~w(name description issue_link status is_implemented implementation_notes implementation_date verification_date verification_method verification_result)a
 
   @doc false
   def changeset(mitigation, attrs) do

@@ -70,7 +70,7 @@ defmodule ThreatShield.Threats do
   end
 
   def create_threat(
-        %User{id: user_id} = user,
+        %User{id: user_id},
         %Organisation{id: org_id} = organisation,
         attrs \\ %{}
       ) do
@@ -79,11 +79,11 @@ defmodule ThreatShield.Threats do
       |> Threat.changeset(attrs)
 
     Repo.transaction(fn ->
-      check_related_system_in_threat_changeset(changeset, user)
-
       Organisation.get(org_id)
       |> Organisation.for_user(user_id, :create_threat)
       |> Repo.one!()
+
+      check_related_entities_in_threat_changeset(changeset, org_id)
 
       Repo.insert!(changeset)
     end)
@@ -214,17 +214,18 @@ defmodule ThreatShield.Threats do
     end)
   end
 
-  def update_threat(%User{id: user_id} = user, %Threat{id: threat_id} = threat, attrs) do
+  def update_threat(%User{id: user_id}, %Threat{id: threat_id} = threat, attrs) do
     changeset =
       threat
       |> Threat.changeset(attrs)
 
     Repo.transaction(fn ->
-      check_related_system_in_threat_changeset(changeset, user)
+      %Threat{organisation_id: org_id} =
+        Threat.get(threat_id)
+        |> Threat.for_user(user_id, :edit_threat)
+        |> Repo.one!()
 
-      Threat.get(threat_id)
-      |> Threat.for_user(user_id, :edit_threat)
-      |> Repo.one!()
+      check_related_entities_in_threat_changeset(changeset, org_id)
 
       Repo.update!(changeset)
     end)
@@ -253,13 +254,26 @@ defmodule ThreatShield.Threats do
     Threat.changeset(threat, attrs)
   end
 
-  defp check_related_system_in_threat_changeset(%{changes: %{system_id: sys_id}}, user)
-       when not is_nil(sys_id) do
-    System.get(sys_id)
-    |> System.for_user(user.id)
-    |> Repo.one!()
-  end
+  # A threat may only reference a system and an asset of its own organisation.
+  defp check_related_entities_in_threat_changeset(%Ecto.Changeset{changes: changes}, org_id) do
+    case changes do
+      %{system_id: sys_id} when not is_nil(sys_id) ->
+        System.get(sys_id)
+        |> System.for_organisation(org_id)
+        |> Repo.one!()
 
-  defp check_related_system_in_threat_changeset(_, _user) do
+      _ ->
+        nil
+    end
+
+    case changes do
+      %{asset_id: asset_id} when not is_nil(asset_id) ->
+        Asset.get(asset_id)
+        |> Asset.for_organisation(org_id)
+        |> Repo.one!()
+
+      _ ->
+        nil
+    end
   end
 end
