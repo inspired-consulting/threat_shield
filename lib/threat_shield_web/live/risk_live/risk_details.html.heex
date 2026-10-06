@@ -12,22 +12,11 @@
     <.risk_status_badge status={@risk.status} />
   </:status>
   <:links>
-    <li :if={ThreatShield.Members.Rights.may(:delete_risk, @membership)} class="context-menu-item">
-      <.link
-        phx-click={JS.push("delete", value: %{risk_id: @risk.id})}
-        data-confirm="Are you sure?"
-      >
-        <%= dgettext("common", "Delete") %>
-      </.link>
-    </li>
-    <li :if={ThreatShield.Members.Rights.may(:edit_risk, @membership)} class="context-menu-item">
-      <.link
-        patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/edit"}
-        phx-click={JS.push_focus()}
-      >
-        <%= dgettext("common", "Edit") %>
-      </.link>
-    </li>
+    <.delete_menu_item :if={may?(@membership, :delete_risk)} value={%{risk_id: @risk.id}} />
+    <.edit_menu_item
+      :if={may?(@membership, :edit_risk)}
+      patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/risks/#{@risk.id}/edit"}
+    />
   </:links>
 
   <:attribute>
@@ -106,7 +95,6 @@
     mitigations={@risk.mitigations}
     threat={@threat}
     risk={@risk}
-    ai_suggestions={@ai_suggestions}
     origin={@origin}
   />
 </section>

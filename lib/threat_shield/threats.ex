@@ -63,12 +63,6 @@ defmodule ThreatShield.Threats do
     |> Repo.aggregate(:count, :id)
   end
 
-  def count_threats_for_system(system_id) do
-    Threat
-    |> where([t], t.system_id == ^system_id)
-    |> Repo.aggregate(:count, :id)
-  end
-
   def create_threat(
         %User{id: user_id},
         %Organisation{id: org_id} = organisation,
@@ -89,129 +83,17 @@ defmodule ThreatShield.Threats do
     end)
   end
 
-  def add_threat_with_name_and_description(
-        %Scope{} = scope,
-        name,
-        description
-      ) do
-    case scope do
-      %Scope{system: %System{} = system, asset: %Asset{} = asset} ->
-        add_threat_with_name_and_description(scope.user, system, asset, name, description)
-
-      %Scope{asset: %Asset{} = asset} ->
-        add_threat_with_name_and_description(scope.user, asset, name, description)
-
-      %Scope{system: %System{} = system} ->
-        add_threat_with_name_and_description(scope.user, system, name, description)
-
-      %Scope{organisation: %Organisation{} = organisation} ->
-        add_threat_with_name_and_description(scope.user, organisation, name, description)
-    end
-  end
-
-  def add_threat_with_name_and_description(
-        %User{id: user_id},
-        %System{id: sys_id},
-        %Asset{id: asset_id},
-        name,
-        description
-      ) do
-    Repo.transaction(fn ->
-      system =
-        System.get(sys_id)
-        |> System.for_user(user_id, :create_threat)
-        |> System.preload_organisation()
-        |> Repo.one!()
-
-      asset =
-        Asset.get(asset_id)
-        |> Asset.for_user(user_id, :create_threat)
-        |> Repo.one!()
-
-      changeset =
-        %Threat{
-          system: system,
-          asset: asset,
-          organisation: system.organisation,
-          name: name,
-          description: description
-        }
-        |> Ecto.Changeset.change()
-
-      Repo.insert!(changeset)
-    end)
-  end
-
-  def add_threat_with_name_and_description(
-        %User{id: user_id},
-        %System{id: sys_id},
-        name,
-        description
-      ) do
-    Repo.transaction(fn ->
-      system =
-        System.get(sys_id)
-        |> System.for_user(user_id, :create_threat)
-        |> System.preload_organisation()
-        |> Repo.one!()
-
-      changeset =
-        %Threat{
-          system: system,
-          organisation: system.organisation,
-          name: name,
-          description: description
-        }
-        |> Ecto.Changeset.change()
-
-      Repo.insert!(changeset)
-    end)
-  end
-
-  def add_threat_with_name_and_description(
-        %User{id: user_id},
-        %Asset{id: asset_id},
-        name,
-        description
-      ) do
-    Repo.transaction(fn ->
-      asset =
-        Asset.get(asset_id)
-        |> Asset.for_user(user_id, :create_threat)
-        |> Asset.preload_organisation()
-        |> Repo.one!()
-
-      changeset =
-        %Threat{
-          asset: asset,
-          organisation: asset.organisation,
-          name: name,
-          description: description
-        }
-        |> Ecto.Changeset.change()
-
-      Repo.insert!(changeset)
-    end)
-  end
-
-  def add_threat_with_name_and_description(
-        %User{id: user_id},
-        %Organisation{id: org_id},
-        name,
-        description
-      ) do
-    Repo.transaction(fn ->
-      organisation =
-        Organisation.get(org_id)
-        |> Organisation.for_user(user_id, :create_threat)
-        |> Repo.one!()
-
-      changeset =
-        %Threat{organisation: organisation, description: description, name: name}
-        |> Ecto.Changeset.change()
-
-      Repo.insert!(changeset)
-    end)
+  @doc """
+  Creates a threat with the given name and description for the scope: for its
+  organisation and, if the scope has them, for its system and its asset.
+  """
+  def add_threat_with_name_and_description(%Scope{} = scope, name, description) do
+    create_threat(scope.user, scope.organisation, %{
+      name: name,
+      description: description,
+      system_id: scope.system && scope.system.id,
+      asset_id: scope.asset && scope.asset.id
+    })
   end
 
   def update_threat(%User{id: user_id}, %Threat{id: threat_id} = threat, attrs) do

@@ -31,4 +31,12 @@ defmodule ThreatShield.Members.Rights do
   def may(right, %Membership{role: role}) do
     role in get_authorised_roles(right)
   end
+
+  @doc """
+  Checks a right for a membership, or for the membership of a scope.
+  Without a membership, nothing is allowed.
+  """
+  def may?(%Membership{} = membership, right), do: may(right, membership)
+  def may?(%{membership: membership}, right), do: may?(membership, right)
+  def may?(nil, _right), do: false
 end

@@ -22,7 +22,6 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import disappear from "./components/disappear";
-import collapseTrigger from "./components/collapse-trigger";
 import tooltips from "./components/tooltips";
 import chartJs from "./components/charts";
 
@@ -48,13 +47,6 @@ liveSocket.connect();
 window.liveSocket = liveSocket;
 
 function initialize(container) {
-  // urgent things that should load first
-  collapseTrigger(container, ".collapse-trigger");
-
-  // mid urgent
-
-  // visually helpers that are optional and can be loaded last
-
   disappear(container, "[data-disappear-after]");
   chartJs(container, "[data-chart-type]");
   tooltips(container, "[title], svg title");

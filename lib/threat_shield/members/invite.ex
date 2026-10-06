@@ -75,12 +75,6 @@ defmodule ThreatShield.Members.Invite do
     |> preload([organisation: o], organisation: o)
   end
 
-  def for_user(query, user_id) do
-    query
-    |> join(:inner, [invite: i], assoc(i, :organisation), as: :organisation)
-    |> Organisation.for_user(user_id)
-  end
-
   def for_user(query, user_id, right) do
     query
     |> join(:inner, [invite: i], assoc(i, :organisation), as: :organisation)

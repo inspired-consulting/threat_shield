@@ -5,8 +5,6 @@ defmodule ThreatShield.Accounts.RBAC do
 
   alias ThreatShield.Accounts.{User, Organisation}
 
-  require Logger
-
   def verify_permission(%User{} = user, %Organisation{} = organisation, permission) do
     if has_permission(user, organisation, permission) do
       :ok
@@ -27,8 +25,6 @@ defmodule ThreatShield.Accounts.RBAC do
 
   def has_permission(%User{} = user, _organisation, permission)
       when is_atom(permission) do
-    # Logger.debug("Checking permission #{inspect(permission)} for user #{inspect(user)}")
-
     case permission do
       :administer_platform -> has_global_role(user, :platform_admin)
       _ -> false

@@ -29,25 +29,14 @@
               <%= dgettext("organisation", "Members") %>
             </.link>
           </li>
-          <li
-            :if={ThreatShield.Members.Rights.may(:delete_organisation, @membership)}
-            class="context-menu-item"
-          >
-            <.link
-              phx-click={JS.push("delete", value: %{organisation_id: @organisation.id})}
-              data-confirm="Are you sure?"
-            >
-              <%= dgettext("common", "Delete") %>
-            </.link>
-          </li>
-          <li
-            :if={ThreatShield.Members.Rights.may(:edit_organisation, @membership)}
-            class="context-menu-item"
-          >
-            <.link patch={~p"/organisations/#{@organisation}/edit"} phx-click={JS.push_focus()}>
-              <%= dgettext("common", "Edit") %>
-            </.link>
-          </li>
+          <.delete_menu_item
+            :if={may?(@membership, :delete_organisation)}
+            value={%{organisation_id: @organisation.id}}
+          />
+          <.edit_menu_item
+            :if={may?(@membership, :edit_organisation)}
+            patch={~p"/organisations/#{@organisation}/edit"}
+          />
           <li class="context-menu-item w-48">
             <.link
               patch={~p"/exports/excel?org_id=#{@organisation.id}"}
@@ -99,7 +88,6 @@
     module={ThreatShieldWeb.AssetLive.AssetsList}
     id={"assets_for_org_#{@organisation.id}"}
     scope={@scope}
-    ai_suggestions={@ai_suggestions}
     origin={link_to(@organisation)}
   />
 
@@ -108,7 +96,6 @@
     module={ThreatShieldWeb.ThreatLive.ThreatsList}
     id={"threats_for_org_#{@organisation.id}"}
     scope={@scope}
-    ai_suggestions={@ai_suggestions}
     origin={link_to(@organisation)}
   />
 

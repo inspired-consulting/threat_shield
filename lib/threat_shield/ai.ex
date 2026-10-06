@@ -14,29 +14,37 @@ defmodule ThreatShield.AI do
   @open_ai_model "gpt-3.5-turbo"
   # @open_ai_model "gpt-4-turbo-preview"
 
-  @threat_info "Threats are any potential event or action that can compromise the security of a system, organisation, or individual. Threats are not the negative outcome, i.e. not the loss, damage, or harm resulting from the exploitation of vulnerabilities by threats."
+  @schemas %{assets: Asset, threats: Threat, risks: Risk, mitigations: Mitigation}
+
+  # The changesets of these schemas allow names of up to 60 characters
+  @max_name_length 60
+
+  # The explanation of each kind of entity that is sent with a request
+  @info %{
+    assets: "  Assets are valuable resources or data, that need to be protected.\n",
+    threats:
+      "Threats are any potential event or action that can compromise the security of a system, organisation, or individual. Threats are not the negative outcome, i.e. not the loss, damage, or harm resulting from the exploitation of vulnerabilities by threats.",
+    risks:
+      "Risks are the potential negative outcome — loss, damage, or harm resulting from the exploitation of vulnerabilities by threats.\n",
+    mitigations:
+      "Mitigations are strategies and measures put in place to mitigate the risks of a particular threat.\n"
+  }
 
   @quota_ai_requests_per_month "ai_requests_per_month"
 
-  defmodule AiSuggestion do
-    @moduledoc """
-    A suggestion from the AI for a given type (e.g. threat, asset, etc.).
-    """
-    defstruct [
-      :type,
-      :result,
-      :requestor
-    ]
-  end
+  @doc """
+  Runs an AI task for the scope: checks the quota of the organisation, records the
+  usage, and calls `fun`.
 
-  # Common runner
-
-  def run_task(%Scope{organisation: %Organisation{} = org} = scope, fun) do
+  The call blocks until `fun` has returned. Run it in a separate process, for
+  example with `ThreatShieldWeb.AiSuggestions.request/3`.
+  """
+  def run_task(%Scope{organisation: %Organisation{} = org} = scope, fun)
+      when is_function(fun, 0) do
     case QuotaManager.check_quota(org, @quota_ai_requests_per_month, 1) do
       {:ok, :quota_available} ->
-        Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fun)
         Task.start(fn -> protocol_quota_usage(scope, "AI request") end)
-        {:ok, :task_started}
+        {:ok, fun.()}
 
       {:error, :quota_exceeded} ->
         Logger.warning("AI quota exceeded for organisation '#{org.name}'")
@@ -79,254 +87,53 @@ defmodule ThreatShield.AI do
     """
   end
 
-  # Assets
+  # Suggestions for assets, threats, risks, and mitigations
 
   def suggest_assets(%Scope{} = scope) do
     case scope do
       %{system: %System{} = system} ->
-        suggest_assets_for_system(system)
+        suggest(:assets, system.organisation, system.assets,
+          info:
+            "  Assets are valuable resources or data for a particular system, that need to be protected.\n",
+          focus: ~s( The assets should be specific to the system "#{system.name}".)
+        )
 
       %{organisation: %Organisation{} = organisation} ->
-        suggest_assets_for_organisation(organisation)
+        suggest(:assets, organisation, organisation.assets)
     end
   end
-
-  defp suggest_assets_for_organisation(%Organisation{} = organisation) do
-    asset_info = """
-      Assets are valuable resources or data, that need to be protected.
-    """
-
-    existing_assets =
-      if Enum.empty?(organisation.assets) do
-        ""
-      else
-        """
-        I already know about the following assets:\n
-        """ <>
-          (organisation.assets
-           |> Enum.map(fn a -> a.name end)
-           |> Enum.join("\n"))
-      end
-
-    system_prompt = get_general_job_description(organisation)
-
-    assignment = """
-    Please suggest five additional assets that are different from the existing ones.
-    """
-
-    user_prompt =
-      [get_response_format_description("assets"), asset_info, existing_assets, assignment]
-      |> Enum.join(" ")
-
-    make_chatgpt_request(system_prompt, user_prompt, &get_assets_from_response/1)
-  end
-
-  defp suggest_assets_for_system(%System{} = system) do
-    asset_info = """
-      Assets are valuable resources or data for a particular system, that need to be protected.
-    """
-
-    existing_assets =
-      if Enum.empty?(system.assets) do
-        ""
-      else
-        """
-        I already know about the following assets:\n
-        """ <>
-          (system.assets
-           |> Enum.map(fn a -> a.name end)
-           |> Enum.join("\n"))
-      end
-
-    system_prompt = get_general_job_description(system.organisation)
-
-    assignment = """
-    Please suggest five additional assets that are different from the existing ones. The assets should be specific to the system "#{system.name}".
-    """
-
-    user_prompt =
-      [get_response_format_description("assets"), asset_info, existing_assets, assignment]
-      |> Enum.join(" ")
-
-    make_chatgpt_request(system_prompt, user_prompt, &get_assets_from_response/1)
-  end
-
-  # Threats
 
   def suggest_threats(%Scope{} = scope) do
     # order is important here, as the most specific scope should be matched first
     case scope do
       %{asset: %Asset{} = asset, system: %System{} = system} ->
-        suggest_threats_for_system_and_asset(system, asset)
+        suggest(:threats, asset.organisation, asset.threats,
+          focus:
+            " The threats should be specific to the system the system '#{system.name}'  and the asset '#{asset.name}'"
+        )
 
       %{asset: %Asset{} = asset} ->
-        suggest_threats_for_asset(asset)
+        suggest(:threats, asset.organisation, asset.threats,
+          focus: " The threats should be specific to the asset '#{asset.name}'"
+        )
 
       %{system: %System{} = system} ->
-        suggest_threats_for_system(system)
+        suggest(:threats, system.organisation, system.threats,
+          focus: " The threats should be specific to the system '#{system.name}'"
+        )
 
       %{organisation: %Organisation{} = organisation} ->
-        suggest_threats_for_organisation(organisation)
+        suggest(:threats, organisation, organisation.threats)
     end
   end
 
-  defp suggest_threats_for_organisation(%Organisation{} = organisation) do
-    existing_threats =
-      if Enum.empty?(organisation.threats) do
-        ""
-      else
-        """
-        I already know about the following threats:\n
-        """ <>
-          (organisation.threats
-           |> Enum.map(fn a -> a.name end)
-           |> Enum.join("\n"))
-      end
-
-    assignment = """
-    Please suggest five additional threats that are different from the existing ones.
-    """
-
-    user_prompt =
-      [get_response_format_description("threats"), @threat_info, existing_threats, assignment]
-      |> Enum.join(" ")
-
-    system_prompt = get_general_job_description(organisation)
-
-    make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
-  end
-
-  defp suggest_threats_for_system(%System{} = system) do
-    existing_threats =
-      if Enum.empty?(system.threats) do
-        ""
-      else
-        """
-        I already know about the following threats:\n
-        """ <>
-          (system.threats
-           |> Enum.map(fn a -> a.name end)
-           |> Enum.join("\n"))
-      end
-
-    assignment = """
-    Please suggest five additional threats that are different from the existing ones. The threats should be specific to the system '#{system.name}'
-    """
-
-    user_prompt =
-      [get_response_format_description("threats"), @threat_info, existing_threats, assignment]
-      |> Enum.join(" ")
-
-    system_prompt = get_general_job_description(system.organisation)
-
-    make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
-  end
-
-  defp suggest_threats_for_asset(%Asset{} = asset) do
-    existing_threats =
-      if Enum.empty?(asset.threats) do
-        ""
-      else
-        """
-        I already know about the following threats:\n
-        """ <>
-          (asset.threats
-           |> Enum.map(fn a -> a.name end)
-           |> Enum.join("\n"))
-      end
-
-    assignment = """
-    Please suggest five additional threats that are different from the existing ones. The threats should be specific to the asset '#{asset.name}'
-    """
-
-    user_prompt =
-      [get_response_format_description("threats"), @threat_info, existing_threats, assignment]
-      |> Enum.join(" ")
-
-    system_prompt = get_general_job_description(asset.organisation)
-
-    make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
-  end
-
-  defp suggest_threats_for_system_and_asset(%System{} = system, %Asset{} = asset) do
-    existing_threats =
-      if Enum.empty?(asset.threats) do
-        ""
-      else
-        """
-        I already know about the following threats:\n
-        """ <>
-          (asset.threats
-           |> Enum.map(fn a -> a.name end)
-           |> Enum.join("\n"))
-      end
-
-    assignment = """
-    Please suggest five additional threats that are different from the existing ones. The threats should be specific to the system the system '#{system.name}'  and the asset '#{asset.name}'
-    """
-
-    user_prompt =
-      [get_response_format_description("threats"), @threat_info, existing_threats, assignment]
-      |> Enum.join(" ")
-
-    system_prompt = get_general_job_description(asset.organisation)
-
-    make_chatgpt_request(system_prompt, user_prompt, &get_threats_from_response/1)
-  end
-
-  # Risks
-
   def suggest_risks_for_threat(%Scope{} = _scope, %Threat{} = threat) do
-    risk_info = """
-    Risks are the potential negative outcome — loss, damage, or harm resulting from the exploitation of vulnerabilities by threats.
-    """
-
-    existing_risks =
-      if Enum.empty?(threat.risks) do
-        ""
-      else
-        """
-        I already know about the following risks:\n
-        """ <>
-          (threat.risks
-           |> Enum.map(fn a -> a.name end)
-           |> Enum.join("\n"))
-      end
-
-    assignment = """
-    Please suggest five additional risks that are different from the existing ones. The risks should relate exclusively to the threat "#{threat.name}".
-    """
-
-    user_prompt =
-      [get_response_format_description("risks"), risk_info, existing_risks, assignment]
-      |> Enum.join(" ")
-
-    system_prompt = get_general_job_description(threat.organisation)
-
-    make_chatgpt_request(system_prompt, user_prompt, &get_risks_from_response/1)
+    suggest(:risks, threat.organisation, threat.risks,
+      focus: ~s( The risks should relate exclusively to the threat "#{threat.name}".)
+    )
   end
 
   def suggest_mitigations_for_risk(%Scope{} = _scope, %Risk{} = risk) do
-    mitigation_info = """
-    Mitigations are strategies and measures put in place to mitigate the risks of a particular threat.
-    """
-
-    existing_mitigations =
-      if Enum.empty?(risk.mitigations) do
-        ""
-      else
-        """
-        I already know about the following mitigations:\n
-        """ <>
-          (risk.mitigations
-           |> Enum.map(fn a -> a.name end)
-           |> Enum.join("\n"))
-      end
-
-    assignment = """
-    Please suggest five additional mitigations that are different from the existing ones. The mitigations should relate exclusively to the risk "#{risk.name}" and the threat "#{risk.threat.name}".
-    """
-
     system_exclusivity =
       if is_nil(risk.threat.system) do
         ""
@@ -336,19 +143,50 @@ defmodule ThreatShield.AI do
         """
       end
 
+    suggest(:mitigations, risk.threat.organisation, risk.mitigations,
+      focus:
+        ~s( The mitigations should relate exclusively to the risk "#{risk.name}" and the threat "#{risk.threat.name}".),
+      extra: system_exclusivity
+    )
+  end
+
+  # Asks for five suggestions of the given kind.
+  #
+  # `existing` are the entities of this kind that are known already. Options:
+  #   * `:info` - replaces the default explanation of the kind
+  #   * `:focus` - a sentence that narrows the assignment, e.g. to one system
+  #   * `:extra` - a further part at the end of the prompt
+  defp suggest(kind, %Organisation{} = organisation, existing, opts \\ []) do
+    {system_prompt, user_prompt} = prompts(kind, organisation, existing, opts)
+
+    make_chatgpt_request(system_prompt, user_prompt, &get_suggestions_from_response(&1, kind))
+  end
+
+  defp prompts(kind, %Organisation{} = organisation, existing, opts) do
+    plural = Atom.to_string(kind)
+
+    existing_names =
+      if Enum.empty?(existing) do
+        ""
+      else
+        "I already know about the following #{plural}:\n\n" <>
+          Enum.map_join(existing, "\n", fn e -> e.name end)
+      end
+
+    assignment =
+      "Please suggest five additional #{plural} that are different from the existing ones." <>
+        Keyword.get(opts, :focus, "") <> "\n"
+
     user_prompt =
-      [
-        get_response_format_description("mitigations"),
-        mitigation_info,
-        existing_mitigations,
-        assignment,
-        system_exclusivity
-      ]
+      ([
+         get_response_format_description(plural),
+         Keyword.get(opts, :info, @info[kind]),
+         existing_names,
+         assignment
+       ] ++ List.wrap(opts[:extra]))
       |> Enum.join(" ")
 
-    system_prompt = get_general_job_description(risk.threat.organisation)
-
-    make_chatgpt_request(system_prompt, user_prompt, &get_mitigations_from_response/1)
+    {get_general_job_description(organisation), user_prompt}
   end
 
   # OpenAI
@@ -366,7 +204,7 @@ defmodule ThreatShield.AI do
         }
       ]
 
-    case OpenAI.chat_completion(
+    case open_ai_client().chat_completion(
            model: @open_ai_model,
            messages: messages
          ) do
@@ -379,6 +217,11 @@ defmodule ThreatShield.AI do
       {:error, :timeout} ->
         {:error, :timeout}
     end
+  end
+
+  # The client module can be replaced in the configuration, e.g. for tests.
+  defp open_ai_client() do
+    Application.get_env(:threat_shield, :open_ai_client, OpenAI)
   end
 
   defp get_content_from_reponse(response, root_key) do
@@ -397,24 +240,11 @@ defmodule ThreatShield.AI do
     end
   end
 
-  defp get_assets_from_response(response) do
-    get_content_from_reponse(response, "assets")
-    |> Enum.map(fn %{"name" => n, "description" => d} -> %Asset{name: n, description: d} end)
-  end
-
-  defp get_threats_from_response(response) do
-    get_content_from_reponse(response, "threats")
-    |> Enum.map(fn %{"name" => n, "description" => d} -> %Threat{name: n, description: d} end)
-  end
-
-  defp get_risks_from_response(response) do
-    get_content_from_reponse(response, "risks")
-    |> Enum.map(fn %{"name" => n, "description" => d} -> %Risk{name: n, description: d} end)
-  end
-
-  defp get_mitigations_from_response(response) do
-    get_content_from_reponse(response, "mitigations")
-    |> Enum.map(fn %{"name" => n, "description" => d} -> %Mitigation{name: n, description: d} end)
+  defp get_suggestions_from_response(response, kind) do
+    get_content_from_reponse(response, Atom.to_string(kind))
+    |> Enum.map(fn %{"name" => n, "description" => d} ->
+      struct(@schemas[kind], name: String.slice(n, 0, @max_name_length), description: d)
+    end)
   end
 
   # Quotas

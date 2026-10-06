@@ -1,6 +1,4 @@
 defmodule ThreatShieldWeb.RiskLive.RiskBoard do
-  require Logger
-
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Accounts.Organisation

@@ -26,14 +26,6 @@ defmodule ThreatShieldWeb.OrganisationLive.MyOrganisations do
     |> noreply()
   end
 
-  defp apply_action(socket, :edit, %{"org_id" => id}) do
-    user = socket.assigns.current_user
-
-    socket
-    |> assign(:page_title, "Edit Organisation")
-    |> assign(:edit_organisation, Organisations.get_organisation!(user, id))
-  end
-
   defp apply_action(socket, :new, _params) do
     %{current_user: current_user} = socket.assigns
 

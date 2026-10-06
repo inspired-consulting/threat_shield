@@ -1,6 +1,8 @@
 defmodule ThreatShieldWeb.MitigationLive.MitigationForm do
   use ThreatShieldWeb, :live_component
 
+  import ThreatShieldWeb.FormHelpers
+
   alias ThreatShield.Mitigations
   alias ThreatShieldWeb.Labels
 
@@ -106,40 +108,20 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationForm do
   defp save_mitigation(socket, :edit_mitigation, mitigation_params) do
     user = socket.assigns.current_user
 
-    case Mitigations.update_mitigation(user, socket.assigns.mitigation, mitigation_params) do
-      {:ok, mitigation} ->
-        notify_parent({:saved, mitigation})
+    result = Mitigations.update_mitigation(user, socket.assigns.mitigation, mitigation_params)
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Mitigation updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
+    socket
+    |> handle_save_result(result, __MODULE__, "Mitigation updated successfully")
+    |> noreply()
   end
 
   defp save_mitigation(socket, :new_mitigation, mitigation_params) do
     %{user: user, risk: risk} = socket.assigns
 
-    case Mitigations.create_mitigation(user, risk, mitigation_params) do
-      {:ok, mitigation} ->
-        notify_parent({:saved, mitigation})
+    result = Mitigations.create_mitigation(user, risk, mitigation_params)
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Mitigation created successfully")
-         |> push_patch(to: socket.assigns.patch)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
+    socket
+    |> handle_save_result(result, __MODULE__, "Mitigation created successfully")
+    |> noreply()
   end
-
-  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-    assign(socket, :form, to_form(changeset))
-  end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

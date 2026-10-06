@@ -1,11 +1,9 @@
 defmodule ThreatShieldWeb.SystemLive.SystemsList do
-  alias ThreatShield.Accounts.Organisation
   use ThreatShieldWeb, :live_component
 
+  alias ThreatShield.Systems
   alias ThreatShield.Systems.System
   alias ThreatShield.Accounts.Organisation
-
-  require Logger
 
   @moduledoc """
   This component renders a list of systems for a given organisation.
@@ -31,7 +29,7 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
 
           <:buttons>
             <.link
-              :if={ThreatShield.Members.Rights.may(:create_system, @scope.membership)}
+              :if={may?(@scope, :create_system)}
               phx-click="open-create-system-modal"
               phx-target={@myself}
             >
@@ -92,8 +90,11 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
   # lifecycle and events
 
   @impl true
-  def update(%{added_system: system} = assigns, socket) do
-    old_systems = assigns[:systems] || []
+  def update(%{added_system: system}, socket) do
+    old_systems = socket.assigns[:systems] || []
+
+    # reload to resolve associations
+    system = Systems.get_system!(socket.assigns.scope.user, system.id)
 
     socket
     |> assign(:show_modal, false)

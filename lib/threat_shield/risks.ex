@@ -21,14 +21,6 @@ defmodule ThreatShield.Risks do
     |> Repo.one!()
   end
 
-  def get_threat!(%User{id: user_id}, org_id, threat_id) do
-    Threat.get(threat_id)
-    |> Threat.for_user(user_id)
-    |> Threat.where_organisation(org_id)
-    |> Threat.with_organisation_and_risks()
-    |> Repo.one!()
-  end
-
   def get_all_risks(%User{id: user_id}, org_id) do
     Risk.all()
     |> Risk.for_user(user_id)
@@ -81,19 +73,5 @@ defmodule ThreatShield.Risks do
   """
   def change_risk(%Risk{} = risk, attrs \\ %{}) do
     Risk.changeset(risk, attrs)
-  end
-
-  def add_risk(%User{id: user_id}, threat_id, name, description) do
-    Repo.transaction(fn ->
-      threat =
-        Threat.get(threat_id)
-        |> Threat.for_user(user_id, :create_risk)
-        |> Repo.one!()
-
-      %Risk{name: name, description: description}
-      |> change_risk()
-      |> Ecto.Changeset.put_assoc(:threat, threat)
-      |> Repo.insert!()
-    end)
   end
 end

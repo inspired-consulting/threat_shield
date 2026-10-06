@@ -25,6 +25,59 @@ defmodule ThreatShield.ThreatsTest do
     end
   end
 
+  describe "add_threat_with_name_and_description/3" do
+    alias ThreatShield.Scope
+
+    setup do
+      user = AccountsFixtures.user_fixture()
+      organisation = OrganisationsFixtures.organisation_fixture(user)
+
+      {:ok, system} =
+        Systems.create_system(user, organisation, %{
+          name: "some system",
+          description: "some description",
+          attributes: %{}
+        })
+
+      asset = AssetsFixtures.asset_fixture(user, organisation)
+      organisation = ThreatShield.Organisations.get_organisation!(user, organisation.id)
+
+      %{user: user, organisation: organisation, system: system, asset: asset}
+    end
+
+    test "creates a threat for the organisation, the system, and the asset of the scope",
+         %{user: user, organisation: organisation, system: system, asset: asset} do
+      assert {:ok, %Threat{system_id: nil, asset_id: nil}} =
+               Threats.add_threat_with_name_and_description(
+                 Scope.for(user, organisation),
+                 "a name",
+                 "a description"
+               )
+
+      scope = Scope.for(user, organisation, system: system, asset: asset)
+
+      assert {:ok, %Threat{name: "a name", description: "a description"} = threat} =
+               Threats.add_threat_with_name_and_description(scope, "a name", "a description")
+
+      assert threat.organisation_id == organisation.id
+      assert threat.system_id == system.id
+      assert threat.asset_id == asset.id
+    end
+
+    test "is not allowed for a viewer", %{organisation: organisation} do
+      viewer = AccountsFixtures.user_fixture()
+      MembersFixtures.membership_fixture(organisation, viewer, :viewer)
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Threats.add_threat_with_name_and_description(
+          Scope.for(viewer, organisation),
+          "a name",
+          "a description"
+        )
+      end
+    end
+  end
+
   describe "references of a threat" do
     @valid_attrs %{name: "some name", description: "some description"}
 

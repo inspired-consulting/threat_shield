@@ -3,7 +3,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
 
   alias ThreatShield.AI
   alias ThreatShield.Scope
-  alias ThreatShield.AI.AiSuggestion
+  alias ThreatShieldWeb.AiSuggestions
 
   alias ThreatShield.Threats
   alias ThreatShield.Threats.Threat
@@ -42,7 +42,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
 
           <:buttons>
             <.link
-              :if={ThreatShield.Members.Rights.may(:create_threat, @scope.membership)}
+              :if={may?(@scope, :create_threat)}
               phx-click="open-create-dialog"
               phx-target={@myself}
             >
@@ -55,7 +55,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
             </.link>
             <.link>
               <.button_magic
-                :if={ThreatShield.Members.Rights.may(:create_threat, @scope.membership)}
+                :if={may?(@scope, :create_threat)}
                 phx-click="suggest_threats"
                 phx-target={@myself}
               >
@@ -106,7 +106,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           system_options={systems_of_organisaton(@scope.organisation)}
           asset_options={assets_of_organisaton(@scope.organisation)}
           threat={prepare_threat(@scope)}
-          origin={@origin}
+          patch={@origin}
         />
       </.modal>
       <.modal
@@ -119,7 +119,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           title={dgettext("threats", "Suggested Threats")}
           listener={@myself}
           scope={@scope}
-          suggestions={@ai_suggestions[:threats]}
+          suggestions={assigns[:ai_suggestions]}
         />
       </.modal>
     </div>
@@ -156,44 +156,22 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
     |> noreply()
   end
 
-  @doc """
-  Will start a background task to suggest threats for the current scope
-  When the task is finished, it will send a :new_ai_suggestion message to the current page.
-  The page is expected to add the suggestions to the :ai_suggesstions assigns.
-  """
   @impl true
   def handle_event("suggest_threats", _params, socket) do
     scope = socket.assigns.scope
 
-    AI.run_task(scope, fn ->
-      new_threats =
-        AI.suggest_threats(scope)
-
-      {:new_ai_suggestion, %AiSuggestion{result: new_threats, type: :threats, requestor: self()}}
-    end)
-    |> case do
-      {:ok, _} ->
-        socket
-        |> assign(:show_suggest_dialog, true)
-        |> noreply()
-
-      {:error, :quota_exceeded} ->
-        socket
-        |> put_flash(:error, dgettext("common", "Your quota for AI suggestions is exceeded."))
-        |> push_navigate(to: socket.assigns.origin)
-        |> noreply()
-    end
+    socket
+    |> AiSuggestions.request(scope, fn -> AI.suggest_threats(scope) end)
+    |> noreply()
   end
 
   @impl true
-  def handle_event("apply_selection", %{"selected_suggestions" => selected_names}, socket) do
+  def handle_event("apply_selection", params, socket) do
     scope = %Scope{} = socket.assigns.scope
 
-    ai_suggestions = socket.assigns.ai_suggestions
-
     new_threats =
-      ai_suggestions[:threats]
-      |> Enum.filter(fn s -> Enum.member?(selected_names, s.name) end)
+      socket
+      |> AiSuggestions.selected(params)
       |> Enum.map(fn s -> create_threat(scope, s) end)
 
     socket
@@ -203,10 +181,9 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
   end
 
   @impl true
-  def handle_event("apply_selection", _params, socket) do
+  def handle_async(:ai_suggestions, result, socket) do
     socket
-    |> put_flash(:error, dgettext("common", "No suggestions selected."))
-    |> assign(:show_suggest_dialog, false)
+    |> AiSuggestions.handle_result(result)
     |> noreply()
   end
 
@@ -255,6 +232,8 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
 
   defp create_threat(scope, %{name: name, description: desc}) do
     {:ok, threat} = Threats.add_threat_with_name_and_description(scope, name, desc)
-    threat
+
+    # reload to resolve associations
+    Threats.get_threat!(scope.user, threat.id)
   end
 end

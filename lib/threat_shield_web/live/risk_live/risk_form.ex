@@ -1,6 +1,8 @@
 defmodule ThreatShieldWeb.RiskLive.RiskForm do
   use ThreatShieldWeb, :live_component
 
+  import ThreatShieldWeb.FormHelpers
+
   alias ThreatShield.Risks
   alias ThreatShieldWeb.Labels
 
@@ -94,40 +96,20 @@ defmodule ThreatShieldWeb.RiskLive.RiskForm do
   defp save_risk(socket, :edit_risk, risk_params) do
     %{current_user: user, risk: risk} = socket.assigns
 
-    case Risks.update_risk(user, risk, risk_params) do
-      {:ok, risk} ->
-        notify_parent({:saved, risk})
+    result = Risks.update_risk(user, risk, risk_params)
 
-        socket
-        |> put_flash(:info, "Risk updated successfully")
-        |> push_patch(to: socket.assigns.patch)
-        |> noreply()
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
+    socket
+    |> handle_save_result(result, __MODULE__, "Risk updated successfully")
+    |> noreply()
   end
 
   defp save_risk(socket, :new_risk, risk_params) do
     %{current_user: user, threat: threat} = socket.assigns
 
-    case Risks.create_risk(user, threat.id, risk_params) do
-      {:ok, risk} ->
-        notify_parent({:saved, risk})
+    result = Risks.create_risk(user, threat.id, risk_params)
 
-        socket
-        |> put_flash(:info, "Risk created successfully")
-        |> push_patch(to: socket.assigns.patch)
-        |> noreply()
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
+    socket
+    |> handle_save_result(result, __MODULE__, "Risk created successfully")
+    |> noreply()
   end
-
-  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-    assign(socket, :form, to_form(changeset))
-  end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

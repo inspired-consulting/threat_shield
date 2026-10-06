@@ -2,6 +2,8 @@ defmodule ThreatShieldWeb.MembersLive.RoleForm do
   alias ThreatShield.Accounts.Membership
   use ThreatShieldWeb, :live_component
 
+  import ThreatShieldWeb.FormHelpers
+
   alias ThreatShield.Members
 
   @impl true
@@ -70,23 +72,10 @@ defmodule ThreatShieldWeb.MembersLive.RoleForm do
       Ecto.Enum.mappings(Membership, :role)
       |> Enum.find(fn {_, v} -> v == Map.get(membership_params, "role") end)
 
-    case Members.update_role(user, membership, role) do
-      {:ok, membership} ->
-        notify_parent({:saved, membership})
+    result = Members.update_role(user, membership, role)
 
-        socket
-        |> put_flash(:info, "Role updated successfully")
-        |> push_patch(to: socket.assigns.patch)
-        |> noreply()
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
+    socket
+    |> handle_save_result(result, __MODULE__, "Role updated successfully")
+    |> noreply()
   end
-
-  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-    assign(socket, :form, to_form(changeset))
-  end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

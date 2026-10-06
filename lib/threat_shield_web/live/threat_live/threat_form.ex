@@ -1,6 +1,8 @@
 defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
   use ThreatShieldWeb, :live_component
 
+  import ThreatShieldWeb.FormHelpers
+
   alias ThreatShield.Scope
   alias ThreatShield.Threats
 
@@ -73,7 +75,6 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
   def handle_event("validate", %{"threat" => threat_params}, socket) do
     changeset =
       socket.assigns.threat
-      |> update_with_fixed_system(socket)
       |> Threats.change_threat(threat_params)
       |> Map.put(:action, :validate)
 
@@ -87,59 +88,25 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
   defp save_threat(socket, :edit_threat, threat_params) do
     scope = %Scope{} = socket.assigns.scope
 
-    case Threats.update_threat(
-           scope.user,
-           socket.assigns.threat,
-           threat_params |> update_with_fixed_system(socket)
-         ) do
-      {:ok, threat} ->
-        notify_parent({:saved, threat})
+    result = Threats.update_threat(scope.user, socket.assigns.threat, threat_params)
 
-        socket
-        |> put_flash(:info, "Threat updated successfully")
-        |> push_patch(to: socket.assigns.origin)
-        |> noreply()
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
+    socket
+    |> handle_save_result(result, __MODULE__, "Threat updated successfully")
+    |> noreply()
   end
 
   defp save_threat(socket, :new_threat, threat_params) do
     scope = %Scope{} = socket.assigns.scope
 
-    Threats.create_threat(
-      scope.user,
-      scope.organisation,
-      threat_params |> update_with_fixed_system(socket)
-    )
-    |> case do
-      {:ok, threat} ->
-        notify_parent({:saved, threat})
-        notify_threat_list(id: socket.assigns.parent_id, added_threat: threat)
+    result = Threats.create_threat(scope.user, scope.organisation, threat_params)
+    socket = handle_save_result(socket, result, __MODULE__, "Threat created successfully")
 
-        socket
-        |> put_flash(:info, "Threat created successfully")
-        |> push_patch(to: socket.assigns.origin)
-        |> noreply()
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+    with {:ok, threat} <- result do
+      notify_threat_list(id: socket.assigns.parent_id, added_threat: threat)
     end
-  end
 
-  defp update_with_fixed_system(threat_params, socket) do
-    case socket.assigns[:fixed_system] do
-      nil -> threat_params
-      sys -> threat_params |> Map.put("system_id", sys.id)
-    end
+    noreply(socket)
   end
-
-  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-    assign(socket, :form, to_form(changeset))
-  end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 
   defp notify_threat_list(msg),
     do: send_update(self(), ThreatShieldWeb.ThreatLive.ThreatsList, msg)

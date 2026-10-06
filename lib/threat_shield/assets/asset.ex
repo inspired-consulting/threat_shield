@@ -29,13 +29,6 @@ defmodule ThreatShield.Assets.Asset do
     |> validate_length(:name, max: 60)
   end
 
-  def list_system_options(%Organisation{systems: systems}) do
-    [{"None", nil} | Enum.map(systems, fn s -> {s.name, s.id} end)]
-  end
-
-  def system_name(%__MODULE__{system: %{name: name}}), do: name
-  def system_name(_), do: "None"
-
   def calc_overall_criticality(%__MODULE__{
         criticality_loss: loss,
         criticality_theft: theft,

@@ -9,28 +9,11 @@
     <%= @threat.description %>
   </:description>
   <:links>
-    <li
-      :if={ThreatShield.Members.Rights.may(:delete_threat, @scope.membership)}
-      class="context-menu-item"
-    >
-      <.link
-        phx-click={JS.push("delete", value: %{threat_id: @threat.id})}
-        data-confirm="Are you sure?"
-      >
-        <%= dgettext("common", "Delete") %>
-      </.link>
-    </li>
-    <li
-      :if={ThreatShield.Members.Rights.may(:edit_threat, @scope.membership)}
-      class="context-menu-item"
-    >
-      <.link
-        patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/edit"}
-        phx-click={JS.push_focus()}
-      >
-        <%= dgettext("common", "Edit") %>
-      </.link>
-    </li>
+    <.delete_menu_item :if={may?(@scope, :delete_threat)} value={%{threat_id: @threat.id}} />
+    <.edit_menu_item
+      :if={may?(@scope, :edit_threat)}
+      patch={get_path_prefix(assigns) <> "/threats/#{@threat.id}/edit"}
+    />
   </:links>
   <:attribute>
     <div>
@@ -60,7 +43,7 @@
       threat={@threat}
       system_options={assigns[:system_options]}
       asset_options={assigns[:asset_options]}
-      origin={@origin}
+      patch={@origin}
     />
   </.modal>
 
@@ -89,7 +72,6 @@
     scope={@scope}
     threat={@threat}
     risks={@threat.risks}
-    ai_suggestions={@ai_suggestions}
     origin={@origin}
   />
 </section>

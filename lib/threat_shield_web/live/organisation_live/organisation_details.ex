@@ -2,8 +2,6 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
   alias ThreatShield.Accounts.Organisation
   use ThreatShieldWeb, :live_view
 
-  require Logger
-
   alias ThreatShield.Organisations
   alias ThreatShield.Const.Locations
 
@@ -35,7 +33,6 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
     |> assign(locations_options: Locations.list_locations())
     |> assign(:attributes, Organisation.attributes())
     |> assign(:scope, Scope.for(user, organisation))
-    |> assign(:ai_suggestions, %{})
     |> show_tab(:systems)
     |> ok()
   end
@@ -103,22 +100,6 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
     socket
     |> assign(organisation: updated_org)
     |> assign(page_title: "Show Organisation")
-    |> noreply()
-  end
-
-  @impl true
-  def handle_info({task_ref, {:new_ai_suggestion, suggestion}}, socket) do
-    %{type: entity_type, result: result} = suggestion
-
-    # stop monitoring the task
-    Process.demonitor(task_ref, [:flush])
-
-    suggestions =
-      (socket.assigns[:suggestions] || %{})
-      |> Map.put(entity_type, result)
-
-    socket
-    |> assign(ai_suggestions: suggestions)
     |> noreply()
   end
 

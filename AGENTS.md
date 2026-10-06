@@ -106,9 +106,10 @@ schema — security is in the query, not just the UI.
 `ThreatShield.AI` builds prompts from the domain objects (organisation/system/asset
 descriptions) and asks OpenAI for JSON suggestions. Every AI call goes through
 `AI.run_task/2`, which checks the organisation's **quota** (`Quotas.QuotaManager`,
-`ai_requests_per_month`) before running the task async under `ThreatShield.TaskSupervisor`
-and logging usage. When adding AI features, route through `run_task/2` so quotas are
-respected.
+`ai_requests_per_month`), logs the usage, and then runs the task. The call blocks, so run
+it in a separate process: the list components use `ThreatShieldWeb.AiSuggestions`, which
+starts it with `start_async` under `ThreatShield.TaskSupervisor`. When adding AI features,
+route through `run_task/2` so quotas are respected.
 
 ### Other notable modules
 

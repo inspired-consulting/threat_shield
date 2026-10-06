@@ -153,12 +153,6 @@ defmodule ThreatShield.Members do
     |> Repo.delete_all()
   end
 
-  def update_invite(%Invite{} = invite, attrs) do
-    invite
-    |> Invite.changeset(attrs)
-    |> Repo.update()
-  end
-
   def change_invite(%Invite{} = invite, attrs \\ %{}) do
     Invite.changeset(invite, attrs)
   end
