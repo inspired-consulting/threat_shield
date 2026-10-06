@@ -63,8 +63,9 @@ cd threat_shield
 
 ThreatShield is configured via environment variables. Copy `.env.template`
 to `.env` and fill in the values — at minimum a PostgreSQL connection and an
-**OpenAI API key** for the AI suggestion features. See `config/runtime.exs`
-for the full list of supported variables.
+**OpenAI API key** for the AI suggestion features. See `config/dev.exs`
+(development) and `config/runtime.exs` (production) for the full list of
+supported variables.
 
 ## Development setup with docker
 
@@ -162,6 +163,7 @@ To start your Phoenix server:
 
 ```bash
 cd threat_shield
+npm install --prefix assets
 mix setup
 mix phx.server
 ```
