@@ -1,6 +1,8 @@
 defmodule ThreatShieldWeb.MembersLive.InviteForm do
   use ThreatShieldWeb, :live_component
 
+  import ThreatShieldWeb.FormHelpers
+
   alias ThreatShield.Members
 
   @impl true
@@ -66,23 +68,10 @@ defmodule ThreatShieldWeb.MembersLive.InviteForm do
     organisation = socket.assigns.organisation
     user = socket.assigns.current_user
 
-    case Members.create_invite(user, organisation, invite_params) do
-      {:ok, invite} ->
-        notify_parent({:saved, invite})
+    result = Members.create_invite(user, organisation, invite_params)
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Invite created successfully")
-         |> push_patch(to: socket.assigns.patch)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
+    socket
+    |> handle_save_result(result, __MODULE__, "Invite created successfully")
+    |> noreply()
   end
-
-  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-    assign(socket, :form, to_form(changeset))
-  end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

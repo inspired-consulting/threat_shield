@@ -3,15 +3,21 @@ defmodule ThreatShield.OpenAIStub do
   Replaces the OpenAI client in tests (see `config/test.exs`).
 
   It answers a chat completion with two items in the JSON format that the request
-  asks for, and sends the request messages to the calling process.
+  asks for.
 
-  A test can set another result with
-  `Application.put_env(:threat_shield, :open_ai_stub_result, result)`.
+  A test can change this with the application environment of `:threat_shield`:
+
+    * `:open_ai_stub_listener` - a pid that gets `{:open_ai_request, messages}`
+      for each request
+    * `:open_ai_stub_result` - the result to return
   """
 
   def chat_completion(params) do
     messages = Keyword.fetch!(params, :messages)
-    send(self(), {:open_ai_request, messages})
+
+    if listener = Application.get_env(:threat_shield, :open_ai_stub_listener) do
+      send(listener, {:open_ai_request, messages})
+    end
 
     Application.get_env(:threat_shield, :open_ai_stub_result) || suggestions(messages)
   end

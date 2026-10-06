@@ -1,6 +1,8 @@
 defmodule ThreatShieldWeb.AssetLive.AssetForm do
   use ThreatShieldWeb, :live_component
 
+  import ThreatShieldWeb.FormHelpers
+
   alias ThreatShield.Scope
   alias ThreatShield.Assets
 
@@ -92,51 +94,25 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
   defp save_asset(socket, :edit, asset_params) do
     scope = %Scope{} = socket.assigns.scope
 
-    case Assets.update_asset(
-           scope.user,
-           socket.assigns.asset,
-           asset_params
-         ) do
-      {:ok, asset} ->
-        notify_parent({:saved, asset})
+    result = Assets.update_asset(scope.user, socket.assigns.asset, asset_params)
 
-        socket
-        |> put_flash(:info, "Asset updated successfully")
-        |> push_patch(to: socket.assigns.origin)
-        |> noreply()
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
+    socket
+    |> handle_save_result(result, __MODULE__, "Asset updated successfully")
+    |> noreply()
   end
 
   defp save_asset(socket, :new_asset, asset_params) do
     scope = %Scope{} = socket.assigns.scope
 
-    case Assets.create_asset(
-           scope.user,
-           scope.organisation,
-           asset_params
-         ) do
-      {:ok, asset} ->
-        notify_parent({:saved, asset})
-        notify_asset_list(id: socket.assigns.parent_id, added_asset: asset)
+    result = Assets.create_asset(scope.user, scope.organisation, asset_params)
+    socket = handle_save_result(socket, result, __MODULE__, "Asset created successfully")
 
-        socket
-        |> put_flash(:info, "Asset created successfully")
-        |> push_patch(to: socket.assigns.origin)
-        |> noreply()
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+    with {:ok, asset} <- result do
+      notify_asset_list(id: socket.assigns.parent_id, added_asset: asset)
     end
-  end
 
-  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-    assign(socket, :form, to_form(changeset))
+    noreply(socket)
   end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 
   defp notify_asset_list(msg),
     do: send_update(self(), ThreatShieldWeb.AssetLive.AssetsList, msg)

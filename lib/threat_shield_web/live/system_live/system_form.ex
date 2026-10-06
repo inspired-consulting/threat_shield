@@ -1,6 +1,8 @@
 defmodule ThreatShieldWeb.SystemLive.SystemForm do
   use ThreatShieldWeb, :live_component
 
+  import ThreatShieldWeb.FormHelpers
+
   alias ThreatShield.Systems
   alias ThreatShield.DynamicAttribute
 
@@ -93,44 +95,26 @@ defmodule ThreatShieldWeb.SystemLive.SystemForm do
   defp save_system(socket, :edit_system, system_params) do
     user = socket.assigns.current_user
 
-    case Systems.update_system(user, socket.assigns.system, system_params) do
-      {:ok, system} ->
-        notify_parent({:saved, system})
+    result = Systems.update_system(user, socket.assigns.system, system_params)
 
-        socket
-        |> put_flash(:info, "System updated successfully")
-        |> push_patch(to: socket.assigns.origin)
-        |> noreply()
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
+    socket
+    |> handle_save_result(result, __MODULE__, "System updated successfully")
+    |> noreply()
   end
 
   defp save_system(socket, :new_system, system_params) do
     user = socket.assigns.current_user
     organisation = socket.assigns.organisation
 
-    case Systems.create_system(user, organisation, system_params) do
-      {:ok, system} ->
-        notify_parent({:saved, system})
-        notify_systems_list(id: socket.assigns.parent_id, added_system: system)
+    result = Systems.create_system(user, organisation, system_params)
+    socket = handle_save_result(socket, result, __MODULE__, "System created successfully")
 
-        socket
-        |> put_flash(:info, "System created successfully")
-        |> push_patch(to: socket.assigns.origin)
-        |> noreply()
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+    with {:ok, system} <- result do
+      notify_systems_list(id: socket.assigns.parent_id, added_system: system)
     end
-  end
 
-  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-    assign(socket, :form, to_form(changeset))
+    noreply(socket)
   end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 
   defp notify_systems_list(msg),
     do: send_update(self(), ThreatShieldWeb.SystemLive.SystemsList, msg)

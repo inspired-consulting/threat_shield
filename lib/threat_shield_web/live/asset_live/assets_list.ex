@@ -125,7 +125,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
           action={:new_asset}
           system_options={systems_of_organisaton(@scope.organisation)}
           asset={prepare_asset(assigns)}
-          origin={@origin}
+          patch={@origin}
         />
       </.modal>
       <.modal

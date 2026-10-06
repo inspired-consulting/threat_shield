@@ -106,7 +106,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
           system_options={systems_of_organisaton(@scope.organisation)}
           asset_options={assets_of_organisaton(@scope.organisation)}
           threat={prepare_threat(@scope)}
-          origin={@origin}
+          patch={@origin}
         />
       </.modal>
       <.modal

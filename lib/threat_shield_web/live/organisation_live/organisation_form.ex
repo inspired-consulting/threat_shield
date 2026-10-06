@@ -1,7 +1,8 @@
 defmodule ThreatShieldWeb.OrganisationLive.OrganisationForm do
   alias ThreatShield.DynamicAttribute
   use ThreatShieldWeb, :live_component
-  import Phoenix.LiveView
+
+  import ThreatShieldWeb.FormHelpers
 
   alias ThreatShield.Organisations
   import ThreatShield.Accounts.Organisation, only: [attributes: 0]
@@ -91,44 +92,25 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationForm do
   defp save_organisation(socket, :edit_organisation, organisation_params) do
     current_user = socket.assigns.current_user
 
-    case Organisations.update_organisation(
-           socket.assigns.organisation,
-           current_user,
-           organisation_params
-         ) do
-      {:ok, organisation} ->
-        notify_parent({:saved, organisation})
+    result =
+      Organisations.update_organisation(
+        socket.assigns.organisation,
+        current_user,
+        organisation_params
+      )
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Organisation updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
+    socket
+    |> handle_save_result(result, __MODULE__, "Organisation updated successfully")
+    |> noreply()
   end
 
   defp save_organisation(socket, :new, organisation_params) do
     %{current_user: current_user} = socket.assigns
 
-    case Organisations.create_organisation(organisation_params, current_user) do
-      {:ok, organisation} ->
-        notify_parent({:saved, organisation})
+    result = Organisations.create_organisation(organisation_params, current_user)
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "Organisation created successfully")
-         |> push_patch(to: socket.assigns.patch)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
+    socket
+    |> handle_save_result(result, __MODULE__, "Organisation created successfully")
+    |> noreply()
   end
-
-  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-    assign(socket, :form, to_form(changeset))
-  end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 end

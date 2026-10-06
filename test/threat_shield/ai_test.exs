@@ -17,6 +17,9 @@ defmodule ThreatShield.AITest do
   alias ThreatShield.Threats.Threat
 
   setup do
+    Application.put_env(:threat_shield, :open_ai_stub_listener, self())
+    on_exit(fn -> Application.delete_env(:threat_shield, :open_ai_stub_listener) end)
+
     user = AccountsFixtures.user_fixture()
     organisation = OrganisationsFixtures.organisation_fixture(user, %{name: "ACME"})
 
