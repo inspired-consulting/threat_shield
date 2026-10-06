@@ -51,3 +51,6 @@ tmp/
 
 
 
+
+# Local audit reports (see docs/README.md)
+/docs/audit/
