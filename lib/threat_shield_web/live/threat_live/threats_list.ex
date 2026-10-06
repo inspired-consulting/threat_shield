@@ -255,6 +255,8 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
 
   defp create_threat(scope, %{name: name, description: desc}) do
     {:ok, threat} = Threats.add_threat_with_name_and_description(scope, name, desc)
-    threat
+
+    # reload to resolve associations
+    Threats.get_threat!(scope.user, threat.id)
   end
 end

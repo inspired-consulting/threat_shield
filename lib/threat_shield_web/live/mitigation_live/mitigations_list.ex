@@ -168,7 +168,9 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationsList do
   end
 
   defp create_mitigation(%User{} = user, %Risk{} = risk, %{name: name, description: desc}) do
-    {:ok, mitigation} = Mitigations.add_mitigation(user, risk.id, name, desc)
+    {:ok, mitigation} =
+      Mitigations.create_mitigation(user, risk, %{name: name, description: desc})
+
     mitigation
   end
 end

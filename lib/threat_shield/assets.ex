@@ -106,64 +106,16 @@ defmodule ThreatShield.Assets do
   defp check_related_system_in_asset_changeset(_, _user) do
   end
 
-  def add_asset_with_name_and_description(
-        %Scope{} = scope,
-        name,
-        description
-      ) do
-    case scope do
-      %Scope{system: %System{} = system} ->
-        add_asset_with_name_and_description(scope.user, system, name, description)
-
-      %Scope{organisation: %Organisation{} = organisation} ->
-        add_asset_with_name_and_description(scope.user, organisation, name, description)
-    end
-  end
-
-  def add_asset_with_name_and_description(
-        %User{id: user_id},
-        %System{id: sys_id},
-        name,
-        description
-      ) do
-    Repo.transaction(fn ->
-      system =
-        System.get(sys_id)
-        |> System.for_user(user_id, :create_asset)
-        |> System.preload_organisation()
-        |> Repo.one!()
-
-      changeset =
-        %Asset{
-          organisation: system.organisation,
-          system: system,
-          name: name,
-          description: description
-        }
-        |> Ecto.Changeset.change()
-
-      Repo.insert!(changeset)
-    end)
-  end
-
-  def add_asset_with_name_and_description(
-        %User{id: user_id},
-        %Organisation{id: org_id},
-        name,
-        description
-      ) do
-    Repo.transaction(fn ->
-      organisation =
-        Organisation.get(org_id)
-        |> Organisation.for_user(user_id, :create_asset)
-        |> Repo.one!()
-
-      changeset =
-        %Asset{organisation: organisation, description: description, name: name}
-        |> Ecto.Changeset.change()
-
-      Repo.insert!(changeset)
-    end)
+  @doc """
+  Creates an asset with the given name and description for the scope: for its
+  organisation and, if the scope has one, for its system.
+  """
+  def add_asset_with_name_and_description(%Scope{} = scope, name, description) do
+    create_asset(scope.user, scope.organisation, %{
+      name: name,
+      description: description,
+      system_id: scope.system && scope.system.id
+    })
   end
 
   defp update_overall_criticality(%Ecto.Changeset{} = asset_cs) do

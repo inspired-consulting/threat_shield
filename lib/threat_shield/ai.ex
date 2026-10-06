@@ -16,6 +16,9 @@ defmodule ThreatShield.AI do
 
   @schemas %{assets: Asset, threats: Threat, risks: Risk, mitigations: Mitigation}
 
+  # The changesets of these schemas allow names of up to 60 characters
+  @max_name_length 60
+
   # The explanation of each kind of entity that is sent with a request
   @info %{
     assets: "  Assets are valuable resources or data, that need to be protected.\n",
@@ -246,7 +249,7 @@ defmodule ThreatShield.AI do
   defp get_suggestions_from_response(response, kind) do
     get_content_from_reponse(response, Atom.to_string(kind))
     |> Enum.map(fn %{"name" => n, "description" => d} ->
-      struct(@schemas[kind], name: n, description: d)
+      struct(@schemas[kind], name: String.slice(n, 0, @max_name_length), description: d)
     end)
   end
 
