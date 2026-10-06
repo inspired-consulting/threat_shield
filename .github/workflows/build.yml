@@ -14,6 +14,8 @@ on:
 
 jobs:
   build:
+    # When triggered by the test workflow, build only if the tests succeeded
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
