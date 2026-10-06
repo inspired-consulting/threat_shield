@@ -137,8 +137,8 @@ MIX_ENV=test mix test
 
 You will need the following installed on your system:
 
-- Erlang/OTP 26.2.1
-- Elixir 1.16.2
+- Erlang/OTP 29.1.1
+- Elixir 1.20.4
 - Node.js 20.11
 
 If you use asdf, you can install these dependencies with `asdf install`.

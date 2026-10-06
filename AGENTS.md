@@ -12,8 +12,8 @@ assess **risks**, and plan **mitigations**. An OpenAI-backed assistant suggests 
 
 ## Tech stack
 
-- **Elixir** 1.16.2 / **OTP** 26.2.1 (see `.tool-versions`; CI pins the same versions).
-  `mix.exs` requires Elixir `~> 1.14`; the `Dockerfile` builds with Elixir 1.15.7 / OTP 26.1.2.
+- **Elixir** 1.20.4 / **OTP** 29.1.1 (see `.tool-versions`; CI and the `Dockerfile` pin the
+  same versions). `mix.exs` requires Elixir `~> 1.20`.
 - **Phoenix** `~> 1.7` with **LiveView** `~> 0.20` — the UI is almost entirely LiveView.
 - **Ecto** + **Postgrex** over **PostgreSQL**.
 - **OpenAI** via the `openai` hex package (`gpt-3.5-turbo`, see `lib/threat_shield/ai.ex`).

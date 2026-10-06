@@ -1,5 +1,5 @@
 # Second stage: Run tests
-FROM elixir:1.15.4-alpine as test_stage
+FROM elixir:1.20.4-otp-29-alpine as test_stage
 
 ENV LANG=C.UTF-8
 ENV MIX_ENV="test"
