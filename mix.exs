@@ -53,7 +53,7 @@ defmodule ThreatShield.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:openai, "~> 0.5.2"},
-      {:ecto_psql_extras, "~> 0.7.13"},
+      {:ecto_psql_extras, "~> 0.8"},
       {:ex_rated, "~> 2.1"},
       {:timex, "~> 3.7.11"},
       {:number, "~> 1.0.1"},
