@@ -23,16 +23,6 @@ defmodule ThreatShield.Threats.Threat do
     timestamps()
   end
 
-  def describe(%__MODULE__{description: description, system: system}) do
-    system_description =
-      case system do
-        nil -> ""
-        system -> " It belongs to the following system: " <> System.describe(system)
-      end
-
-    description <> system_description
-  end
-
   @doc false
   def changeset(threat, attrs) do
     threat
@@ -40,9 +30,6 @@ defmodule ThreatShield.Threats.Threat do
     |> validate_required([:organisation, :name, :description])
     |> validate_length(:name, max: 60)
   end
-
-  def system_name(%__MODULE__{system: %{name: name}}), do: name
-  def system_name(_), do: "None"
 
   import Ecto.Query
 

@@ -63,12 +63,6 @@ defmodule ThreatShield.Threats do
     |> Repo.aggregate(:count, :id)
   end
 
-  def count_threats_for_system(system_id) do
-    Threat
-    |> where([t], t.system_id == ^system_id)
-    |> Repo.aggregate(:count, :id)
-  end
-
   def create_threat(
         %User{id: user_id},
         %Organisation{id: org_id} = organisation,

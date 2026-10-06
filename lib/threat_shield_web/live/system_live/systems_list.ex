@@ -1,11 +1,8 @@
 defmodule ThreatShieldWeb.SystemLive.SystemsList do
-  alias ThreatShield.Accounts.Organisation
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.Systems.System
   alias ThreatShield.Accounts.Organisation
-
-  require Logger
 
   @moduledoc """
   This component renders a list of systems for a given organisation.

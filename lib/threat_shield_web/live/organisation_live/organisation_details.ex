@@ -2,8 +2,6 @@ defmodule ThreatShieldWeb.OrganisationLive.OrganisationDetails do
   alias ThreatShield.Accounts.Organisation
   use ThreatShieldWeb, :live_view
 
-  require Logger
-
   alias ThreatShield.Organisations
   alias ThreatShield.Const.Locations
 

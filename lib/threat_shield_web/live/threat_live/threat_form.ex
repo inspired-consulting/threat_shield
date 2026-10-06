@@ -73,7 +73,6 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
   def handle_event("validate", %{"threat" => threat_params}, socket) do
     changeset =
       socket.assigns.threat
-      |> update_with_fixed_system(socket)
       |> Threats.change_threat(threat_params)
       |> Map.put(:action, :validate)
 
@@ -90,7 +89,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
     case Threats.update_threat(
            scope.user,
            socket.assigns.threat,
-           threat_params |> update_with_fixed_system(socket)
+           threat_params
          ) do
       {:ok, threat} ->
         notify_parent({:saved, threat})
@@ -111,7 +110,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
     Threats.create_threat(
       scope.user,
       scope.organisation,
-      threat_params |> update_with_fixed_system(socket)
+      threat_params
     )
     |> case do
       {:ok, threat} ->
@@ -125,13 +124,6 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatForm do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
-    end
-  end
-
-  defp update_with_fixed_system(threat_params, socket) do
-    case socket.assigns[:fixed_system] do
-      nil -> threat_params
-      sys -> threat_params |> Map.put("system_id", sys.id)
     end
   end
 

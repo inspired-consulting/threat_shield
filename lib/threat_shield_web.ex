@@ -57,11 +57,6 @@ defmodule ThreatShieldWeb do
         layout: {ThreatShieldWeb.Layouts, :app}
 
       unquote(html_helpers())
-
-      def init_assigns(assigns, key) when is_atom(key), do: assign(assigns, key, nil)
-
-      def init_assigns(assigns, keys) when is_list(keys),
-        do: for(key <- keys, do: init_assigns(assigns, key))
     end
   end
 
@@ -106,7 +101,6 @@ defmodule ThreatShieldWeb do
       def ok(socket), do: {:ok, socket}
       def ok(socket, options), do: {:ok, socket, options}
       def noreply(socket), do: {:noreply, socket}
-      def halt(socket), do: {:halt, socket}
     end
   end
 

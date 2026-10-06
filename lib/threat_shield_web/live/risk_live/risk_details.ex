@@ -1,5 +1,4 @@
 defmodule ThreatShieldWeb.RiskLive.RiskDetails do
-  require Logger
   use ThreatShieldWeb, :live_view
 
   alias ThreatShield.Threats.Threat
@@ -10,8 +9,6 @@ defmodule ThreatShieldWeb.RiskLive.RiskDetails do
 
   import ThreatShieldWeb.Helpers
   import ThreatShieldWeb.Labels
-
-  require Logger
 
   @moduledoc """
   Live view for showing a risk.

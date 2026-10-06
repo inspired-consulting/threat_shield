@@ -39,13 +39,6 @@ defmodule ThreatShield.Risks.Risk do
   end
 
   @fields ~w(name description estimated_cost probability severity status)a
-  @valid_states ~w(identified assessed mitigated accepted)a
-
-  def describe(%__MODULE__{description: description, threat: threat}) do
-    description <> " " <> Threat.describe(threat)
-  end
-
-  def valid_states(), do: @valid_states
 
   @doc false
   def changeset(risk, attrs) do

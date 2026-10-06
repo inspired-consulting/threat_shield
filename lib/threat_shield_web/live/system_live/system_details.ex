@@ -1,5 +1,4 @@
 defmodule ThreatShieldWeb.SystemLive.SystemDetails do
-  require Logger
   alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Organisations
   alias ThreatShield.Accounts.User

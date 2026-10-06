@@ -3,8 +3,7 @@ defmodule ThreatShieldWeb.Helpers do
     endpoint: ThreatShieldWeb.Endpoint,
     router: ThreatShieldWeb.Router
 
-  alias ElixirLS.LanguageServer.Plugins.Phoenix.Scope
-  alias ThreatShield.Accounts.{Organisation, User}
+  alias ThreatShield.Accounts.Organisation
 
   import Phoenix.Component
   alias ThreatShieldWeb.Endpoint
@@ -84,13 +83,6 @@ defmodule ThreatShieldWeb.Helpers do
   def format_monetary_amount(number, currency) do
     "#{format_number(number)} #{currency}"
   end
-
-  def format_percentage(number) when is_number(number) do
-    "#{format_number(number)} %"
-  end
-
-  def format_percentage(nil), do: "-"
-  def format_percentage(number), do: number
 
   # URLs
 

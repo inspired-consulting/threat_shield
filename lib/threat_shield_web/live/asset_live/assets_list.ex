@@ -1,5 +1,4 @@
 defmodule ThreatShieldWeb.AssetLive.AssetsList do
-  alias ElixirSense.Plugins.Phoenix.Scope
   use ThreatShieldWeb, :live_component
 
   alias ThreatShield.AI

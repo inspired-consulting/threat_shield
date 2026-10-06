@@ -79,7 +79,6 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
   def handle_event("validate", %{"asset" => asset_params}, socket) do
     changeset =
       socket.assigns.asset
-      |> update_with_fixed_system(socket)
       |> Assets.change_asset(asset_params)
       |> Map.put(:action, :validate)
 
@@ -96,7 +95,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
     case Assets.update_asset(
            scope.user,
            socket.assigns.asset,
-           asset_params |> update_with_fixed_system(socket)
+           asset_params
          ) do
       {:ok, asset} ->
         notify_parent({:saved, asset})
@@ -117,7 +116,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
     case Assets.create_asset(
            scope.user,
            scope.organisation,
-           asset_params |> update_with_fixed_system(socket)
+           asset_params
          ) do
       {:ok, asset} ->
         notify_parent({:saved, asset})
@@ -130,13 +129,6 @@ defmodule ThreatShieldWeb.AssetLive.AssetForm do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
-    end
-  end
-
-  defp update_with_fixed_system(asset_params, socket) do
-    case socket.assigns[:fixed_system] do
-      nil -> asset_params
-      sys -> asset_params |> Map.put("system_id", sys.id)
     end
   end
 
