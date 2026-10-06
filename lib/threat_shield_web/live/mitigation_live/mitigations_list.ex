@@ -34,10 +34,7 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationsList do
           </:subtitle>
 
           <:buttons>
-            <.link
-              :if={ThreatShield.Members.Rights.may(:create_mitigation, @scope.membership)}
-              patch={@origin <> "/mitigations/new"}
-            >
+            <.link :if={may?(@scope, :create_mitigation)} patch={@origin <> "/mitigations/new"}>
               <.button_primary>
                 <.icon name="hero-cursor-arrow-ripple" class="mr-1 mb-1" /><%= dgettext(
                   "mitigations",
@@ -47,7 +44,7 @@ defmodule ThreatShieldWeb.MitigationLive.MitigationsList do
             </.link>
             <.link>
               <.button_magic
-                :if={ThreatShield.Members.Rights.may(:create_mitigation, @scope.membership)}
+                :if={may?(@scope, :create_mitigation)}
                 phx-click="suggest_mitigations"
                 phx-target={@myself}
               >

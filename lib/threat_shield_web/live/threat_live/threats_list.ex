@@ -42,7 +42,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
 
           <:buttons>
             <.link
-              :if={ThreatShield.Members.Rights.may(:create_threat, @scope.membership)}
+              :if={may?(@scope, :create_threat)}
               phx-click="open-create-dialog"
               phx-target={@myself}
             >
@@ -55,7 +55,7 @@ defmodule ThreatShieldWeb.ThreatLive.ThreatsList do
             </.link>
             <.link>
               <.button_magic
-                :if={ThreatShield.Members.Rights.may(:create_threat, @scope.membership)}
+                :if={may?(@scope, :create_threat)}
                 phx-click="suggest_threats"
                 phx-target={@myself}
               >

@@ -5,6 +5,7 @@ defmodule ThreatShieldWeb.TsComponents do
   use Phoenix.Component
 
   alias ThreatShield.Scope
+  alias Phoenix.LiveView.JS
 
   use ThreatShieldWeb, :verified_routes
   import ThreatShieldWeb.CoreComponents
@@ -105,6 +106,39 @@ defmodule ThreatShieldWeb.TsComponents do
 
   defp has_suggestions?(assigns) do
     not is_nil(assigns[:suggestions]) and not Enum.empty?(assigns[:suggestions])
+  end
+
+  # context menu items
+
+  @doc """
+  A context-menu item that deletes the entity of the page. It pushes the event
+  "delete" with the given value.
+  """
+  attr :value, :map, required: true
+
+  def delete_menu_item(assigns) do
+    ~H"""
+    <li class="context-menu-item">
+      <.link phx-click={JS.push("delete", value: @value)} data-confirm="Are you sure?">
+        <%= dgettext("common", "Delete") %>
+      </.link>
+    </li>
+    """
+  end
+
+  @doc """
+  A context-menu item that opens the edit dialog of the entity of the page.
+  """
+  attr :patch, :string, required: true
+
+  def edit_menu_item(assigns) do
+    ~H"""
+    <li class="context-menu-item">
+      <.link patch={@patch} phx-click={JS.push_focus()}>
+        <%= dgettext("common", "Edit") %>
+      </.link>
+    </li>
+    """
   end
 
   # simple components

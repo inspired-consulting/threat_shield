@@ -28,7 +28,7 @@ defmodule ThreatShieldWeb.SystemLive.SystemsList do
 
           <:buttons>
             <.link
-              :if={ThreatShield.Members.Rights.may(:create_system, @scope.membership)}
+              :if={may?(@scope, :create_system)}
               phx-click="open-create-system-modal"
               phx-target={@myself}
             >

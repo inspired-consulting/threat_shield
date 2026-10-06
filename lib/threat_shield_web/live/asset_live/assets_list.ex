@@ -38,7 +38,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
 
           <:buttons>
             <.link
-              :if={ThreatShield.Members.Rights.may(:create_asset, @scope.membership)}
+              :if={may?(@scope, :create_asset)}
               phx-click="open-create-dialog"
               phx-target={@myself}
             >
@@ -51,7 +51,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
             </.link>
             <.link>
               <.button_magic
-                :if={ThreatShield.Members.Rights.may(:create_asset, @scope.membership)}
+                :if={may?(@scope, :create_asset)}
                 phx-click="suggest_assets"
                 phx-target={@myself}
               >

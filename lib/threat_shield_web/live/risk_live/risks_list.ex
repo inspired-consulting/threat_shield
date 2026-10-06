@@ -31,10 +31,7 @@ defmodule ThreatShieldWeb.RiskLive.RisksList do
           </:subtitle>
 
           <:buttons>
-            <.link
-              :if={ThreatShield.Members.Rights.may(:create_risk, @scope.membership)}
-              patch={@origin <> "/risks/new"}
-            >
+            <.link :if={may?(@scope, :create_risk)} patch={@origin <> "/risks/new"}>
               <.button_primary>
                 <.icon name="hero-hand-raised" class="mr-1 mb-1" /><%= dgettext(
                   "risks",
@@ -44,7 +41,7 @@ defmodule ThreatShieldWeb.RiskLive.RisksList do
             </.link>
             <.link>
               <.button_magic
-                :if={ThreatShield.Members.Rights.may(:create_risk, @scope.membership)}
+                :if={may?(@scope, :create_risk)}
                 phx-click="suggest_risks"
                 phx-target={@myself}
               >
