@@ -4,12 +4,19 @@ defmodule ThreatShield.OpenAIStub do
 
   It answers a chat completion with two items in the JSON format that the request
   asks for, and sends the request messages to the calling process.
+
+  A test can set another result with
+  `Application.put_env(:threat_shield, :open_ai_stub_result, result)`.
   """
 
   def chat_completion(params) do
     messages = Keyword.fetch!(params, :messages)
     send(self(), {:open_ai_request, messages})
 
+    Application.get_env(:threat_shield, :open_ai_stub_result) || suggestions(messages)
+  end
+
+  defp suggestions(messages) do
     text = Enum.map_join(messages, "\n", & &1.content)
     [_, root_key, field] = Regex.run(~r/\{"(\w+)": \[\{"(\w+)":/, text)
 

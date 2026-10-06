@@ -3,7 +3,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
 
   alias ThreatShield.AI
   alias ThreatShield.Scope
-  alias ThreatShield.AI.AiSuggestion
+  alias ThreatShieldWeb.AiSuggestions
   alias ThreatShield.Assets
 
   alias ThreatShield.Accounts.Organisation
@@ -138,7 +138,7 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
           title={dgettext("assets", "Suggested Assets")}
           listener={@myself}
           scope={@scope}
-          suggestions={@ai_suggestions[:assets]}
+          suggestions={assigns[:ai_suggestions]}
         />
       </.modal>
     </div>
@@ -170,44 +170,22 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
     |> noreply()
   end
 
-  @doc """
-  Will start a background task to suggest assets for the current scope.
-  When the task is finished, it will send a :new_ai_suggestion message to the current page.
-  The page is expected to add the suggestions to the :ai_suggesstions assigns.
-  """
   @impl true
   def handle_event("suggest_assets", _params, socket) do
     scope = socket.assigns.scope
 
-    AI.run_task(scope, fn ->
-      new_assets =
-        AI.suggest_assets(scope)
-
-      {:new_ai_suggestion, %AiSuggestion{result: new_assets, type: :assets, requestor: self()}}
-    end)
-    |> case do
-      {:ok, _} ->
-        socket
-        |> assign(:show_suggest_dialog, true)
-        |> noreply()
-
-      {:error, :quota_exceeded} ->
-        socket
-        |> put_flash(:error, dgettext("common", "Your quota for AI suggestions is exceeded."))
-        |> push_navigate(to: socket.assigns.origin)
-        |> noreply()
-    end
+    socket
+    |> AiSuggestions.request(scope, fn -> AI.suggest_assets(scope) end)
+    |> noreply()
   end
 
   @impl true
-  def handle_event("apply_selection", %{"selected_suggestions" => selected_names}, socket) do
+  def handle_event("apply_selection", params, socket) do
     scope = %Scope{} = socket.assigns.scope
 
-    ai_suggestions = socket.assigns.ai_suggestions
-
     new_assets =
-      ai_suggestions[:assets]
-      |> Enum.filter(fn s -> Enum.member?(selected_names, s.name) end)
+      socket
+      |> AiSuggestions.selected(params)
       |> Enum.map(fn s -> create_asset(scope, s) end)
 
     socket
@@ -217,10 +195,9 @@ defmodule ThreatShieldWeb.AssetLive.AssetsList do
   end
 
   @impl true
-  def handle_event("apply_selection", _params, socket) do
+  def handle_async(:ai_suggestions, result, socket) do
     socket
-    |> put_flash(:error, dgettext("common", "No suggestions selected."))
-    |> assign(:show_suggest_dialog, false)
+    |> AiSuggestions.handle_result(result)
     |> noreply()
   end
 

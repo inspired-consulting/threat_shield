@@ -18,7 +18,6 @@ defmodule ThreatShieldWeb.RiskLive.RiskDetails do
   @impl true
   def mount(_params, _session, socket) do
     socket
-    |> assign(:ai_suggestions, %{})
     |> ok()
   end
 
@@ -38,7 +37,6 @@ defmodule ThreatShieldWeb.RiskLive.RiskDetails do
     |> assign(membership: scope.membership)
     |> assign(system: threat.system)
     |> assign(scope: scope)
-    |> assign(ai_suggestions: %{})
     |> assign(origin: risk_scope_to_url(scope, risk))
     |> add_breadcrumbs(url)
     |> apply_action(socket.assigns.live_action, params)
@@ -90,22 +88,6 @@ defmodule ThreatShieldWeb.RiskLive.RiskDetails do
   @impl true
   def handle_info({ThreatShieldWeb.MitigationLive.MitigationForm, {:saved, _mitigation}}, socket) do
     socket
-    |> noreply()
-  end
-
-  @impl true
-  def handle_info({task_ref, {:new_ai_suggestion, suggestion}}, socket) do
-    %{type: entity_type, result: result} = suggestion
-
-    # stop monitoring the task
-    Process.demonitor(task_ref, [:flush])
-
-    suggestions =
-      (socket.assigns[:suggestions] || %{})
-      |> Map.put(entity_type, result)
-
-    socket
-    |> assign(ai_suggestions: suggestions)
     |> noreply()
   end
 

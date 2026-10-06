@@ -30,7 +30,6 @@ defmodule ThreatShieldWeb.AssetLive.AssetDetails do
     |> assign(system_options: list_system_options(asset.organisation))
     |> assign(asset_options: list_asset_options(asset.organisation))
     |> assign(origin: asset_scope_to_url(scope))
-    |> assign(ai_suggestions: %{})
     |> ok()
   end
 
@@ -73,22 +72,6 @@ defmodule ThreatShieldWeb.AssetLive.AssetDetails do
     |> assign(organisation: asset.organisation)
     |> assign(system: asset.system)
     |> assign(page_title: "Show Asset")
-    |> noreply()
-  end
-
-  @impl true
-  def handle_info({task_ref, {:new_ai_suggestion, suggestion}}, socket) do
-    %{type: entity_type, result: result} = suggestion
-
-    # stop monitoring the task
-    Process.demonitor(task_ref, [:flush])
-
-    suggestions =
-      (socket.assigns[:suggestions] || %{})
-      |> Map.put(entity_type, result)
-
-    socket
-    |> assign(ai_suggestions: suggestions)
     |> noreply()
   end
 

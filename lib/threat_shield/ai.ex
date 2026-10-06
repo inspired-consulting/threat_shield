@@ -32,25 +32,19 @@ defmodule ThreatShield.AI do
 
   @quota_ai_requests_per_month "ai_requests_per_month"
 
-  defmodule AiSuggestion do
-    @moduledoc """
-    A suggestion from the AI for a given type (e.g. threat, asset, etc.).
-    """
-    defstruct [
-      :type,
-      :result,
-      :requestor
-    ]
-  end
+  @doc """
+  Runs an AI task for the scope: checks the quota of the organisation, records the
+  usage, and calls `fun`.
 
-  # Common runner
-
-  def run_task(%Scope{organisation: %Organisation{} = org} = scope, fun) do
+  The call blocks until `fun` has returned. Run it in a separate process, for
+  example with `ThreatShieldWeb.AiSuggestions.request/3`.
+  """
+  def run_task(%Scope{organisation: %Organisation{} = org} = scope, fun)
+      when is_function(fun, 0) do
     case QuotaManager.check_quota(org, @quota_ai_requests_per_month, 1) do
       {:ok, :quota_available} ->
-        Task.Supervisor.async_nolink(ThreatShield.TaskSupervisor, fun)
         Task.start(fn -> protocol_quota_usage(scope, "AI request") end)
-        {:ok, :task_started}
+        {:ok, fun.()}
 
       {:error, :quota_exceeded} ->
         Logger.warning("AI quota exceeded for organisation '#{org.name}'")

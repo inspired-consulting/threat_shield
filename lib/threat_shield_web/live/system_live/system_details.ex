@@ -22,7 +22,6 @@ defmodule ThreatShieldWeb.SystemLive.SystemDetails do
     |> assign(:membership, Organisation.get_membership(organisation, user))
     |> assign(:attributes, System.attributes())
     |> assign(:scope, Scope.for_system(user, organisation, system))
-    |> assign(:ai_suggestions, %{})
     |> ok()
   end
 
@@ -75,22 +74,6 @@ defmodule ThreatShieldWeb.SystemLive.SystemDetails do
     updated_sys = %{stale_sys | threats: stale_sys.threats ++ [threat]}
 
     {:noreply, socket |> assign(system: updated_sys) |> assign(page_title: "Show System")}
-  end
-
-  @impl true
-  def handle_info({task_ref, {:new_ai_suggestion, suggestion}}, socket) do
-    %{type: entity_type, result: result} = suggestion
-
-    # stop monitoring the task
-    Process.demonitor(task_ref, [:flush])
-
-    suggestions =
-      (socket.assigns[:suggestions] || %{})
-      |> Map.put(entity_type, result)
-
-    socket
-    |> assign(ai_suggestions: suggestions)
-    |> noreply()
   end
 
   @impl true

@@ -16,6 +16,7 @@ defmodule ThreatShieldWeb.AiSuggestionsLiveTest do
 
   alias ThreatShield.Repo
   alias ThreatShield.Systems
+  alias ThreatShield.Accounts.Organisation
   alias ThreatShield.Assets.Asset
   alias ThreatShield.Mitigations.Mitigation
   alias ThreatShield.Risks.Risk
@@ -52,21 +53,13 @@ defmodule ThreatShieldWeb.AiSuggestionsLiveTest do
   defp suggest_and_apply(view, entities) do
     view |> element(~s([phx-click="suggest_#{entities}"])) |> render_click()
 
-    assert wait_for(view, "Suggestion 1") =~ "Description 2"
+    html = render_async(view)
+    assert html =~ "Suggestion 1"
+    assert html =~ "Description 2"
 
     view
     |> element("#suggest-#{entities}-modal form")
     |> render_submit(%{"selected_suggestions" => ["Suggestion 1"]})
-  end
-
-  defp wait_for(view, text, attempts \\ 100) do
-    html = render(view)
-
-    cond do
-      html =~ text -> html
-      attempts == 0 -> flunk("\"#{text}\" did not appear")
-      true -> Process.sleep(20) && wait_for(view, text, attempts - 1)
-    end
   end
 
   defp switch_tab(view, tab), do: render_hook(view, "switch_tab", %{"tab" => tab})
@@ -153,5 +146,60 @@ defmodule ThreatShieldWeb.AiSuggestionsLiveTest do
              mitigation = Repo.get_by!(Mitigation, name: "Suggestion 1")
 
     assert mitigation.risk_id == risk.id
+  end
+
+  describe "a failed request" do
+    setup %{conn: conn, organisation: organisation} do
+      path = ~p"/organisations/#{organisation.id}"
+      {:ok, view, _html} = live(conn, path)
+      switch_tab(view, "threats")
+
+      %{view: view, path: path}
+    end
+
+    test "an error from OpenAI closes the dialog with a message", %{view: view, path: path} do
+      Application.put_env(:threat_shield, :open_ai_stub_result, {:error, :timeout})
+      on_exit(fn -> Application.delete_env(:threat_shield, :open_ai_stub_result) end)
+
+      view |> element(~s([phx-click="suggest_threats"])) |> render_click()
+
+      flash = assert_redirect(view, path, 1000)
+      assert flash["error"] =~ "could not create suggestions"
+    end
+
+    test "an unexpected response closes the dialog with a message", %{view: view, path: path} do
+      Application.put_env(:threat_shield, :open_ai_stub_result, {:ok, %{choices: []}})
+      on_exit(fn -> Application.delete_env(:threat_shield, :open_ai_stub_result) end)
+
+      view |> element(~s([phx-click="suggest_threats"])) |> render_click()
+
+      flash = assert_redirect(view, path, 1000)
+      assert flash["error"] =~ "could not create suggestions"
+    end
+
+    test "an exceeded quota closes the dialog with a message", %{conn: conn, path: path} do
+      Repo.update_all(Organisation, set: [quotas: %{"ai_requests_per_month" => 0}])
+
+      {:ok, view, _html} = live(conn, path)
+      switch_tab(view, "threats")
+
+      view |> element(~s([phx-click="suggest_threats"])) |> render_click()
+
+      flash = assert_redirect(view, path, 1000)
+      assert flash["error"] =~ "quota for AI suggestions is exceeded"
+    end
+  end
+
+  test "applying without a selection creates nothing", %{conn: conn, organisation: organisation} do
+    {:ok, view, _html} = live(conn, ~p"/organisations/#{organisation.id}")
+    switch_tab(view, "threats")
+
+    view |> element(~s([phx-click="suggest_threats"])) |> render_click()
+    render_async(view)
+
+    html = view |> element("#suggest-threats-modal form") |> render_submit(%{})
+
+    refute html =~ "Suggestion 1"
+    refute Repo.get_by(Threat, name: "Suggestion 1")
   end
 end
