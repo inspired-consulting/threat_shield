@@ -60,22 +60,18 @@ defmodule ThreatShield.Mitigations do
 
   """
   def create_mitigation(%User{id: user_id}, %Risk{id: risk_id}, attrs \\ %{}) do
-    case Repo.transaction(fn ->
-           risk =
-             Risk.get(risk_id)
-             |> Risk.for_user(user_id, :create_mitigation)
-             |> Repo.one!()
+    Repo.transaction(fn ->
+      risk =
+        Risk.get(risk_id)
+        |> Risk.for_user(user_id, :create_mitigation)
+        |> Repo.one!()
 
-           %Mitigation{}
-           |> Mitigation.changeset(attrs)
-           |> update_implementation_status()
-           |> Ecto.Changeset.put_assoc(:risk, risk)
-           |> Repo.insert()
-         end) do
-      {:ok, {:error, reason}} -> {:error, reason}
-      {:ok, {:ok, payload}} -> {:ok, payload}
-      {:error, rollback} -> {:error, rollback}
-    end
+      %Mitigation{}
+      |> Mitigation.changeset(attrs)
+      |> update_implementation_status()
+      |> Ecto.Changeset.put_assoc(:risk, risk)
+      |> Repo.insert_or_rollback()
+    end)
   end
 
   @doc """

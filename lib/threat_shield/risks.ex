@@ -39,7 +39,7 @@ defmodule ThreatShield.Risks do
       %Risk{}
       |> Risk.changeset(attrs)
       |> Ecto.Changeset.put_assoc(:threat, threat)
-      |> Repo.insert!()
+      |> Repo.insert_or_rollback()
     end)
   end
 
@@ -51,7 +51,7 @@ defmodule ThreatShield.Risks do
 
       risk
       |> Risk.changeset(attrs)
-      |> Repo.update!()
+      |> Repo.update_or_rollback()
     end)
   end
 

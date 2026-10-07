@@ -50,25 +50,18 @@ defmodule ThreatShield.Organisations do
   end
 
   def create_organisation(attrs \\ %{}, %User{} = current_user) do
-    case Repo.transaction(fn ->
-           case %Organisation{}
-                |> Organisation.changeset(attrs)
-                |> Repo.insert() do
-             {:ok, org} ->
-               %Membership{organisation: org, user: current_user, role: :owner}
-               |> Membership.changeset(%{})
-               |> Repo.insert()
+    Repo.transaction(fn ->
+      organisation =
+        %Organisation{}
+        |> Organisation.changeset(attrs)
+        |> Repo.insert_or_rollback()
 
-               {:ok, org}
+      %Membership{organisation: organisation, user: current_user, role: :owner}
+      |> Membership.changeset(%{})
+      |> Repo.insert_or_rollback()
 
-             x ->
-               x
-           end
-         end) do
-      {:ok, {:ok, org}} -> {:ok, org}
-      {:ok, {:error, e}} -> {:error, e}
-      {:error, e} -> e
-    end
+      organisation
+    end)
   end
 
   def update_organisation(
@@ -81,7 +74,7 @@ defmodule ThreatShield.Organisations do
       |> Organisation.for_user(user_id, :edit_organisation)
       |> Repo.one!()
       |> Organisation.changeset(attrs)
-      |> Repo.update!()
+      |> Repo.update_or_rollback()
     end)
   end
 

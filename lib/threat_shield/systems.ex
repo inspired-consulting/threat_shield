@@ -52,7 +52,7 @@ defmodule ThreatShield.Systems do
       %System{}
       |> System.changeset(attrs)
       |> Ecto.Changeset.put_assoc(:organisation, organisation)
-      |> Repo.insert!()
+      |> Repo.insert_or_rollback()
     end)
   end
 
