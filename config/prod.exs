@@ -6,7 +6,13 @@ import Config
 # which you should run after static files are built and
 # before starting your production server.
 config :threat_shield, ThreatShieldWeb.Endpoint,
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  # TLS ends at the load balancer in front of Cloud Run, and the container gets
+  # plain HTTP. Trust the proxy header, so that the app sees HTTPS: cookies get
+  # the Secure flag, browsers get the HSTS header, and a plain HTTP request is
+  # redirected. This is a compile-time option, so it lives here and not in
+  # runtime.exs.
+  force_ssl: [rewrite_on: [:x_forwarded_proto], hsts: true]
 
 # Configures Swoosh API Client
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: ThreatShield.Finch
