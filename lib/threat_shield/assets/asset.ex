@@ -27,6 +27,17 @@ defmodule ThreatShield.Assets.Asset do
     |> cast(attrs, @fields)
     |> validate_required([:name, :description, :organisation])
     |> validate_length(:name, max: 60)
+    |> validate_length(:description, max: 4000)
+    |> validate_number(:criticality_loss, greater_than_or_equal_to: 0, less_than_or_equal_to: 5)
+    |> validate_number(:criticality_theft, greater_than_or_equal_to: 0, less_than_or_equal_to: 5)
+    |> validate_number(:criticality_publication,
+      greater_than_or_equal_to: 0,
+      less_than_or_equal_to: 5
+    )
+    |> validate_number(:criticality_overall,
+      greater_than_or_equal_to: 0,
+      less_than_or_equal_to: 5
+    )
   end
 
   def calc_overall_criticality(%__MODULE__{

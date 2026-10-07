@@ -53,6 +53,12 @@ defmodule ThreatShield.Systems.System do
     |> cast(attrs, [:name, :description, :attributes])
     |> validate_required([:name, :description])
     |> validate_length(:name, max: 60)
+    |> validate_length(:description, max: 4000)
+    |> DynamicAttribute.validate_values(:attributes)
+    |> unique_constraint([:organisation_id, :name],
+      error_key: :name,
+      message: "is already used by another system of this organisation"
+    )
   end
 
   def attributes() do

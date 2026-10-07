@@ -46,6 +46,13 @@ defmodule ThreatShield.Risks.Risk do
     |> cast(attrs, @fields)
     |> validate_required([:name, :description])
     |> validate_length(:name, max: 60)
+    |> validate_length(:description, max: 4000)
+    |> validate_number(:severity, greater_than_or_equal_to: 0, less_than_or_equal_to: 5)
+    |> validate_number(:probability, greater_than_or_equal_to: 0)
+    |> validate_number(:estimated_cost,
+      greater_than_or_equal_to: 0,
+      less_than_or_equal_to: 2_147_483_647
+    )
   end
 
   def frequency_per_year(%{probability: probability}) do
