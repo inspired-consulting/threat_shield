@@ -10,7 +10,7 @@ defmodule ThreatShield.Quotas.QuotaUsage do
     field :quota_type, :string
     field :amount, :float, default: 0.0
     field :message, :string
-    field :timestamp, :utc_datetime_usec, default: Timex.now()
+    field :timestamp, :utc_datetime_usec
 
     belongs_to :organisation, Organisation
     belongs_to :user, User
