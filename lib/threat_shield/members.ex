@@ -60,21 +60,21 @@ defmodule ThreatShield.Members do
   def create_invite(%User{} = actor, %Organisation{id: org_id}, attrs \\ %{}) do
     token = generate_token()
 
-    case Repo.transaction(fn ->
-           organisation =
-             Organisation.get(org_id)
-             |> Organisation.for_user(actor.id, :invite_new_members)
-             |> Repo.one!()
+    Repo.transaction(fn ->
+      organisation =
+        Organisation.get(org_id)
+        |> Organisation.for_user(actor.id, :invite_new_members)
+        |> Repo.one!()
 
-           %Invite{token: token}
-           |> Invite.changeset(attrs)
-           |> Ecto.Changeset.put_assoc(:organisation, organisation)
-           |> Repo.insert()
-         end) do
-      {:ok, {:ok, invite}} -> {:ok, invite}
-      {:ok, {:error, changeset}} -> {:error, changeset}
-      {:error, err} -> {:error, err}
-    end
+      %Invite{token: token}
+      |> Invite.changeset(attrs)
+      |> Ecto.Changeset.put_assoc(:organisation, organisation)
+      |> Repo.insert()
+      |> case do
+        {:ok, invite} -> invite
+        {:error, changeset} -> Repo.rollback(changeset)
+      end
+    end)
   end
 
   def delete_membership_by_id(%User{} = actor, org_id, membership_id) do
@@ -101,14 +101,16 @@ defmodule ThreatShield.Members do
 
   def accept_invite(%User{confirmed_at: nil}, _invite_id), do: {:error, :email_not_confirmed}
 
-  def accept_invite(%User{email: invitee_email} = invitee, invite_id) do
+  def accept_invite(%User{} = invitee, invite_id) do
+    # the address is compared by the database, without regard to case
     invite =
       Invite.get(invite_id)
+      |> Invite.where_invitee(invitee)
       |> Invite.with_time_limit()
       |> Invite.with_organisation()
       |> Repo.one()
 
-    with %Invite{email: ^invitee_email} <- invite,
+    with %Invite{} <- invite,
          {:ok, :no_member} <- check_membership(invitee, invite.organisation_id) do
       convert_to_membership(invitee, invite)
     else
