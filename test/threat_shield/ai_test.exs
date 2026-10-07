@@ -66,6 +66,24 @@ defmodule ThreatShield.AITest do
     {system_prompt, user_prompt}
   end
 
+  test "run_task/2 records the usage and refuses a request above the quota",
+       %{user: user, organisation: organisation} do
+    organisation = Organisations.get_organisation!(user, organisation.id)
+    scope = Scope.for(user, organisation)
+
+    assert {:ok, :done} = AI.run_task(scope, fn -> :done end)
+
+    assert ThreatShield.Quotas.QuotaManager.get_usage(organisation, "ai_requests_per_month") ==
+             1.0
+
+    ThreatShield.Repo.update_all(ThreatShield.Accounts.Organisation,
+      set: [quotas: %{"ai_requests_per_month" => 1}]
+    )
+
+    organisation = Organisations.get_organisation!(user, organisation.id)
+    assert {:error, :quota_exceeded} = AI.run_task(Scope.for(user, organisation), fn -> :done end)
+  end
+
   test "suggest_assets/1 for an organisation", %{user: user, organisation: organisation} do
     organisation = Organisations.get_organisation!(user, organisation.id)
 

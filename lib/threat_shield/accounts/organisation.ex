@@ -54,6 +54,9 @@ defmodule ThreatShield.Accounts.Organisation do
       :attributes
     ])
     |> validate_required([:name])
+    |> validate_length(:name, max: 255)
+    |> validate_length(:location, max: 255)
+    |> DynamicAttribute.validate_values(:attributes)
   end
 
   def attributes() do

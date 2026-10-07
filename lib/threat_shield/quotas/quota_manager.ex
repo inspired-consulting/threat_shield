@@ -16,13 +16,9 @@ defmodule ThreatShield.Quotas.QuotaManager do
     query =
       from q in QuotaUsage,
         where:
-          q.organisation_id == ^org.id and q.quota_type == ^quota_type and q.timestamp >= ^start,
-        select: q
+          q.organisation_id == ^org.id and q.quota_type == ^quota_type and q.timestamp >= ^start
 
-    query
-    |> Repo.all()
-    |> Enum.map(& &1.amount)
-    |> Enum.sum()
+    Repo.aggregate(query, :sum, :amount) || 0.0
   end
 
   def check_quota(%Organisation{} = org, quota_type, amount \\ 1.0) do
@@ -42,19 +38,10 @@ defmodule ThreatShield.Quotas.QuotaManager do
       user: user,
       quota_type: quota_type,
       amount: amount,
-      message: message
+      message: message,
+      timestamp: DateTime.utc_now()
     }
     |> Repo.insert()
-  end
-
-  def add_usage_async(
-        %Organisation{} = org,
-        %User{} = user,
-        quota_type,
-        amount,
-        message \\ nil
-      ) do
-    Task.async(fn -> add_usage(org, user, quota_type, amount, message) end)
   end
 
   defp start_time(quota_type) when is_atom(quota_type) do

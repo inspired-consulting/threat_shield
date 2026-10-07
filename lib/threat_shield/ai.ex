@@ -43,7 +43,7 @@ defmodule ThreatShield.AI do
       when is_function(fun, 0) do
     case QuotaManager.check_quota(org, @quota_ai_requests_per_month, 1) do
       {:ok, :quota_available} ->
-        Task.start(fn -> protocol_quota_usage(scope, "AI request") end)
+        {:ok, _usage} = protocol_quota_usage(scope, "AI request")
         {:ok, fun.()}
 
       {:error, :quota_exceeded} ->
@@ -250,14 +250,12 @@ defmodule ThreatShield.AI do
   # Quotas
 
   defp protocol_quota_usage(%Scope{} = scope, message) do
-    QuotaManager.add_usage_async(
+    QuotaManager.add_usage(
       scope.organisation,
       scope.user,
       @quota_ai_requests_per_month,
       1.0,
       message
     )
-
-    {:ok, :usage_recorded}
   end
 end

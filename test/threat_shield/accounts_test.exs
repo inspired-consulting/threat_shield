@@ -49,6 +49,20 @@ defmodule ThreatShield.AccountsTest do
   end
 
   describe "register_user/1" do
+    test "stores the first and the last name" do
+      attrs = valid_user_attributes(%{first_name: "Ada", last_name: "Lovelace"})
+
+      assert {:ok, %User{first_name: "Ada", last_name: "Lovelace"}} =
+               Accounts.register_user(attrs)
+    end
+
+    test "limits the names to the column size" do
+      attrs = valid_user_attributes(%{first_name: String.duplicate("x", 41)})
+
+      assert {:error, changeset} = Accounts.register_user(attrs)
+      assert "should be at most 40 character(s)" in errors_on(changeset).first_name
+    end
+
     test "requires email and password to be set" do
       {:error, changeset} = Accounts.register_user(%{})
 

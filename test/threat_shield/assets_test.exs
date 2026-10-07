@@ -4,6 +4,9 @@ defmodule ThreatShield.AssetsTest do
 
   alias ThreatShield.OrganisationsFixtures
   alias ThreatShield.AccountsFixtures
+  alias ThreatShield.AssetsFixtures
+  alias ThreatShield.ThreatsFixtures
+  alias ThreatShield.Threats.Threat
   alias ThreatShield.Assets
   alias ThreatShield.Assets.Asset
 
@@ -19,6 +22,18 @@ defmodule ThreatShield.AssetsTest do
       }
 
       assert {:ok, %Asset{}} = Assets.create_asset(user, organisation, valid_attrs)
+    end
+
+    test "delete_asset_by_id/2 keeps the threats of the asset and clears the reference" do
+      user = AccountsFixtures.user_fixture()
+      organisation = OrganisationsFixtures.organisation_fixture(user)
+      asset = AssetsFixtures.asset_fixture(user, organisation)
+      threat = ThreatsFixtures.threat_fixture(user, organisation, %{asset_id: asset.id})
+
+      assert {1, _} = Assets.delete_asset_by_id(user, asset.id)
+
+      refute Repo.get(Asset, asset.id)
+      assert %Threat{asset_id: nil} = Repo.get(Threat, threat.id)
     end
   end
 end

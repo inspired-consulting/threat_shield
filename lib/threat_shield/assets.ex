@@ -72,7 +72,7 @@ defmodule ThreatShield.Assets do
       |> Organisation.for_user(user_id, :create_asset)
       |> Repo.one!()
 
-      Repo.insert!(changeset)
+      Repo.insert_or_rollback(changeset)
       |> Repo.reload!()
       |> Repo.preload(:system)
     end)
@@ -90,7 +90,7 @@ defmodule ThreatShield.Assets do
       |> Asset.for_user(user_id, :edit_asset)
       |> Repo.one!()
 
-      Repo.update!(changeset)
+      Repo.update_or_rollback(changeset)
       |> Repo.reload!()
       |> Repo.preload(:system)
     end)

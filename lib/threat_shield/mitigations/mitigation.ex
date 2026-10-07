@@ -33,6 +33,11 @@ defmodule ThreatShield.Mitigations.Mitigation do
     |> cast(attrs, @fields)
     |> validate_required([:name, :description, :is_implemented])
     |> validate_length(:name, max: 60)
+    |> validate_length(:description, max: 4000)
+    |> validate_length(:implementation_notes, max: 255)
+    |> validate_length(:verification_method, max: 255)
+    |> validate_length(:verification_result, max: 255)
+    |> validate_length(:issue_link, max: 255)
   end
 
   import Ecto.Query

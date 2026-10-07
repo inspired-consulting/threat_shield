@@ -135,6 +135,32 @@ defmodule ThreatShieldWeb.EntityFormLiveTest do
     assert risk.threat_id == threat.id
   end
 
+  test "shows validation errors for a duplicate system name and a long threat name",
+       %{conn: conn, org_path: org_path} do
+    {:ok, view, _html} = live(conn, org_path)
+    view |> element(~s([phx-click="open-create-system-modal"])) |> render_click()
+
+    html =
+      view
+      |> form("#system-form", system: %{name: "Web shop", description: "Another one"})
+      |> render_submit()
+
+    assert html =~ "is already used by another system of this organisation"
+    assert Repo.aggregate(System, :count) == 1
+
+    {:ok, view, _html} = live(conn, org_path)
+    switch_tab(view, "threats")
+    view |> element(~s([phx-click="open-create-dialog"])) |> render_click()
+
+    html =
+      view
+      |> form("#threat-form", threat: %{name: String.duplicate("x", 61), description: "d"})
+      |> render_submit()
+
+    assert html =~ "should be at most 60 character(s)"
+    refute Repo.get_by(Threat, description: "d")
+  end
+
   test "creates a mitigation for a risk and shows validation errors",
        %{conn: conn, threat: threat, risk: risk, org_path: org_path} do
     risk_path = org_path <> "/threats/#{threat.id}/risks/#{risk.id}"

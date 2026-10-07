@@ -41,7 +41,9 @@ defmodule ThreatShield.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :first_name, :last_name])
+    |> validate_length(:first_name, max: 40)
+    |> validate_length(:last_name, max: 40)
     |> validate_email(opts)
     |> validate_password(opts)
   end

@@ -67,6 +67,29 @@ defmodule ThreatShield.MembersTest do
       assert invite_id == invite.id
     end
 
+    test "the email address is matched without regard to case", %{invite: invite} do
+      user = AccountsFixtures.confirmed_user_fixture(%{email: "Invited@Example.com"})
+
+      assert [%Invite{id: invite_id}] = Members.get_invites_by_user(user)
+      assert invite_id == invite.id
+      assert {:ok, %Membership{}} = Members.accept_invite(user, invite.id)
+    end
+
+    test "an address can be invited only once per organisation",
+         %{owner: owner, organisation: organisation} do
+      assert {:error, %Ecto.Changeset{} = changeset} =
+               Members.create_invite(owner, organisation, %{"email" => "INVITED@example.com"})
+
+      assert "has already been invited to this organisation" in errors_on(changeset).email
+
+      other_organisation = OrganisationsFixtures.organisation_fixture(owner)
+
+      assert {:ok, %Invite{}} =
+               Members.create_invite(owner, other_organisation, %{
+                 "email" => "invited@example.com"
+               })
+    end
+
     test "an invite for another email address cannot be accepted", %{invite: invite} do
       other_user = AccountsFixtures.confirmed_user_fixture()
 

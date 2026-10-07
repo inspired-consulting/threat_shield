@@ -29,6 +29,7 @@ defmodule ThreatShield.Threats.Threat do
     |> cast(attrs, [:name, :description, :system_id, :asset_id])
     |> validate_required([:organisation, :name, :description])
     |> validate_length(:name, max: 60)
+    |> validate_length(:description, max: 4000)
   end
 
   import Ecto.Query

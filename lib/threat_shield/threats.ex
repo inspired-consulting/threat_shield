@@ -79,7 +79,7 @@ defmodule ThreatShield.Threats do
 
       check_related_entities_in_threat_changeset(changeset, org_id)
 
-      Repo.insert!(changeset)
+      Repo.insert_or_rollback(changeset)
     end)
   end
 
@@ -109,7 +109,7 @@ defmodule ThreatShield.Threats do
 
       check_related_entities_in_threat_changeset(changeset, org_id)
 
-      Repo.update!(changeset)
+      Repo.update_or_rollback(changeset)
     end)
   end
 
