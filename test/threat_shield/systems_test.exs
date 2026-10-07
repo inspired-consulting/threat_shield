@@ -19,7 +19,11 @@ defmodule ThreatShield.SystemsTest do
       organisation = OrganisationsFixtures.organisation_fixture(user)
       valid_attrs = %{name: "some name", description: "some description"}
 
-      assert {:ok, %System{}} = Systems.create_system(user, organisation, valid_attrs)
+      assert {:ok, %System{} = system} = Systems.create_system(user, organisation, valid_attrs)
+
+      assert system.attributes == %{}
+      assert Repo.get!(System, system.id).attributes == %{}
+      assert System.describe(system) =~ "some name"
     end
 
     test "delete_sys_by_id!/2 deletes the assets and threats of the system" do

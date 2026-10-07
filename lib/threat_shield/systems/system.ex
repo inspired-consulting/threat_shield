@@ -36,7 +36,7 @@ defmodule ThreatShield.Systems.System do
   ]
 
   schema "systems" do
-    field :attributes, :map
+    field :attributes, :map, default: %{}
     field :name, :string
     field :description, :string
     belongs_to :organisation, ThreatShield.Accounts.Organisation
