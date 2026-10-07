@@ -1,6 +1,6 @@
 # Backlog
 
-**Status:** open list. Last updated 2026-10-06.
+**Status:** open list. Last updated 2026-10-07.
 
 Short entries for open work without a plan of its own. When work on an entry starts and
 needs steps, it gets its own file in this folder and is removed from here.
@@ -52,3 +52,14 @@ that consists of sub-systems, which contain services.
 
 Open points: the number of levels and their names, and how assets and threats relate to
 a component and to its parent system.
+
+## Upgrade PostgreSQL in production
+
+Production runs PostgreSQL 15.18 (Cloud SQL instance `threatshield-db`, checked on
+2026-10-07). The repository uses 18 everywhere: CI, Docker Compose, the Kubernetes files,
+and `deployment/gcp/create_database.py`. So the tests run against a newer major version
+than production.
+
+Upgrade the instance to 18 with an in-place major version upgrade of Cloud SQL. Take a
+backup first and check that automated backups are enabled. Until then, consider running
+the tests against 15 as well.
